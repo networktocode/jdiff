@@ -1,6 +1,7 @@
 """CheckType Implementation."""
-from typing import Mapping, Iterable, Tuple
+from typing import Mapping, Iterable, Tuple, Union, List
 from .evaluator import diff_generator
+from .runner import extract_values_from_output
 
 
 class CheckType:
@@ -21,24 +22,28 @@ class CheckType:
         else:
             raise NotImplementedError
 
-    def evaluate(self, pre_value: Mapping, post_value: Mapping, path: Mapping) -> Tuple[Mapping, bool]:
-        """Return a diff of the comparison and a boolean True if it passes or False otherwise."""
-        self.diff = diff_generator(pre_value, post_value, path)
-        # self.diff may get modified by a child class when self.check_logic is called.
-        logic_check = self.check_logic()
-        return (self.diff, logic_check)
+    @staticmethod
+    def extract_value_from_json_path(
+        value: Mapping, path: Mapping, exclude: List = list()
+    ) -> Union[Mapping, List, int, str, bool]:
+        """Return the value contained into a Mapping for a defined path."""
+        return extract_values_from_output(value, path, exclude)
 
-    def check_logic(self) -> bool:
-        """docstring placeholder."""
+    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
+        """Return the result of the evaluation and a boolean True if it passes it or False otherwise.
+
+        This method is the one that each CheckType has to implement.
+        """
         raise NotImplementedError
 
 
 class ExactMatchType(CheckType):
     """Exact Match class docstring."""
 
-    def check_logic(self) -> bool:
-        """Return True if diff is empty indicating an exact match."""
-        return not self.diff
+    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
+        """Returns the difference between values and the boolean."""
+        diff = diff_generator(reference_value, value_to_compare)
+        return diff, not diff
 
 
 class ToleranceType(CheckType):
@@ -49,16 +54,17 @@ class ToleranceType(CheckType):
         self.tolerance_factor = float(args[1]) / 100
         super().__init__()
 
-    def check_logic(self) -> bool:
-        """Return True if the changed values are within tolerance."""
-        self.diff = self._get_outliers()
-        return not self.diff
+    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
+        """Returns the difference between values and the boolean."""
+        diff = diff_generator(reference_value, value_to_compare)
+        diff = self._get_outliers(diff)
+        return diff, not diff
 
-    def _get_outliers(self) -> Mapping:
+    def _get_outliers(self, diff: Mapping) -> Mapping:
         """Return a mapping of values outside the tolerance threshold."""
         result = {
             key: {sub_key: values for sub_key, values in obj.items() if not self._within_tolerance(**values)}
-            for key, obj in self.diff.items()
+            for key, obj in diff.items()
         }
         return {key: obj for key, obj in result.items() if obj}
 
@@ -68,20 +74,26 @@ class ToleranceType(CheckType):
         return (old_value - max_diff) < new_value < (old_value + max_diff)
 
 
-def compare(
-    pre_obj: Mapping, post_obj: Mapping, path: Mapping, type_info: Iterable, options: Mapping
-) -> Tuple[Mapping, bool]:
-    """Entry point function.
+# TODO: compare is no longer the entry point, we should use the libary as:
+#   netcompare_check = CheckType.init(check_type_info, options)
+#   pre_result = netcompare_check.extract_value_from_json_path(pre_obj, path)
+#   post_result = netcompare_check.extract_value_from_json_path(post_obj, path)
+#   netcompare_check.evaluate(pre_result, post_result)
+#
+# def compare(
+#     pre_obj: Mapping, post_obj: Mapping, path: Mapping, type_info: Iterable, options: Mapping
+# ) -> Tuple[Mapping, bool]:
+#     """Entry point function.
 
-    Returns a diff object and the boolean of the comparison.
-    """
+#     Returns a diff object and the boolean of the comparison.
+#     """
 
-    type_info = type_info.lower()
+#     type_info = type_info.lower()
 
-    try:
-        type_obj = CheckType.init(type_info, options)
-    except Exception:
-        # We will be here if we can't infer the type_obj
-        raise
+#     try:
+#         type_obj = CheckType.init(type_info, options)
+#     except Exception:
+#         # We will be here if we can't infer the type_obj
+#         raise
 
-    return type_obj.evaluate(pre_obj, post_obj, path)
+#     return type_obj.evaluate(pre_obj, post_obj, path)
