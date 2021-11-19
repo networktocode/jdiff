@@ -2,8 +2,8 @@
 
 import pytest
 import sys
-import pdb
 from ..flatten import flatten_list
+
 sys.path.append("..")
 
 
@@ -20,6 +20,7 @@ flatten_list_case_1 = (
 flatten_list_tests = [
     flatten_list_case_1,
 ]
+
 
 @pytest.mark.parametrize("data, expected_output", flatten_list_tests)
 def test_value_parser(data, expected_output):

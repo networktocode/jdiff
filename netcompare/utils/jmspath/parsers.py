@@ -1,5 +1,6 @@
 import re
-from typing import Mapping, List
+from typing import Mapping
+
 
 def jmspath_value_parser(path: Mapping):
     """
@@ -45,4 +46,3 @@ def jmspath_refkey_parser(path: Mapping):
             splitted_jmspath = splitted_jmspath[: n + 1]
 
     return ".".join(splitted_jmspath)
-

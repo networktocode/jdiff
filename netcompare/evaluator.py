@@ -1,11 +1,11 @@
 """Diff evaluator."""
 import re
 import sys
-from deepdiff import DeepDiff
 from collections import defaultdict
 from collections.abc import Mapping as DictMapping
 from functools import partial
 from typing import Mapping, List
+from deepdiff import DeepDiff
 
 
 sys.path.append(".")

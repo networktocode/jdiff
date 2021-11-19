@@ -3,6 +3,7 @@ from ..jmspath.parsers import jmspath_value_parser
 from ..list.flatten import flatten_list
 from ...runner import associate_key_of_my_value
 
+
 def exclude_filter(data: Mapping, exclude: List):
     """
     Recusively look through all dict keys and pop out the one defined in "exclude".

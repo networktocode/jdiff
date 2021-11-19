@@ -1,4 +1,5 @@
-from typing import Mapping, List, Generator, Union
+from typing import List, Generator
+
 
 def flatten_list(my_list: List) -> List:
     """
@@ -15,6 +16,7 @@ def flatten_list(my_list: List) -> List:
         >>> flatten_list(my_list)
         [[[[-1, 0], [-1, 0]]]]
     """
+
     def iter_flatten_list(my_list: List) -> Generator[List, None, None]:
         """Recursively yield all flat lists within a given list."""
         if is_flat_list(my_list):
@@ -22,7 +24,6 @@ def flatten_list(my_list: List) -> List:
         else:
             for item in my_list:
                 yield from iter_flatten_list(item)
-
 
     def is_flat_list(obj: List) -> bool:
         """Return True is obj is a list that does not contain any lists as its first order elements."""
@@ -33,5 +34,3 @@ def flatten_list(my_list: List) -> List:
     if is_flat_list(my_list):
         return my_list
     return list(iter_flatten_list(my_list))
-
-

@@ -1,9 +1,9 @@
 #!/ur/bin/env python3
 import re
 import jmespath
-from typing import Mapping, List, Generator, Union
+from typing import Mapping, List, Union
 from .utils.jmspath.parsers import jmspath_value_parser, jmspath_refkey_parser
-from .utils.data.parsers import  exclude_filter, get_values
+from .utils.data.parsers import exclude_filter, get_values
 
 
 def extract_values_from_output(value: Mapping, path: Mapping, exclude: List) -> Union[Mapping, List, int, str, bool]:
@@ -46,8 +46,6 @@ def extract_values_from_output(value: Mapping, path: Mapping, exclude: List) -> 
         return keys_values_zipper(list_of_reference_keys, filtered_value)
     else:
         return filtered_value
-
-
 
 
 def associate_key_of_my_value(paths: Mapping, wanted_value: List) -> List:
