@@ -1,17 +1,15 @@
 #!/ur/bin/env python3
 import re
 import jmespath
-from typing import Mapping, List, Generator
+from typing import Mapping, List, Generator, Union
 
 
-def extract_values_from_output(check_definition: Mapping, output: Mapping) -> List:
+def extract_values_from_output(value: Mapping, path: Mapping, exclude: List) -> Union[Mapping, List, int, str, bool]:
     """Return data from output depending on the check path. See unit text for complete example.
 
     Args:
-        check_definition: {
-            "path": "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]",
-        }
-        output: {
+        path: "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]",
+        value: {
             "jsonrpc": "2.0",
             "id": "EapiExplorer-1",
             "result": [
@@ -20,23 +18,26 @@ def extract_values_from_output(check_definition: Mapping, output: Mapping) -> Li
                     "default": {
                     "peerList": [
                         { ...
+        exclude: [...]
+
+    TODO: This function should be able to return a list, or a Dict, or a Integer, or a Boolean or a String
     Return:
         [{'7.7.7.7': {'prefixesReceived': 101}}, {'10.1.0.0': {'prefixesReceived': 120}}, ...
     """
 
-    if check_definition.get("path"):
-        found_values = jmespath.search(jmspath_value_parser(check_definition["path"]), output)
+    if path:
+        found_values = jmespath.search(jmspath_value_parser(path), value)
     else:
-        found_values = output
+        found_values = value
 
-    if "exclude" in check_definition:
-        my_value_exclude_cleaner(found_values, check_definition["exclude"])
+    if exclude:
+        my_value_exclude_cleaner(found_values, exclude)
         my_meaningful_values = found_values
     else:
-        my_meaningful_values = get_meaningful_values(check_definition, found_values)
+        my_meaningful_values = get_meaningful_values(path, found_values)
 
-    if check_definition.get("path") and re.search(r"\$.*\$", check_definition["path"]):
-        wanted_reference_keys = jmespath.search(jmspath_refkey_parser(check_definition["path"]), output)
+    if path and re.search(r"\$.*\$", path):
+        wanted_reference_keys = jmespath.search(jmspath_refkey_parser(path), value)
         list_of_reference_keys = keys_cleaner(wanted_reference_keys)
         return keys_values_zipper(list_of_reference_keys, my_meaningful_values)
     else:
@@ -89,13 +90,13 @@ def jmspath_refkey_parser(path):
     return ".".join(splitted_jmspath)
 
 
-def get_meaningful_values(check_definition, found_values):
-    if check_definition.get("path"):
+def get_meaningful_values(path, found_values):
+    if path:
         # check if list of lists
         if not any(isinstance(i, list) for i in found_values):
             raise TypeError(
                 "Catching value must be defined as list in jmespath expression i.e. result[*].state -> result[*].[state]. You have {}'.".format(
-                    check_definition["path"]
+                    path
                 )
             )
         for element in found_values:
@@ -110,7 +111,7 @@ def get_meaningful_values(check_definition, found_values):
                     found_values = flatten_list(found_values)
                     break
 
-        my_meaningful_values = associate_key_of_my_value(jmspath_value_parser(check_definition["path"]), found_values)
+        my_meaningful_values = associate_key_of_my_value(jmspath_value_parser(path), found_values)
     else:
         my_meaningful_values = found_values
     return my_meaningful_values
