@@ -2,7 +2,8 @@
 import re
 import jmespath
 from typing import Mapping, List, Generator, Union
-from .utils.jmspath.parsers import jmspath_value_parser, jmspath_refkey_parser, exclude_filter
+from .utils.jmspath.parsers import jmspath_value_parser, jmspath_refkey_parser
+from .utils.data.parsers import  exclude_filter, get_values
 
 
 def extract_values_from_output(value: Mapping, path: Mapping, exclude: List) -> Union[Mapping, List, int, str, bool]:
@@ -37,8 +38,7 @@ def extract_values_from_output(value: Mapping, path: Mapping, exclude: List) -> 
         exclude_filter(wanted_value, exclude)
         filtered_value = wanted_value
 
-    pdb.set_trace()
-    filtered_value = get_meaningful_values(path, wanted_value)
+    filtered_value = get_values(path, wanted_value)
 
     if path and re.search(r"\$.*\$", path):
         wanted_reference_keys = jmespath.search(jmspath_refkey_parser(path), value)
@@ -48,67 +48,6 @@ def extract_values_from_output(value: Mapping, path: Mapping, exclude: List) -> 
         return filtered_value
 
 
-def get_meaningful_values(path: Mapping, wanted_value):
-    if path:
-        # check if list of lists
-        if not any(isinstance(i, list) for i in wanted_value):
-            raise TypeError(
-                "Catching value must be defined as list in jmespath expression i.e. result[*].state -> result[*].[state]. You have {}'.".format(
-                    path
-                )
-            )
-        for element in wanted_value:
-            for item in element:
-                if isinstance(item, dict):
-                    raise TypeError(
-                        'Must be list of lists i.e. [["Idle", 75759616], ["Idle", 75759620]]. You have {}\'.'.format(
-                            wanted_value
-                        )
-                    )
-                elif isinstance(item, list):
-                    wanted_value = flatten_list(wanted_value)
-                    break
-
-        filtered_value = associate_key_of_my_value(jmspath_value_parser(path), wanted_value)
-    else:
-        filtered_value = wanted_value
-    return filtered_value
-
-
-def flatten_list(my_list: List) -> List:
-    """
-    Flatten a multi level nested list and returns a list of lists.
-
-    Args:
-        my_list: nested list to be flattened.
-
-    Return:
-        [[-1, 0], [-1, 0], [-1, 0], ...]
-
-    Example:
-        >>> my_list = [[[[-1, 0], [-1, 0]]]]
-        >>> flatten_list(my_list)
-        [[-1, 0], [-1, 0]]
-    """
-    if not isinstance(my_list, list):
-        raise ValueError(f"Argument provided must be a list. You passed a {type(my_list)}")
-    if is_flat_list(my_list):
-        return my_list
-    return list(iter_flatten_list(my_list))
-
-
-def iter_flatten_list(my_list: List) -> Generator[List, None, None]:
-    """Recursively yield all flat lists within a given list."""
-    if is_flat_list(my_list):
-        yield my_list
-    else:
-        for item in my_list:
-            yield from iter_flatten_list(item)
-
-
-def is_flat_list(obj: List) -> bool:
-    """Return True is obj is a list that does not contain any lists as its first order elements."""
-    return isinstance(obj, list) and not any(isinstance(i, list) for i in obj)
 
 
 def associate_key_of_my_value(paths: Mapping, wanted_value: List) -> List:
