@@ -4,7 +4,6 @@ import jmespath
 from typing import Mapping, List, Generator, Union
 from .utils.jmspath.parsers import jmspath_value_parser, jmspath_refkey_parser, exclude_filter
 
-import pdb
 
 def extract_values_from_output(value: Mapping, path: Mapping, exclude: List) -> Union[Mapping, List, int, str, bool]:
     """Return data from output depending on the check path. See unit text for complete example.
