@@ -7,7 +7,6 @@ from collections.abc import Mapping as DictMapping
 from functools import partial
 from typing import Mapping, List
 
-from .runner import extract_values_from_output
 
 sys.path.append(".")
 

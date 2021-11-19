@@ -1,5 +1,5 @@
 """CheckType Implementation."""
-from typing import Mapping, Iterable, Tuple, Union, List
+from typing import Mapping, Tuple, Union, List
 from .evaluator import diff_generator
 from .runner import extract_values_from_output
 
