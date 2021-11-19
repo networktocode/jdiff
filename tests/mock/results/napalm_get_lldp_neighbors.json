@@ -1,0 +1,31 @@
+[
+    [
+        {
+            "Ethernet1": {
+                "port": {
+                    "new_value": "518",
+                    "old_value": "519"
+                },
+                "missing": [
+                    {
+                        "hostname": "ios-xrv-unittest",
+                        "port": "Gi0/0/0/0"
+                    }
+                ]
+            },
+            "Ethernet3": {
+                "new": [
+                    {
+                        "hostname": "ios-xrv-unittest",
+                        "port": "Gi0/0/0/0"
+                    },
+                    {
+                        "hostname": "ios-xrv-unittest",
+                        "port": "Gi0/0/0/1"
+                    }
+                ]
+            }
+        },
+        false
+    ]
+]

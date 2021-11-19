@@ -1,0 +1,34 @@
+{
+    "Ethernet2": [
+        {
+            "hostname": "junos-unittest",
+            "port": "520"
+        }
+    ],
+    "Ethernet3": [
+        {
+            "hostname": "junos-unittest",
+            "port": "522"
+        },
+        {
+            "hostname": "ios-xrv-unittest",
+            "port": "Gi0/0/0/0"
+        },
+        {
+            "hostname": "ios-xrv-unittest",
+            "port": "Gi0/0/0/1"
+        }
+    ],
+    "Ethernet1": [
+        {
+            "hostname": "junos-unittest",
+            "port": "518"
+        }
+    ],
+    "Management1": [
+        {
+            "hostname": "junos-unittest",
+            "port": "508"
+        }
+    ]
+}

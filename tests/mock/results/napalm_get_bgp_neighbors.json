@@ -1,0 +1,39 @@
+[
+    [
+        {
+            "7.7.7.7": {
+                "is_enabled": {
+                    "new_value": false,
+                    "old_value": true
+                },
+                "is_up": {
+                    "new_value": false,
+                    "old_value": true
+                }
+            }
+        },
+        false
+    ],
+    [
+        {
+            "10.1.0.0": {
+                "accepted_prefixes": {
+                    "new_value": 900,
+                    "old_value": 1000
+                }
+            }
+        },
+        false
+    ],
+    [
+         {
+            "10.64.207.255": {
+                "received_prefixes": {
+                    "new_value": 1100,
+                    "old_value": 1000
+                }
+            }
+        },
+        false
+    ]
+]

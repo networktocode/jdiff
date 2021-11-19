@@ -1,0 +1,20 @@
+{
+    "result": {
+        "interfaces": {
+            "Management1": {
+                "lastStatusChangeTimestamp": {
+                    "new_value": 1626247821.123456,
+                    "old_value": 1626247820.0720868
+                },
+                "interfaceAddress": {
+                    "primaryIp": {
+                        "address": {
+                            "new_value": "10.2.2.15",
+                            "old_value": "10.0.2.15"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

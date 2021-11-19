@@ -1,0 +1,22 @@
+{
+    "10.1.0.0": {
+        "is_enabled": {
+            "new_value": false,
+            "old_value": true
+        },
+        "is_up": {
+            "new_value": false,
+            "old_value": true
+        }
+    },
+    "7.7.7.7": {
+        "is_enabled": {
+            "new_value": true,
+            "old_value": false
+        },
+        "is_up": {
+            "new_value": true,
+            "old_value": false
+        }
+    }
+}

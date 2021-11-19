@@ -1,0 +1,14 @@
+{
+    "10.1.0.0": {
+        "accepted_prefixes": {
+            "new_value": -1,
+            "old_value": -9
+        }
+    },
+    "10.2.0.0": {
+        "accepted_prefixes": {
+            "new_value": -1,
+            "old_value": -9
+        }
+    }
+}
