@@ -12,14 +12,13 @@ from .runner import extract_values_from_output
 sys.path.append(".")
 
 
-def diff_generator(pre_data: Mapping, post_data: Mapping, check_definition: Mapping) -> Mapping:
+def diff_generator(pre_result: Mapping, post_result: Mapping) -> Mapping:
     """
     Generates diff between pre and post data based on check definition.
 
     Args:
-        pre_data: pre data result.
-        post_data: post data result.
-        check_definition: check definitions.
+        pre_result: pre data result.
+        post_result: post data result.
 
     Return:
         output: diff between pre and post data.
@@ -32,9 +31,6 @@ def diff_generator(pre_data: Mapping, post_data: Mapping, check_definition: Mapp
         >>> print(diff_generator(check_definition, post_data, check_definition))
         {'10.17.254.2': {'state': {'new_value': 'Up', 'old_value': 'Idle'}}}
     """
-    pre_result = extract_values_from_output(check_definition, pre_data)
-    post_result = extract_values_from_output(check_definition, post_data)
-
     diff_result = DeepDiff(pre_result, post_result)
 
     result = diff_result.get("values_changed", {})
