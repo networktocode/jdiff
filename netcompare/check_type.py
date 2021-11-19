@@ -1,5 +1,5 @@
 """CheckType Implementation."""
-from typing import Mapping, Iterable, Tuple, Union, List
+from typing import Mapping, Tuple, Union, List
 from .evaluator import diff_generator
 from .runner import extract_values_from_output
 
@@ -29,6 +29,7 @@ class CheckType:
         """Return the value contained into a Mapping for a defined path."""
         return extract_values_from_output(value, path, exclude)
 
+    # TODO: Refine this typing
     def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
         """Return the result of the evaluation and a boolean True if it passes it or False otherwise.
 
