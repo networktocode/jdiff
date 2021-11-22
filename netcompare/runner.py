@@ -47,7 +47,3 @@ def extract_values_from_output(value: Mapping, path: Mapping, exclude: List) -> 
         return keys_values_zipper(list_of_reference_keys, filtered_value)
     else:
         return filtered_value
-
-
-
-

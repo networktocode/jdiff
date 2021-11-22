@@ -8,20 +8,20 @@ expected output: {expected_output}
 """
 
 keys_cleaner_case_1 = (
-    {'10.1.0.0': {'address_family': 'ipv4'}},
-    ['10.1.0.0'],
+    {"10.1.0.0": {"address_family": "ipv4"}},
+    ["10.1.0.0"],
 )
 
 keys_zipper_case_1 = (
-    ['10.1.0.0', '10.2.0.0'],
-    [{'is_enabled': False, 'is_up': False}, {'is_enabled': True, 'is_up': True}],
-    [{'10.1.0.0': {'is_enabled': False, 'is_up': False }}, {'10.2.0.0': {'is_enabled': True, 'is_up': True}}]
+    ["10.1.0.0", "10.2.0.0"],
+    [{"is_enabled": False, "is_up": False}, {"is_enabled": True, "is_up": True}],
+    [{"10.1.0.0": {"is_enabled": False, "is_up": False}}, {"10.2.0.0": {"is_enabled": True, "is_up": True}}],
 )
 
 keys_association_case_1 = (
     "global.peers.*.[is_enabled,is_up]",
     [[True, False], [True, False]],
-    [{'is_enabled': True, 'is_up': False}, {'is_enabled': True, 'is_up': False}]
+    [{"is_enabled": True, "is_up": False}, {"is_enabled": True, "is_up": False}],
 )
 
 keys_cleaner_tests = [
@@ -42,10 +42,12 @@ def test_value_parser(wanted_key, expected_output):
     output = keys_cleaner(wanted_key)
     assert expected_output == output, assertion_failed_message.format(output=output, expected_output=expected_output)
 
+
 @pytest.mark.parametrize("ref_keys, wanted_values, expected_output", keys_zipper_tests)
 def test_value_parser(ref_keys, wanted_values, expected_output):
     output = keys_values_zipper(ref_keys, wanted_values)
     assert expected_output == output, assertion_failed_message.format(output=output, expected_output=expected_output)
+
 
 @pytest.mark.parametrize("path, wanted_values, expected_output", keys_association_test)
 def test_value_parser(path, wanted_values, expected_output):
