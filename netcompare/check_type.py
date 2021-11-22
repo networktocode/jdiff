@@ -1,7 +1,10 @@
 """CheckType Implementation."""
+import sys
 from typing import Mapping, Tuple, Union, List
 from .evaluator import diff_generator
 from .runner import extract_values_from_output
+
+sys.path.append(".")
 
 
 class CheckType:

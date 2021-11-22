@@ -1,10 +1,5 @@
-#!/usr/bin/env python3
-
 import pytest
-import sys
-from ..flatten import flatten_list
-
-sys.path.append("..")
+from netcompare.utils.flatten_utils import flatten_list
 
 
 assertion_failed_message = """Test output is different from expected output.

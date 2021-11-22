@@ -1,7 +1,7 @@
 from typing import Mapping, List
-from ..jmspath.parsers import jmspath_value_parser
-from ..list.flatten import flatten_list
-from ...runner import associate_key_of_my_value
+from .jmspath_parsers import jmspath_value_parser
+from .flatten_utils import flatten_list
+from .refkey_utils import associate_key_of_my_value
 
 
 def exclude_filter(data: Mapping, exclude: List):

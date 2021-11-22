@@ -1,10 +1,5 @@
-#!/usr/bin/env python3
-
 import pytest
-import sys
-from ..parsers import jmspath_value_parser, jmspath_refkey_parser
-
-sys.path.append("..")
+from netcompare.utils.jmspath_parsers import jmspath_value_parser, jmspath_refkey_parser
 
 
 assertion_failed_message = """Test output is different from expected output.

@@ -1,12 +1,7 @@
-#!/usr/bin/env python3
-
 import pytest
-import sys
 from .utility import load_json_file
 from netcompare.evaluator import diff_generator
 from netcompare.runner import extract_values_from_output
-
-sys.path.append("..")
 
 
 assertion_failed_message = """Test output is different from expected output.
@@ -52,15 +47,15 @@ exact_match_multi_nested_list = (
 
 eval_tests = [
     exact_match_of_global_peers_via_napalm_getter,
-    # exact_match_of_bgpPeerCaps_via_api,
-    # exact_match_of_bgp_neigh_via_textfsm,
-    # raw_diff_of_interface_ma1_via_api_value_exclude,
-    # raw_diff_of_interface_ma1_via_api_novalue_exclude,
-    # raw_diff_of_interface_ma1_via_api_novalue_noexclude,
-    # exact_match_missing_item,
-    # exact_match_additional_item,
-    # exact_match_changed_item,
-    # exact_match_multi_nested_list,
+    exact_match_of_bgpPeerCaps_via_api,
+    exact_match_of_bgp_neigh_via_textfsm,
+    raw_diff_of_interface_ma1_via_api_value_exclude,
+    raw_diff_of_interface_ma1_via_api_novalue_exclude,
+    raw_diff_of_interface_ma1_via_api_novalue_noexclude,
+    exact_match_missing_item,
+    exact_match_additional_item,
+    exact_match_changed_item,
+    exact_match_multi_nested_list,
 ]
 
 

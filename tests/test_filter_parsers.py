@@ -1,8 +1,6 @@
-#!/usr/bin/env python3
-
 import sys
 import pytest
-from ..parsers import exclude_filter
+from netcompare.utils.filter_parsers import exclude_filter
 
 sys.path.append("..")
 
