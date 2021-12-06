@@ -1,5 +1,5 @@
 import pytest
-from netcompare.utils.flatten_utils import flatten_list
+from netcompare.utils.flatten import flatten_list
 
 
 assertion_failed_message = """Test output is different from expected output.
