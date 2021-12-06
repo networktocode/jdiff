@@ -30,39 +30,37 @@ def extract_values_from_output(value: Mapping, path: Mapping, exclude: List) -> 
     # Get the wanted values to be evaluated if jmspath expression is defined, otherwise
     # use the entire output if jmespath is not defined in check. This cover the "raw" diff type.
     if path:
-        value = jmespath.search(jmspath_value_parser(path), value)
+        wanted_value = jmespath.search(jmspath_value_parser(path), value)
 
     # Exclude filter implementation.
     if exclude:
-        exclude_filter(value, exclude)
-
+        exclude_filter(wanted_value, exclude)
 
     # check if list of lists
-    if not any(isinstance(i, list) for i in value):
+    if not any(isinstance(i, list) for i in wanted_value):
         raise TypeError(
             "Catching value must be defined as list in jmespath expression i.e. result[*].state -> result[*].[state]. You have {}'.".format(
                 path
             )
         )
 
-    for element in value:
+    for element in wanted_value:
         for item in element:
             if isinstance(item, dict):
                 raise TypeError(
                     'Must be list of lists i.e. [["Idle", 75759616], ["Idle", 75759620]]. You have {}\'.'.format(
-                        value
+                        wanted_value
                     )
                 )
             elif isinstance(item, list):
-                flatten_list(value)
+                flatten_list(wanted_value)
                 break
     
     if path:
-        paired_key_value = associate_key_of_my_value(jmspath_value_parser(path), value)
+        paired_key_value = associate_key_of_my_value(jmspath_value_parser(path), wanted_value)
     else:
         paired_key_value = value
 
-    pdb.set_trace()
     if path and re.search(r"\$.*\$", path):
         wanted_reference_keys = jmespath.search(jmspath_refkey_parser(path), value)
         list_of_reference_keys = keys_cleaner(wanted_reference_keys)
