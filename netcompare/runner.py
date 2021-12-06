@@ -31,6 +31,9 @@ def extract_values_from_output(value: Mapping, path: Mapping, exclude: List) -> 
     # use the entire output if jmespath is not defined in check. This cover the "raw" diff type.
     if path:
         wanted_value = jmespath.search(jmspath_value_parser(path), value)
+    # RAW diff mode
+    else:
+        return value
 
     # Exclude filter implementation.
     if exclude:

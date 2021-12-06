@@ -47,14 +47,14 @@ exact_match_multi_nested_list = (
 
 eval_tests = [
     exact_match_of_global_peers_via_napalm_getter,
-    # exact_match_of_bgpPeerCaps_via_api,
-    # exact_match_of_bgp_neigh_via_textfsm,
+    exact_match_of_bgpPeerCaps_via_api,
+    exact_match_of_bgp_neigh_via_textfsm,
     # raw_diff_of_interface_ma1_via_api_value_exclude,
     # raw_diff_of_interface_ma1_via_api_novalue_exclude,
-    # raw_diff_of_interface_ma1_via_api_novalue_noexclude,
-    # exact_match_missing_item,
-    # exact_match_additional_item,
-    # exact_match_changed_item,
+    raw_diff_of_interface_ma1_via_api_novalue_noexclude,
+    exact_match_missing_item,
+    exact_match_additional_item,
+    exact_match_changed_item,
     # exact_match_multi_nested_list,
 ]
 
