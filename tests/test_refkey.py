@@ -1,5 +1,5 @@
 import pytest
-from netcompare.utils.refkey_utils import keys_cleaner, keys_values_zipper, associate_key_of_my_value
+from netcompare.utils.refkey import keys_cleaner, keys_values_zipper, associate_key_of_my_value
 
 
 assertion_failed_message = """Test output is different from expected output.

@@ -3,8 +3,6 @@ import pytest
 from .utility import load_json_file
 from netcompare.check_type import CheckType, ExactMatchType, ToleranceType
 
-sys.path.append("..")
-
 
 @pytest.mark.parametrize(
     "args, expected_class",
