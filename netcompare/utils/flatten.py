@@ -14,7 +14,7 @@ def flatten_list(my_list: List) -> List:
     Example:
         >>> my_list = [[[[-1, 0], [-1, 0]]]]
         >>> flatten_list(my_list)
-        [[[[-1, 0], [-1, 0]]]]
+        [[-1, 0], [-1, 0]]
     """
 
     def iter_flatten_list(my_list: List) -> Generator[List, None, None]:
