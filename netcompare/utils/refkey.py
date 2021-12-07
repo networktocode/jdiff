@@ -23,9 +23,12 @@ def keys_cleaner(wanted_reference_keys: Mapping) -> list:
     elif isinstance(wanted_reference_keys, dict):
         my_keys_list = list()
 
-        for key in wanted_reference_keys.keys():
-            my_keys_list.append(key)
-
+        if isinstance(wanted_reference_keys, dict): 
+            for key in wanted_reference_keys.keys():
+                my_keys_list.append(key)
+        else:
+            raise TypeError(f'Must be a dictionary. You have type:{type(wanted_reference_keys)} output:{wanted_reference_keys}\'.')
+                    
         return my_keys_list
 
 
