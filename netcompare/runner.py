@@ -53,7 +53,7 @@ def extract_values_from_output(value: Mapping, path: Mapping, exclude: List) -> 
                         )
                     )
                 elif isinstance(item, list):
-                    flatten_list(wanted_value)
+                    wanted_value = flatten_list(wanted_value)
                     break
 
             paired_key_value = associate_key_of_my_value(jmspath_value_parser(path), wanted_value)
