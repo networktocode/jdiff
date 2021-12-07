@@ -1,3 +1,4 @@
+"Flatten list unit test"
 import pytest
 from netcompare.utils.flatten import flatten_list
 

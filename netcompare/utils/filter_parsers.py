@@ -1,5 +1,6 @@
 from typing import Mapping, List
 
+
 def exclude_filter(data: Mapping, exclude: List):
     """
     Recusively look through all dict keys and pop out the one defined in "exclude".

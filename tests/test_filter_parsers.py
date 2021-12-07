@@ -1,8 +1,6 @@
-import sys
+"Filter parser unit tests."
 import pytest
 from netcompare.utils.filter_parsers import exclude_filter
-
-sys.path.append("..")
 
 
 assertion_failed_message = """Test output is different from expected output.

@@ -1,3 +1,4 @@
+"Reference key unit tests."
 import pytest
 from netcompare.utils.refkey import keys_cleaner, keys_values_zipper, associate_key_of_my_value
 
@@ -38,18 +39,18 @@ keys_association_test = [
 
 
 @pytest.mark.parametrize("wanted_key, expected_output", keys_cleaner_tests)
-def test_value_parser(wanted_key, expected_output):
+def test_keys_cleaner(wanted_key, expected_output):
     output = keys_cleaner(wanted_key)
     assert expected_output == output, assertion_failed_message.format(output=output, expected_output=expected_output)
 
 
 @pytest.mark.parametrize("ref_keys, wanted_values, expected_output", keys_zipper_tests)
-def test_value_parser(ref_keys, wanted_values, expected_output):
+def test_keys_zipper(ref_keys, wanted_values, expected_output):
     output = keys_values_zipper(ref_keys, wanted_values)
     assert expected_output == output, assertion_failed_message.format(output=output, expected_output=expected_output)
 
 
 @pytest.mark.parametrize("path, wanted_values, expected_output", keys_association_test)
-def test_value_parser(path, wanted_values, expected_output):
+def test_keys_association(path, wanted_values, expected_output):
     output = associate_key_of_my_value(path, wanted_values)
     assert expected_output == output, assertion_failed_message.format(output=output, expected_output=expected_output)

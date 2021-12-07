@@ -1,5 +1,4 @@
 """CheckType Implementation."""
-import sys
 from typing import Mapping, Tuple, Union, List
 from .evaluator import diff_generator
 from .runner import extract_values_from_output
@@ -10,7 +9,6 @@ class CheckType:
 
     def __init__(self, *args):
         """Check Type init method."""
-        pass
 
     @staticmethod
     def init(*args):

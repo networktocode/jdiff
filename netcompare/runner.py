@@ -6,6 +6,8 @@ from .utils.jmspath_parsers import jmspath_value_parser, jmspath_refkey_parser
 from .utils.filter_parsers import exclude_filter
 from .utils.refkey import keys_cleaner, keys_values_zipper, associate_key_of_my_value
 from .utils.flatten import flatten_list
+
+
 def extract_values_from_output(value: Mapping, path: Mapping, exclude: List) -> Union[Mapping, List, int, str, bool]:
     """Return data from output depending on the check path. See unit text for complete example.
 
@@ -29,7 +31,7 @@ def extract_values_from_output(value: Mapping, path: Mapping, exclude: List) -> 
     # use the entire output if jmespath is not defined in check. This cover the "raw" diff type.
     if path and not exclude:
         wanted_value = jmespath.search(jmspath_value_parser(path), value)
-    
+
     elif path and exclude:
         wanted_value = jmespath.search(jmspath_value_parser(path), value)
         exclude_filter(wanted_value, exclude)
@@ -53,8 +55,7 @@ def extract_values_from_output(value: Mapping, path: Mapping, exclude: List) -> 
                 elif isinstance(item, list):
                     flatten_list(wanted_value)
                     break
-        
-        
+
             paired_key_value = associate_key_of_my_value(jmspath_value_parser(path), wanted_value)
     else:
         paired_key_value = value
