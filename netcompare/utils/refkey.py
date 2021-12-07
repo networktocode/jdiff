@@ -1,7 +1,7 @@
 from typing import Mapping, List
 
 
-def keys_cleaner(wanted_reference_keys: Mapping) -> list:
+def keys_cleaner(wanted_reference_keys: Mapping) -> List[Mapping]:
     """
     Get every required reference key from output.
 
