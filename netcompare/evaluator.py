@@ -1,4 +1,4 @@
-"""Diff evaluator."""
+"Diff evaluator."
 import re
 import sys
 from collections import defaultdict
@@ -109,7 +109,7 @@ def fix_deepdiff_key_names(obj: Mapping) -> Mapping:
     # root['Ethernet1'][0]['port']
     pattern = r"'([A-Za-z0-9_\./\\-]*)'"
 
-    result = dict()
+    result = {}
     for key, value in obj.items():
         key_parts = re.findall(pattern, key)
         partial_res = group_value(key_parts, value)

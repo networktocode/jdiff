@@ -1,3 +1,4 @@
+"Filtering parsing."
 from typing import Mapping, List
 
 
@@ -36,5 +37,5 @@ def exclude_filter(data: Mapping, exclude: List):
 
     elif isinstance(data, list):
         for element in data:
-            if isinstance(element, dict) or isinstance(element, list):
+            if isinstance(element, (dict, list)):
                 exclude_filter(element, exclude)

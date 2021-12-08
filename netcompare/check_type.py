@@ -16,14 +16,13 @@ class CheckType:
         check_type = args[0]
         if check_type == "exact_match":
             return ExactMatchType(*args)
-        elif check_type == "tolerance":
+        if check_type == "tolerance":
             return ToleranceType(*args)
-        else:
-            raise NotImplementedError
+        raise NotImplementedError
 
     @staticmethod
     def extract_value_from_json_path(
-        value: Mapping, path: Mapping, exclude: List = list()
+        value: Mapping, path: Mapping, exclude: List = None
     ) -> Union[Mapping, List, int, str, bool]:
         """Return the value contained into a Mapping for a defined path."""
         return extract_values_from_output(value, path, exclude)

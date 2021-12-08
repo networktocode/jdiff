@@ -1,7 +1,7 @@
-#!/ur/bin/env python3
+"Library wrapper for output parsing."
 import re
-import jmespath
 from typing import Mapping, List, Union
+import jmespath
 from .utils.jmspath_parsers import jmspath_value_parser, jmspath_refkey_parser
 from .utils.filter_parsers import exclude_filter
 from .utils.refkey import keys_cleaner, keys_values_zipper, associate_key_of_my_value
@@ -48,11 +48,9 @@ def extract_values_from_output(value: Mapping, path: Mapping, exclude: List) -> 
             for item in element:
                 if isinstance(item, dict):
                     raise TypeError(
-                        'Must be list of lists i.e. [["Idle", 75759616], ["Idle", 75759620]]. You have {}\'.'.format(
-                            wanted_value
-                        )
+                        f'Must be list of lists i.e. [["Idle", 75759616], ["Idle", 75759620]]. You have {wanted_value}\'.'
                     )
-                elif isinstance(item, list):
+                if isinstance(item, list):
                     wanted_value = flatten_list(wanted_value)
                     break
 
@@ -64,5 +62,5 @@ def extract_values_from_output(value: Mapping, path: Mapping, exclude: List) -> 
         wanted_reference_keys = jmespath.search(jmspath_refkey_parser(path), value)
         list_of_reference_keys = keys_cleaner(wanted_reference_keys)
         return keys_values_zipper(list_of_reference_keys, paired_key_value)
-    else:
-        return paired_key_value
+
+    return paired_key_value

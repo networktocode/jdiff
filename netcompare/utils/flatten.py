@@ -1,3 +1,4 @@
+"Flatten multi-nested list."
 from typing import List, Generator
 
 
