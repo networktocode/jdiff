@@ -1,9 +1,7 @@
-import sys
+"Check Type unit tests."
 import pytest
-from .utility import load_json_file
 from netcompare.check_type import CheckType, ExactMatchType, ToleranceType
-
-sys.path.append("..")
+from .utility import load_json_file
 
 
 @pytest.mark.parametrize(

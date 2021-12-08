@@ -9,7 +9,6 @@ class CheckType:
 
     def __init__(self, *args):
         """Check Type init method."""
-        pass
 
     @staticmethod
     def init(*args):

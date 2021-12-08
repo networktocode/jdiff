@@ -107,44 +107,44 @@ def pytest(context, local=INVOKE_LOCAL):
 
 
 @task(help={"local": "Run locally or within the Docker container"})
-def black(context, local=INVOKE_LOCAL):
+def black(context, path=".", local=INVOKE_LOCAL):
     """Run black to check that Python files adherence to black standards."""
-    exec_cmd = "black --check --diff ."
+    exec_cmd = "black {path}".format(path=path)
     run_cmd(context, exec_cmd, local)
 
 
 @task(help={"local": "Run locally or within the Docker container"})
-def flake8(context, local=INVOKE_LOCAL):
+def flake8(context, path=".", local=INVOKE_LOCAL):
     """Run flake8 code analysis."""
-    exec_cmd = "flake8 ."
+    exec_cmd = "flake8 {path}".format(path=path)
     run_cmd(context, exec_cmd, local)
 
 
 @task(help={"local": "Run locally or within the Docker container"})
-def pylint(context, local=INVOKE_LOCAL):
+def pylint(context, path=".", local=INVOKE_LOCAL):
     """Run pylint code analysis."""
-    exec_cmd = 'find . -name "*.py" | xargs pylint'
+    exec_cmd = 'find {path} -name "*.py" | xargs pylint'.format(path=path)
     run_cmd(context, exec_cmd, local)
 
 
 @task(help={"local": "Run locally or within the Docker container"})
-def yamllint(context, local=INVOKE_LOCAL):
+def yamllint(context, path=".", local=INVOKE_LOCAL):
     """Run yamllint to validate formatting adheres to NTC defined YAML standards."""
-    exec_cmd = "yamllint ."
+    exec_cmd = "yamllint {path}".format(path=path)
     run_cmd(context, exec_cmd, local)
 
 
 @task(help={"local": "Run locally or within the Docker container"})
-def pydocstyle(context, local=INVOKE_LOCAL):
+def pydocstyle(context, path=".", local=INVOKE_LOCAL):
     """Run pydocstyle to validate docstring formatting adheres to NTC defined standards."""
-    exec_cmd = "pydocstyle ."
+    exec_cmd = "pydocstyle {path}".format(path=path)
     run_cmd(context, exec_cmd, local)
 
 
 @task(help={"local": "Run locally or within the Docker container"})
-def bandit(context, local=INVOKE_LOCAL):
+def bandit(context, path=".", local=INVOKE_LOCAL):
     """Run bandit to validate basic static code security analysis."""
-    exec_cmd = "bandit --recursive ./ --configfile .bandit.yml"
+    exec_cmd = "bandit --recursive ./{path} --configfile .bandit.yml".format(path=path)
     run_cmd(context, exec_cmd, local)
 
 
@@ -156,14 +156,14 @@ def cli(context):
 
 
 @task(help={"local": "Run locally or within the Docker container"})
-def tests(context, local=INVOKE_LOCAL):
+def tests(context, path=".", local=INVOKE_LOCAL):
     """Run all tests for this repository."""
-    black(context, local)
-    flake8(context, local)
-    # pylint(context, local)
-    yamllint(context, local)
-    # pydocstyle(context, local)
-    bandit(context, local)
-    pytest(context, local)
+    black(context, path, local)
+    flake8(context, path, local)
+    pylint(context, path, local)
+    yamllint(context, path, local)
+    pydocstyle(context, path, local)
+    bandit(context, path, local)
+    pytest(context, path, local)
 
     print("All tests have passed!")

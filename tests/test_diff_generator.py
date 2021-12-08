@@ -1,12 +1,7 @@
-#!/usr/bin/env python3
-
 import pytest
-import sys
 from .utility import load_json_file
 from netcompare.evaluator import diff_generator
 from netcompare.runner import extract_values_from_output
-
-sys.path.append("..")
 
 
 assertion_failed_message = """Test output is different from expected output.
