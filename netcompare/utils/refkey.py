@@ -61,7 +61,7 @@ def keys_values_zipper(list_of_reference_keys: List, wanted_value_with_key: List
     return final_result
 
 
-def associate_key_of_my_value(paths: Mapping, wanted_value: List) -> List:
+def associate_key_of_my_value(paths: str, wanted_value: List) -> List:
     """
     Associate each key defined in path to every value found in output.
 

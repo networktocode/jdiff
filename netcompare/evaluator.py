@@ -2,16 +2,15 @@
 import re
 import sys
 from collections import defaultdict
-from collections.abc import Mapping as DictMapping
 from functools import partial
-from typing import Mapping, List
+from typing import Mapping, List, Dict
 from deepdiff import DeepDiff
 
 
 sys.path.append(".")
 
 
-def diff_generator(pre_result: Mapping, post_result: Mapping) -> Mapping:
+def diff_generator(pre_result: Mapping, post_result: Mapping) -> Dict:
     """
     Generates diff between pre and post data based on check definition.
 
@@ -139,7 +138,7 @@ def group_value(tree_list: List, value: Mapping) -> Mapping:
     return value
 
 
-def dict_merger(original_dict: List, merged_dict: Mapping):
+def dict_merger(original_dict: Mapping, merged_dict: Mapping):
     """
     Merge dictionaries to build final result.
 
@@ -153,7 +152,7 @@ def dict_merger(original_dict: List, merged_dict: Mapping):
         {'10.17.254.2': {'state': {'new_value': 'Up', 'old_value': 'Idle'}}}
     """
     for key in merged_dict.keys():
-        if key in original_dict and isinstance(original_dict[key], dict) and isinstance(merged_dict[key], DictMapping):
+        if key in original_dict and isinstance(original_dict[key], dict) and isinstance(merged_dict[key], dict):
             dict_merger(original_dict[key], merged_dict[key])
         else:
             original_dict[key] = merged_dict[key]

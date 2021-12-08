@@ -1,8 +1,7 @@
 import re
-from typing import Mapping
 
 
-def jmspath_value_parser(path: Mapping):
+def jmspath_value_parser(path: str):
     """
     Get the JMSPath  value path from 'path'.
 
@@ -13,19 +12,17 @@ def jmspath_value_parser(path: Mapping):
     """
     regex_match_value = re.search(r"\$.*\$\.|\$.*\$,|,\$.*\$", path)
 
-    if regex_match_value:
-        # $peers$. --> peers
-        regex_normalized_value = re.search(r"\$.*\$", regex_match_value.group())
-        if regex_normalized_value:
-            normalized_value = regex_match_value.group().split("$")[1]
-        value_path = path.replace(regex_normalized_value.group(), normalized_value)
-    else:
-        value_path = path
-
-    return value_path
+    if not regex_match_value:
+        return path
+    # $peers$. --> peers
+    regex_normalized_value = re.search(r"\$.*\$", regex_match_value.group())
+    if regex_normalized_value:
+        normalized_value = regex_match_value.group().split("$")[1]
+        return path.replace(regex_normalized_value.group(), normalized_value)
+    else: return path
 
 
-def jmspath_refkey_parser(path: Mapping):
+def jmspath_refkey_parser(path: str):
     """
     Get the JMSPath reference key path from 'path'.
 

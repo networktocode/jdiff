@@ -31,7 +31,7 @@ def exclude_filter(data: Mapping, exclude: List):
                 pass
 
         for key in data:
-            if isinstance(data[key], dict) or isinstance(data[key], list):
+            if isinstance(data[key], (dict, list)):
                 exclude_filter(data[key], exclude)
 
     elif isinstance(data, list):
