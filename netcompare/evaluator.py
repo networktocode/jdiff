@@ -11,24 +11,7 @@ sys.path.append(".")
 
 
 def diff_generator(pre_result: Mapping, post_result: Mapping) -> Dict:
-    """
-    Generates diff between pre and post data based on check definition.
-
-    Args:
-        pre_result: pre data result.
-        post_result: post data result.
-
-    Return:
-        output: diff between pre and post data.
-
-    Example:
-        >>> from evaluator import diff_generator
-        >>> pre_data = {"result": [{"bgp_neigh": "10.17.254.2","state": "Idle"}]}
-        >>> post_data = {"result": [{"bgp_neigh": "10.17.254.2","state": "Up"}]}
-        >>> check_definition = {"check_type": "exact_match", "value_path": "result[*].[state]", "reference_key_path": "result[*].bgp_neigh"}
-        >>> print(diff_generator(check_definition, post_data, check_definition))
-        {'10.17.254.2': {'state': {'new_value': 'Up', 'old_value': 'Idle'}}}
-    """
+    """Generates diff between pre and post data based on check definition."""
     diff_result = DeepDiff(pre_result, post_result)
 
     result = diff_result.get("values_changed", {})
@@ -45,38 +28,7 @@ def diff_generator(pre_result: Mapping, post_result: Mapping) -> Dict:
 
 
 def get_diff_iterables_items(diff_result: Mapping) -> Mapping:
-    """
-    Return a dict with new and missing values where the values are in a list.
-
-    Args:
-        diff_result: dict retruned from a DeepDiff compare.
-
-    Return:
-        defaultdict
-
-    Example:
-        >>> diff_result = {
-            "iterable_item_added": {
-                "root['Ethernet3'][1]": {
-                    "hostname": "ios-xrv-unittest",
-                    "port": "Gi0/0/0/0"
-                },
-                "root['Ethernet3'][2]": {
-                    "hostname": "ios-xrv-unittest",
-                    "port": "Gi0/0/0/1"
-                }
-            }
-        }
-        >>> get_diff_iterables_items(diff_result)
-        defaultdict(functools.partial(<class 'collections.defaultdict'>, <class 'list'>),
-            {"['Ethernet3']": defaultdict(list,
-                {'new': [
-                        {'hostname': 'ios-xrv-unittest', 'port': 'Gi0/0/0/0'},
-                        {'hostname': 'ios-xrv-unittest', 'port': 'Gi0/0/0/1'}
-                    ]}
-            )}
-        )
-    """
+    """Return a dict with new and missing values where the values are in a list."""
     # DeepDiff iterable_items are returned when the source data is a list
     # and provided in the format: "root['Ethernet3'][1]"
     # or more generically: root['KEY']['KEY']['KEY']...[numeric_index]
@@ -104,12 +56,10 @@ def get_diff_iterables_items(diff_result: Mapping) -> Mapping:
 
 def fix_deepdiff_key_names(obj: Mapping) -> Mapping:
     """Return a dict based on the provided dict object where the brackets and quotes are removed from the string."""
-    # sample keys:
-    # root[2]['10.64.207.255']['accepted_prefixes']
-    # root['Ethernet1'][0]['port']
     pattern = r"'([A-Za-z0-9_\./\\-]*)'"
 
     result = {}
+    # root[2]['10.64.207.255']['accepted_prefixes']
     for key, value in obj.items():
         key_parts = re.findall(pattern, key)
         partial_res = group_value(key_parts, value)
@@ -118,39 +68,14 @@ def fix_deepdiff_key_names(obj: Mapping) -> Mapping:
 
 
 def group_value(tree_list: List, value: Mapping) -> Mapping:
-    """
-    Build dictionary based on value's key and reference key.
-
-    Args:
-        tree_list: list of value's key and reference key
-        value: value results
-
-    Return:
-        value: Mapping of the changed values associated to reference key
-
-    Example:
-        >>> tree_list = ['10.17.254.2', 'state']
-        >>> value = {'new_value': 'Up', 'old_value': 'Idle'}
-        {'10.17.254.2': {'state': {'new_value': 'Up', 'old_value': 'Idle'}}}
-    """
+    """Build dictionary based on value's key and reference key."""
     if tree_list:
         return {tree_list[0]: group_value(tree_list[1:], value)}
     return value
 
 
 def dict_merger(original_dict: Mapping, merged_dict: Mapping):
-    """
-    Merge dictionaries to build final result.
-
-    Args:
-        original_dict: empty dictionary to be merged
-        merged_dict: dictionary containing returned key/value and associated reference key
-
-    Example:
-        >>> original_dict = {}
-        >>> merged_dict = {'10.17.254.2': {'state': {'new_value': 'Up', 'old_value': 'Idle'}}}
-        {'10.17.254.2': {'state': {'new_value': 'Up', 'old_value': 'Idle'}}}
-    """
+    """Merge dictionaries to build final result."""
     for key in merged_dict.keys():
         if key in original_dict and isinstance(original_dict[key], dict) and isinstance(merged_dict[key], dict):
             dict_merger(original_dict[key], merged_dict[key])

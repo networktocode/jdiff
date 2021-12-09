@@ -9,24 +9,7 @@ from .utils.flatten import flatten_list
 
 
 def extract_values_from_output(value: Mapping, path: Mapping, exclude: List) -> Union[Mapping, List, int, str, bool]:
-    """Return data from output depending on the check path. See unit text for complete example.
-
-    Args:
-        path: "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]",
-        value: {
-            "jsonrpc": "2.0",
-            "id": "EapiExplorer-1",
-            "result": [
-                {
-                "vrfs": {
-                    "default": {
-                    "peerList": [
-                        { ...
-        exclude: ["interfaceStatistics", "interfaceCounters"]
-
-    Return:
-        [{'7.7.7.7': {'prefixesReceived': 101}}, {'10.1.0.0': {'prefixesReceived': 120}}, ...
-    """
+    """Return data from output depending on the check path. See unit text for complete example."""
     # Get the wanted values to be evaluated if jmspath expression is defined, otherwise
     # use the entire output if jmespath is not defined in check. This cover the "raw" diff type.
     if path and not exclude:
