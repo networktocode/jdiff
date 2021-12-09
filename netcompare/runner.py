@@ -1,4 +1,4 @@
-"Library wrapper for output parsing."
+"""Library wrapper for output parsing."""
 import re
 from typing import Mapping, List, Union
 import jmespath

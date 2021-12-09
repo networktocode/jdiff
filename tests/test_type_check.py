@@ -13,7 +13,7 @@ def test_check_init(args, expected_class):
     assert isinstance(CheckType.init(*args), expected_class)
 
 
-def test_CheckType_raises_NotImplementedError_for_invalid_check_type():
+def test_check_type_raises_not_implemented_error_for_invalid_check_type():
     """Validate that CheckType raises a NotImplementedError when passed a non-existant check_type."""
     with pytest.raises(NotImplementedError):
         CheckType.init("does_not_exist")

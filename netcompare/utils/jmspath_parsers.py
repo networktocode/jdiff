@@ -1,4 +1,4 @@
-"JMSPath expresion parsers."
+"""JMSPath expresion parsers."""
 import re
 
 

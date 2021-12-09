@@ -1,4 +1,4 @@
-"Diff evaluator."
+"""Diff evaluator."""
 import re
 import sys
 from collections import defaultdict

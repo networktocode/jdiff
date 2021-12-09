@@ -1,15 +1,14 @@
+"""Reference key utilities."""
 from typing import Mapping, List
 
 
 def keys_cleaner(wanted_reference_keys: Mapping) -> List[Mapping]:
-    """
-    Get every required reference key from output.
-    """
+    """Get every required reference key from output."""
     if isinstance(wanted_reference_keys, list):
         return wanted_reference_keys
 
-    elif isinstance(wanted_reference_keys, dict):
-        my_keys_list = list()
+    if isinstance(wanted_reference_keys, dict):
+        my_keys_list = []
 
         if isinstance(wanted_reference_keys, dict):
             for key in wanted_reference_keys.keys():
@@ -21,12 +20,12 @@ def keys_cleaner(wanted_reference_keys: Mapping) -> List[Mapping]:
 
         return my_keys_list
 
+    return None
+
 
 def keys_values_zipper(list_of_reference_keys: List, wanted_value_with_key: List) -> List:
-    """
-    Build dictionary zipping keys with relative values.
-    """
-    final_result = list()
+    """Build dictionary zipping keys with relative values."""
+    final_result = []
 
     if len(list_of_reference_keys) != len(wanted_value_with_key):
         raise ValueError("Keys len != from Values len")
@@ -38,10 +37,7 @@ def keys_values_zipper(list_of_reference_keys: List, wanted_value_with_key: List
 
 
 def associate_key_of_my_value(paths: str, wanted_value: List) -> List:
-    """
-    Associate each key defined in path to every value found in output.
-    """
-
+    """Associate each key defined in path to every value found in output."""
     # global.peers.*.[is_enabled,is_up] / result.[*].state
     find_the_key_of_my_values = paths.split(".")[-1]
 
@@ -53,10 +49,10 @@ def associate_key_of_my_value(paths: str, wanted_value: List) -> List:
     else:
         my_key_value_list = [find_the_key_of_my_values]
 
-    final_list = list()
+    final_list = []
 
     for items in wanted_value:
-        temp_dict = dict()
+        temp_dict = {}
 
         if len(items) != len(my_key_value_list):
             raise ValueError("Key's value len != from value len")
