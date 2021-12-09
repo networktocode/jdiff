@@ -100,51 +100,51 @@ def rebuild(context):
 
 
 @task(help={"local": "Run locally or within the Docker container"})
-def pytest(context, local=INVOKE_LOCAL):
+def pytest(context, path=".", local=INVOKE_LOCAL):
     """Run pytest test cases."""
-    exec_cmd = "pytest"
+    exec_cmd = f"pytest {path}"
     run_cmd(context, exec_cmd, local)
 
 
 @task(help={"local": "Run locally or within the Docker container"})
 def black(context, path=".", local=INVOKE_LOCAL):
     """Run black to check that Python files adherence to black standards."""
-    exec_cmd = "black {path}".format(path=path)
+    exec_cmd = f"black {path}"
     run_cmd(context, exec_cmd, local)
 
 
 @task(help={"local": "Run locally or within the Docker container"})
 def flake8(context, path=".", local=INVOKE_LOCAL):
     """Run flake8 code analysis."""
-    exec_cmd = "flake8 {path}".format(path=path)
+    exec_cmd = f"flake8 {path}"
     run_cmd(context, exec_cmd, local)
 
 
 @task(help={"local": "Run locally or within the Docker container"})
 def pylint(context, path=".", local=INVOKE_LOCAL):
     """Run pylint code analysis."""
-    exec_cmd = 'find {path} -name "*.py" | xargs pylint'.format(path=path)
+    exec_cmd = f'find {path} -name "*.py" | xargs pylint'
     run_cmd(context, exec_cmd, local)
 
 
 @task(help={"local": "Run locally or within the Docker container"})
 def yamllint(context, path=".", local=INVOKE_LOCAL):
     """Run yamllint to validate formatting adheres to NTC defined YAML standards."""
-    exec_cmd = "yamllint {path}".format(path=path)
+    exec_cmd = f"yamllint {path}"
     run_cmd(context, exec_cmd, local)
 
 
 @task(help={"local": "Run locally or within the Docker container"})
 def pydocstyle(context, path=".", local=INVOKE_LOCAL):
     """Run pydocstyle to validate docstring formatting adheres to NTC defined standards."""
-    exec_cmd = "pydocstyle {path}".format(path=path)
+    exec_cmd = f"pydocstyle {path}"
     run_cmd(context, exec_cmd, local)
 
 
 @task(help={"local": "Run locally or within the Docker container"})
 def bandit(context, path=".", local=INVOKE_LOCAL):
     """Run bandit to validate basic static code security analysis."""
-    exec_cmd = "bandit --recursive ./{path} --configfile .bandit.yml".format(path=path)
+    exec_cmd = f"bandit --recursive ./{path} --configfile .bandit.yml"
     run_cmd(context, exec_cmd, local)
 
 

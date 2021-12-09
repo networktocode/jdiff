@@ -3,7 +3,7 @@ import pytest
 from netcompare.utils.flatten import flatten_list
 
 
-assertion_failed_message = """Test output is different from expected output.
+ASSERTION_FAILED_MESSAGE = """Test output is different from expected output.
 output: {output}
 expected output: {expected_output}
 """
@@ -21,4 +21,4 @@ flatten_list_tests = [
 @pytest.mark.parametrize("data, expected_output", flatten_list_tests)
 def test_value_parser(data, expected_output):
     output = flatten_list(data)
-    assert expected_output == output, assertion_failed_message.format(output=output, expected_output=expected_output)
+    assert expected_output == output, ASSERTION_FAILED_MESSAGE.format(output=output, expected_output=expected_output)

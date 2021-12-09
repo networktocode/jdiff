@@ -1,10 +1,11 @@
+"""Diff generator unit tests."""
 import pytest
-from .utility import load_json_file
 from netcompare.evaluator import diff_generator
 from netcompare.runner import extract_values_from_output
+from .utility import load_json_file
 
 
-assertion_failed_message = """Test output is different from expected output.
+ASSERTION_FAILED_MESSAGE = """Test output is different from expected output.
 output: {output}
 expected output: {expected_output}
 """
@@ -69,4 +70,4 @@ def test_eval(filename, path, exclude):
     post_value = extract_values_from_output(post_data, path, exclude)
     output = diff_generator(pre_value, post_value)
 
-    assert expected_output == output, assertion_failed_message.format(output=output, expected_output=expected_output)
+    assert expected_output == output, ASSERTION_FAILED_MESSAGE.format(output=output, expected_output=expected_output)
