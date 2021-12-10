@@ -100,9 +100,9 @@ def rebuild(context):
 
 
 @task(help={"local": "Run locally or within the Docker container"})
-def pytest(context, path=".", local=INVOKE_LOCAL):
+def pytest(context, local=INVOKE_LOCAL):
     """Run pytest test cases."""
-    exec_cmd = f"pytest {path}"
+    exec_cmd = "pytest"
     run_cmd(context, exec_cmd, local)
 
 
