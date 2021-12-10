@@ -2,7 +2,7 @@
 import pytest
 from netcompare.check_type import CheckType, ExactMatchType, ToleranceType
 from .utility import load_json_file
-
+import pdb
 
 @pytest.mark.parametrize(
     "args, expected_class",
@@ -131,3 +131,21 @@ def test_checks(filename, check_args, path, result_index):
     actual_results = check.evaluate(pre_value, post_value)
 
     assert list(actual_results) == result[result_index]
+
+
+parameter_match_api = (
+    "parameter_match.json",
+    ("parameter_match", {"localAsn": "65130.1100", "linkType": "external"}),
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,localAsn,linkType]",
+    ({'7.7.7.7': {'localAsn': '65130.1010', 'linkType': 'the road to seniority'}, '10.1.0.0': {'localAsn': '65130.8888'}}, True)
+)
+
+@pytest.mark.parametrize("filename, check_args, path, expected_result", [parameter_match_api])
+def test_checks(filename, check_args, path, expected_result):
+    """Validate parameter_match check type."""
+    check = CheckType.init(*check_args)
+    # There is not concept of "pre" and "post" in parameter_match.
+    data = load_json_file("pre", filename)
+    value = check.extract_value_from_json_path(data, path)
+    actual_results = check.evaluate(value, check_args)
+    assert actual_results == expected_result

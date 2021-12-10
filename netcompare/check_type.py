@@ -1,6 +1,6 @@
 """CheckType Implementation."""
 from typing import Mapping, Tuple, Union, List
-from .evaluator import diff_generator
+from .evaluator import diff_generator, parameter_evaluator
 from .runner import extract_values_from_output
 
 
@@ -18,6 +18,9 @@ class CheckType:
             return ExactMatchType(*args)
         if check_type == "tolerance":
             return ToleranceType(*args)
+        if check_type == "parameter_match":
+            return ParameterMatchType(*args)
+
         raise NotImplementedError
 
     @staticmethod
@@ -72,6 +75,14 @@ class ToleranceType(CheckType):
         max_diff = old_value * self.tolerance_factor
         return (old_value - max_diff) < new_value < (old_value + max_diff)
 
+
+class ParameterMatchType(CheckType):
+
+    def evaluate(self, value: Mapping, check_args: Mapping) -> Tuple[Mapping, bool]:
+        # TO DO: remove arg index
+        diff = parameter_evaluator(value, check_args[1])
+        
+        return diff, [True if diff else False][0]
 
 # TODO: compare is no longer the entry point, we should use the libary as:
 #   netcompare_check = CheckType.init(check_type_info, options)
