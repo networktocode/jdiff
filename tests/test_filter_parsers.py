@@ -3,7 +3,7 @@ import pytest
 from netcompare.utils.filter_parsers import exclude_filter
 
 
-ASSERTION_FAILED_MESSAGE = """Test output is different from expected output.
+ASSERT_FAIL_MESSAGE = """Test output is different from expected output.
 output: {output}
 expected output: {expected_output}
 """
@@ -41,4 +41,4 @@ exclude_filter_tests = [
 @pytest.mark.parametrize("exclude, data, expected_output", exclude_filter_tests)
 def test_exclude_filter(exclude, data, expected_output):
     exclude_filter(data, exclude)
-    assert expected_output == data, ASSERTION_FAILED_MESSAGE.format(output=data, expected_output=expected_output)
+    assert expected_output == data, ASSERT_FAIL_MESSAGE.format(output=data, expected_output=expected_output)

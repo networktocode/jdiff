@@ -1,9 +1,9 @@
-"JMSPath parser unit tests."
+"""JMSPath parser unit tests."""
 import pytest
 from netcompare.utils.jmspath_parsers import jmspath_value_parser, jmspath_refkey_parser
 
 
-ASSERTION_FAILED_MESSAGE = """Test output is different from expected output.
+ASSERT_FAIL_MESSSAGE = """Test output is different from expected output.
 output: {output}
 expected output: {expected_output}
 """
@@ -61,10 +61,10 @@ keyref_parser_tests = [
 @pytest.mark.parametrize("path, expected_output", value_parser_tests)
 def test_value_parser(path, expected_output):
     output = jmspath_value_parser(path)
-    assert expected_output == output, ASSERTION_FAILED_MESSAGE.format(output=output, expected_output=expected_output)
+    assert expected_output == output, ASSERT_FAIL_MESSSAGE.format(output=output, expected_output=expected_output)
 
 
 @pytest.mark.parametrize("path, expected_output", keyref_parser_tests)
 def test_keyref_parser(path, expected_output):
     output = jmspath_refkey_parser(path)
-    assert expected_output == output, ASSERTION_FAILED_MESSAGE.format(output=output, expected_output=expected_output)
+    assert expected_output == output, ASSERT_FAIL_MESSSAGE.format(output=output, expected_output=expected_output)
