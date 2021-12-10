@@ -160,7 +160,7 @@ def tests(context, path=".", local=INVOKE_LOCAL):
     """Run all tests for this repository."""
     black(context, path, local)
     flake8(context, path, local)
-    pylint(context, path, local)
+    # pylint(context, path, local)
     yamllint(context, path, local)
     pydocstyle(context, path, local)
     bandit(context, path, local)
