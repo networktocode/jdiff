@@ -1,12 +1,8 @@
 "Flatten list unit test"
 import pytest
 from netcompare.utils.flatten import flatten_list
+from .utility import ASSERT_FAIL_MESSAGE
 
-
-ASSERT_FAIL_MESSAGE = """Test output is different from expected output.
-output: {output}
-expected output: {expected_output}
-"""
 
 flatten_list_case_1 = (
     [[[[-1, 0], [-1, 0]]]],

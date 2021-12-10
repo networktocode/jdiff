@@ -7,6 +7,12 @@ import os
 dirname = os.path.dirname(os.path.abspath(__file__))
 
 
+ASSERT_FAIL_MESSAGE = """Test output is different from expected output.
+output: {output}
+expected output: {expected_output}
+"""
+
+
 def load_json_file(folder, filename):
     """Load mock data from json file."""
     filepath = os.path.join(dirname, "mock", folder, filename)

@@ -1,12 +1,7 @@
 """Reference key unit tests."""
 import pytest
 from netcompare.utils.refkey import keys_cleaner, keys_values_zipper, associate_key_of_my_value
-
-
-ASSERT_FAILED_MESSAGE = """Test output is different from expected output.
-output: {output}
-expected output: {expected_output}
-"""
+from .utility import ASSERT_FAIL_MESSAGE
 
 keys_cleaner_case_1 = (
     {"10.1.0.0": {"address_family": "ipv4"}},
@@ -41,16 +36,16 @@ keys_association_test = [
 @pytest.mark.parametrize("wanted_key, expected_output", keys_cleaner_tests)
 def test_keys_cleaner(wanted_key, expected_output):
     output = keys_cleaner(wanted_key)
-    assert expected_output == output, ASSERT_FAILED_MESSAGE.format(output=output, expected_output=expected_output)
+    assert expected_output == output, ASSERT_FAIL_MESSAGE.format(output=output, expected_output=expected_output)
 
 
 @pytest.mark.parametrize("ref_keys, wanted_values, expected_output", keys_zipper_tests)
 def test_keys_zipper(ref_keys, wanted_values, expected_output):
     output = keys_values_zipper(ref_keys, wanted_values)
-    assert expected_output == output, ASSERT_FAILED_MESSAGE.format(output=output, expected_output=expected_output)
+    assert expected_output == output, ASSERT_FAIL_MESSAGE.format(output=output, expected_output=expected_output)
 
 
 @pytest.mark.parametrize("path, wanted_values, expected_output", keys_association_test)
 def test_keys_association(path, wanted_values, expected_output):
     output = associate_key_of_my_value(path, wanted_values)
-    assert expected_output == output, ASSERT_FAILED_MESSAGE.format(output=output, expected_output=expected_output)
+    assert expected_output == output, ASSERT_FAIL_MESSAGE.format(output=output, expected_output=expected_output)

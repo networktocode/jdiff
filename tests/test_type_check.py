@@ -1,7 +1,7 @@
 "Check Type unit tests."
 import pytest
 from netcompare.check_type import CheckType, ExactMatchType, ToleranceType
-from .utility import load_mocks
+from .utility import load_mocks, ASSERT_FAIL_MESSAGE
 
 
 @pytest.mark.parametrize(
@@ -83,7 +83,9 @@ def test_check_type_results(check_type_args, folder_name, path, expected_results
     pre_value = check.get_value(pre_data, path)
     post_value = check.get_value(post_data, path)
     actual_results = check.evaluate(pre_value, post_value)
-    assert actual_results == expected_results
+    assert actual_results == expected_results, ASSERT_FAIL_MESSAGE.format(
+        output=actual_results, expected_output=expected_results
+    )
 
 
 napalm_bgp_neighbor_status = (
@@ -107,7 +109,12 @@ napalm_bgp_neighbor_prefixes_ipv6 = (
     2,
 )
 
-napalm_get_lldp_neighbors_exact_raw = ("napalm_get_lldp_neighbors", ("exact_match",), None, 0)
+napalm_get_lldp_neighbors_exact_raw = (
+    "napalm_get_lldp_neighbors",
+    ("exact_match",),
+    None,
+    0,
+)
 
 check_tests = [
     napalm_bgp_neighbor_status,
@@ -120,6 +127,8 @@ check_tests = [
 @pytest.mark.parametrize("folder_name, check_args, path, result_index", check_tests)
 def test_checks(folder_name, check_args, path, result_index):
     """Validate multiple checks on the same data to catch corner cases."""
+    pre_data, post_data, results = load_mocks(folder_name)
+
     check = CheckType.init(*check_args)
     pre_data, post_data, results = load_mocks(folder_name)
 
@@ -127,7 +136,9 @@ def test_checks(folder_name, check_args, path, result_index):
     post_value = check.get_value(post_data, path)
     actual_results = check.evaluate(pre_value, post_value)
 
-    assert list(actual_results) == results[result_index]
+    assert list(actual_results) == results[result_index], ASSERT_FAIL_MESSAGE.format(
+        output=actual_results, expected_output=results[result_index]
+    )
 
 
 parameter_match_api = (

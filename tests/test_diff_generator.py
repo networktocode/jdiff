@@ -2,12 +2,20 @@
 import pytest
 from netcompare.evaluator import diff_generator
 from netcompare.runner import extract_values_from_output
-from .utility import load_mocks
+from .utility import load_mocks, ASSERT_FAIL_MESSAGE
 
 
-exact_match_of_global_peers_via_napalm_getter = ("napalm_getter", "global.$peers$.*.[is_enabled,is_up]", [])
+exact_match_of_global_peers_via_napalm_getter = (
+    "napalm_getter_peer_state_change",
+    "global.$peers$.*.[is_enabled,is_up]",
+    [],
+)
 
-exact_match_of_bgpPeerCaps_via_api = ("api", "result[0].vrfs.default.peerList[*].[$peerAddress$,state,bgpPeerCaps]", [])
+exact_match_of_bgp_peer_caps_via_api = (
+    "api",
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,state,bgpPeerCaps]",
+    [],
+)
 
 exact_match_of_bgp_neigh_via_textfsm = ("textfsm", "result[*].[$bgp_neigh$,state]", [])
 
@@ -39,7 +47,7 @@ exact_match_multi_nested_list = (
 
 eval_tests = [
     exact_match_of_global_peers_via_napalm_getter,
-    exact_match_of_bgpPeerCaps_via_api,
+    exact_match_of_bgp_peer_caps_via_api,
     exact_match_of_bgp_neigh_via_textfsm,
     raw_diff_of_interface_ma1_via_api_value_exclude,
     raw_diff_of_interface_ma1_via_api_novalue_exclude,
@@ -50,11 +58,6 @@ eval_tests = [
     exact_match_multi_nested_list,
 ]
 
-ASSERT_FAILED_MESSAGE = """Test output is different from expected output.
-output: {output}
-expected output: {expected_output}
-"""
-
 
 @pytest.mark.parametrize("folder_name, path, exclude", eval_tests)
 def test_eval(folder_name, path, exclude):
@@ -64,4 +67,4 @@ def test_eval(folder_name, path, exclude):
     post_value = extract_values_from_output(post_data, path, exclude)
     output = diff_generator(pre_value, post_value)
 
-    assert expected_output == output, ASSERT_FAILED_MESSAGE.format(output=output, expected_output=expected_output)
+    assert expected_output == output, ASSERT_FAIL_MESSAGE.format(output=output, expected_output=expected_output)

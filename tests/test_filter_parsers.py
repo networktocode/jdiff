@@ -1,12 +1,8 @@
 "Filter parser unit tests."
 import pytest
 from netcompare.utils.filter_parsers import exclude_filter
+from .utility import ASSERT_FAIL_MESSAGE
 
-
-ASSERT_FAIL_MESSAGE = """Test output is different from expected output.
-output: {output}
-expected output: {expected_output}
-"""
 
 exclude_filter_case_1 = (
     ["interfaceStatistics"],
