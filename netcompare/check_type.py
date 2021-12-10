@@ -24,12 +24,13 @@ class CheckType:
         raise NotImplementedError
 
     @staticmethod
-    def get_value(value: Mapping, path: Mapping, exclude: List = None) -> Union[Mapping, List, int, str, bool]:
+    def get_value(output: Mapping, path: Mapping, exclude: List = None) -> Union[Mapping, List, int, str, bool]:
         """Return the value contained into a Mapping for a defined path."""
-        return extract_values_from_output(value, path, exclude)
+        return extract_values_from_output(output, path, exclude)
 
-    # TODO: Refine this typing
-    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
+    def evaluate(
+        self, reference_value: Union[Mapping, Iterable], value_to_compare: Union[Mapping, Iterable]
+    ) -> Tuple[Mapping, bool]:
         """Return the result of the evaluation and a boolean True if it passes it or False otherwise.
 
         This method is the one that each CheckType has to implement.
@@ -40,7 +41,9 @@ class CheckType:
 class ExactMatchType(CheckType):
     """Exact Match class docstring."""
 
-    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
+    def evaluate(
+        self, reference_value: Union[Mapping, Iterable], value_to_compare: Union[Mapping, Iterable]
+    ) -> Tuple[Mapping, bool]:
         """Returns the difference between values and the boolean."""
         diff = diff_generator(reference_value, value_to_compare)
         return diff, not diff
