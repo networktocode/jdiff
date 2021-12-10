@@ -77,12 +77,14 @@ class ToleranceType(CheckType):
 
 
 class ParameterMatchType(CheckType):
+    """Parameter Match class implementation."""
 
-    def evaluate(self, value: Mapping, check_args: Mapping) -> Tuple[Mapping, bool]:
-        # TO DO: remove arg index
-        diff = parameter_evaluator(value, check_args[1])
-        
-        return diff, [True if diff else False][0]
+    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
+        """Parameter Match evaluator implementation."""
+        # TO DO: remove arg index. from tollerance too
+        diff = parameter_evaluator(reference_value, value_to_compare[1])
+        return diff, bool(diff)
+
 
 # TODO: compare is no longer the entry point, we should use the libary as:
 #   netcompare_check = CheckType.init(check_type_info, options)

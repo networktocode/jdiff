@@ -84,22 +84,22 @@ def dict_merger(original_dict: Mapping, merged_dict: Mapping):
 
 
 def parameter_evaluator(value: Mapping, parameter: Mapping) -> Mapping:
-    # value: [{'7.7.7.7': {'peerAddress': '7.7.7.7', 'localAsn': '65130.1100', 'linkType': 'external'}}, {'10.1.0.0': {'peerAddress': '10.1.0.0', 'localAsn': '65130.1100', 'linkType': 'external'}}, {'10.2.0.0': {'peerAddress': '10.2.0.0', 'localAsn': '65130.1100', 'linkType': 'external'}}, {'10.64.207.255': {'peerAddress': '10.64.207.255', 'localAsn': '65130.1100', 'linkType': 'external'}}] 
+    """Parameter Match evaluator engine."""
+    # value: [{'7.7.7.7': {'peerAddress': '7.7.7.7', 'localAsn': '65130.1100', 'linkType': 'external'}}, {'10.1.0.0': {'peerAddress': '10.1.0.0', 'localAsn': '65130.1100', 'linkType': 'external'}}, {'10.2.0.0': {'peerAddress': '10.2.0.0', 'localAsn': '65130.1100', 'linkType': 'external'}}, {'10.64.207.255': {'peerAddress': '10.64.207.255', 'localAsn': '65130.1100', 'linkType': 'external'}}]
     # parameters: {'localAsn': '65130.1100', 'linkType': 'external'}
-    result = dict()
+    result = {}
 
     for item in value:
         # item: {'7.7.7.7': {'peerAddress': '7.7.7.7', 'localAsn': '65130.1101', 'linkType': 'externals
-        temp_dict = dict()
+        temp_dict = {}
 
         inner_value = list(item.values())
         # inner_value: [{'peerAddress': '7.7.7.7', 'localAsn': '65130.1101', 'linkType': 'externals'}]
-        
-        for k,v in parameter.items():
-            if inner_value[0][k] != v:
-                temp_dict[k] = inner_value[0][k]
+
+        for p_key, p_value in parameter.items():
+            if inner_value[0][p_key] != p_value:
+                temp_dict[p_key] = inner_value[0][p_key]
             if temp_dict:
                 result[list(item.keys())[0]] = temp_dict
-        
 
     return result
