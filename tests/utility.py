@@ -24,5 +24,4 @@ def load_mocks(folder):
     """Load data from mock files."""
     pre = load_json_file(folder, "pre.json")
     post = load_json_file(folder, "post.json")
-    results = load_json_file(folder, "results.json")
-    return pre, post, results
+    return pre, post

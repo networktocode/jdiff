@@ -79,7 +79,7 @@ check_type_tests = [
 def test_check_type_results(check_type_args, folder_name, path, expected_results):
     """Validate that CheckType.evaluate returns the expected_results."""
     check = CheckType.init(*check_type_args)
-    pre_data, post_data, _ = load_mocks(folder_name)
+    pre_data, post_data = load_mocks(folder_name)
     pre_value = check.get_value(pre_data, path)
     post_value = check.get_value(post_data, path)
     actual_results = check.evaluate(pre_value, post_value)
@@ -92,28 +92,50 @@ napalm_bgp_neighbor_status = (
     "napalm_get_bgp_neighbors",
     ("exact_match",),
     "global.$peers$.*.[is_enabled,is_up]",
-    0,
+    (
+        {
+            "7.7.7.7": {
+                "is_enabled": {"new_value": False, "old_value": True},
+                "is_up": {"new_value": False, "old_value": True},
+            }
+        },
+        False,
+    ),
 )
 
 napalm_bgp_neighbor_prefixes_ipv4 = (
     "napalm_get_bgp_neighbors",
     ("tolerance", 10),
     "global.$peers$.*.*.ipv4.[accepted_prefixes,received_prefixes,sent_prefixes]",
-    1,
+    ({"10.1.0.0": {"accepted_prefixes": {"new_value": 900, "old_value": 1000}}}, False),
 )
 
 napalm_bgp_neighbor_prefixes_ipv6 = (
     "napalm_get_bgp_neighbors",
     ("tolerance", 10),
     "global.$peers$.*.*.ipv6.[accepted_prefixes,received_prefixes,sent_prefixes]",
-    2,
+    ({"10.64.207.255": {"received_prefixes": {"new_value": 1100, "old_value": 1000}}}, False),
 )
 
 napalm_get_lldp_neighbors_exact_raw = (
     "napalm_get_lldp_neighbors",
     ("exact_match",),
     None,
-    0,
+    (
+        {
+            "Ethernet1": {
+                "port": {"new_value": "518", "old_value": "519"},
+                "missing": [{"hostname": "ios-xrv-unittest", "port": "Gi0/0/0/0"}],
+            },
+            "Ethernet3": {
+                "new": [
+                    {"hostname": "ios-xrv-unittest", "port": "Gi0/0/0/0"},
+                    {"hostname": "ios-xrv-unittest", "port": "Gi0/0/0/1"},
+                ]
+            },
+        },
+        False,
+    ),
 )
 
 check_tests = [
@@ -124,20 +146,19 @@ check_tests = [
 ]
 
 
-@pytest.mark.parametrize("folder_name, check_args, path, result_index", check_tests)
-def test_checks(folder_name, check_args, path, result_index):
+@pytest.mark.parametrize("folder_name, check_args, path, expected_result", check_tests)
+def test_checks(folder_name, check_args, path, expected_result):
     """Validate multiple checks on the same data to catch corner cases."""
-    pre_data, post_data, results = load_mocks(folder_name)
+    pre_data, post_data = load_mocks(folder_name)
 
     check = CheckType.init(*check_args)
-    pre_data, post_data, results = load_mocks(folder_name)
-
+    pre_data, post_data = load_mocks(folder_name)
     pre_value = check.get_value(pre_data, path)
     post_value = check.get_value(post_data, path)
     actual_results = check.evaluate(pre_value, post_value)
 
-    assert list(actual_results) == results[result_index], ASSERT_FAIL_MESSAGE.format(
-        output=actual_results, expected_output=results[result_index]
+    assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
+        output=actual_results, expected_output=expected_result
     )
 
 
