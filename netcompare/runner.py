@@ -1,6 +1,6 @@
 """Library wrapper for output parsing."""
 import re
-from typing import Mapping, List, Union
+from typing import Mapping, List, Union, Any
 import jmespath
 from .utils.jmspath_parsers import jmspath_value_parser, jmspath_refkey_parser
 from .utils.filter_parsers import exclude_filter
@@ -8,13 +8,22 @@ from .utils.refkey import keys_cleaner, keys_values_zipper, associate_key_of_my_
 from .utils.flatten import flatten_list
 
 
-def extract_values_from_output(
-    output: Union[Mapping, List], path: str, exclude: List = None
-) -> Union[Mapping, List, int, str, bool]:
+def extract_values_from_output(output: Union[Mapping, List], path: str, exclude: List = None) -> Any:
     """Return data from output depending on the check path. See unit test for complete example.
 
-    Get the wanted values to be evaluated if jmspath expression is defined,
+    Get the wanted values to be evaluated if JMESPath expression is defined,
     otherwise use the entire output if jmespath is not defined in check. This covers the "raw" diff type.
+    Exclude data not desired to compare.
+
+    Notes:
+        https://jmespath.org/ shows how JMESPath works.
+
+    Args:
+        output: json data structure
+        path: JMESPath to extract specific values
+        exclude: list of keys to exclude
+    Returns:
+        Evaluated data, may be anything depending on JMESPath used.
     """
     if exclude:
         exclude_filter(output, exclude)  # exclude unwanted elements

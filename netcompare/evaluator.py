@@ -11,7 +11,15 @@ sys.path.append(".")
 
 
 def diff_generator(pre_result: Union[Mapping, Iterable], post_result: Union[Mapping, Iterable]) -> Dict:
-    """Generates diff between pre and post data based on check definition."""
+    """Generates diff between pre and post data based on check definition.
+
+    Args:
+        pre_result: dataset to compare
+        post_result: dataset to compare
+
+    Returns:
+        differences between two datasets
+    """
     diff_result = DeepDiff(pre_result, post_result)
 
     result = diff_result.get("values_changed", {})
@@ -28,13 +36,18 @@ def diff_generator(pre_result: Union[Mapping, Iterable], post_result: Union[Mapp
 
 
 def get_diff_iterables_items(diff_result: Mapping) -> Dict:
-    """Return a dict with new and missing values where the values are in a list.
+    """Helper function for diff_generator to postprocess changes reported by DeepDiff for iterables.
 
     DeepDiff iterable_items are returned when the source data is a list
     and provided in the format: "root['Ethernet3'][1]"
     or more generically: root['KEY']['KEY']['KEY']...[numeric_index]
     where the KEYs are dict keys within the original object
     and the "[index]" is appended to indicate the position within the list.
+
+    Args:
+        diff_result: iterable comparison result from DeepDiff
+    Returns:
+        Return a dict with new and missing values where the values are in a list.
     """
     get_dict_keys = re.compile(r"^root((\['\w.*'\])+)\[\d+\]$")
 
@@ -59,7 +72,13 @@ def get_diff_iterables_items(diff_result: Mapping) -> Dict:
 def fix_deepdiff_key_names(obj: Mapping) -> Dict:
     """Return a dict based on the provided dict object where the brackets and quotes are removed from the string.
 
-    obj sample: root[2]['10.64.207.255']['accepted_prefixes']
+    Args:
+        obj: Example: {"root[3]['7.7.7.7']['is_enabled']": {'new_value': False, 'old_value': True},
+                       "root[3]['7.7.7.7']['is_up']": {'new_value': False, 'old_value': True}}
+
+    Returns:
+        normalized output Example: {'7.7.7.7': {'is_enabled': {'new_value': False, 'old_value': True},
+                                                'is_up': {'new_value': False, 'old_value': True}}}
     """
     pattern = r"'([A-Za-z0-9_\./\\-]*)'"
 

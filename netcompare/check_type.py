@@ -1,5 +1,7 @@
 """CheckType Implementation."""
-from typing import Mapping, Tuple, Union, List
+from typing import Mapping, Iterable, Tuple, Union, List, Dict, Any
+from .evaluator import diff_generator
+from typing import Mapping, Tuple, Union, List, Iterable
 from .evaluator import diff_generator, parameter_evaluator
 from .runner import extract_values_from_output
 
@@ -12,7 +14,11 @@ class CheckType:
 
     @staticmethod
     def init(*args):
-        """Factory pattern to get the appropiate CheckType implementation."""
+        """Factory pattern to get the appropriate CheckType implementation.
+
+        Args:
+            *args: Variable length argument list.
+        """
         check_type = args[0]
         if check_type == "exact_match":
             return ExactMatchType(*args)
@@ -24,16 +30,23 @@ class CheckType:
         raise NotImplementedError
 
     @staticmethod
-    def get_value(output: Mapping, path: Mapping, exclude: List = None) -> Union[Mapping, List, int, str, bool]:
+    def extract_value_from_json_path(output: Union[Mapping, Iterable], path: str, exclude: List = None) -> Any:
         """Return the value contained into a Mapping for a defined path."""
         return extract_values_from_output(output, path, exclude)
 
     def evaluate(
         self, reference_value: Union[Mapping, Iterable], value_to_compare: Union[Mapping, Iterable]
-    ) -> Tuple[Mapping, bool]:
+    ) -> Tuple[Dict, bool]:
         """Return the result of the evaluation and a boolean True if it passes it or False otherwise.
 
         This method is the one that each CheckType has to implement.
+
+        Args:
+            reference_value: dataset to compare
+            value_to_compare: dataset to compare
+
+        Returns:
+            tuple: Dictionary representing differences between datasets, bool indicating if differences are found.
         """
         raise NotImplementedError
 
@@ -53,7 +66,7 @@ class ToleranceType(CheckType):
     """Tolerance class docstring."""
 
     def __init__(self, *args):
-        """Tollerance init method."""
+        """Tolerance init method."""
         try:
             tolerance = args[1]
         except IndexError as error:
@@ -63,7 +76,7 @@ class ToleranceType(CheckType):
         super().__init__()
 
     def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
-        """Returns the difference between values and the boolean."""
+        """Returns the difference between values and the boolean. Overwrites method in base class."""
         diff = diff_generator(reference_value, value_to_compare)
         diff = self._get_outliers(diff)
         return diff, not diff
