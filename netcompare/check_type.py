@@ -53,7 +53,12 @@ class ToleranceType(CheckType):
 
     def __init__(self, *args):
         """Tollerance init method."""
-        self.tolerance_factor = float(args[1]) / 100
+        try:
+            tolerance = args[1]
+        except IndexError as error:
+            raise f"Tolerance parameter must be defined as float at index 1. You have: {args}" from error
+
+        self.tolerance_factor = float(tolerance) / 100
         super().__init__()
 
     def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
@@ -81,9 +86,12 @@ class ParameterMatchType(CheckType):
 
     def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
         """Parameter Match evaluator implementation."""
-        # TO DO: remove arg index. from tollerance too
-        diff = parameter_evaluator(reference_value, value_to_compare[1])
-        return diff, bool(diff)
+        try:
+            parameter = value_to_compare[1]
+        except IndexError as error:
+            raise f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}" from error
+        diff = parameter_evaluator(reference_value, parameter)
+        return diff, not diff
 
 
 # TODO: compare is no longer the entry point, we should use the libary as:

@@ -83,23 +83,28 @@ def dict_merger(original_dict: Mapping, merged_dict: Mapping):
             original_dict[key] = merged_dict[key]
 
 
-def parameter_evaluator(value: Mapping, parameter: Mapping) -> Mapping:
+def parameter_evaluator(values: Mapping, parameter: Mapping) -> Mapping:
     """Parameter Match evaluator engine."""
-    # value: [{'7.7.7.7': {'peerAddress': '7.7.7.7', 'localAsn': '65130.1100', 'linkType': 'external'}}, {'10.1.0.0': {'peerAddress': '10.1.0.0', 'localAsn': '65130.1100', 'linkType': 'external'}}, {'10.2.0.0': {'peerAddress': '10.2.0.0', 'localAsn': '65130.1100', 'linkType': 'external'}}, {'10.64.207.255': {'peerAddress': '10.64.207.255', 'localAsn': '65130.1100', 'linkType': 'external'}}]
-    # parameters: {'localAsn': '65130.1100', 'linkType': 'external'}
+    # value: [{'7.7.7.7': {'peerAddress': '7.7.7.7', 'localAsn': '65130.1100', 'linkType': 'external'}}]
+    # parameter: {'localAsn': '65130.1100', 'linkType': 'external'}
     result = {}
+    if not isinstance(values, list):
+        raise TypeError("Something went wrong during JMSPath parsing. values must be of type list.")
 
-    for item in value:
+    for value in values:
         # item: {'7.7.7.7': {'peerAddress': '7.7.7.7', 'localAsn': '65130.1101', 'linkType': 'externals
         temp_dict = {}
 
-        inner_value = list(item.values())
+        inner_key = list(value.keys())[0]
+        # inner_key: '7.7.7.7'
+        inner_value = list(value.values())[0]
         # inner_value: [{'peerAddress': '7.7.7.7', 'localAsn': '65130.1101', 'linkType': 'externals'}]
 
         for p_key, p_value in parameter.items():
-            if inner_value[0][p_key] != p_value:
-                temp_dict[p_key] = inner_value[0][p_key]
-            if temp_dict:
-                result[list(item.keys())[0]] = temp_dict
+            if inner_value[p_key] != p_value:
+                temp_dict[p_key] = inner_value[p_key]
+
+        if temp_dict:
+            result[inner_key] = temp_dict
 
     return result
