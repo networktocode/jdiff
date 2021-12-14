@@ -1,8 +1,8 @@
 """Reference key utilities."""
-from typing import Mapping, List, Union
+from typing import Mapping, List, Optional
 
 
-def keys_cleaner(wanted_reference_keys: Mapping) -> Union[List[Mapping], None]:
+def keys_cleaner(wanted_reference_keys: Mapping) -> Optional[List[Mapping]]:
     """Get every required reference key from output."""
     if isinstance(wanted_reference_keys, list):
         return wanted_reference_keys

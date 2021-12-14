@@ -3,14 +3,14 @@ import re
 import sys
 from collections import defaultdict
 from functools import partial
-from typing import Mapping, List, Dict, Union, Iterable
+from typing import Any, Mapping, Dict, List
 from deepdiff import DeepDiff
 
 
 sys.path.append(".")
 
 
-def diff_generator(pre_result: Union[Mapping, Iterable], post_result: Union[Mapping, Iterable]) -> Dict:
+def diff_generator(pre_result: Any, post_result: Any) -> Dict:
     """Generates diff between pre and post data based on check definition.
 
     Args:
@@ -77,7 +77,7 @@ def fix_deepdiff_key_names(obj: Mapping) -> Dict:
                        "root[3]['7.7.7.7']['is_up']": {'new_value': False, 'old_value': True}}
 
     Returns:
-        normalized output Example: {'7.7.7.7': {'is_enabled': {'new_value': False, 'old_value': True},
+        aggregated output Example: {'7.7.7.7': {'is_enabled': {'new_value': False, 'old_value': True},
                                                 'is_up': {'new_value': False, 'old_value': True}}}
     """
     pattern = r"'([A-Za-z0-9_\./\\-]*)'"
@@ -106,7 +106,7 @@ def dict_merger(original_dict: Dict, merged_dict: Dict):
             original_dict[key] = merged_dict[key]
 
 
-def parameter_evaluator(values: Mapping, parameter: Mapping) -> Mapping:
+def parameter_evaluator(values: Mapping, parameter: Mapping) -> Dict:
     """Parameter Match evaluator engine."""
     # value: [{'7.7.7.7': {'peerAddress': '7.7.7.7', 'localAsn': '65130.1100', 'linkType': 'external'}}]
     # parameter: {'localAsn': '65130.1100', 'linkType': 'external'}

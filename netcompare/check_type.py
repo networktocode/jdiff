@@ -1,7 +1,5 @@
 """CheckType Implementation."""
-from typing import Mapping, Iterable, Tuple, Union, List, Dict, Any
-from .evaluator import diff_generator
-from typing import Mapping, Tuple, Union, List, Iterable
+from typing import Mapping, Tuple, List, Dict, Any
 from .evaluator import diff_generator, parameter_evaluator
 from .runner import extract_values_from_output
 
@@ -30,23 +28,21 @@ class CheckType:
         raise NotImplementedError
 
     @staticmethod
-    def extract_value_from_json_path(output: Union[Mapping, Iterable], path: str, exclude: List = None) -> Any:
+    def get_value(output: Mapping, path: str, exclude: List = None) -> Any:
         """Return the value contained into a Mapping for a defined path."""
         return extract_values_from_output(output, path, exclude)
 
-    def evaluate(
-        self, reference_value: Union[Mapping, Iterable], value_to_compare: Union[Mapping, Iterable]
-    ) -> Tuple[Dict, bool]:
+    def evaluate(self, reference_value: Any, value_to_compare: Any) -> Tuple[Dict, bool]:
         """Return the result of the evaluation and a boolean True if it passes it or False otherwise.
 
         This method is the one that each CheckType has to implement.
 
         Args:
-            reference_value: dataset to compare
-            value_to_compare: dataset to compare
+            reference_value: Can be any structured data or just a simple value.
+            value_to_compare: Similar value as above to perform comparison.
 
         Returns:
-            tuple: Dictionary representing differences between datasets, bool indicating if differences are found.
+            tuple: Dictionary representing check result, bool indicating if differences are found.
         """
         raise NotImplementedError
 
@@ -54,9 +50,7 @@ class CheckType:
 class ExactMatchType(CheckType):
     """Exact Match class docstring."""
 
-    def evaluate(
-        self, reference_value: Union[Mapping, Iterable], value_to_compare: Union[Mapping, Iterable]
-    ) -> Tuple[Mapping, bool]:
+    def evaluate(self, reference_value: Any, value_to_compare: Any) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean."""
         diff = diff_generator(reference_value, value_to_compare)
         return diff, not diff
@@ -75,13 +69,13 @@ class ToleranceType(CheckType):
         self.tolerance_factor = float(tolerance) / 100
         super().__init__()
 
-    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
+    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean. Overwrites method in base class."""
         diff = diff_generator(reference_value, value_to_compare)
         diff = self._get_outliers(diff)
         return diff, not diff
 
-    def _get_outliers(self, diff: Mapping) -> Mapping:
+    def _get_outliers(self, diff: Mapping) -> Dict:
         """Return a mapping of values outside the tolerance threshold."""
         result = {
             key: {sub_key: values for sub_key, values in obj.items() if not self._within_tolerance(**values)}
@@ -98,7 +92,7 @@ class ToleranceType(CheckType):
 class ParameterMatchType(CheckType):
     """Parameter Match class implementation."""
 
-    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
+    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Dict, bool]:
         """Parameter Match evaluator implementation."""
         try:
             parameter = value_to_compare[1]
