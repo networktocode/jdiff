@@ -97,7 +97,7 @@ The check wants at least 2 arguments: `check_type` which can be `exact_match`, `
 
 Example #1:
 
-Run an `exact_match` between 2 files where `peerAddress` is teh reference key (note the anchors used - `$` ) for `statebgpPeerCaps`. In this example, key and value are at the same level.
+Run an `exact_match` between 2 files where `peerAddress` is the reference key (note the anchors used - `$` ) for `statebgpPeerCaps`. In this example, key and value are at the same level.
 
 Check Definition:
 ```
