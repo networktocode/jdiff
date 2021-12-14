@@ -93,7 +93,7 @@ Post: [120]
 
 ## How To Define A Check
 
-The check wants at least 2 arguments: `check_type` which can be `exact_match`, `tollerance`, `parameter_match` and `path`. `path` argument is JMESPath based but uses `$` to anchor the reference key needed to generate the diff - more on this later. 
+The check wants at least 2 arguments: `check_type` which can be `exact_match`, `tolerance`, `parameter_match` and `path`. `path` argument is JMESPath based but uses `$` to anchor the reference key needed to generate the diff - more on this later. 
 
 Example #1:
 
