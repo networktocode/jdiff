@@ -24,7 +24,7 @@ class CheckType:
         raise NotImplementedError
 
     @staticmethod
-    def extract_value_from_json_path(
+    def get_value(
         value: Mapping, path: Mapping, exclude: List = None
     ) -> Union[Mapping, List, int, str, bool]:
         """Return the value contained into a Mapping for a defined path."""
@@ -96,8 +96,8 @@ class ParameterMatchType(CheckType):
 
 # TODO: compare is no longer the entry point, we should use the libary as:
 #   netcompare_check = CheckType.init(check_type_info, options)
-#   pre_result = netcompare_check.extract_value_from_json_path(pre_obj, path)
-#   post_result = netcompare_check.extract_value_from_json_path(post_obj, path)
+#   pre_result = netcompare_check.get_value(pre_obj, path)
+#   post_result = netcompare_check.get_value(post_obj, path)
 #   netcompare_check.evaluate(pre_result, post_result)
 #
 # def compare(

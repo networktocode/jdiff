@@ -81,8 +81,8 @@ def test_check_type_results(check_type_args, filename, path, expected_results):
     check = CheckType.init(*check_type_args)
     pre_data = load_json_file("pre", filename)
     post_data = load_json_file("post", filename)
-    pre_value = check.extract_value_from_json_path(pre_data, path)
-    post_value = check.extract_value_from_json_path(post_data, path)
+    pre_value = check.get_value(pre_data, path)
+    post_value = check.get_value(post_data, path)
     actual_results = check.evaluate(pre_value, post_value)
     assert actual_results == expected_results
 
@@ -126,8 +126,8 @@ def test_checks(filename, check_args, path, result_index):
     post_data = load_json_file("post", filename)
     result = load_json_file("results", filename)
 
-    pre_value = check.extract_value_from_json_path(pre_data, path)
-    post_value = check.extract_value_from_json_path(post_data, path)
+    pre_value = check.get_value(pre_data, path)
+    post_value = check.get_value(post_data, path)
     actual_results = check.evaluate(pre_value, post_value)
 
     assert list(actual_results) == result[result_index]
@@ -153,6 +153,6 @@ def test_param_match(filename, check_args, path, expected_result):
     check = CheckType.init(*check_args)
     # There is not concept of "pre" and "post" in parameter_match.
     data = load_json_file("pre", filename)
-    value = check.extract_value_from_json_path(data, path)
+    value = check.get_value(data, path)
     actual_results = check.evaluate(value, check_args)
     assert actual_results == expected_result
