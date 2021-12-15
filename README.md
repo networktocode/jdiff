@@ -1,36 +1,43 @@
 # netcompare
 
+netcompare is a python library targeted at intelligently deep diffing structured data objects of different types. In addition, netcompare provides some basic tests of keys and values within the data structure. Ultimately, this library is meant to be a light-weight way to compare structured output from network device 'show' commands. 
+
+## Use Case
+
+netcompare enables an easy and direct way to see the outcome of network change windows. The intended usage is to collect raw show command output before and after a change window. Prior to closing the change window, the results are compared to help determine if the change was successful and if the network is in an acceptable state. The output can be stored with the change's documentation for easy reference and proof of completion.
+
 ## Check Types
 
 ### exact_match
 
-This test is concerned about the value of the elements. There must be an exact match between pre and post. 
+exact_match is concerned about the value of the elements within the data structure. The keys and values should match between the pre and post values.
 
 ```
 PASS 
 --------------------
-pre: [{‘A’: 1}]
-post: [{‘A’: 1}]
+pre: [{"A": 1}]
+post: [{"A": 1}]
 ```
 
 ```
 FAIL
 --------------------
-pre: [{‘A’: 1}]
-post: [{‘A’: 2}]
+pre: [{"A": 1}]
+post: [{"A": 2}]
 ```
 
 ```
 FAIL
 --------------------
-pre: [{ ‘A’: 1}]
+pre: [{ "A": 1}]
 post: []
 ```
 
 ### parameter_match
 
-This test defines key/value pairs - type `dict()` - to match against the parsed output.
-The test FAILS if any status has changed based on what is defined in pre/post 
+parameter_match provides a way to match keys and values in the output with known good values. 
+
+The test defines key/value pairs known to be the good value - type `dict()` - to match against the parsed output. The test FAILS if any status has changed based on what is defined in pre/post. If there are new values not contained in the input/test value, that will not count as a failure.
 
 
 Examples:
@@ -39,27 +46,29 @@ Examples:
 {"A": 1, "B": 2}
 
 PASS/PASS
-{‘A’: 1, ‘B’:2}
-{‘A’: 1, ‘B’:2}
+{"A": 1, "B": 2}
+{"A": 1, "B": 2}
 
 PASS/PASS
-{‘A’: 1, ‘B’:2}
-{‘A’: 1, ‘B’:2, ‘C’: 3}
+{"A": 1, "B": 2}
+{"A": 1, "B": 2, "C": 3}
 
 PASS/FAIL
-{‘A’: 1, ‘B’:2}
-{‘A’: 1, ‘B’:666}
+{"A": 1, "B": 2}
+{"A": 1, "B": 666}
 
 FAIL/PASS
-{‘A’: 1}
-{‘A’: 1, ‘B’:2}
+{"A": 1}
+{"A": 1, "B": 2}
 ```
+
+In network data, this could be a state of bgp neighbors being Established or the connectedness of certain interfaces being up.
 
 ### Tolerance
 
 The `tolerance` test defines a percentage of differing `float()` between the pre and post checks. The threshold is defined as a percentage that can be different either from the value stated in pre and post fields. 
 
-The threshold must be `float > 0`, is percentge based and will be counted as a range centered on the value in pre and post.
+The threshold must be `float > 0`, is percentge based, and will be counted as a range centered on the value in pre and post.
 
 ```
 Pre: 100 
@@ -91,9 +100,11 @@ Pre:  [80]
 Post: [120]
 ```
 
+This test can test the tolerance for changing quantities of certain things such as routes, or L2 or L3 neighbors. It could also test actual outputted values such as transmitted light levels for optics.
+
 ## How To Define A Check
 
-The check wants at least 2 arguments: `check_type` which can be `exact_match`, `tolerance`, `parameter_match` and `path`. `path` argument is JMESPath based but uses `$` to anchor the reference key needed to generate the diff - more on this later. 
+The check requires at least 2 arguments: `check_type` which can be `exact_match`, `tolerance`, `parameter_match` or `path`. The `path` argument is JMESPath based but uses `$` to anchor the reference key needed to generate the diff - more on this later. 
 
 Example #1:
 
@@ -231,7 +242,7 @@ Result:
 
 Example #3:
 
-Similar to Example 1 and 2 but withouth any referece key defined in `path` plus some excluded fields to remove verbosity from diff output
+Similar to Example 1 and 2 but without a reference key defined in `path`, plus some excluded fields to remove verbosity from diff output
 
 Check Definition:
 ```
