@@ -1,6 +1,6 @@
 """CheckType Implementation."""
 from typing import Mapping, Tuple, Union, List
-from .evaluator import diff_generator
+from .evaluator import diff_generator, parameter_evaluator
 from .runner import extract_values_from_output
 
 
@@ -18,10 +18,13 @@ class CheckType:
             return ExactMatchType(*args)
         if check_type == "tolerance":
             return ToleranceType(*args)
+        if check_type == "parameter_match":
+            return ParameterMatchType(*args)
+
         raise NotImplementedError
 
     @staticmethod
-    def extract_value_from_json_path(
+    def get_value(
         value: Mapping, path: Mapping, exclude: List = None
     ) -> Union[Mapping, List, int, str, bool]:
         """Return the value contained into a Mapping for a defined path."""
@@ -50,7 +53,12 @@ class ToleranceType(CheckType):
 
     def __init__(self, *args):
         """Tollerance init method."""
-        self.tolerance_factor = float(args[1]) / 100
+        try:
+            tolerance = args[1]
+        except IndexError as error:
+            raise f"Tolerance parameter must be defined as float at index 1. You have: {args}" from error
+
+        self.tolerance_factor = float(tolerance) / 100
         super().__init__()
 
     def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
@@ -73,10 +81,23 @@ class ToleranceType(CheckType):
         return (old_value - max_diff) < new_value < (old_value + max_diff)
 
 
+class ParameterMatchType(CheckType):
+    """Parameter Match class implementation."""
+
+    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
+        """Parameter Match evaluator implementation."""
+        try:
+            parameter = value_to_compare[1]
+        except IndexError as error:
+            raise f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}" from error
+        diff = parameter_evaluator(reference_value, parameter)
+        return diff, not diff
+
+
 # TODO: compare is no longer the entry point, we should use the libary as:
 #   netcompare_check = CheckType.init(check_type_info, options)
-#   pre_result = netcompare_check.extract_value_from_json_path(pre_obj, path)
-#   post_result = netcompare_check.extract_value_from_json_path(post_obj, path)
+#   pre_result = netcompare_check.get_value(pre_obj, path)
+#   post_result = netcompare_check.get_value(post_obj, path)
 #   netcompare_check.evaluate(pre_result, post_result)
 #
 # def compare(
