@@ -24,9 +24,7 @@ class CheckType:
         raise NotImplementedError
 
     @staticmethod
-    def get_value(
-        value: Mapping, path: Mapping, exclude: List = None
-    ) -> Union[Mapping, List, int, str, bool]:
+    def get_value(value: Mapping, path: Mapping, exclude: List = None) -> Union[Mapping, List, int, str, bool]:
         """Return the value contained into a Mapping for a defined path."""
         return extract_values_from_output(value, path, exclude)
 

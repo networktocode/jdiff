@@ -1,7 +1,7 @@
 "Check Type unit tests."
 import pytest
 from netcompare.check_type import CheckType, ExactMatchType, ToleranceType
-from .utility import load_mocks, ASSERT_FAIL_MESSAGE
+from .utility import load_json_file, load_mocks, ASSERT_FAIL_MESSAGE
 
 
 @pytest.mark.parametrize(
@@ -163,7 +163,7 @@ def test_checks(folder_name, check_args, path, expected_result):
 
 
 parameter_match_api = (
-    "parameter_match.json",
+    "pre.json",
     ("parameter_match", {"localAsn": "65130.1100", "linkType": "external"}),
     "result[0].vrfs.default.peerList[*].[$peerAddress$,localAsn,linkType]",
     (
@@ -181,7 +181,9 @@ def test_param_match(filename, check_args, path, expected_result):
     """Validate parameter_match check type."""
     check = CheckType.init(*check_args)
     # There is not concept of "pre" and "post" in parameter_match.
-    data = load_json_file("pre", filename)
+    data = load_json_file("parameter_match", filename)
     value = check.get_value(data, path)
     actual_results = check.evaluate(value, check_args)
-    assert actual_results == expected_result
+    assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
+        output=actual_results, expected_output=expected_result
+    )
