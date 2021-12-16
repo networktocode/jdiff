@@ -1,6 +1,6 @@
 """CheckType Implementation."""
 from typing import Mapping, Tuple, Union, List
-from .evaluator import diff_generator, parameter_evaluator
+from .evaluator import diff_generator, parameter_evaluator, regex_evaluator
 from .runner import extract_values_from_output
 
 
@@ -20,7 +20,8 @@ class CheckType:
             return ToleranceType(*args)
         if check_type == "parameter_match":
             return ParameterMatchType(*args)
-
+        if check_type == "regex":
+            return RegexType(*args)
         raise NotImplementedError
 
     @staticmethod
@@ -88,9 +89,23 @@ class ParameterMatchType(CheckType):
             parameter = value_to_compare[1]
         except IndexError as error:
             raise f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}" from error
+        assert isinstance(parameter, dict), "check_option must be of type dict()"
         diff = parameter_evaluator(reference_value, parameter)
         return diff, not diff
 
+
+class RegexType(CheckType):
+    """Regex Match class implementation."""
+
+    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
+        """Parameter Match evaluator implementation."""
+        try:
+            parameter = value_to_compare[1]
+        except IndexError as error:
+            raise f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}" from error
+        assert (isinstance(parameter, dict), isinstance(parameter['regex'], str)), "check_option must be of type dict() as in example: {'regex': '\d.'}"
+        diff = regex_evaluator(reference_value, parameter)
+        return diff, not diff
 
 # TODO: compare is no longer the entry point, we should use the libary as:
 #   netcompare_check = CheckType.init(check_type_info, options)

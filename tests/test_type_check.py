@@ -187,3 +187,29 @@ def test_param_match(filename, check_args, path, expected_result):
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
         output=actual_results, expected_output=expected_result
     )
+
+
+regex_match = (
+    "pre.json",
+    ("regex", {"regex": ".*UNDERLAY.*"}),
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
+    (
+        {
+            "7.7.7.7": {"peerGroup": "EVPN-OVERLAY-SPINE"},
+        },
+        False,
+    ),
+)
+
+
+@pytest.mark.parametrize("filename, check_args, path, expected_result", [parameter_match_api])
+def test_regex_match(filename, check_args, path, expected_result):
+    """Validate regex check type."""
+    check = CheckType.init(*check_args)
+    # There is not concept of "pre" and "post" in parameter_match.
+    data = load_json_file("regex", filename)
+    value = check.get_value(data, path)
+    actual_results = check.evaluate(value, check_args)
+    assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
+        output=actual_results, expected_output=expected_result
+    )

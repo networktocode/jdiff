@@ -108,3 +108,15 @@ def parameter_evaluator(values: Mapping, parameter: Mapping) -> Mapping:
             result[inner_key] = temp_dict
 
     return result
+
+
+def regex_evaluator(values: Mapping, parameter: Mapping) -> Mapping:
+    """Regex Match evaluator engine."""
+    # value: [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE'}]
+    # parameter: {'regex': '.*UNDERLAY.*'}
+    result = {}
+    if not isinstance(values, list):
+        raise TypeError("Something went wrong during JMSPath parsing. values must be of type list.")
+
+
+    return result
