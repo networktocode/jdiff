@@ -4,7 +4,7 @@ import re
 
 def jmspath_value_parser(path: str):
     """
-    Get the JMSPath  value path from 'path'.
+    Get the JMSPath value path from 'path'.
 
     Args:
         path: "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]"

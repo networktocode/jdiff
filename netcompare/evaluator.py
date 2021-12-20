@@ -3,15 +3,23 @@ import re
 import sys
 from collections import defaultdict
 from functools import partial
-from typing import Mapping, List, Dict
+from typing import Any, Mapping, Dict, List
 from deepdiff import DeepDiff
 
 
 sys.path.append(".")
 
 
-def diff_generator(pre_result: Mapping, post_result: Mapping) -> Dict:
-    """Generates diff between pre and post data based on check definition."""
+def diff_generator(pre_result: Any, post_result: Any) -> Dict:
+    """Generates diff between pre and post data based on check definition.
+
+    Args:
+        pre_result: dataset to compare
+        post_result: dataset to compare
+
+    Returns:
+        differences between two datasets
+    """
     diff_result = DeepDiff(pre_result, post_result)
 
     result = diff_result.get("values_changed", {})
@@ -27,13 +35,20 @@ def diff_generator(pre_result: Mapping, post_result: Mapping) -> Dict:
     return result
 
 
-def get_diff_iterables_items(diff_result: Mapping) -> Mapping:
-    """Return a dict with new and missing values where the values are in a list."""
-    # DeepDiff iterable_items are returned when the source data is a list
-    # and provided in the format: "root['Ethernet3'][1]"
-    # or more generically: root['KEY']['KEY']['KEY']...[numeric_index]
-    # where the KEYs are dict keys within the original object
-    # and the "[index]" is appended to indicate the position within the list.
+def get_diff_iterables_items(diff_result: Mapping) -> Dict:
+    """Helper function for diff_generator to postprocess changes reported by DeepDiff for iterables.
+
+    DeepDiff iterable_items are returned when the source data is a list
+    and provided in the format: "root['Ethernet3'][1]"
+    or more generically: root['KEY']['KEY']['KEY']...[numeric_index]
+    where the KEYs are dict keys within the original object
+    and the "[index]" is appended to indicate the position within the list.
+
+    Args:
+        diff_result: iterable comparison result from DeepDiff
+    Returns:
+        Return a dict with new and missing values where the values are in a list.
+    """
     get_dict_keys = re.compile(r"^root((\['\w.*'\])+)\[\d+\]$")
 
     defaultdict_list = partial(defaultdict, list)
@@ -54,12 +69,20 @@ def get_diff_iterables_items(diff_result: Mapping) -> Mapping:
     return result
 
 
-def fix_deepdiff_key_names(obj: Mapping) -> Mapping:
-    """Return a dict based on the provided dict object where the brackets and quotes are removed from the string."""
+def fix_deepdiff_key_names(obj: Mapping) -> Dict:
+    """Return a dict based on the provided dict object where the brackets and quotes are removed from the string.
+
+    Args:
+        obj: Example: {"root[3]['7.7.7.7']['is_enabled']": {'new_value': False, 'old_value': True},
+                       "root[3]['7.7.7.7']['is_up']": {'new_value': False, 'old_value': True}}
+
+    Returns:
+        aggregated output Example: {'7.7.7.7': {'is_enabled': {'new_value': False, 'old_value': True},
+                                                'is_up': {'new_value': False, 'old_value': True}}}
+    """
     pattern = r"'([A-Za-z0-9_\./\\-]*)'"
 
     result = {}
-    # root[2]['10.64.207.255']['accepted_prefixes']
     for key, value in obj.items():
         key_parts = re.findall(pattern, key)
         partial_res = group_value(key_parts, value)
@@ -67,14 +90,14 @@ def fix_deepdiff_key_names(obj: Mapping) -> Mapping:
     return result
 
 
-def group_value(tree_list: List, value: Mapping) -> Mapping:
+def group_value(tree_list: List, value: Dict) -> Dict:
     """Build dictionary based on value's key and reference key."""
     if tree_list:
         return {tree_list[0]: group_value(tree_list[1:], value)}
     return value
 
 
-def dict_merger(original_dict: Mapping, merged_dict: Mapping):
+def dict_merger(original_dict: Dict, merged_dict: Dict):
     """Merge dictionaries to build final result."""
     for key in merged_dict.keys():
         if key in original_dict and isinstance(original_dict[key], dict) and isinstance(merged_dict[key], dict):
@@ -83,7 +106,7 @@ def dict_merger(original_dict: Mapping, merged_dict: Mapping):
             original_dict[key] = merged_dict[key]
 
 
-def parameter_evaluator(values: Mapping, parameter: Mapping) -> Mapping:
+def parameter_evaluator(values: Mapping, parameter: Mapping) -> Dict:
     """Parameter Match evaluator engine."""
     # value: [{'7.7.7.7': {'peerAddress': '7.7.7.7', 'localAsn': '65130.1100', 'linkType': 'external'}}]
     # parameter: {'localAsn': '65130.1100', 'linkType': 'external'}
