@@ -2,6 +2,7 @@
 from typing import Mapping, Tuple, List, Dict, Any
 from .evaluator import diff_generator, parameter_evaluator
 from .runner import extract_values_from_output
+from .exceptions import InvalidDataFormat
 
 
 class CheckType:
@@ -77,10 +78,18 @@ class ToleranceType(CheckType):
 
     def _get_outliers(self, diff: Mapping) -> Dict:
         """Return a mapping of values outside the tolerance threshold."""
-        result = {
-            key: {sub_key: values for sub_key, values in obj.items() if not self._within_tolerance(**values)}
-            for key, obj in diff.items()
-        }
+        try:
+            result = {
+                key: {sub_key: values for sub_key, values in obj.items() if not self._within_tolerance(**values)}
+                for key, obj in diff.items()
+            }
+        except (ValueError, TypeError) as error:
+            raise InvalidDataFormat(
+                f"""Tolerance check expects a certain diff data structure.
+                {{'key': {{'sub_key': {{'new_value': int, 'old_value': int}}, ... }}
+                You have:
+                {diff}"""
+            ) from error
         return {key: obj for key, obj in result.items() if obj}
 
     def _within_tolerance(self, *, old_value: float, new_value: float) -> bool:
