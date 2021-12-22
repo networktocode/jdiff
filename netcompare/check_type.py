@@ -72,16 +72,19 @@ class ToleranceType(CheckType):
     def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean. Overwrites method in base class."""
         diff = diff_generator(reference_value, value_to_compare)
-        diff = self._get_outliers(diff)
+        self._remove_within_tolerance(diff)
         return diff, not diff
 
-    def _get_outliers(self, diff: Mapping) -> Dict:
-        """Return a mapping of values outside the tolerance threshold."""
-        result = {
-            key: {sub_key: values for sub_key, values in obj.items() if not self._within_tolerance(**values)}
-            for key, obj in diff.items()
-        }
-        return {key: obj for key, obj in result.items() if obj}
+    def _remove_within_tolerance(self, diff: Dict) -> None:
+        """Recursively look into diff and apply tolerance check, remove reported difference when within tolerance."""
+        for key, value in list(diff.items()):  # casting list makes copy, so we don't modify object being iterated.
+            if isinstance(value, dict):
+                if "new_value" in value.keys() and "old_value" in value.keys() and self._within_tolerance(**value):
+                    diff.pop(key)
+                else:
+                    self._remove_within_tolerance(diff[key])
+                if not value:
+                    diff.pop(key)
 
     def _within_tolerance(self, *, old_value: float, new_value: float) -> bool:
         """Return True if new value is within the tolerance range of the previous value."""
