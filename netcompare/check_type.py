@@ -1,6 +1,6 @@
 """CheckType Implementation."""
 from typing import Mapping, Tuple, List, Dict, Any
-from .evaluator import diff_generator, parameter_evaluator
+from .evaluator import diff_generator, parameter_evaluator, regex_evaluator
 from .runner import extract_values_from_output
 
 

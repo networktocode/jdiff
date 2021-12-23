@@ -202,12 +202,12 @@ regex_match = (
 )
 
 
-@pytest.mark.parametrize("filename, check_args, path, expected_result", [parameter_match_api])
+@pytest.mark.parametrize("filename, check_args, path, expected_result", [regex_match])
 def test_regex_match(filename, check_args, path, expected_result):
     """Validate regex check type."""
     check = CheckType.init(*check_args)
     # There is not concept of "pre" and "post" in parameter_match.
-    data = load_json_file("regex", filename)
+    data = load_json_file("api", filename)
     value = check.get_value(data, path)
     actual_results = check.evaluate(value, check_args)
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
