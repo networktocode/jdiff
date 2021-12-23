@@ -1,8 +1,8 @@
 """Reference key utilities."""
-from typing import Mapping, List
+from typing import Mapping, List, Optional
 
 
-def keys_cleaner(wanted_reference_keys: Mapping) -> List[Mapping]:
+def keys_cleaner(wanted_reference_keys: Mapping) -> Optional[List[Mapping]]:
     """Get every required reference key from output."""
     if isinstance(wanted_reference_keys, list):
         return wanted_reference_keys
@@ -52,13 +52,11 @@ def associate_key_of_my_value(paths: str, wanted_value: List) -> List:
     final_list = []
 
     for items in wanted_value:
-        temp_dict = {}
-
         if len(items) != len(my_key_value_list):
             raise ValueError("Key's value len != from value len")
 
-        for my_index, my_value in enumerate(items):
-            temp_dict.update({my_key_value_list[my_index]: my_value})
+        temp_dict = {my_key_value_list[my_index]: my_value for my_index, my_value in enumerate(items)}
+
         final_list.append(temp_dict)
 
     return final_list
