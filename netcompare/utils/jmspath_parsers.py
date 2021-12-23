@@ -11,15 +11,12 @@ def jmspath_value_parser(path: str):
     Return:
         "result[0].vrfs.default.peerList[*].[prefixesReceived]"
     """
-    regex_match_value = re.search(r"\$.*\$\.|\$.*\$,|,\$.*\$", path)
-
-    if not regex_match_value:
-        return path
+    regex_match_ref_key = re.search(r"\$.*\$\.|\$.*\$,|,\$.*\$", path)
+    
     # $peers$. --> peers
-    regex_normalized_value = re.search(r"\$.*\$", regex_match_value.group())
-    if regex_normalized_value:
-        normalized_value = regex_match_value.group().split("$")[1]
-        return path.replace(regex_normalized_value.group(), normalized_value)
+    if regex_match_ref_key:
+        reference_key = regex_match_ref_key.group()
+        return path.replace(reference_key, '')
 
     return path
 
