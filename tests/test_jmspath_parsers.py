@@ -6,15 +6,15 @@ from .utility import ASSERT_FAIL_MESSAGE
 
 value_parser_case_1 = (
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]",
-    "result[0].vrfs.default.peerList[*].[peerAddress,prefixesReceived]",
+    "result[0].vrfs.default.peerList[*].[prefixesReceived]",
 )
 value_parser_case_2 = (
     "result[0].vrfs.default.peerList[*].[peerAddress,$prefixesReceived$]",
-    "result[0].vrfs.default.peerList[*].[peerAddress,prefixesReceived]",
+    "result[0].vrfs.default.peerList[*].[peerAddress]",
 )
 value_parser_case_3 = (
     "result[0].vrfs.default.peerList[*].[interfaceCounters,$peerAddress$,prefixesReceived]",
-    "result[0].vrfs.default.peerList[*].[interfaceCounters,peerAddress,prefixesReceived]",
+    "result[0].vrfs.default.peerList[*].[interfaceCounters,prefixesReceived]",
 )
 value_parser_case_4 = (
     "result[0].$vrfs$.default.peerList[*].[peerAddress,prefixesReceived]",
