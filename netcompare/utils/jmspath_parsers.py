@@ -5,6 +5,7 @@ import re
 def jmspath_value_parser(path: str):
     """
     Get the JMSPath value path from 'path'.
+
     Two combinations are possible based on where reference key is defined. See example below.
 
     Args:
@@ -18,7 +19,7 @@ def jmspath_value_parser(path: str):
     regex_match_ref_key = re.search(r"\$.*\$\.|\$.*\$,|,\$.*\$", path)
     path_suffix = path.split(".")[-1]
     if regex_match_ref_key:
-        if re.search(r"\$.*\$\.|\$.*\$,|,\$.*\$", path_suffix[-1]):
+        if re.search(r"\$.*\$\.|\$.*\$,|,\$.*\$", path_suffix):
             # [$peerAddress$,prefixesReceived] --> [prefixesReceived]
             if regex_match_ref_key:
                 reference_key = regex_match_ref_key.group()
