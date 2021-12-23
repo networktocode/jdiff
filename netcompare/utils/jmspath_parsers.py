@@ -4,20 +4,30 @@ import re
 
 def jmspath_value_parser(path: str):
     """
-    Get the JMSPath value path from 'path'.
+    Get the JMSPath value path from 'path'. Two combinations are possible based on wherenreference key is defined. See example below.
 
     Args:
         path: "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]"
+        path: "result[0].$vrfs$.default.peerList[*].[peerAddress, prefixesReceived]"
+
     Return:
         "result[0].vrfs.default.peerList[*].[prefixesReceived]"
+        "result[0].vrfs.default.peerList[*].[peerAddress, prefixesReceived]"
     """
     regex_match_ref_key = re.search(r"\$.*\$\.|\$.*\$,|,\$.*\$", path)
-    
-    # $peers$. --> peers
+    s_path = path.split(".")
     if regex_match_ref_key:
-        reference_key = regex_match_ref_key.group()
-        return path.replace(reference_key, '')
-
+        if re.search(r"\$.*\$\.|\$.*\$,|,\$.*\$", s_path[-1]):
+            # [$peerAddress$,prefixesReceived] --> [prefixesReceived]
+            if regex_match_ref_key:
+                reference_key = regex_match_ref_key.group()
+                return path.replace(reference_key, "")
+        else:
+            # result[0].$vrfs$.default... --> result[0].vrfs.default....
+            regex_normalized_value = re.search(r"\$.*\$", regex_match_ref_key.group())
+            if regex_normalized_value:
+                normalized_value = regex_match_ref_key.group().split("$")[1]
+                return path.replace(regex_normalized_value.group(), normalized_value)
     return path
 
 
