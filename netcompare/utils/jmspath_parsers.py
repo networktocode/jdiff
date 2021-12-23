@@ -4,7 +4,8 @@ import re
 
 def jmspath_value_parser(path: str):
     """
-    Get the JMSPath value path from 'path'. Two combinations are possible based on wherenreference key is defined. See example below.
+    Get the JMSPath value path from 'path'.
+    Two combinations are possible based on where reference key is defined. See example below.
 
     Args:
         path: "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]"
@@ -15,9 +16,9 @@ def jmspath_value_parser(path: str):
         "result[0].vrfs.default.peerList[*].[peerAddress, prefixesReceived]"
     """
     regex_match_ref_key = re.search(r"\$.*\$\.|\$.*\$,|,\$.*\$", path)
-    s_path = path.split(".")
+    path_suffix = path.split(".")[-1]
     if regex_match_ref_key:
-        if re.search(r"\$.*\$\.|\$.*\$,|,\$.*\$", s_path[-1]):
+        if re.search(r"\$.*\$\.|\$.*\$,|,\$.*\$", path_suffix[-1]):
             # [$peerAddress$,prefixesReceived] --> [prefixesReceived]
             if regex_match_ref_key:
                 reference_key = regex_match_ref_key.group()
