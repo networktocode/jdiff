@@ -16,20 +16,21 @@ def jmspath_value_parser(path: str):
         "result[0].vrfs.default.peerList[*].[prefixesReceived]"
         "result[0].vrfs.default.peerList[*].[peerAddress, prefixesReceived]"
     """
-    regex_match_ref_key = re.search(r"\$.*\$\.|\$.*\$,|,\$.*\$", path)
+    regex_ref_key = re.compile(r"\$.*\$\.|\$.*\$,|,\$.*\$")
+    regex_match_ref_key = regex_ref_key.search(path)
     path_suffix = path.split(".")[-1]
+
     if regex_match_ref_key:
-        if re.search(r"\$.*\$\.|\$.*\$,|,\$.*\$", path_suffix):
+        if regex_ref_key.search(path_suffix):
             # [$peerAddress$,prefixesReceived] --> [prefixesReceived]
-            if regex_match_ref_key:
-                reference_key = regex_match_ref_key.group()
-                return path.replace(reference_key, "")
-        else:
-            # result[0].$vrfs$.default... --> result[0].vrfs.default....
-            regex_normalized_value = re.search(r"\$.*\$", regex_match_ref_key.group())
-            if regex_normalized_value:
-                normalized_value = regex_match_ref_key.group().split("$")[1]
-                return path.replace(regex_normalized_value.group(), normalized_value)
+            reference_key = regex_match_ref_key.group()
+            return path.replace(reference_key, "")
+
+        # result[0].$vrfs$.default... --> result[0].vrfs.default....
+        regex_normalized_value = re.search(r"\$.*\$", regex_match_ref_key.group())
+        if regex_normalized_value:
+            normalized_value = regex_match_ref_key.group().split("$")[1]
+            return path.replace(regex_normalized_value.group(), normalized_value)
     return path
 
 
