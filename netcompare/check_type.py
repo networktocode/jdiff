@@ -1,7 +1,13 @@
 """CheckType Implementation."""
-from typing import Mapping, Tuple, List, Dict, Any
+import re
+from typing import Mapping, Tuple, List, Dict, Any, Union
+import jmespath
+
+from .utils.jmspath_parsers import jmspath_value_parser, jmspath_refkey_parser
+from .utils.filter_parsers import exclude_filter
+from .utils.refkey import keys_cleaner, keys_values_zipper, associate_key_of_my_value
+from .utils.flatten import flatten_list
 from .evaluator import diff_generator, parameter_evaluator
-from .runner import extract_values_from_output
 
 
 class CheckType:
@@ -28,9 +34,52 @@ class CheckType:
         raise NotImplementedError
 
     @staticmethod
-    def get_value(output: Mapping, path: str, exclude: List = None) -> Any:
-        """Return the value contained into a Mapping for a defined path."""
-        return extract_values_from_output(output, path, exclude)
+    def get_value(output: Union[Mapping, List], path: str, exclude: List = None) -> Any:
+        """Return data from output depending on the check path. See unit test for complete example.
+
+        Get the wanted values to be evaluated if JMESPath expression is defined,
+        otherwise use the entire output if jmespath is not defined in check. This covers the "raw" diff type.
+        Exclude data not desired to compare.
+
+        Notes:
+            https://jmespath.org/ shows how JMESPath works.
+
+        Args:
+            output: json data structure
+            path: JMESPath to extract specific values
+            exclude: list of keys to exclude
+        Returns:
+            Evaluated data, may be anything depending on JMESPath used.
+        """
+        if exclude:
+            exclude_filter(output, exclude)  # exclude unwanted elements
+
+        if not path:
+            return output  # return if path is not specified
+
+        values = jmespath.search(jmspath_value_parser(path), output)
+
+        if not any(isinstance(i, list) for i in values):  # check for multi-nested lists if not found return here
+            return values
+
+        for element in values:  # process elements to check is lists should be flatten
+            for item in element:
+                if isinstance(item, dict):  # raise if there is a dict, path must be more specific to extract data
+                    raise TypeError(
+                        f'Must be list of lists i.e. [["Idle", 75759616], ["Idle", 75759620]].' f"You have {values}'."
+                    )
+                if isinstance(item, list):
+                    values = flatten_list(values)  # flatten list and rewrite values
+                    break  # items are the same, need to check only first to see if this is a nested list
+
+        paired_key_value = associate_key_of_my_value(jmspath_value_parser(path), values)
+
+        if re.search(r"\$.*\$", path):  # normalize
+            wanted_reference_keys = jmespath.search(jmspath_refkey_parser(path), output)
+            list_of_reference_keys = keys_cleaner(wanted_reference_keys)
+            return keys_values_zipper(list_of_reference_keys, paired_key_value)
+
+        return values
 
     def evaluate(self, reference_value: Any, value_to_compare: Any) -> Tuple[Dict, bool]:
         """Return the result of the evaluation and a boolean True if it passes it or False otherwise.
