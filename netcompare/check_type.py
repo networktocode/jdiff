@@ -7,7 +7,7 @@ from .utils.jmspath_parsers import jmspath_value_parser, jmspath_refkey_parser
 from .utils.filter_parsers import exclude_filter
 from .utils.refkey import keys_cleaner, keys_values_zipper, associate_key_of_my_value
 from .utils.flatten import flatten_list
-from .evaluator import diff_generator, parameter_evaluator
+from .evaluators import diff_generator, parameter_evaluator
 
 
 class CheckType:
@@ -101,8 +101,8 @@ class ExactMatchType(CheckType):
 
     def evaluate(self, reference_value: Any, value_to_compare: Any) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean."""
-        diff = diff_generator(reference_value, value_to_compare)
-        return diff, not diff
+        evaluation_result = diff_generator(reference_value, value_to_compare)
+        return evaluation_result, not evaluation_result
 
 
 class ToleranceType(CheckType):
@@ -121,8 +121,8 @@ class ToleranceType(CheckType):
     def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean. Overwrites method in base class."""
         diff = diff_generator(reference_value, value_to_compare)
-        diff = self._get_outliers(diff)
-        return diff, not diff
+        evaluation_result = self._get_outliers(diff)
+        return evaluation_result, not evaluation_result
 
     def _get_outliers(self, diff: Mapping) -> Dict:
         """Return a mapping of values outside the tolerance threshold."""
@@ -147,8 +147,8 @@ class ParameterMatchType(CheckType):
             parameter = value_to_compare[1]
         except IndexError as error:
             raise f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}" from error
-        diff = parameter_evaluator(reference_value, parameter)
-        return diff, not diff
+        evaluation_result = parameter_evaluator(reference_value, parameter)
+        return evaluation_result, not evaluation_result
 
 
 # TODO: compare is no longer the entry point, we should use the libary as:
