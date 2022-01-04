@@ -20,40 +20,59 @@ def diff_generator(pre_result: Any, post_result: Any) -> Dict:
     diff_result = DeepDiff(pre_result, post_result)
 
     result = diff_result.get("values_changed", {})
+
     if diff_result.get("dictionary_item_removed"):
         result.update({k: "missing" for k in diff_result["dictionary_item_removed"]})
+
     if diff_result.get("dictionary_item_added"):
         result.update({k: "new" for k in diff_result["dictionary_item_added"]})
+
     iterables_items = get_diff_iterables_items(diff_result)
     if iterables_items:
         result.update(iterables_items)
 
-    result = fix_deepdiff_key_names(result)
-    return result
+    return fix_deepdiff_key_names(result)
 
 
-def parameter_evaluator(values: Mapping, parameter: Mapping) -> Dict:
-    """Parameter Match evaluator engine."""
-    # value: [{'7.7.7.7': {'peerAddress': '7.7.7.7', 'localAsn': '65130.1100', 'linkType': 'external'}}]
-    # parameter: {'localAsn': '65130.1100', 'linkType': 'external'}
-    result = {}
+def parameter_evaluator(values: Mapping, parameters: Mapping) -> Dict:
+    """Parameter Match evaluator engine.
+
+    Args:
+        values: List of items what we will check the parameters against
+        parameters: Dict with the keys and reference values to check
+
+    Example:
+        values: [{'7.7.7.7': {'peerAddress': '7.7.7.7', 'localAsn': '65130.1100', 'linkType': 'external'}}]
+        parameters: {'localAsn': '65130.1100', 'linkType': 'external'}
+
+    Returns:
+        Dictionary with all the items that have some value not matching the expectations from parameters
+    """
     if not isinstance(values, list):
-        raise TypeError("Something went wrong during JMSPath parsing. values must be of type list.")
+        raise TypeError("Something went wrong during JMSPath parsing. 'values' must be of type List.")
 
+    result = {}
     for value in values:
-        # item: {'7.7.7.7': {'peerAddress': '7.7.7.7', 'localAsn': '65130.1101', 'linkType': 'externals
-        temp_dict = {}
+        # value: {'7.7.7.7': {'peerAddress': '7.7.7.7', 'localAsn': '65130.1101', 'linkType': 'externals
+        if not isinstance(value, dict):
+            raise TypeError(
+                "Something went wrong during JMSPath parsing. ",
+                f"'value' ({value}) must be of type Dict, and it's {type(value)}",
+            )
 
-        inner_key = list(value.keys())[0]
+        result_item = {}
+
+        # TODO: Why the 'value' dict has always ONE single element? we have to explain
         # inner_key: '7.7.7.7'
-        inner_value = list(value.values())[0]
+        inner_key = list(value.keys())[0]
         # inner_value: [{'peerAddress': '7.7.7.7', 'localAsn': '65130.1101', 'linkType': 'externals'}]
+        inner_value = list(value.values())[0]
 
-        for p_key, p_value in parameter.items():
-            if inner_value[p_key] != p_value:
-                temp_dict[p_key] = inner_value[p_key]
+        for parameter_key, parameter_value in parameters.items():
+            if inner_value[parameter_key] != parameter_value:
+                result_item[parameter_key] = inner_value[parameter_key]
 
-        if temp_dict:
-            result[inner_key] = temp_dict
+        if result_item:
+            result[inner_key] = result_item
 
     return result
