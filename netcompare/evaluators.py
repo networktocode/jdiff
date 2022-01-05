@@ -1,10 +1,7 @@
 """Evaluators."""
-import sys
 from typing import Any, Mapping, Dict
 from deepdiff import DeepDiff
 from .utils.diff_helpers import get_diff_iterables_items, fix_deepdiff_key_names
-
-sys.path.append(".")
 
 
 def diff_generator(pre_result: Any, post_result: Any) -> Dict:
@@ -15,7 +12,10 @@ def diff_generator(pre_result: Any, post_result: Any) -> Dict:
         post_result: dataset to compare
 
     Returns:
-        differences between two datasets
+        dict: differences between two datasets with the following keys:
+            - "values_changed": Item values that have changed
+            - "missing": Item keys that have been removed
+            - "new": Item keys that have been added
     """
     diff_result = DeepDiff(pre_result, post_result)
 

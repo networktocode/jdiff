@@ -51,7 +51,7 @@ class CheckType:
         Returns:
             Evaluated data, may be anything depending on JMESPath used.
         """
-        if exclude:
+        if exclude and isinstance(output, Dict):
             exclude_filter(output, exclude)  # exclude unwanted elements
 
         if not path:
@@ -59,10 +59,15 @@ class CheckType:
 
         values = jmespath.search(jmspath_value_parser(path), output)
 
+        if not isinstance(values, List):
+            raise ValueError(f"Internal error processing Jmespath result. Got {type(values)} instead of a List")
+
         if not any(isinstance(i, list) for i in values):  # check for multi-nested lists if not found return here
             return values
 
         for element in values:  # process elements to check is lists should be flatten
+            # TODO: Not sure how this is working becasyse from `jmespath.search` it's supposed to get a flat list
+            # of str or Decimals, not another list...
             for item in element:
                 if isinstance(item, dict):  # raise if there is a dict, path must be more specific to extract data
                     raise TypeError(
@@ -110,13 +115,13 @@ class ToleranceType(CheckType):
 
     def __init__(self, *args):
         """Tolerance init method."""
+        super().__init__()
+
         try:
             tolerance = args[1]
         except IndexError as error:
-            raise f"Tolerance parameter must be defined as float at index 1. You have: {args}" from error
-
+            raise ValueError(f"Tolerance parameter must be defined as float at index 1. You have: {args}") from error
         self.tolerance_factor = float(tolerance) / 100
-        super().__init__()
 
     def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean. Overwrites method in base class."""
@@ -126,16 +131,17 @@ class ToleranceType(CheckType):
 
     def _get_outliers(self, diff: Mapping) -> Dict:
         """Return a mapping of values outside the tolerance threshold."""
+
+        def _within_tolerance(*, old_value: float, new_value: float) -> bool:
+            """Return True if new value is within the tolerance range of the previous value."""
+            max_diff = old_value * self.tolerance_factor
+            return (old_value - max_diff) < new_value < (old_value + max_diff)
+
         result = {
-            key: {sub_key: values for sub_key, values in obj.items() if not self._within_tolerance(**values)}
+            key: {sub_key: values for sub_key, values in obj.items() if not _within_tolerance(**values)}
             for key, obj in diff.items()
         }
         return {key: obj for key, obj in result.items() if obj}
-
-    def _within_tolerance(self, *, old_value: float, new_value: float) -> bool:
-        """Return True if new value is within the tolerance range of the previous value."""
-        max_diff = old_value * self.tolerance_factor
-        return (old_value - max_diff) < new_value < (old_value + max_diff)
 
 
 class ParameterMatchType(CheckType):
@@ -146,31 +152,8 @@ class ParameterMatchType(CheckType):
         try:
             parameter = value_to_compare[1]
         except IndexError as error:
-            raise f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}" from error
+            raise ValueError(
+                f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}"
+            ) from error
         evaluation_result = parameter_evaluator(reference_value, parameter)
         return evaluation_result, not evaluation_result
-
-
-# TODO: compare is no longer the entry point, we should use the libary as:
-#   netcompare_check = CheckType.init(check_type_info, options)
-#   pre_result = netcompare_check.get_value(pre_obj, path)
-#   post_result = netcompare_check.get_value(post_obj, path)
-#   netcompare_check.evaluate(pre_result, post_result)
-#
-# def compare(
-#     pre_obj: Mapping, post_obj: Mapping, path: Mapping, type_info: Iterable, options: Mapping
-# ) -> Tuple[Mapping, bool]:
-#     """Entry point function.
-
-#     Returns a diff object and the boolean of the comparison.
-#     """
-
-#     type_info = type_info.lower()
-
-#     try:
-#         type_obj = CheckType.init(type_info, options)
-#     except Exception:
-#         # We will be here if we can't infer the type_obj
-#         raise
-
-#     return type_obj.evaluate(pre_obj, post_obj, path)

@@ -4,6 +4,8 @@ from collections import defaultdict
 from functools import partial
 from typing import Mapping, Dict, List
 
+REGEX_PATTERN_RELEVANT_KEYS = r"'([A-Za-z0-9_\./\\-]*)'"
+
 
 def get_diff_iterables_items(diff_result: Mapping) -> Dict:
     """Helper function for diff_generator to postprocess changes reported by DeepDiff for iterables.
@@ -43,34 +45,37 @@ def fix_deepdiff_key_names(obj: Mapping) -> Dict:
     """Return a dict based on the provided dict object where the brackets and quotes are removed from the string.
 
     Args:
-        obj: Example: {"root[3]['7.7.7.7']['is_enabled']": {'new_value': False, 'old_value': True},
-                       "root[3]['7.7.7.7']['is_up']": {'new_value': False, 'old_value': True}}
+        obj (Mapping): Mapping to be fixed. For example:
+            {
+                "root[3]['7.7.7.7']['is_enabled']": {'new_value': False, 'old_value': True},
+                "root[3]['7.7.7.7']['is_up']": {'new_value': False, 'old_value': True}
+            }
 
     Returns:
-        aggregated output Example: {'7.7.7.7': {'is_enabled': {'new_value': False, 'old_value': True},
+        Dict: aggregated output, for example: {'7.7.7.7': {'is_enabled': {'new_value': False, 'old_value': True},
                                                 'is_up': {'new_value': False, 'old_value': True}}}
     """
-    pattern = r"'([A-Za-z0-9_\./\\-]*)'"
-
     result = {}
     for key, value in obj.items():
-        key_parts = re.findall(pattern, key)
+        key_parts = re.findall(REGEX_PATTERN_RELEVANT_KEYS, key)
         partial_res = group_value(key_parts, value)
         dict_merger(result, partial_res)
     return result
 
 
+# TODO: Add testing
 def group_value(tree_list: List, value: Dict) -> Dict:
-    """Build dictionary based on value's key and reference key."""
+    """Function to create a nested Dict by recursively use the tree_list as nested keys."""
     if tree_list:
         return {tree_list[0]: group_value(tree_list[1:], value)}
     return value
 
 
-def dict_merger(original_dict: Dict, merged_dict: Dict):
-    """Merge dictionaries to build final result."""
-    for key in merged_dict.keys():
-        if key in original_dict and isinstance(original_dict[key], dict) and isinstance(merged_dict[key], dict):
-            dict_merger(original_dict[key], merged_dict[key])
+# TODO: Add testing
+def dict_merger(original_dict: Dict, dict_to_merge: Dict):
+    """Function to merge a dictionary (dict_to_merge) recursively into the original_dict."""
+    for key in dict_to_merge.keys():
+        if key in original_dict and isinstance(original_dict[key], dict) and isinstance(dict_to_merge[key], dict):
+            dict_merger(original_dict[key], dict_to_merge[key])
         else:
-            original_dict[key] = merged_dict[key]
+            original_dict[key] = dict_to_merge[key]
