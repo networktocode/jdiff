@@ -112,10 +112,16 @@ class RegexType(CheckType):
         try:
             parameter = value_to_compare[1]
         except IndexError as error:
-            raise f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}" from error
-        assert (isinstance(parameter, dict), isinstance(parameter['regex'], str)), "check_option must be of type dict() as in example: {'regex': '\d.'}"
+            raise IndexError(
+                f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}"
+            ) from error
+
+        if not all([isinstance(parameter, dict), isinstance(parameter["regex"], str)]):
+            raise TypeError("check_option must be of type dict() as in example: {'regex': '\d.'}")
+
         diff = regex_evaluator(reference_value, parameter)
         return diff, not diff
+
 
 # TODO: compare is no longer the entry point, we should use the libary as:
 #   netcompare_check = CheckType.init(check_type_info, options)
