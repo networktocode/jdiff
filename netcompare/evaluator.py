@@ -141,14 +141,13 @@ def regex_evaluator(values: Mapping, parameter: Mapping) -> Dict:
     if not isinstance(values, list):
         raise TypeError("Something went wrong during JMSPath parsing. values must be of type list.")
 
-    regex_expression = parameter['regex']
+    regex_expression = parameter["regex"]
 
     for item in values:
         for founded_value in item.values():
             for value in founded_value.values():
                 match_result = re.search(regex_expression, value)
-                if match_result:
+                if not match_result:
                     result.update(item)
-
 
     return result

@@ -117,7 +117,7 @@ class RegexType(CheckType):
             ) from error
 
         if not all([isinstance(parameter, dict), isinstance(parameter["regex"], str)]):
-            raise TypeError("check_option must be of type dict() as in example: {'regex': '\d.'}")
+            raise TypeError("check_option must be of type dict() as in example: {'regex': '.*UNDERLAY.*'}")
 
         diff = regex_evaluator(reference_value, parameter)
         return diff, not diff
