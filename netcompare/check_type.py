@@ -99,7 +99,9 @@ class ParameterMatchType(CheckType):
             parameter = value_to_compare[1]
         except IndexError as error:
             raise f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}" from error
-        assert isinstance(parameter, dict), "check_option must be of type dict()"
+        if not isinstance(parameter, dict):
+            raise TypeError("check_option must be of type dict()")
+
         diff = parameter_evaluator(reference_value, parameter)
         return diff, not diff
 
