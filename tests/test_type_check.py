@@ -213,3 +213,147 @@ def test_regex_match(filename, check_args, path, expected_result):
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
         output=actual_results, expected_output=expected_result
     )
+
+range_all_same = (
+    "api",
+    ("range", {"all-same": True}),
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup,vrf,state]",
+    (
+        {},     #TBD
+        False,  #TBD
+    ),
+)
+
+range_is_equal = (
+    "api",
+    ("range", {"is-equal": 100}),
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]",
+    (
+        {},     #TBD
+        False,  #TBD
+    ),
+)
+
+range_not_equal = (
+    "api",
+    ("range", {"not-equal": "internal"}),
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,linkType]",
+    (
+        {},     #TBD
+        False,  #TBD
+    ),
+)
+
+range_contains = (
+    "api",
+    ("range", {"contains": "EVPN"}),
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
+    (
+        {},     #TBD
+        False,  #TBD
+    ),
+)
+
+range_not_contains = (
+    "api",
+    ("range", {"not-contains": "OVERLAY"}),
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
+    (
+        {},     #TBD
+        False,  #TBD
+    ),
+)
+
+range_is_gt = (
+    "api",
+    ("range", {"is-gt": 70000000}),
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
+    (
+        {},     #TBD
+        False,  #TBD
+    ),
+)
+
+range_is_lt = (
+    "api",
+    ("range", {"is-lt": 80000000}),
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
+    (
+        {},     #TBD
+        False,  #TBD
+    ),
+)
+
+range_in_range = (
+    "api",
+    ("range", {"in-range": (70000000, 80000000)}),
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
+    (
+        {},     #TBD
+        False,  #TBD
+    ),
+)
+
+range_not_range = (
+    "api",
+    ("range", {"not-range": (70000000, 80000000)}),
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
+    (
+        {},     #TBD
+        False,  #TBD
+    ),
+)
+
+range_is_in = (
+    "api",
+    ("range", {"is-in": ("Idle", "Down")}),
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,state]",
+    (
+        {},     #TBD
+        False,  #TBD
+    ),
+)
+
+range_not_in = (
+    "api",
+    ("range", {"not-in": ("Idle", "Down")}),
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,state]",
+    (
+        {},     #TBD
+        False,  #TBD
+    ),
+)
+range_all_tests = [
+    # type() == str(), int(), float()
+    range_all_same,
+    range_is_equal,
+    range_not_equal,
+    range_contains,
+    range_not_contains,
+    # type() == int(), float()
+    range_is_gt,
+    range_is_lt,
+    range_in_range,
+    range_not_range,
+    # type() == str()
+    range_is_in,
+    range_not_in,
+]
+
+
+@pytest.mark.parametrize("folder_name, check_args, path, expected_result", range_all_tests)
+def test_range(folder_name, check_args, path, expected_result):
+    """Validate all range check types."""
+    pre_data, post_data = load_mocks(folder_name)
+
+    check = CheckType.init(*check_args)
+    pre_data, post_data = load_mocks(folder_name)
+    pre_value = check.get_value(pre_data, path)
+    post_value = check.get_value(post_data, path)
+    actual_results = check.evaluate(pre_value, post_value)
+
+    assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
+        output=actual_results, expected_output=expected_result
+    )
+
+
