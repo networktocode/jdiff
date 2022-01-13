@@ -1,7 +1,7 @@
 """Diff generator tests."""
 import pytest
 from netcompare.evaluators import diff_generator
-from netcompare.check_type import CheckType
+from netcompare.check_types import CheckType
 from .utility import load_mocks, ASSERT_FAIL_MESSAGE
 
 
