@@ -110,7 +110,35 @@ class RegexType(CheckType):
     """Regex Match class implementation."""
 
     def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
-        """Parameter Match evaluator implementation."""
+        """Regex Match evaluator implementation."""
+        try:
+            parameter = value_to_compare[1]
+        except IndexError as error:
+            raise IndexError(
+                f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}"
+            ) from error
+
+        try:
+            parameter['regex']
+            parameter['mode']
+        except KeyError as error:
+            raise KeyError(
+                f"""Regex check-type requires check-option. Example: dict(regex='.*UNDERLAY.*', mode='no-match')
+                Read the docs for more information."""
+            ) from error
+
+        if not all([isinstance(parameter, dict), isinstance(parameter["regex"], str)]):
+            raise TypeError("check_option must be of type dict() as in example: {'regex': '.*UNDERLAY.*'}")
+
+        diff = regex_evaluator(reference_value, parameter)
+        return diff, not diff
+
+
+class RangeType(CheckType):
+    """Range Match class implementation."""
+
+    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
+        """Range Match evaluator implementation."""
         try:
             parameter = value_to_compare[1]
         except IndexError as error:
@@ -123,7 +151,6 @@ class RegexType(CheckType):
 
         diff = regex_evaluator(reference_value, parameter)
         return diff, not diff
-
 
 # TODO: compare is no longer the entry point, we should use the libary as:
 #   netcompare_check = CheckType.init(check_type_info, options)
