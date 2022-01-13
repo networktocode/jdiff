@@ -189,9 +189,9 @@ def test_param_match(filename, check_args, path, expected_result):
     )
 
 
-regex_match = (
+regex_match_include = (
     "pre.json",
-    ("regex", {"regex": ".*UNDERLAY.*"}),
+    ("regex", {"regex": ".*UNDERLAY.*", "mode": "match"}),
     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
     (
         {
@@ -201,8 +201,24 @@ regex_match = (
     ),
 )
 
+regex_match_exclude = (
+    "pre.json",
+    ("regex", {"regex": ".*UNDERLAY.*", "mode": "no-match"}),
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
+    (
+        {
+            "10.1.0.0": {"peerGroup": "IPv4-UNDERLAY-SPINE"},
+            "10.2.0.0": {"peerGroup": "IPv4-UNDERLAY-SPINE"},
+            "10.64.207.255": {"peerGroup": "IPv4-UNDERLAY-MLAG-PEER"},
+        },
+        False,
+    ),
+)
 
-@pytest.mark.parametrize("filename, check_args, path, expected_result", [regex_match])
+regex_match = [regex_match_include, regex_match_exclude]
+
+
+@pytest.mark.parametrize("filename, check_args, path, expected_result", regex_match)
 def test_regex_match(filename, check_args, path, expected_result):
     """Validate regex check type."""
     check = CheckType.init(*check_args)
