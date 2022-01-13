@@ -1,10 +1,10 @@
-"""JMSPath expresion parsers."""
+"""jmespath expresion parsers."""
 import re
 
 
-def jmspath_value_parser(path: str):
+def jmespath_value_parser(path: str):
     """
-    Get the JMSPath value path from 'path'.
+    Get the jmespath value path from 'path'.
 
     Two combinations are possible based on where reference key is defined. See example below.
 
@@ -34,24 +34,24 @@ def jmspath_value_parser(path: str):
     return path
 
 
-def jmspath_refkey_parser(path: str):
+def jmespath_refkey_parser(path: str):
     """
-    Get the JMSPath reference key path from 'path'.
+    Get the jmespath reference key path from 'path'.
 
     Args:
         path: "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]"
     Return:
         "result[0].vrfs.default.peerList[*].[$peerAddress$]"
     """
-    splitted_jmspath = path.split(".")
+    splitted_jmespath = path.split(".")
 
-    for number, element in enumerate(splitted_jmspath):
+    for number, element in enumerate(splitted_jmespath):
         regex_match_anchor = re.search(r"\$.*\$", element)
 
         if regex_match_anchor:
-            splitted_jmspath[number] = regex_match_anchor.group().replace("$", "")
+            splitted_jmespath[number] = regex_match_anchor.group().replace("$", "")
 
         if regex_match_anchor and not element.startswith("[") and not element.endswith("]"):
-            splitted_jmspath = splitted_jmspath[: number + 1]
+            splitted_jmespath = splitted_jmespath[: number + 1]
 
-    return ".".join(splitted_jmspath)
+    return ".".join(splitted_jmespath)

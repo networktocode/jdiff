@@ -49,14 +49,14 @@ def parameter_evaluator(values: Mapping, parameters: Mapping) -> Dict:
         Dictionary with all the items that have some value not matching the expectations from parameters
     """
     if not isinstance(values, list):
-        raise TypeError("Something went wrong during JMSPath parsing. 'values' must be of type List.")
+        raise TypeError("Something went wrong during jmespath parsing. 'values' must be of type List.")
 
     result = {}
     for value in values:
         # value: {'7.7.7.7': {'peerAddress': '7.7.7.7', 'localAsn': '65130.1101', 'linkType': 'externals
         if not isinstance(value, dict):
             raise TypeError(
-                "Something went wrong during JMSPath parsing. ",
+                "Something went wrong during jmespath parsing. ",
                 f"'value' ({value}) must be of type Dict, and it's {type(value)}",
             )
 

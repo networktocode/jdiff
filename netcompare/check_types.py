@@ -3,7 +3,7 @@ import re
 from typing import Mapping, Tuple, List, Dict, Any, Union
 import jmespath
 
-from .utils.jmspath_parsers import jmspath_value_parser, jmspath_refkey_parser
+from .utils.jmespath_parsers import jmespath_value_parser, jmespath_refkey_parser
 from .utils.filter_parsers import exclude_filter
 from .utils.refkey import keys_cleaner, keys_values_zipper, associate_key_of_my_value
 from .utils.flatten import flatten_list
@@ -57,7 +57,7 @@ class CheckType:
         if not path:
             return output  # return if path is not specified
 
-        values = jmespath.search(jmspath_value_parser(path), output)
+        values = jmespath.search(jmespath_value_parser(path), output)
 
         if not isinstance(values, List):
             raise ValueError(f"Internal error processing Jmespath result. Got {type(values)} instead of a List")
@@ -77,10 +77,10 @@ class CheckType:
                     values = flatten_list(values)  # flatten list and rewrite values
                     break  # items are the same, need to check only first to see if this is a nested list
 
-        paired_key_value = associate_key_of_my_value(jmspath_value_parser(path), values)
+        paired_key_value = associate_key_of_my_value(jmespath_value_parser(path), values)
 
         if re.search(r"\$.*\$", path):  # normalize
-            wanted_reference_keys = jmespath.search(jmspath_refkey_parser(path), output)
+            wanted_reference_keys = jmespath.search(jmespath_refkey_parser(path), output)
             list_of_reference_keys = keys_cleaner(wanted_reference_keys)
             return keys_values_zipper(list_of_reference_keys, paired_key_value)
 
