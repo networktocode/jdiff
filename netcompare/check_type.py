@@ -110,7 +110,8 @@ class RegexType(CheckType):
     """Regex Match class implementation."""
 
     def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
-        """Parameter Match evaluator implementation."""
+        """Regex Match evaluator implementation."""
+        # Assert that check parameters are at index 1.
         try:
             parameter = value_to_compare[1]
         except IndexError as error:
@@ -118,8 +119,21 @@ class RegexType(CheckType):
                 f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}"
             ) from error
 
-        if not all([isinstance(parameter, dict), isinstance(parameter["regex"], str)]):
-            raise TypeError("check_option must be of type dict() as in example: {'regex': '.*UNDERLAY.*'}")
+        # Assert that check parameters are at index 1.
+        if not all([isinstance(parameter, dict)]):
+            raise TypeError("check_option must be of type dict().")
+
+        # Assert that check option has 'regex' and 'mode' dict keys.
+        if "regex" not in parameter and "mode" not in parameter:
+            raise KeyError(
+                "Regex check-type requires check-option. Example: dict(regex='.*UNDERLAY.*', mode='no-match')."
+            )
+
+        # Assert that check option has 'regex' and 'mode' dict keys.\
+        if parameter["mode"] not in ["match", "no-match"]:
+            raise ValueError(
+                "Regex check-type requires check-option. Example: dict(regex='.*UNDERLAY.*', mode='no-match')."
+            )
 
         diff = regex_evaluator(reference_value, parameter)
         return diff, not diff

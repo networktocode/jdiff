@@ -215,7 +215,10 @@ regex_match_exclude = (
     ),
 )
 
-regex_match = [regex_match_include, regex_match_exclude]
+regex_match = [
+    regex_match_include,
+    regex_match_exclude,
+]
 
 
 @pytest.mark.parametrize("filename, check_args, path, expected_result", regex_match)
