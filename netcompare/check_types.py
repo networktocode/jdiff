@@ -3,10 +3,14 @@ import re
 from typing import Mapping, Tuple, List, Dict, Any, Union
 import jmespath
 
-from .utils.jmespath_parsers import jmespath_value_parser, jmespath_refkey_parser
-from .utils.filter_parsers import exclude_filter
-from .utils.refkey import keys_cleaner, keys_values_zipper, associate_key_of_my_value
-from .utils.flatten import flatten_list
+from .utils.jmespath_parsers import (
+    jmespath_value_parser,
+    jmespath_refkey_parser,
+    associate_key_of_my_value,
+    keys_cleaner,
+    keys_values_zipper,
+)
+from .utils.data_normalization import exclude_filter, flatten_list
 from .evaluators import diff_generator, parameter_evaluator
 
 

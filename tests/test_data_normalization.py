@@ -1,6 +1,6 @@
 "Flatten list unit test"
 import pytest
-from netcompare.utils.flatten import flatten_list
+from netcompare.utils.data_normalization import flatten_list
 from .utility import ASSERT_FAIL_MESSAGE
 
 

@@ -1,4 +1,4 @@
-"""Diff helpres."""
+"""Diff helpers."""
 import re
 from collections import defaultdict
 from functools import partial
