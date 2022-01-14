@@ -138,11 +138,52 @@ napalm_get_lldp_neighbors_exact_raw = (
     ),
 )
 
+tolerance_no_path = (
+    "tolerance",
+    ("tolerance", 10),
+    "",
+    (
+        {
+            "interfaces": {
+                "Ethernet1": {"power_level": {"new_value": 4, "old_value": -4}},
+                "Ethernet3": {"power_level": {"new_value": 3, "old_value": -3}},
+            }
+        },
+        False,
+    ),
+)
+
+tolerance_path = (
+    "tolerance",
+    ("tolerance", 10),
+    "interfaces",
+    (
+        {
+            "Ethernet1": {"power_level": {"new_value": 4, "old_value": -4}},
+            "Ethernet3": {"power_level": {"new_value": 3, "old_value": -3}},
+        },
+        False,
+    ),
+)
+
+tolerance_deep_path = (
+    "tolerance",
+    ("tolerance", 10),
+    "interfaces.Ethernet1",
+    (
+        {"power_level": {"new_value": 4, "old_value": -4}},
+        False,
+    ),
+)
+
 check_tests = [
     napalm_bgp_neighbor_status,
     napalm_bgp_neighbor_prefixes_ipv4,
     napalm_bgp_neighbor_prefixes_ipv6,
     napalm_get_lldp_neighbors_exact_raw,
+    tolerance_no_path,
+    tolerance_path,
+    tolerance_deep_path,
 ]
 
 
