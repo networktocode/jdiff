@@ -351,7 +351,7 @@ range_all_tests = [
     range_is_lt,
     range_in_range,
     range_not_range,
-    # type() == str()
+    # type() == dict()
     range_is_in,
     range_not_in,
 ]

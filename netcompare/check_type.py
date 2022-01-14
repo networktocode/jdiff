@@ -1,6 +1,6 @@
 """CheckType Implementation."""
 from typing import Mapping, Tuple, List, Dict, Any
-from .evaluator import diff_generator, parameter_evaluator, regex_evaluator
+from .evaluator import diff_generator, parameter_evaluator, regex_evaluator, range_evaluator
 from .runner import extract_values_from_output
 
 
@@ -26,6 +26,8 @@ class CheckType:
             return ParameterMatchType(*args)
         if check_type == "regex":
             return RegexType(*args)
+        if check_type == "range":
+            return RangeType(*args)
         raise NotImplementedError
 
     @staticmethod
@@ -139,6 +141,41 @@ class RangeType(CheckType):
 
     def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
         """Range Match evaluator implementation."""
+
+        valid_options = (
+            "all-same",
+            "is-equal",
+            "not-equal",
+            "contains",
+            "not-contains",
+            "is-gt",
+            "is-lt",
+            "in-range",
+            "not-range",
+            "is-in",
+            "not-in"
+        )
+
+        bools = ("all-same")
+        iter = (
+            "is-in", 
+            "not-in",
+            "in-range",
+            "not-range"
+        )
+        numbers = (
+            "is-gt",
+            "is-lt",
+        )
+        mix = (
+            "all-same",
+            "is-equal",
+            "not-equal",
+            "contains",
+            "not-contains",
+        )
+
+        # Assert that check parameters are at index 1.
         try:
             parameter = value_to_compare[1]
         except IndexError as error:
@@ -146,10 +183,45 @@ class RangeType(CheckType):
                 f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}"
             ) from error
 
-        if not all([isinstance(parameter, dict), isinstance(parameter["regex"], str)]):
-            raise TypeError("check_option must be of type dict() as in example: {'regex': '.*UNDERLAY.*'}")
+        if not all([isinstance(parameter, dict)]):
+            raise TypeError("check-option must be of type dict().")
 
-        diff = regex_evaluator(reference_value, parameter)
+        parameter_key = list(parameter.keys())[0]
+        parameter_value = list(parameter.values())[0]
+
+        # Assert that check option is valid.
+        if parameter_key not in valid_options:
+            raise KeyError(
+                f"Range check-type requires one of the following check-option: {valid_options}"
+            )
+
+        # Assert data type for each range option.
+        if parameter_key in bools:
+            # "all-same" requires boolean True or False
+            if not isinstance(parameter_value, bool):
+                raise ValueError(f"Range check-option {bools} must have value of type bool. i.e: dict(all-same=True)")
+        
+        elif parameter_key in iter:
+            #"in", "not-in", "in-range", "not-range" requires an iterable
+            if not isinstance(parameter_value, list) or not isinstance(parameter_value, tuple):
+                raise ValueError(f"Range check-option {iter} must have value of type list or tuple. i.e: dict(not-in=('Idle', 'Down')")
+            # "in-range", "not-range" requires int or floar where value at index 0 is lower than value at index 1
+            if "range" in parameter_key:
+                if not (isinstance(parameter_value[0], int) or isinstance(parameter_value[0], float)) and not (isinstance(parameter_value[1], float) or isinstance(parameter_value[1], int)):
+                    raise ValueError(f"Range check-option {iter} must have value of type list or tuple with items of type float or int. i.e: dict(not-range=(70000000, 80000000)")
+                if not parameter_value[0] < parameter_value[1]:
+                    raise ValueError(f"'range' and 'not-range' must have value at index 0 lower than value at index 1. i.e: dict(not-range=(70000000, 80000000)")
+            else:
+                # "is-in", "not-in" requires iterable of strings
+                for item in parameter_value.values():
+                    if not isinstance(item, str):
+                        raise ValueError(f"'is-in' and 'not-in' must be an iterable of strings. i.e: dict(is-in=(Idle, Down)")
+
+        elif parameter_key in numbers:
+            if not isinstance(parameter_value, float) or not isinstance(parameter_value, int):
+                raise ValueError(f"Range check-option {numbers} must have value of type float or int. i.e: dict(is-lt=80000000)")
+
+        diff = range_evaluator(reference_value, parameter)
         return diff, not diff
 
 # TODO: compare is no longer the entry point, we should use the libary as:
