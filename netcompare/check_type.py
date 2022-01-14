@@ -1,6 +1,6 @@
 """CheckType Implementation."""
 from typing import Mapping, Tuple, List, Dict, Any
-from .evaluator import diff_generator, parameter_evaluator
+from .evaluator import diff_generator, parameter_evaluator, regex_evaluator
 from .runner import extract_values_from_output
 
 
@@ -24,7 +24,8 @@ class CheckType:
             return ToleranceType(*args)
         if check_type == "parameter_match":
             return ParameterMatchType(*args)
-
+        if check_type == "regex":
+            return RegexType(*args)
         raise NotImplementedError
 
     @staticmethod
@@ -101,7 +102,43 @@ class ParameterMatchType(CheckType):
             parameter = value_to_compare[1]
         except IndexError as error:
             raise f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}" from error
+        if not isinstance(parameter, dict):
+            raise TypeError("check_option must be of type dict()")
+
         diff = parameter_evaluator(reference_value, parameter)
+        return diff, not diff
+
+
+class RegexType(CheckType):
+    """Regex Match class implementation."""
+
+    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
+        """Regex Match evaluator implementation."""
+        # Assert that check parameters are at index 1.
+        try:
+            parameter = value_to_compare[1]
+        except IndexError as error:
+            raise IndexError(
+                f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}"
+            ) from error
+
+        # Assert that check parameters are at index 1.
+        if not all([isinstance(parameter, dict)]):
+            raise TypeError("check_option must be of type dict().")
+
+        # Assert that check option has 'regex' and 'mode' dict keys.
+        if "regex" not in parameter and "mode" not in parameter:
+            raise KeyError(
+                "Regex check-type requires check-option. Example: dict(regex='.*UNDERLAY.*', mode='no-match')."
+            )
+
+        # Assert that check option has 'regex' and 'mode' dict keys.\
+        if parameter["mode"] not in ["match", "no-match"]:
+            raise ValueError(
+                "Regex check-type requires check-option. Example: dict(regex='.*UNDERLAY.*', mode='no-match')."
+            )
+
+        diff = regex_evaluator(reference_value, parameter)
         return diff, not diff
 
 
