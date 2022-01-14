@@ -167,10 +167,7 @@ class RangeType(CheckType):
             "is-gt",
             "is-lt",
         )
-        mix = (
-            "all-same",
-            "is-equal",
-            "not-equal",
+        strings = (
             "contains",
             "not-contains",
         )
@@ -220,6 +217,11 @@ class RangeType(CheckType):
         elif parameter_key in numbers:
             if not isinstance(parameter_value, float) or not isinstance(parameter_value, int):
                 raise ValueError(f"Range check-option {numbers} must have value of type float or int. i.e: dict(is-lt=80000000)")
+
+        elif parameter_key in strings:
+            if not isinstance(parameter_value, str):
+                raise ValueError(f"Range check-option {strings} must have value of type string. i.e: dict(contains='EVPN')")
+
 
         diff = range_evaluator(reference_value, parameter)
         return diff, not diff
