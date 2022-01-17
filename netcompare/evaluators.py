@@ -85,7 +85,7 @@ def regex_evaluator(values: Mapping, parameter: Mapping) -> Dict:
     # parameter: {'regex': '.*UNDERLAY.*', 'mode': 'include'}
     result = {}
     if not isinstance(values, list):
-        raise TypeError("Something went wrong during JMSPath parsing. values must be of type list.")
+        raise TypeError("Something went wrong during JMSPath parsing. 'values' must be of type List.")
 
     regex_expression = parameter["regex"]
     mode = parameter["mode"]

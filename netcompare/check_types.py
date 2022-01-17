@@ -121,10 +121,13 @@ class ToleranceType(CheckType):
         super().__init__()
 
         try:
-            tolerance = args[1]
+            tolerance = float(args[1])
         except IndexError as error:
-            raise ValueError(f"Tolerance parameter must be defined as float at index 1. You have: {args}") from error
-        self.tolerance_factor = float(tolerance) / 100
+            raise IndexError(f"Tolerance parameter must be defined as float at index 1. You have: {args}") from error
+        except ValueError as error:
+            raise ValueError(f"Argument must be convertible to float. You have: {args[1]}") from error
+
+        self.tolerance_factor = tolerance / 100
 
     def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean. Overwrites method in base class."""
@@ -155,16 +158,10 @@ class ParameterMatchType(CheckType):
 
     def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Dict, bool]:
         """Parameter Match evaluator implementation."""
-        try:
-            parameter = value_to_compare[1]
-        except IndexError as error:
-            raise ValueError(
-                f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}"
-            ) from error
-        if not isinstance(parameter, dict):
+        if not isinstance(value_to_compare, dict):
             raise TypeError("check_option must be of type dict()")
 
-        evaluation_result = parameter_evaluator(reference_value, parameter)
+        evaluation_result = parameter_evaluator(reference_value, value_to_compare)
         return evaluation_result, not evaluation_result
 
 
@@ -173,29 +170,21 @@ class RegexType(CheckType):
 
     def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
         """Regex Match evaluator implementation."""
-        # Assert that check parameters are at index 1.
-        try:
-            parameter = value_to_compare[1]
-        except IndexError as error:
-            raise IndexError(
-                f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}"
-            ) from error
-
-        # Assert that check parameters are at index 1.
-        if not all([isinstance(parameter, dict)]):
+        # Check that check value_to_compare is dict.
+        if not isinstance(value_to_compare, dict):
             raise TypeError("check_option must be of type dict().")
 
-        # Assert that check option has 'regex' and 'mode' dict keys.
-        if "regex" not in parameter and "mode" not in parameter:
+        # Check that value_to_compare has 'regex' and 'mode' dict keys.
+        if any(key not in value_to_compare.keys() for key in ("regex", "mode")):
             raise KeyError(
                 "Regex check-type requires check-option. Example: dict(regex='.*UNDERLAY.*', mode='no-match')."
             )
 
         # Assert that check option has 'regex' and 'mode' dict keys.\
-        if parameter["mode"] not in ["match", "no-match"]:
+        if value_to_compare["mode"] not in ["match", "no-match"]:
             raise ValueError(
                 "Regex check-type requires check-option. Example: dict(regex='.*UNDERLAY.*', mode='no-match')."
             )
 
-        diff = regex_evaluator(reference_value, parameter)
+        diff = regex_evaluator(reference_value, value_to_compare)
         return diff, not diff
