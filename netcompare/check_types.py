@@ -65,10 +65,7 @@ class CheckType:
 
         values = jmespath.search(jmespath_value_parser(path), output)
 
-        if not isinstance(values, List):
-            raise ValueError(f"Internal error processing Jmespath result. Got {type(values)} instead of a List")
-
-        if not any(isinstance(i, list) for i in values):  # check for multi-nested lists if not found return here
+Re        if not any(isinstance(i, list) for i in values):  # check for multi-nested lists if not found return here
             return values
 
         for element in values:  # process elements to check is lists should be flatten
