@@ -1,4 +1,5 @@
 """Evaluators."""
+import re
 from typing import Any, Mapping, Dict
 from deepdiff import DeepDiff
 from .utils.diff_helpers import get_diff_iterables_items, fix_deepdiff_key_names
