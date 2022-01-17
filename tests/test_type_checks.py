@@ -138,11 +138,52 @@ napalm_get_lldp_neighbors_exact_raw = (
     ),
 )
 
+tolerance_no_path = (
+    "tolerance",
+    ("tolerance", 10),
+    "",
+    (
+        {
+            "interfaces": {
+                "Ethernet1": {"power_level": {"new_value": 4, "old_value": -4}},
+                "Ethernet3": {"power_level": {"new_value": 3, "old_value": -3}},
+            }
+        },
+        False,
+    ),
+)
+
+tolerance_path = (
+    "tolerance",
+    ("tolerance", 10),
+    "interfaces",
+    (
+        {
+            "Ethernet1": {"power_level": {"new_value": 4, "old_value": -4}},
+            "Ethernet3": {"power_level": {"new_value": 3, "old_value": -3}},
+        },
+        False,
+    ),
+)
+
+tolerance_deep_path = (
+    "tolerance",
+    ("tolerance", 10),
+    "interfaces.Ethernet1",
+    (
+        {"power_level": {"new_value": 4, "old_value": -4}},
+        False,
+    ),
+)
+
 check_tests = [
     napalm_bgp_neighbor_status,
     napalm_bgp_neighbor_prefixes_ipv4,
     napalm_bgp_neighbor_prefixes_ipv6,
     napalm_get_lldp_neighbors_exact_raw,
+    tolerance_no_path,
+    tolerance_path,
+    tolerance_deep_path,
 ]
 
 
@@ -182,6 +223,51 @@ def test_param_match(filename, check_args, path, expected_result):
     check = CheckType.init(*check_args)
     # There is not concept of "pre" and "post" in parameter_match.
     data = load_json_file("parameter_match", filename)
+    value = check.get_value(data, path)
+    actual_results = check.evaluate(value, check_args)
+    assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
+        output=actual_results, expected_output=expected_result
+    )
+
+
+regex_match_include = (
+    "pre.json",
+    ("regex", {"regex": ".*UNDERLAY.*", "mode": "match"}),
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
+    (
+        {
+            "7.7.7.7": {"peerGroup": "EVPN-OVERLAY-SPINE"},
+        },
+        False,
+    ),
+)
+
+regex_match_exclude = (
+    "pre.json",
+    ("regex", {"regex": ".*UNDERLAY.*", "mode": "no-match"}),
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
+    (
+        {
+            "10.1.0.0": {"peerGroup": "IPv4-UNDERLAY-SPINE"},
+            "10.2.0.0": {"peerGroup": "IPv4-UNDERLAY-SPINE"},
+            "10.64.207.255": {"peerGroup": "IPv4-UNDERLAY-MLAG-PEER"},
+        },
+        False,
+    ),
+)
+
+regex_match = [
+    regex_match_include,
+    regex_match_exclude,
+]
+
+
+@pytest.mark.parametrize("filename, check_args, path, expected_result", regex_match)
+def test_regex_match(filename, check_args, path, expected_result):
+    """Validate regex check type."""
+    check = CheckType.init(*check_args)
+    # There is not concept of "pre" and "post" in parameter_match.
+    data = load_json_file("api", filename)
     value = check.get_value(data, path)
     actual_results = check.evaluate(value, check_args)
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(

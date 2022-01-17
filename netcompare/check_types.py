@@ -11,7 +11,7 @@ from .utils.jmespath_parsers import (
     keys_values_zipper,
 )
 from .utils.data_normalization import exclude_filter, flatten_list
-from .evaluators import diff_generator, parameter_evaluator
+from .evaluators import diff_generator, parameter_evaluator, regex_evaluator
 
 
 class CheckType:
@@ -34,6 +34,8 @@ class CheckType:
             return ToleranceType(*args)
         if check_type == "parameter_match":
             return ParameterMatchType(*args)
+        if check_type == "regex":
+            return RegexType(*args)
 
         raise NotImplementedError
 
@@ -130,22 +132,25 @@ class ToleranceType(CheckType):
     def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean. Overwrites method in base class."""
         diff = diff_generator(reference_value, value_to_compare)
-        evaluation_result = self._get_outliers(diff)
-        return evaluation_result, not evaluation_result
+        self._remove_within_tolerance(diff)
+        return diff, not diff
 
-    def _get_outliers(self, diff: Mapping) -> Dict:
-        """Return a mapping of values outside the tolerance threshold."""
+    def _remove_within_tolerance(self, diff: Dict) -> None:
+        """Recursively look into diff and apply tolerance check, remove reported difference when within tolerance."""
 
         def _within_tolerance(*, old_value: float, new_value: float) -> bool:
             """Return True if new value is within the tolerance range of the previous value."""
             max_diff = old_value * self.tolerance_factor
             return (old_value - max_diff) < new_value < (old_value + max_diff)
 
-        result = {
-            key: {sub_key: values for sub_key, values in obj.items() if not _within_tolerance(**values)}
-            for key, obj in diff.items()
-        }
-        return {key: obj for key, obj in result.items() if obj}
+        for key, value in list(diff.items()):  # casting list makes copy, so we don't modify object being iterated.
+            if isinstance(value, dict):
+                if "new_value" in value.keys() and "old_value" in value.keys() and _within_tolerance(**value):
+                    diff.pop(key)
+                else:
+                    self._remove_within_tolerance(diff[key])
+                if not value:
+                    diff.pop(key)
 
 
 class ParameterMatchType(CheckType):
@@ -159,5 +164,41 @@ class ParameterMatchType(CheckType):
             raise ValueError(
                 f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}"
             ) from error
+        if not isinstance(parameter, dict):
+            raise TypeError("check_option must be of type dict()")
+
         evaluation_result = parameter_evaluator(reference_value, parameter)
         return evaluation_result, not evaluation_result
+
+
+class RegexType(CheckType):
+    """Regex Match class implementation."""
+
+    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
+        """Regex Match evaluator implementation."""
+        # Assert that check parameters are at index 1.
+        try:
+            parameter = value_to_compare[1]
+        except IndexError as error:
+            raise IndexError(
+                f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}"
+            ) from error
+
+        # Assert that check parameters are at index 1.
+        if not all([isinstance(parameter, dict)]):
+            raise TypeError("check_option must be of type dict().")
+
+        # Assert that check option has 'regex' and 'mode' dict keys.
+        if "regex" not in parameter and "mode" not in parameter:
+            raise KeyError(
+                "Regex check-type requires check-option. Example: dict(regex='.*UNDERLAY.*', mode='no-match')."
+            )
+
+        # Assert that check option has 'regex' and 'mode' dict keys.\
+        if parameter["mode"] not in ["match", "no-match"]:
+            raise ValueError(
+                "Regex check-type requires check-option. Example: dict(regex='.*UNDERLAY.*', mode='no-match')."
+            )
+
+        diff = regex_evaluator(reference_value, parameter)
+        return diff, not diff
