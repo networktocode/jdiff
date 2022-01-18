@@ -1,7 +1,7 @@
 """Diff generator tests."""
 import pytest
-from netcompare.evaluator import diff_generator
-from netcompare.runner import extract_values_from_output
+from netcompare.evaluators import diff_generator
+from netcompare.check_types import CheckType
 from .utility import load_mocks, ASSERT_FAIL_MESSAGE
 
 
@@ -149,8 +149,8 @@ eval_tests = [
 def test_eval(folder_name, path, exclude, expected_output):
     """Run tests."""
     pre_data, post_data = load_mocks(folder_name)
-    pre_value = extract_values_from_output(pre_data, path, exclude)
-    post_value = extract_values_from_output(post_data, path, exclude)
+    pre_value = CheckType.get_value(pre_data, path, exclude)
+    post_value = CheckType.get_value(post_data, path, exclude)
     output = diff_generator(pre_value, post_value)
 
     assert expected_output == output, ASSERT_FAIL_MESSAGE.format(output=output, expected_output=expected_output)

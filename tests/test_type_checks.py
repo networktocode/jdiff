@@ -1,6 +1,6 @@
 "Check Type unit tests."
 import pytest
-from netcompare.check_type import CheckType, ExactMatchType, ToleranceType
+from netcompare.check_types import CheckType, ExactMatchType, ToleranceType
 from .utility import load_json_file, load_mocks, ASSERT_FAIL_MESSAGE
 
 

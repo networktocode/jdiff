@@ -1,7 +1,17 @@
 """CheckType Implementation."""
-from typing import Mapping, Tuple, List, Dict, Any
-from .evaluator import diff_generator, parameter_evaluator, regex_evaluator
-from .runner import extract_values_from_output
+import re
+from typing import Mapping, Tuple, List, Dict, Any, Union
+import jmespath
+
+from .utils.jmespath_parsers import (
+    jmespath_value_parser,
+    jmespath_refkey_parser,
+    associate_key_of_my_value,
+    keys_cleaner,
+    keys_values_zipper,
+)
+from .utils.data_normalization import exclude_filter, flatten_list
+from .evaluators import diff_generator, parameter_evaluator, regex_evaluator
 
 
 class CheckType:
@@ -26,12 +36,58 @@ class CheckType:
             return ParameterMatchType(*args)
         if check_type == "regex":
             return RegexType(*args)
+
         raise NotImplementedError
 
     @staticmethod
-    def get_value(output: Mapping, path: str, exclude: List = None) -> Any:
-        """Return the value contained into a Mapping for a defined path."""
-        return extract_values_from_output(output, path, exclude)
+    def get_value(output: Union[Mapping, List], path: str, exclude: List = None) -> Any:
+        """Return data from output depending on the check path. See unit test for complete example.
+
+        Get the wanted values to be evaluated if JMESPath expression is defined,
+        otherwise use the entire output if jmespath is not defined in check. This covers the "raw" diff type.
+        Exclude data not desired to compare.
+
+        Notes:
+            https://jmespath.org/ shows how JMESPath works.
+
+        Args:
+            output: json data structure
+            path: JMESPath to extract specific values
+            exclude: list of keys to exclude
+        Returns:
+            Evaluated data, may be anything depending on JMESPath used.
+        """
+        if exclude and isinstance(output, Dict):
+            exclude_filter(output, exclude)  # exclude unwanted elements
+
+        if not path:
+            return output  # return if path is not specified
+
+        values = jmespath.search(jmespath_value_parser(path), output)
+
+        if not any(isinstance(i, list) for i in values):  # check for multi-nested lists if not found return here
+            return values
+
+        for element in values:  # process elements to check is lists should be flatten
+            # TODO: Not sure how this is working becasyse from `jmespath.search` it's supposed to get a flat list
+            # of str or Decimals, not another list...
+            for item in element:
+                if isinstance(item, dict):  # raise if there is a dict, path must be more specific to extract data
+                    raise TypeError(
+                        f'Must be list of lists i.e. [["Idle", 75759616], ["Idle", 75759620]].' f"You have {values}'."
+                    )
+                if isinstance(item, list):
+                    values = flatten_list(values)  # flatten list and rewrite values
+                    break  # items are the same, need to check only first to see if this is a nested list
+
+        paired_key_value = associate_key_of_my_value(jmespath_value_parser(path), values)
+
+        if re.search(r"\$.*\$", path):  # normalize
+            wanted_reference_keys = jmespath.search(jmespath_refkey_parser(path), output)
+            list_of_reference_keys = keys_cleaner(wanted_reference_keys)
+            return keys_values_zipper(list_of_reference_keys, paired_key_value)
+
+        return values
 
     def evaluate(self, reference_value: Any, value_to_compare: Any) -> Tuple[Dict, bool]:
         """Return the result of the evaluation and a boolean True if it passes it or False otherwise.
@@ -53,8 +109,8 @@ class ExactMatchType(CheckType):
 
     def evaluate(self, reference_value: Any, value_to_compare: Any) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean."""
-        diff = diff_generator(reference_value, value_to_compare)
-        return diff, not diff
+        evaluation_result = diff_generator(reference_value, value_to_compare)
+        return evaluation_result, not evaluation_result
 
 
 class ToleranceType(CheckType):
@@ -62,13 +118,13 @@ class ToleranceType(CheckType):
 
     def __init__(self, *args):
         """Tolerance init method."""
+        super().__init__()
+
         try:
             tolerance = args[1]
         except IndexError as error:
-            raise f"Tolerance parameter must be defined as float at index 1. You have: {args}" from error
-
+            raise ValueError(f"Tolerance parameter must be defined as float at index 1. You have: {args}") from error
         self.tolerance_factor = float(tolerance) / 100
-        super().__init__()
 
     def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean. Overwrites method in base class."""
@@ -78,19 +134,20 @@ class ToleranceType(CheckType):
 
     def _remove_within_tolerance(self, diff: Dict) -> None:
         """Recursively look into diff and apply tolerance check, remove reported difference when within tolerance."""
+
+        def _within_tolerance(*, old_value: float, new_value: float) -> bool:
+            """Return True if new value is within the tolerance range of the previous value."""
+            max_diff = old_value * self.tolerance_factor
+            return (old_value - max_diff) < new_value < (old_value + max_diff)
+
         for key, value in list(diff.items()):  # casting list makes copy, so we don't modify object being iterated.
             if isinstance(value, dict):
-                if "new_value" in value.keys() and "old_value" in value.keys() and self._within_tolerance(**value):
+                if "new_value" in value.keys() and "old_value" in value.keys() and _within_tolerance(**value):
                     diff.pop(key)
                 else:
                     self._remove_within_tolerance(diff[key])
                 if not value:
                     diff.pop(key)
-
-    def _within_tolerance(self, *, old_value: float, new_value: float) -> bool:
-        """Return True if new value is within the tolerance range of the previous value."""
-        max_diff = old_value * self.tolerance_factor
-        return (old_value - max_diff) < new_value < (old_value + max_diff)
 
 
 class ParameterMatchType(CheckType):
@@ -101,12 +158,14 @@ class ParameterMatchType(CheckType):
         try:
             parameter = value_to_compare[1]
         except IndexError as error:
-            raise f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}" from error
+            raise ValueError(
+                f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}"
+            ) from error
         if not isinstance(parameter, dict):
             raise TypeError("check_option must be of type dict()")
 
-        diff = parameter_evaluator(reference_value, parameter)
-        return diff, not diff
+        evaluation_result = parameter_evaluator(reference_value, parameter)
+        return evaluation_result, not evaluation_result
 
 
 class RegexType(CheckType):
@@ -140,28 +199,3 @@ class RegexType(CheckType):
 
         diff = regex_evaluator(reference_value, parameter)
         return diff, not diff
-
-
-# TODO: compare is no longer the entry point, we should use the libary as:
-#   netcompare_check = CheckType.init(check_type_info, options)
-#   pre_result = netcompare_check.get_value(pre_obj, path)
-#   post_result = netcompare_check.get_value(post_obj, path)
-#   netcompare_check.evaluate(pre_result, post_result)
-#
-# def compare(
-#     pre_obj: Mapping, post_obj: Mapping, path: Mapping, type_info: Iterable, options: Mapping
-# ) -> Tuple[Mapping, bool]:
-#     """Entry point function.
-
-#     Returns a diff object and the boolean of the comparison.
-#     """
-
-#     type_info = type_info.lower()
-
-#     try:
-#         type_obj = CheckType.init(type_info, options)
-#     except Exception:
-#         # We will be here if we can't infer the type_obj
-#         raise
-
-#     return type_obj.evaluate(pre_obj, post_obj, path)

@@ -1,5 +1,5 @@
 """Pre/Post Check library."""
-# from .check_type import compare
+from .check_types import CheckType
 
 
-# __all__ = ["compare"]
+__all__ = ["CheckType"]
