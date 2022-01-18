@@ -251,7 +251,6 @@ def test_param_match(filename, check_type_args, path, expected_result):
     # There is not concept of "pre" and "post" in parameter_match.
     data = load_json_file("parameter_match", filename)
     value = check.get_value(data, path)
-    print()
     actual_results = check.evaluate(value, check_type_args[1])
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
         output=actual_results, expected_output=expected_result
