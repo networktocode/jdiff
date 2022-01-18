@@ -131,6 +131,16 @@ exact_match_multi_nested_list = (
     },
 )
 
+textfsm_ospf_int_br_exact_match = (
+    "textfsm_ospf_int_br",
+    "[*].[$interface$,area,ip_address_mask,cost,state,neighbors_fc]",
+    [],
+    {
+        "Se0/0/0.100": {"state": {"new_value": "DOWN", "old_value": "P2P"}},
+        "Fa0/0": {"state": {"new_value": "DR", "old_value": "BDR"}},
+    },
+)
+
 eval_tests = [
     exact_match_of_global_peers_via_napalm_getter,
     exact_match_of_bgp_peer_caps_via_api,
@@ -142,6 +152,7 @@ eval_tests = [
     exact_match_additional_item,
     exact_match_changed_item,
     exact_match_multi_nested_list,
+    textfsm_ospf_int_br_exact_match,
 ]
 
 
