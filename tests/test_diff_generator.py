@@ -8,6 +8,7 @@ from .utility import load_mocks, ASSERT_FAIL_MESSAGE
 exact_match_of_global_peers_via_napalm_getter = (
     "napalm_getter_peer_state_change",
     "global.$peers$.*.[is_enabled,is_up]",
+    True,
     [],
     {
         "10.1.0.0": {
@@ -24,6 +25,7 @@ exact_match_of_global_peers_via_napalm_getter = (
 exact_match_of_bgp_peer_caps_via_api = (
     "api",
     "result[0].vrfs.default.peerList[*].[$peerAddress$,state,bgpPeerCaps]",
+    True,
     [],
     {"7.7.7.7": {"state": {"new_value": "Connected", "old_value": "Idle"}}},
 )
@@ -31,6 +33,7 @@ exact_match_of_bgp_peer_caps_via_api = (
 exact_match_of_bgp_neigh_via_textfsm = (
     "textfsm",
     "result[*].[$bgp_neigh$,state]",
+    True,
     [],
     {"10.17.254.2": {"state": {"new_value": "Up", "old_value": "Idle"}}},
 )
@@ -38,6 +41,7 @@ exact_match_of_bgp_neigh_via_textfsm = (
 raw_diff_of_interface_ma1_via_api_value_exclude = (
     "raw_value_exclude",
     "result[*]",
+    True,
     ["interfaceStatistics", "interfaceCounters"],
     {
         "interfaces": {
@@ -52,6 +56,7 @@ raw_diff_of_interface_ma1_via_api_value_exclude = (
 raw_diff_of_interface_ma1_via_api_novalue_exclude = (
     "raw_novalue_exclude",
     None,
+    True,
     ["interfaceStatistics", "interfaceCounters"],
     {
         "result": {
@@ -70,6 +75,7 @@ raw_diff_of_interface_ma1_via_api_novalue_exclude = (
 raw_diff_of_interface_ma1_via_api_novalue_noexclude = (
     "raw_novalue_noexclude",
     None,
+    True,
     [],
     {
         "result": {
@@ -103,6 +109,7 @@ raw_diff_of_interface_ma1_via_api_novalue_noexclude = (
 exact_match_missing_item = (
     "napalm_getter_missing_peer",
     None,
+    True,
     [],
     {"global": {"peers": {"7.7.7.7": "missing"}}},
 )
@@ -110,6 +117,7 @@ exact_match_missing_item = (
 exact_match_additional_item = (
     "napalm_getter_additional_peer",
     None,
+    True,
     [],
     {"global": {"peers": {"8.8.8.8": "new"}}},
 )
@@ -117,6 +125,7 @@ exact_match_additional_item = (
 exact_match_changed_item = (
     "napalm_getter_changed_peer",
     None,
+    True,
     [],
     {"global": {"peers": {"7.7.7.7": "missing", "8.8.8.8": "new"}}},
 )
@@ -124,6 +133,7 @@ exact_match_changed_item = (
 exact_match_multi_nested_list = (
     "exact_match_nested",
     "global.$peers$.*.*.ipv4.[accepted_prefixes,received_prefixes]",
+    True,
     [],
     {
         "10.1.0.0": {"accepted_prefixes": {"new_value": -1, "old_value": -9}},
@@ -134,10 +144,22 @@ exact_match_multi_nested_list = (
 textfsm_ospf_int_br_exact_match = (
     "textfsm_ospf_int_br",
     "[*].[$interface$,area,ip_address_mask,cost,state,neighbors_fc]",
+    True,
     [],
     {
         "Se0/0/0.100": {"state": {"new_value": "DOWN", "old_value": "P2P"}},
         "Fa0/0": {"state": {"new_value": "DR", "old_value": "BDR"}},
+    },
+)
+
+textfsm_ospf_int_br_exact_match_no_ref_key = (
+    "textfsm_ospf_int_br",
+    "",
+    False,
+    [],
+    {
+        "root[1]['state']": {'new_value': 'DOWN', 'old_value': 'P2P'},
+        "root[2]['state']": {'new_value': 'DR', 'old_value': 'BDR'}
     },
 )
 
@@ -153,15 +175,15 @@ eval_tests = [
     exact_match_changed_item,
     exact_match_multi_nested_list,
     textfsm_ospf_int_br_exact_match,
+    textfsm_ospf_int_br_exact_match_no_ref_key,
 ]
 
 
-@pytest.mark.parametrize("folder_name, path, exclude, expected_output", eval_tests)
-def test_eval(folder_name, path, exclude, expected_output):
+@pytest.mark.parametrize("folder_name, path, normalize, exclude, expected_output", eval_tests)
+def test_eval(folder_name, path, normalize, exclude, expected_output):
     """Run tests."""
     pre_data, post_data = load_mocks(folder_name)
     pre_value = CheckType.get_value(pre_data, path, exclude)
     post_value = CheckType.get_value(post_data, path, exclude)
-    output = diff_generator(pre_value, post_value)
-
+    output = diff_generator(pre_value, post_value, normalize)
     assert expected_output == output, ASSERT_FAIL_MESSAGE.format(output=output, expected_output=expected_output)

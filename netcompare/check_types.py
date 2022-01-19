@@ -107,9 +107,9 @@ class CheckType:
 class ExactMatchType(CheckType):
     """Exact Match class docstring."""
 
-    def evaluate(self, reference_value: Any, value_to_compare: Any) -> Tuple[Dict, bool]:
+    def evaluate(self, reference_value: Any, value_to_compare: Any, normalize=True) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean."""
-        evaluation_result = diff_generator(reference_value, value_to_compare)
+        evaluation_result = diff_generator(reference_value, value_to_compare, normalize)
         return evaluation_result, not evaluation_result
 
 
@@ -126,9 +126,9 @@ class ToleranceType(CheckType):
             raise ValueError(f"Tolerance parameter must be defined as float at index 1. You have: {args}") from error
         self.tolerance_factor = float(tolerance) / 100
 
-    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Dict, bool]:
+    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping, normalize=True) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean. Overwrites method in base class."""
-        diff = diff_generator(reference_value, value_to_compare)
+        diff = diff_generator(reference_value, value_to_compare, normalize)
         self._remove_within_tolerance(diff)
         return diff, not diff
 

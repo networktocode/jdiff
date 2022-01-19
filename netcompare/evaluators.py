@@ -5,12 +5,13 @@ from deepdiff import DeepDiff
 from .utils.diff_helpers import get_diff_iterables_items, fix_deepdiff_key_names
 
 
-def diff_generator(pre_result: Any, post_result: Any) -> Dict:
+def diff_generator(pre_result: Any, post_result: Any, normalize=True) -> Dict:
     """Generates diff between pre and post data based on check definition.
 
     Args:
         pre_result: dataset to compare
         post_result: dataset to compare
+        normalize: indicates if reference key was used in JMESPath to normalize data
 
     Returns:
         dict: differences between two datasets with the following keys:
@@ -32,7 +33,7 @@ def diff_generator(pre_result: Any, post_result: Any) -> Dict:
     if iterables_items:
         result.update(iterables_items)
 
-    return fix_deepdiff_key_names(result)
+    return fix_deepdiff_key_names(result) if normalize else result
 
 
 def parameter_evaluator(values: Mapping, parameters: Mapping) -> Dict:
