@@ -13,10 +13,39 @@ def test_check_init(args, expected_class):
     assert isinstance(CheckType.init(*args), expected_class)
 
 
-def test_check_type_raises_not_implemented_error_for_invalid_check_type():
-    """Validate that CheckType raises a NotImplementedError when passed a non-existant check_type."""
-    with pytest.raises(NotImplementedError):
-        CheckType.init("does_not_exist")
+exception_tests_init = [
+    (("does_not_exist",), NotImplementedError, ""),
+    (("tolerance",), IndexError, "parameter"),
+    (("tolerance", "non-float"), ValueError, "non-float"),
+]
+
+
+@pytest.mark.parametrize("check_type_args, exception_type, expected_in_output", exception_tests_init)
+def tests_exceptions_init(check_type_args, exception_type, expected_in_output):
+    """Tests exceptions when check object is initialized."""
+    with pytest.raises(exception_type) as error:
+        CheckType.init(*check_type_args)
+    assert expected_in_output in error.value.__str__()
+
+
+exception_tests_eval = [
+    ("parameter_match", ([{}], "not-dict"), TypeError, "dict()"),
+    ("parameter_match", ({}, {}), TypeError, "'values' must be of type List"),
+    ("regex", ([{}], "not-dict"), TypeError, "dict()"),
+    ("regex", ([{}], {"mode": "match"}), KeyError, "check-option"),
+    ("regex", ([{}], {"mode": "regex"}), KeyError, "check-option"),
+    ("regex", ([{}], {"regex": "", "mode": "unknown"}), ValueError, "check-option"),
+    ("regex", ({}, {"regex": "", "mode": "match"}), TypeError, "'values' must be of type List"),
+]
+
+
+@pytest.mark.parametrize("check_type, args, exception_type, expected_in_output", exception_tests_eval)
+def tests_exceptions_eval(check_type, args, exception_type, expected_in_output):
+    """Tests exceptions when calling .evaluate() method."""
+    with pytest.raises(exception_type) as error:
+        check = CheckType.init(check_type)
+        check.evaluate(*args)
+    assert expected_in_output in error.value.__str__()
 
 
 exact_match_test_values_no_change = (
@@ -187,12 +216,10 @@ check_tests = [
 ]
 
 
-@pytest.mark.parametrize("folder_name, check_args, path, expected_result", check_tests)
-def test_checks(folder_name, check_args, path, expected_result):
+@pytest.mark.parametrize("folder_name, check_type_args, path, expected_result", check_tests)
+def test_checks(folder_name, check_type_args, path, expected_result):
     """Validate multiple checks on the same data to catch corner cases."""
-    pre_data, post_data = load_mocks(folder_name)
-
-    check = CheckType.init(*check_args)
+    check = CheckType.init(*check_type_args)
     pre_data, post_data = load_mocks(folder_name)
     pre_value = check.get_value(pre_data, path)
     post_value = check.get_value(post_data, path)
@@ -217,14 +244,14 @@ parameter_match_api = (
 )
 
 
-@pytest.mark.parametrize("filename, check_args, path, expected_result", [parameter_match_api])
-def test_param_match(filename, check_args, path, expected_result):
+@pytest.mark.parametrize("filename, check_type_args, path, expected_result", [parameter_match_api])
+def test_param_match(filename, check_type_args, path, expected_result):
     """Validate parameter_match check type."""
-    check = CheckType.init(*check_args)
+    check = CheckType.init(check_type_args[0])
     # There is not concept of "pre" and "post" in parameter_match.
     data = load_json_file("parameter_match", filename)
     value = check.get_value(data, path)
-    actual_results = check.evaluate(value, check_args)
+    actual_results = check.evaluate(value, check_type_args[1])
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
         output=actual_results, expected_output=expected_result
     )
@@ -262,14 +289,14 @@ regex_match = [
 ]
 
 
-@pytest.mark.parametrize("filename, check_args, path, expected_result", regex_match)
-def test_regex_match(filename, check_args, path, expected_result):
+@pytest.mark.parametrize("filename, check_type_args, path, expected_result", regex_match)
+def test_regex_match(filename, check_type_args, path, expected_result):
     """Validate regex check type."""
-    check = CheckType.init(*check_args)
+    check = CheckType.init(check_type_args[0])
     # There is not concept of "pre" and "post" in parameter_match.
     data = load_json_file("api", filename)
     value = check.get_value(data, path)
-    actual_results = check.evaluate(value, check_args)
+    actual_results = check.evaluate(value, check_type_args[1])
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
         output=actual_results, expected_output=expected_result
     )
