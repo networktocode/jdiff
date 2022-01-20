@@ -3,6 +3,14 @@ import re
 from typing import Mapping, Tuple, List, Dict, Any, Union
 import jmespath
 
+from netcompare.arguments import (
+    CheckArguments,
+    CheckArgumentsExactMatch,
+    CheckArgumentsParameterMatch,
+    CheckArgumentsRegexMatch,
+    CheckArgumentsToleranceMatch,
+)
+
 from .utils.jmespath_parsers import (
     jmespath_value_parser,
     jmespath_refkey_parser,
@@ -12,30 +20,32 @@ from .utils.jmespath_parsers import (
 )
 from .utils.data_normalization import exclude_filter, flatten_list
 from .evaluators import diff_generator, parameter_evaluator, regex_evaluator
+from .check_types import *
 
 
 class CheckType:
     """Check Type Class."""
 
+    class_args = CheckArguments
+
     def __init__(self, *args):
         """Check Type init method."""
 
     @staticmethod
-    def init(*args):
+    def init(check_type):
         """Factory pattern to get the appropriate CheckType implementation.
 
         Args:
             *args: Variable length argument list.
         """
-        check_type = args[0]
         if check_type == "exact_match":
-            return ExactMatchType(*args)
+            return ExactMatchType()
         if check_type == "tolerance":
-            return ToleranceType(*args)
+            return ToleranceType()
         if check_type == "parameter_match":
-            return ParameterMatchType(*args)
+            return ParameterMatchType()
         if check_type == "regex":
-            return RegexType(*args)
+            return RegexType()
 
         raise NotImplementedError
 
@@ -89,7 +99,7 @@ class CheckType:
 
         return values
 
-    def evaluate(self, reference_value: Any, value_to_compare: Any) -> Tuple[Dict, bool]:
+    def hook_evaluate(self, reference_value: CheckArguments, value_to_compare: Any) -> Tuple[Dict, bool]:
         """Return the result of the evaluation and a boolean True if it passes it or False otherwise.
 
         This method is the one that each CheckType has to implement.
@@ -103,13 +113,19 @@ class CheckType:
         """
         raise NotImplementedError
 
+    def evaluate(self, reference_value: dict, value_to_compare: Any) -> Tuple[Dict, bool]:
+
+        return self.hook_evaluate(self.args_class(reference_value), value_to_compare)
+
 
 class ExactMatchType(CheckType):
     """Exact Match class docstring."""
 
-    def evaluate(self, reference_value: Any, value_to_compare: Any) -> Tuple[Dict, bool]:
+    args_class = CheckArgumentsExactMatch
+
+    def evaluate(self, reference_value: CheckArgumentsExactMatch, value_to_compare: Any) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean."""
-        evaluation_result = diff_generator(reference_value, value_to_compare)
+        evaluation_result = diff_generator(reference_value.reference_data, value_to_compare)
         return evaluation_result, not evaluation_result
 
 
@@ -129,18 +145,20 @@ class ToleranceType(CheckType):
 
         self.tolerance_factor = tolerance / 100
 
-    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Dict, bool]:
+    def hook_evaluate(
+        self, reference_value: CheckArgumentsToleranceMatch, value_to_compare: Mapping
+    ) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean. Overwrites method in base class."""
-        diff = diff_generator(reference_value, value_to_compare)
-        self._remove_within_tolerance(diff)
+        diff = diff_generator(reference_value.reference_data, value_to_compare)
+        self._remove_within_tolerance(diff, reference_value.tolerance)
         return diff, not diff
 
-    def _remove_within_tolerance(self, diff: Dict) -> None:
+    def _remove_within_tolerance(self, diff: Dict, tolerance: int) -> None:
         """Recursively look into diff and apply tolerance check, remove reported difference when within tolerance."""
 
         def _within_tolerance(*, old_value: float, new_value: float) -> bool:
             """Return True if new value is within the tolerance range of the previous value."""
-            max_diff = old_value * self.tolerance_factor
+            max_diff = old_value * tolerance
             return (old_value - max_diff) < new_value < (old_value + max_diff)
 
         for key, value in list(diff.items()):  # casting list makes copy, so we don't modify object being iterated.
@@ -148,7 +166,7 @@ class ToleranceType(CheckType):
                 if "new_value" in value.keys() and "old_value" in value.keys() and _within_tolerance(**value):
                     diff.pop(key)
                 else:
-                    self._remove_within_tolerance(diff[key])
+                    self._remove_within_tolerance(diff[key], tolerance)
                 if not value:
                     diff.pop(key)
 
@@ -156,11 +174,14 @@ class ToleranceType(CheckType):
 class ParameterMatchType(CheckType):
     """Parameter Match class implementation."""
 
-    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Dict, bool]:
+    def hook_evaluate(
+        self, reference_value: CheckArgumentsParameterMatch, value_to_compare: Mapping
+    ) -> Tuple[Dict, bool]:
         """Parameter Match evaluator implementation."""
         if not isinstance(value_to_compare, dict):
             raise TypeError("check_option must be of type dict()")
 
+        # TODO: update this
         evaluation_result = parameter_evaluator(reference_value, value_to_compare)
         return evaluation_result, not evaluation_result
 
@@ -168,7 +189,9 @@ class ParameterMatchType(CheckType):
 class RegexType(CheckType):
     """Regex Match class implementation."""
 
-    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
+    def hook_evaluate(
+        self, reference_value: CheckArgumentsRegexMatch, value_to_compare: Mapping
+    ) -> Tuple[Mapping, bool]:
         """Regex Match evaluator implementation."""
         # Check that check value_to_compare is dict.
         if not isinstance(value_to_compare, dict):
@@ -186,5 +209,6 @@ class RegexType(CheckType):
                 "Regex check-type requires check-option. Example: dict(regex='.*UNDERLAY.*', mode='no-match')."
             )
 
+        # TODO: update this
         diff = regex_evaluator(reference_value, value_to_compare)
         return diff, not diff
