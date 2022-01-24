@@ -230,9 +230,9 @@ def test_regex_match(filename, check_args, path, expected_result):
         output=actual_results, expected_output=expected_result
     )
 
-range_all_same = (
+operator_all_same = (
     "api",
-    ("range", {"all-same": True}),
+    ("operator", {"all-same": True}),
     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup,vrf,state]",
     (
         {},     #TBD
@@ -240,9 +240,9 @@ range_all_same = (
     ),
 )
 
-range_is_equal = (
+operator_is_equal = (
     "api",
-    ("range", {"is-equal": 100}),
+    ("operator", {"is-equal": 100}),
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]",
     (
         {},     #TBD
@@ -250,9 +250,9 @@ range_is_equal = (
     ),
 )
 
-range_not_equal = (
+operator_not_equal = (
     "api",
-    ("range", {"not-equal": "internal"}),
+    ("operator", {"not-equal": "internal"}),
     "result[0].vrfs.default.peerList[*].[$peerAddress$,linkType]",
     (
         {},     #TBD
@@ -260,9 +260,9 @@ range_not_equal = (
     ),
 )
 
-range_contains = (
+operator_contains = (
     "api",
-    ("range", {"contains": "EVPN"}),
+    ("operator", {"contains": "EVPN"}),
     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
     (
         {},     #TBD
@@ -270,9 +270,9 @@ range_contains = (
     ),
 )
 
-range_not_contains = (
+operator_not_contains = (
     "api",
-    ("range", {"not-contains": "OVERLAY"}),
+    ("operator", {"not-contains": "OVERLAY"}),
     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
     (
         {},     #TBD
@@ -280,9 +280,9 @@ range_not_contains = (
     ),
 )
 
-range_is_gt = (
+operator_is_gt = (
     "api",
-    ("range", {"is-gt": 70000000}),
+    ("operator", {"is-gt": 70000000}),
     "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
     (
         {},     #TBD
@@ -290,9 +290,9 @@ range_is_gt = (
     ),
 )
 
-range_is_lt = (
+operator_is_lt = (
     "api",
-    ("range", {"is-lt": 80000000}),
+    ("operator", {"is-lt": 80000000}),
     "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
     (
         {},     #TBD
@@ -300,9 +300,9 @@ range_is_lt = (
     ),
 )
 
-range_in_range = (
+operator_in_operator = (
     "api",
-    ("range", {"in-range": (70000000, 80000000)}),
+    ("operator", {"in-operator": (70000000, 80000000)}),
     "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
     (
         {},     #TBD
@@ -310,9 +310,9 @@ range_in_range = (
     ),
 )
 
-range_not_range = (
+operator_not_operator = (
     "api",
-    ("range", {"not-range": (70000000, 80000000)}),
+    ("operator", {"not-range": (70000000, 80000000)}),
     "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
     (
         {},     #TBD
@@ -320,9 +320,9 @@ range_not_range = (
     ),
 )
 
-range_is_in = (
+operator_is_in = (
     "api",
-    ("range", {"is-in": ("Idle", "Down")}),
+    ("operator", {"is-in": ("Idle", "Down")}),
     "result[0].vrfs.default.peerList[*].[$peerAddress$,state]",
     (
         {},     #TBD
@@ -330,36 +330,36 @@ range_is_in = (
     ),
 )
 
-range_not_in = (
+operator_not_in = (
     "api",
-    ("range", {"not-in": ("Idle", "Down")}),
+    ("operator", {"not-in": ("Idle", "Down")}),
     "result[0].vrfs.default.peerList[*].[$peerAddress$,state]",
     (
         {},     #TBD
         False,  #TBD
     ),
 )
-range_all_tests = [
+operator_all_tests = [
     # type() == str(), int(), float()
-    range_all_same,
-    range_is_equal,
-    range_not_equal,
-    range_contains,
-    range_not_contains,
-    # type() == int(), float()
-    range_is_gt,
-    range_is_lt,
-    range_in_range,
-    range_not_range,
-    # type() == dict()
-    range_is_in,
-    range_not_in,
+    operator_all_same,
+    # operator_is_equal,
+    # operator_not_equal,
+    # operator_contains,
+    # operator_not_contains,
+    # # type() == int(), float()
+    # operator_is_gt,
+    # operator_is_lt,
+    # operator_in_operator,
+    # operator_not_operator,
+    # # type() == dict()
+    # operator_is_in,
+    # operator_not_in,
 ]
 
 
-@pytest.mark.parametrize("folder_name, check_args, path, expected_result", range_all_tests)
-def test_range(folder_name, check_args, path, expected_result):
-    """Validate all range check types."""
+@pytest.mark.parametrize("folder_name, check_args, path, expected_result", operator_all_tests)
+def test_operator(folder_name, check_args, path, expected_result):
+    """Validate all operator check types."""
     pre_data, post_data = load_mocks(folder_name)
 
     check = CheckType.init(*check_args)
