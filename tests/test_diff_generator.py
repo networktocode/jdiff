@@ -131,7 +131,14 @@ exact_match_multi_nested_list = (
     },
 )
 
-textfsm_ospf_int_br_exact_match = (
+exact_match_textfsm_ospf_int_br_raw = (
+    "textfsm_ospf_int_br",
+    "",
+    [],
+    {"state": {"new_value": "DOWN", "old_value": "P2P", "new_value_dup!": "DR", "old_value_dup!": "BDR"}},
+)
+
+exact_match_textfsm_ospf_int_br_normalized = (
     "textfsm_ospf_int_br",
     "[*].[$interface$,area,ip_address_mask,cost,state,neighbors_fc]",
     [],
@@ -152,7 +159,8 @@ eval_tests = [
     exact_match_additional_item,
     exact_match_changed_item,
     exact_match_multi_nested_list,
-    textfsm_ospf_int_br_exact_match,
+    exact_match_textfsm_ospf_int_br_raw,
+    exact_match_textfsm_ospf_int_br_normalized,
 ]
 
 

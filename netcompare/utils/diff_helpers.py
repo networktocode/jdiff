@@ -77,5 +77,7 @@ def dict_merger(original_dict: Dict, dict_to_merge: Dict):
     for key in dict_to_merge.keys():
         if key in original_dict and isinstance(original_dict[key], dict) and isinstance(dict_to_merge[key], dict):
             dict_merger(original_dict[key], dict_to_merge[key])
+        elif key in original_dict.keys():
+            original_dict[key + "_dup!"] = dict_to_merge[key]  # avoid overwriting existing keys.
         else:
             original_dict[key] = dict_to_merge[key]
