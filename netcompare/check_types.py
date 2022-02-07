@@ -149,7 +149,8 @@ class ToleranceType(CheckType):
 
         def _within_tolerance(*, old_value: float, new_value: float) -> bool:
             """Return True if new value is within the tolerance range of the previous value."""
-            max_diff = old_value * tolerance
+            tolerance_factor = tolerance / 100
+            max_diff = old_value * tolerance_factor
             return (old_value - max_diff) < new_value < (old_value + max_diff)
 
         for key, value in list(diff.items()):  # casting list makes copy, so we don't modify object being iterated.
