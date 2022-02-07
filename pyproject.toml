@@ -5,7 +5,7 @@ description = ""
 authors = ["Network to Code, LLC <info@networktocode.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.6.2"
 deepdiff = "^5.5.0"
 jmespath = "^0.10.0"
 bandit = "^1.7.1"
