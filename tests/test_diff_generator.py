@@ -30,7 +30,8 @@ exact_match_of_bgp_peer_caps_via_api = (
 
 exact_match_of_bgp_neigh_via_textfsm = (
     "textfsm",
-    "result[*].[$bgp_neigh$,state]",
+    "",
+    # "result[*].[$bgp_neigh$,state]",
     [],
     {"10.17.254.2": {"state": {"new_value": "Up", "old_value": "Idle"}}},
 )
@@ -132,16 +133,16 @@ exact_match_multi_nested_list = (
 )
 
 eval_tests = [
-    exact_match_of_global_peers_via_napalm_getter,
-    exact_match_of_bgp_peer_caps_via_api,
+    # exact_match_of_global_peers_via_napalm_getter,
+    # exact_match_of_bgp_peer_caps_via_api,
     exact_match_of_bgp_neigh_via_textfsm,
-    raw_diff_of_interface_ma1_via_api_value_exclude,
-    raw_diff_of_interface_ma1_via_api_novalue_exclude,
-    raw_diff_of_interface_ma1_via_api_novalue_noexclude,
-    exact_match_missing_item,
-    exact_match_additional_item,
-    exact_match_changed_item,
-    exact_match_multi_nested_list,
+    # raw_diff_of_interface_ma1_via_api_value_exclude,
+    # raw_diff_of_interface_ma1_via_api_novalue_exclude,
+    # raw_diff_of_interface_ma1_via_api_novalue_noexclude,
+    # exact_match_missing_item,
+    # exact_match_additional_item,
+    # exact_match_changed_item,
+    # exact_match_multi_nested_list,
 ]
 
 
