@@ -3,13 +3,6 @@ import re
 from typing import Mapping, Tuple, List, Dict, Any, Union
 import jmespath
 
-from netcompare.arguments import (
-    CheckArguments,
-    CheckArgumentsExactMatch,
-    CheckArgumentsRegexMatch,
-    CheckArgumentsParameterMatch,
-    CheckArgumentsToleranceMatch,
-)
 
 from .utils.jmespath_parsers import (
     jmespath_value_parser,
@@ -26,8 +19,6 @@ from .evaluators import diff_generator, parameter_evaluator, regex_evaluator
 
 class CheckType:
     """Check Type Class."""
-
-    class_args = CheckArguments
 
     @staticmethod
     def init(check_type):
@@ -108,17 +99,27 @@ class CheckType:
         Returns:
             tuple: Dictionary representing check result, bool indicating if differences are found.
         """
+        # This method should call before any other logic the validation of the arguments
+        # self.validate(**kwargs)
+        raise NotImplementedError
+
+    @staticmethod
+    def validate(**kwargs):
+        """Method to validate arguments that raises proper exceptions."""
         raise NotImplementedError
 
 
 class ExactMatchType(CheckType):
     """Exact Match class docstring."""
 
-    validator_class = CheckArgumentsExactMatch
+    @staticmethod
+    def validate(**kwargs):
+        """Method to validate arguments."""
+        # reference_data = getattr(kwargs, "reference_data")
 
     def evaluate(self, value_to_compare: Any, reference_data: Any) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean."""
-        self.validator_class.validate(reference_data=reference_data)
+        self.validate(reference_data=reference_data)
         evaluation_result = diff_generator(reference_data, value_to_compare)
         return evaluation_result, not evaluation_result
 
@@ -126,11 +127,19 @@ class ExactMatchType(CheckType):
 class ToleranceType(CheckType):
     """Tolerance class docstring."""
 
-    validator_class = CheckArgumentsToleranceMatch
+    @staticmethod
+    def validate(**kwargs):
+        """Method to validate arguments."""
+        # reference_data = getattr(kwargs, "reference_data")
+        tolerance = kwargs.get("tolerance")
+        if not tolerance:
+            raise ValueError("Tolerance argument is mandatory for Tolerance Check Type.")
+        if not isinstance(tolerance, int):
+            raise ValueError(f"Tolerance argument must be an integer, and it's {type(tolerance)}.")
 
     def evaluate(self, value_to_compare: Any, reference_data: Any, tolerance: int) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean. Overwrites method in base class."""
-        self.validator_class.validate(reference_data=reference_data, tolerance=tolerance)
+        self.validate(reference_data=reference_data, tolerance=tolerance)
         diff = diff_generator(reference_data, value_to_compare)
         self._remove_within_tolerance(diff, tolerance)
         return diff, not diff
@@ -156,11 +165,27 @@ class ToleranceType(CheckType):
 class ParameterMatchType(CheckType):
     """Parameter Match class implementation."""
 
-    validator_class = CheckArgumentsParameterMatch
+    @staticmethod
+    def validate(**kwargs):
+        """Method to validate arguments."""
+        mode_options = ["match", "no-match"]
+        params = kwargs.get("params")
+        if not params:
+            raise ValueError("Params argument is mandatory for ParameterMatch Check Type.")
+        if not isinstance(params, dict):
+            raise ValueError(f"Params argument must be a dict, and it's {type(params)}.")
+
+        mode = kwargs.get("mode")
+        if not mode:
+            raise ValueError("Mode argument is mandatory for ParameterMatch Check Type.")
+        if not isinstance(mode, str):
+            raise ValueError(f"Mode argument must be a string, and it's {type(mode)}.")
+        if mode not in mode_options:
+            raise ValueError(f"Mode argument should be {mode_options}, and it's {mode}")
 
     def evaluate(self, value_to_compare: Mapping, params: Dict, mode: str) -> Tuple[Dict, bool]:
         """Parameter Match evaluator implementation."""
-        self.validator_class.validate(params=params, mode=mode)
+        self.validate(params=params, mode=mode)
         # TODO: we don't use the mode?
         evaluation_result = parameter_evaluator(value_to_compare, params)
         return evaluation_result, not evaluation_result
@@ -169,10 +194,26 @@ class ParameterMatchType(CheckType):
 class RegexType(CheckType):
     """Regex Match class implementation."""
 
-    validator_class = CheckArgumentsRegexMatch
+    @staticmethod
+    def validate(**kwargs):
+        """Method to validate arguments."""
+        mode_options = ["match", "no-match"]
+        regex = kwargs.get("regex")
+        if not regex:
+            raise ValueError("Params argument is mandatory for Regex Match Check Type.")
+        if not isinstance(regex, str):
+            raise ValueError(f"Params argument must be a string, and it's {type(regex)}.")
+
+        mode = kwargs.get("mode")
+        if not mode:
+            raise ValueError("Mode argument is mandatory for Regex Match Check Type.")
+        if not isinstance(mode, str):
+            raise ValueError(f"Mode argument must be a string, and it's {type(mode)}.")
+        if mode not in mode_options:
+            raise ValueError(f"Mode argument should be {mode_options}, and it's {mode}")
 
     def evaluate(self, value_to_compare: Mapping, regex: str, mode: str) -> Tuple[Mapping, bool]:
         """Regex Match evaluator implementation."""
-        self.validator_class.validate(regex=regex, mode=mode)
+        self.validate(regex=regex, mode=mode)
         diff = regex_evaluator(value_to_compare, regex, mode)
         return diff, not diff
