@@ -1,6 +1,7 @@
 """CheckType Implementation."""
 import re
 from typing import Mapping, Tuple, List, Dict, Any, Union
+from abc import ABC, abstractmethod
 import jmespath
 
 
@@ -17,11 +18,11 @@ from .evaluators import diff_generator, parameter_evaluator, regex_evaluator
 # pylint: disable=arguments-differ
 
 
-class CheckType:
-    """Check Type Class."""
+class CheckType(ABC):
+    """Check Type Base Abstract Class."""
 
     @staticmethod
-    def init(check_type):
+    def init(check_type: str):
         """Factory pattern to get the appropriate CheckType implementation.
 
         Args:
@@ -68,7 +69,7 @@ class CheckType:
             return values
 
         for element in values:  # process elements to check is lists should be flatten
-            # TODO: Not sure how this is working becasyse from `jmespath.search` it's supposed to get a flat list
+            # TODO: Not sure how this is working because from `jmespath.search` it's supposed to get a flat list
             # of str or Decimals, not another list...
             for item in element:
                 if isinstance(item, dict):  # raise if there is a dict, path must be more specific to extract data
@@ -88,25 +89,26 @@ class CheckType:
 
         return values
 
-    def evaluate(self, value_to_compare: Any, **kwargs) -> Tuple[Dict, bool]:
+    @abstractmethod
+    def evaluate(self, *args, **kwargs) -> Tuple[Dict, bool]:
         """Return the result of the evaluation and a boolean True if it passes it or False otherwise.
 
         This method is the one that each CheckType has to implement.
 
         Args:
-            value_to_compare: Similar value as above to perform comparison.
+            *args: arguments specific to child class implementation
+            **kwargs: named arguments
 
         Returns:
             tuple: Dictionary representing check result, bool indicating if differences are found.
         """
         # This method should call before any other logic the validation of the arguments
         # self.validate(**kwargs)
-        raise NotImplementedError
 
     @staticmethod
-    def validate(**kwargs):
+    @abstractmethod
+    def validate(**kwargs) -> None:
         """Method to validate arguments that raises proper exceptions."""
-        raise NotImplementedError
 
 
 class ExactMatchType(CheckType):

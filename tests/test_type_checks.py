@@ -1,12 +1,49 @@
-"Check Type unit tests."
+"""Check Type unit tests."""
 import pytest
-from netcompare.check_types import CheckType, ExactMatchType, ToleranceType
+from netcompare.check_types import CheckType, ExactMatchType, ToleranceType, ParameterMatchType, RegexType
 from .utility import load_json_file, load_mocks, ASSERT_FAIL_MESSAGE
+
+
+def test_child_class_raises_exception():
+    """Tests that exception is raised for child class when abstract methods are not implemented."""
+
+    class CheckTypeChild(CheckType):
+        """Test Class."""
+
+    with pytest.raises(TypeError) as error:
+        CheckTypeChild()  # pylint: disable=E0110
+
+    assert (
+        "Can't instantiate abstract class CheckTypeChild"
+        " with abstract methods evaluate, validate" in error.value.__str__()
+    )
+
+
+def test_child_class_proper_implementation():
+    """Test properly implemented child class can be instantiated."""
+
+    class CheckTypeChild(CheckType):
+        """Test Class."""
+
+        @staticmethod
+        def validate(**kwargs):
+            return None
+
+        def evaluate(self, *args, **kwargs):
+            return {}, True
+
+    check = CheckTypeChild()
+    assert isinstance(check, CheckTypeChild) and check.validate() is None and check.evaluate() == ({}, True)
 
 
 @pytest.mark.parametrize(
     "check_type_str, expected_class",
-    [("exact_match", ExactMatchType), ("tolerance", ToleranceType)],
+    [
+        ("exact_match", ExactMatchType),
+        ("tolerance", ToleranceType),
+        ("parameter_match", ParameterMatchType),
+        ("regex", RegexType),
+    ],
 )
 def test_check_init(check_type_str, expected_class):
     """Validate that the returned class is the expected one."""
