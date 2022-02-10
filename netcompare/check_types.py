@@ -115,7 +115,7 @@ class ExactMatchType(CheckType):
     """Exact Match class docstring."""
 
     @staticmethod
-    def validate(**kwargs):
+    def validate(**kwargs) -> None:
         """Method to validate arguments."""
         # reference_data = getattr(kwargs, "reference_data")
 
@@ -130,7 +130,7 @@ class ToleranceType(CheckType):
     """Tolerance class docstring."""
 
     @staticmethod
-    def validate(**kwargs):
+    def validate(**kwargs) -> None:
         """Method to validate arguments."""
         # reference_data = getattr(kwargs, "reference_data")
         tolerance = kwargs.get("tolerance")
@@ -169,7 +169,7 @@ class ParameterMatchType(CheckType):
     """Parameter Match class implementation."""
 
     @staticmethod
-    def validate(**kwargs):
+    def validate(**kwargs) -> None:
         """Method to validate arguments."""
         mode_options = ["match", "no-match"]
         params = kwargs.get("params")
@@ -198,7 +198,7 @@ class RegexType(CheckType):
     """Regex Match class implementation."""
 
     @staticmethod
-    def validate(**kwargs):
+    def validate(**kwargs) -> None:
         """Method to validate arguments."""
         mode_options = ["match", "no-match"]
         regex = kwargs.get("regex")
@@ -220,3 +220,107 @@ class RegexType(CheckType):
         self.validate(regex=regex, mode=mode)
         diff = regex_evaluator(value_to_compare, regex, mode)
         return diff, not diff
+
+
+class OperatorType(CheckType):
+    """Operator class implementation."""
+
+    @staticmethod
+    def validate(**kwargs) -> None:
+        ins = (
+            "is-in", 
+            "not-in",
+            "in-range",
+            "not-range"
+        )
+        # ('all-same', ('is-in',
+        bools = ("all-same",)
+        numbers = ("is-gt","is-lt")
+        equals = ("is-equal", "not-equal")
+        strings = ("contains", "not-contains")
+        valid_options = (
+            bools,
+            ins,
+            numbers,
+            strings,
+            equals,
+        )
+
+        # Validate "params" argument is not None.
+        try:
+            params = kwargs['params']
+        except KeyError:
+            raise KeyError(f"'params' argument must be provided. You have {kwargs}. Read the docs for more info.")
+
+        # Validate "params" value is legal.
+        if not any(params in operator for operator in valid_options):
+            raise ValueError(f"'params' value must be one of the following: {[sub_element for element in valid_options for sub_element in element]}" )
+
+
+        
+
+
+
+
+
+
+    # elif parameter_key in iter:
+    #     #"in", "not-in", "in-range", "not-range" requires an iterable
+    #     if not isinstance(parameter_value, list) or not isinstance(parameter_value, tuple):
+    #         raise ValueError(f"Range check-option {iter} must have value of type list or tuple. i.e: dict(not-in=('Idle', 'Down')")
+    #     # "in-range", "not-range" requires int or floar where value at index 0 is lower than value at index 1
+    #     if "range" in parameter_key:
+    #         if not (isinstance(parameter_value[0], int) or isinstance(parameter_value[0], float)) and not (isinstance(parameter_value[1], float) or isinstance(parameter_value[1], int)):
+    #             raise ValueError(f"Range check-option {iter} must have value of type list or tuple with items of type float or int. i.e: dict(not-range=(70000000, 80000000)")
+    #         if not parameter_value[0] < parameter_value[1]:
+    #             raise ValueError(f"'range' and 'not-range' must have value at index 0 lower than value at index 1. i.e: dict(not-range=(70000000, 80000000)")
+    #     else:
+    #         # "is-in", "not-in" requires iterable of strings
+    #         for item in parameter_value.values():
+    #             if not isinstance(item, str):
+    #                 raise ValueError(f"'is-in' and 'not-in' must be an iterable of strings. i.e: dict(is-in=(Idle, Down)")
+
+    # elif parameter_key in numbers:
+    #     if not isinstance(parameter_value, float) or not isinstance(parameter_value, int):
+    #         raise ValueError(f"Range check-option {numbers} must have value of type float or int. i.e: dict(is-lt=80000000)")
+
+    # elif parameter_key in strings:
+    #     if not isinstance(parameter_value, str):
+    #         raise ValueError(f"Range check-option {strings} must have value of type string. i.e: dict(contains='EVPN')")
+
+
+    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
+        """Operator evaluator implementation."""
+
+        # Assert that check parameters are at index 1.
+        try:
+            parameter = value_to_compare[1]
+        except IndexError as error:
+            raise IndexError(
+                f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}"
+            ) from error
+
+        parameter: list
+        @validator('parameter')
+        def parameter_must_be_dict(cls, v):
+            if not isinstance(v, list):
+                raise TypeError("check-option must be of type dict().")
+            return parameter
+        
+        # parameter_key = list(parameter.keys())[0]
+        # parameter_value = list(parameter.values())[0]
+
+        # parameter_key: list
+        # parameter_value: list
+        # @validator(parameter_key)
+        # def check_option_must_be_legal_option(parameter_key):
+        #     if parameter_key not in self.valid_options:
+        #         raise KeyError(
+        #             f"Range check-type requires one of the following check-option: {self.valid_options}"
+        #         )
+
+        # # Assert data type for each range option.
+        # if parameter_key in bools:
+        #     # "all-same" requires boolean True or False
+        #     if not isinstance(parameter_value, bool):
+        #         raise ValueError(f"Range check-option {bools} must have value of type bool. i.e: dict(all-same=True)")

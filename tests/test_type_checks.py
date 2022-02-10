@@ -1,6 +1,6 @@
 """Check Type unit tests."""
 import pytest
-from netcompare.check_types import CheckType, ExactMatchType, ToleranceType, ParameterMatchType, RegexType
+from netcompare.check_types import CheckType, ExactMatchType, OperatorType, ToleranceType, ParameterMatchType, RegexType
 from .utility import load_json_file, load_mocks, ASSERT_FAIL_MESSAGE
 
 
@@ -43,6 +43,7 @@ def test_child_class_proper_implementation():
         ("tolerance", ToleranceType),
         ("parameter_match", ParameterMatchType),
         ("regex", RegexType),
+        ("operator", OperatorType)
     ],
 )
 def test_check_init(check_type_str, expected_class):
@@ -355,3 +356,147 @@ def test_regex_match(filename, check_type_str, evaluate_args, path, expected_res
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
         output=actual_results, expected_output=expected_result
     )
+
+operator_all_same = (
+    "api",
+    "operator",
+    {"params", {"all-same": True}},
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup,vrf,state]",
+    (
+        {},     #TBD
+        False,  #TBD
+    ),
+)
+
+# operator_is_equal = (
+#     "api",
+#     "operator",
+#     ("operator", {"is-equal": 100}),
+#     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]",
+#     (
+#         {},     #TBD
+#         False,  #TBD
+#     ),
+# )
+
+# operator_not_equal = (
+#     "api",
+#     ("operator", {"not-equal": "internal"}),
+#     "result[0].vrfs.default.peerList[*].[$peerAddress$,linkType]",
+#     (
+#         {},     #TBD
+#         False,  #TBD
+#     ),
+# )
+
+# operator_contains = (
+#     "api",
+#     ("operator", {"contains": "EVPN"}),
+#     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
+#     (
+#         {},     #TBD
+#         False,  #TBD
+#     ),
+# )
+
+# operator_not_contains = (
+#     "api",
+#     ("operator", {"not-contains": "OVERLAY"}),
+#     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
+#     (
+#         {},     #TBD
+#         False,  #TBD
+#     ),
+# )
+
+# operator_is_gt = (
+#     "api",
+#     ("operator", {"is-gt": 70000000}),
+#     "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
+#     (
+#         {},     #TBD
+#         False,  #TBD
+#     ),
+# )
+
+# operator_is_lt = (
+#     "api",
+#     ("operator", {"is-lt": 80000000}),
+#     "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
+#     (
+#         {},     #TBD
+#         False,  #TBD
+#     ),
+# )
+
+# operator_in_operator = (
+#     "api",
+#     ("operator", {"in-operator": (70000000, 80000000)}),
+#     "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
+#     (
+#         {},     #TBD
+#         False,  #TBD
+#     ),
+# )
+
+# operator_not_operator = (
+#     "api",
+#     ("operator", {"not-range": (70000000, 80000000)}),
+#     "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
+#     (
+#         {},     #TBD
+#         False,  #TBD
+#     ),
+# )
+
+# operator_is_in = (
+#     "api",
+#     ("operator", {"is-in": ("Idle", "Down")}),
+#     "result[0].vrfs.default.peerList[*].[$peerAddress$,state]",
+#     (
+#         {},     #TBD
+#         False,  #TBD
+#     ),
+# )
+
+# operator_not_in = (
+#     "api",
+#     ("operator", {"not-in": ("Idle", "Down")}),
+#     "result[0].vrfs.default.peerList[*].[$peerAddress$,state]",
+#     (
+#         {},     #TBD
+#         False,  #TBD
+#     ),
+# )
+# operator_all_tests = [
+#     # type() == str(), int(), float()
+#     operator_all_same,
+#     operator_is_equal,
+#     operator_not_equal,
+#     operator_contains,
+#     operator_not_contains,
+#     # type() == int(), float()
+#     operator_is_gt,
+#     operator_is_lt,
+#     operator_in_operator,
+#     operator_not_operator,
+#     # type() == dict()
+#     operator_is_in,
+#     operator_not_in,
+# ]
+
+
+# @pytest.mark.parametrize("folder_name, check_args, path, expected_result", operator_all_tests)
+# def test_operator(folder_name, check_args, path, expected_result):
+#     """Validate all operator check types."""
+#     pre_data, post_data = load_mocks(folder_name)
+
+#     check = CheckType.init(*check_args)
+#     pre_data, post_data = load_mocks(folder_name)
+#     pre_value = check.get_value(pre_data, path)
+#     post_value = check.get_value(post_data, path)
+#     actual_results = check.evaluate(pre_value, post_value)
+
+#     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
+#         output=actual_results, expected_output=expected_result
+#     )
