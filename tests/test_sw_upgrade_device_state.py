@@ -14,14 +14,14 @@ from .utility import load_json_file
     ],
 )
 def test_show_version(platform, command, jpath, expected, test_result):
-    """Test expected version."""
+    """Test expected version with parameter_match."""
     filename = f"{platform}_{command}.json"
     command = load_json_file("sw_upgrade", filename)
 
     check = CheckType.init("parameter_match")
     value = check.get_value(command, jpath)
-    _, result = check.evaluate(value, expected, "match")  # pylint: disable=E1121
-    assert result is test_result
+    eval_results, passed = check.evaluate(value, expected, "match")  # pylint: disable=E1121
+    assert passed is test_result, f"FAILED, eval_result: {eval_results}"
 
 
 @pytest.mark.parametrize(
@@ -34,7 +34,7 @@ def test_show_version(platform, command, jpath, expected, test_result):
     ],
 )
 def test_show_interfaces_state(platform, command, jpath, test_result):
-    """Test the interface status."""
+    """Test the interface status with exact_match."""
     command_pre = load_json_file("sw_upgrade", f"{platform}_{command}.json")
     command_post = load_json_file("sw_upgrade", f"{platform}_{command}.json")
 
@@ -45,8 +45,8 @@ def test_show_interfaces_state(platform, command, jpath, test_result):
     check = CheckType.init("exact_match")
     pre_value = CheckType.get_value(command_pre, jpath)
     post_value = CheckType.get_value(command_post, jpath)
-    _, result = check.evaluate(post_value, pre_value)
-    assert result is test_result
+    eval_results, passed = check.evaluate(post_value, pre_value)
+    assert passed is test_result, f"FAILED, eval_result: {eval_results}"
 
 
 @pytest.mark.parametrize(
@@ -57,12 +57,12 @@ def test_show_interfaces_state(platform, command, jpath, test_result):
     ],
 )
 def test_show_ip_route_exact_match(platform, command):
-    """Test identical route table pass the test."""
+    """Test identical route table pass the test with exact_match."""
     command_pre = command_post = load_json_file("sw_upgrade", f"{platform}_{command}.json")
 
     check = CheckType.init("exact_match")
-    _, result = check.evaluate(command_post, command_pre)
-    assert result is True
+    eval_results, passed = check.evaluate(command_post, command_pre)
+    assert passed is True, f"FAILED, eval_result: {eval_results}"
 
 
 @pytest.mark.parametrize(
@@ -73,12 +73,14 @@ def test_show_ip_route_exact_match(platform, command):
     ],
 )
 def test_show_ip_route_missing_and_additional_routes(platform, command):
-    """Test missing or additional routes fail the test."""
+    """Test missing or additional routes fail the test with exact_match."""
     command_pre = command_post = load_json_file("sw_upgrade", f"{platform}_{command}.json")
     check = CheckType.init("exact_match")
-    _, result_missing_routes = check.evaluate(command_post[:30], command_pre)
-    _, result_additional_routes = check.evaluate(command_post, command_pre[:30])
-    assert result_missing_routes is False and result_additional_routes is False
+    eval_results_missing, passed_missing = check.evaluate(command_post[:30], command_pre)
+    eval_results_additional, passed_additional = check.evaluate(command_post, command_pre[:30])
+    assert (
+        passed_missing is False and passed_additional is False
+    ), f"FAILED, eval_results_missing: {eval_results_missing}; eval_results_additional: {eval_results_additional}"
 
 
 @pytest.mark.parametrize(
@@ -91,6 +93,7 @@ def test_show_ip_route_missing_and_additional_routes(platform, command):
     ],
 )
 def test_bgp_neighbor_state(platform, command, jpath, test_result):
+    """Test bgp neighbors state with exact_match."""
     command_pre = load_json_file("sw_upgrade", f"{platform}_{command}.json")
     command_post = load_json_file("sw_upgrade", f"{platform}_{command}.json")
 
@@ -101,8 +104,8 @@ def test_bgp_neighbor_state(platform, command, jpath, test_result):
     check = CheckType.init("exact_match")
     pre_value = CheckType.get_value(command_pre, jpath)
     post_value = CheckType.get_value(command_post, jpath)
-    _, result = check.evaluate(post_value, pre_value)
-    assert result is test_result
+    eval_results, passed = check.evaluate(post_value, pre_value)
+    assert passed is test_result, f"FAILED, eval_result: {eval_results}"
 
 
 @pytest.mark.parametrize(
@@ -114,6 +117,7 @@ def test_bgp_neighbor_state(platform, command, jpath, test_result):
     ],
 )
 def test_bgp_prefix_tolerance(platform, command, prfx_post_value, tolerance, test_result):
+    """Test bgp peer prefix count with tolerance."""
     command_pre = load_json_file("sw_upgrade", f"{platform}_{command}.json")
     command_post = load_json_file("sw_upgrade", f"{platform}_{command}.json")
 
@@ -124,8 +128,8 @@ def test_bgp_prefix_tolerance(platform, command, prfx_post_value, tolerance, tes
     pre_value = CheckType.get_value(command_pre, jpath)
     post_value = CheckType.get_value(command_post, jpath)
 
-    _, result = check.evaluate(post_value, pre_value, tolerance)  # pylint: disable=E1121
-    assert result is test_result
+    eval_results, passed = check.evaluate(post_value, pre_value, tolerance)  # pylint: disable=E1121
+    assert passed is test_result, f"FAILED, eval_result: {eval_results}"
 
 
 @pytest.mark.parametrize(
@@ -138,6 +142,7 @@ def test_bgp_prefix_tolerance(platform, command, prfx_post_value, tolerance, tes
     ],
 )
 def test_ospf_neighbor_state(platform, command, jpath, test_result):
+    """Test ospf neighbors with exact_match."""
     command_pre = load_json_file("sw_upgrade", f"{platform}_{command}.json")
     command_post = load_json_file("sw_upgrade", f"{platform}_{command}.json")
 
@@ -148,8 +153,8 @@ def test_ospf_neighbor_state(platform, command, jpath, test_result):
     check = CheckType.init("exact_match")
     pre_value = CheckType.get_value(command_pre, jpath)
     post_value = CheckType.get_value(command_post, jpath)
-    _, result = check.evaluate(post_value, pre_value)
-    assert result is test_result
+    eval_results, passed = check.evaluate(post_value, pre_value)
+    assert passed is test_result, f"FAILED, eval_result: {eval_results}"
 
 
 @pytest.mark.skip(reason="Command output not available")
@@ -167,6 +172,7 @@ def test_pim_neighbors():
     ],
 )
 def test_lldp_neighbor_state(platform, command, test_result):
+    """Test LLDP neighbors with exact match."""
     command_pre = load_json_file("sw_upgrade", f"{platform}_{command}.json")
     command_post = load_json_file("sw_upgrade", f"{platform}_{command}.json")
 
@@ -174,5 +180,5 @@ def test_lldp_neighbor_state(platform, command, test_result):
         command_post = command_post[:2]
 
     check = CheckType.init("exact_match")
-    _, result = check.evaluate(command_post, command_pre)
-    assert result is test_result
+    eval_results, passed = check.evaluate(command_post, command_pre)
+    assert passed is test_result, f"FAILED, eval_result: {eval_results}"
