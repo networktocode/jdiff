@@ -106,6 +106,29 @@ def test_bgp_neighbor_state(platform, command, jpath, test_result):
 
 
 @pytest.mark.parametrize(
+    "platform, command, prfx_post_value, tolerance, test_result",
+    [
+        ("cisco_ios", "show_ip_bgp_summary", "5457", 10, True),
+        ("cisco_ios", "show_ip_bgp_summary", "5456", 10, False),
+        ("cisco_ios", "show_ip_bgp_summary", "Idle", 10, False),
+    ],
+)
+def test_bgp_prefix_tolerance(platform, command, prfx_post_value, tolerance, test_result):
+    command_pre = load_json_file("sw_upgrade", f"{platform}_{command}.json")
+    command_post = load_json_file("sw_upgrade", f"{platform}_{command}.json")
+
+    command_post[0]["state_pfxrcd"] = prfx_post_value
+
+    check = CheckType.init("tolerance")
+    jpath = "[].[$bgp_neigh$,state_pfxrcd]"
+    pre_value = CheckType.get_value(command_pre, jpath)
+    post_value = CheckType.get_value(command_post, jpath)
+
+    _, result = check.evaluate(post_value, pre_value, tolerance)  # pylint: disable=E1121
+    assert result is test_result
+
+
+@pytest.mark.parametrize(
     "platform, command, jpath, test_result",
     [
         ("arista_eos", "show_ip_ospf_neighbors", "[*].[$neighbor_id$,state]", True),
