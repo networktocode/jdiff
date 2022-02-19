@@ -20,8 +20,8 @@ def test_show_version(platform, command, jpath, expected, test_result):
 
     check = CheckType.init("parameter_match")
     value = check.get_value(command, jpath)
-    result = check.evaluate(value, expected, "match")  # pylint: disable=E1121
-    assert result[1] is test_result
+    _, result = check.evaluate(value, expected, "match")  # pylint: disable=E1121
+    assert result is test_result
 
 
 @pytest.mark.parametrize(
@@ -45,8 +45,8 @@ def test_show_interfaces_state(platform, command, jpath, test_result):
     check = CheckType.init("exact_match")
     pre_value = CheckType.get_value(command_pre, jpath)
     post_value = CheckType.get_value(command_post, jpath)
-    result = check.evaluate(post_value, pre_value)
-    assert result[1] is test_result
+    _, result = check.evaluate(post_value, pre_value)
+    assert result is test_result
 
 
 @pytest.mark.parametrize(
@@ -61,11 +61,10 @@ def test_show_ip_route_exact_match(platform, command):
     command_pre = command_post = load_json_file("sw_upgrade", f"{platform}_{command}.json")
 
     check = CheckType.init("exact_match")
-    result = check.evaluate(command_post, command_pre)
-    assert result[1] is True
+    _, result = check.evaluate(command_post, command_pre)
+    assert result is True
 
 
-@pytest.mark.xfail(reason="./utils/diff_helpers.py:32: AttributeError, list of dicts with different elem number.")
 @pytest.mark.parametrize(
     "platform, command",
     [
@@ -77,9 +76,9 @@ def test_show_ip_route_missing_and_additional_routes(platform, command):
     """Test missing or additional routes fail the test."""
     command_pre = command_post = load_json_file("sw_upgrade", f"{platform}_{command}.json")
     check = CheckType.init("exact_match")
-    result_missing_routes = check.evaluate(command_post[:30], command_pre)
-    result_additional_routes = check.evaluate(command_post, command_pre[:30])
-    assert result_missing_routes[1] is False and result_additional_routes[1] is False
+    _, result_missing_routes = check.evaluate(command_post[:30], command_pre)
+    _, result_additional_routes = check.evaluate(command_post, command_pre[:30])
+    assert result_missing_routes is False and result_additional_routes is False
 
 
 @pytest.mark.parametrize(
@@ -102,8 +101,8 @@ def test_bgp_neighbor_state(platform, command, jpath, test_result):
     check = CheckType.init("exact_match")
     pre_value = CheckType.get_value(command_pre, jpath)
     post_value = CheckType.get_value(command_post, jpath)
-    result = check.evaluate(post_value, pre_value)
-    assert result[1] is test_result
+    _, result = check.evaluate(post_value, pre_value)
+    assert result is test_result
 
 
 @pytest.mark.parametrize(
@@ -122,13 +121,12 @@ def test_ospf_neighbor_state(platform, command, jpath, test_result):
     if test_result is False:
         command_post[0]["state"] = "2WAY"
         command_post = command_post[:1]
-        pytest.xfail("./utils/diff_helpers.py:32: AttributeError")
 
     check = CheckType.init("exact_match")
     pre_value = CheckType.get_value(command_pre, jpath)
     post_value = CheckType.get_value(command_post, jpath)
-    result = check.evaluate(post_value, pre_value)
-    assert result[1] is test_result
+    _, result = check.evaluate(post_value, pre_value)
+    assert result is test_result
 
 
 @pytest.mark.skip(reason="Command output not available")
@@ -151,8 +149,7 @@ def test_lldp_neighbor_state(platform, command, test_result):
 
     if test_result is False:
         command_post = command_post[:2]
-        pytest.xfail("./utils/diff_helpers.py:32: AttributeError")
 
     check = CheckType.init("exact_match")
-    result = check.evaluate(command_post, command_pre)
-    assert result[1] is test_result
+    _, result = check.evaluate(command_post, command_pre)
+    assert result is test_result
