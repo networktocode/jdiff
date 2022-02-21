@@ -152,12 +152,11 @@ class ToleranceType(CheckType):
         def _make_float(value):
             """Make float, treat non-convertable as 0."""
             try:
-                value_ = float(value)
+                return float(value)
             except ValueError:
-                value_ = 0
-            return value_
+                return 0
 
-        def _within_tolerance(*, old_value: float, new_value: float) -> bool:
+        def _within_tolerance(*, old_value: Union[str, int, float], new_value: Union[str, int, float]) -> bool:
             """Return True if new value is within the tolerance range of the previous value."""
             tolerance_factor = tolerance / 100
             old_value, new_value = _make_float(old_value), _make_float(new_value)

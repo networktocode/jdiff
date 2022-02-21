@@ -30,7 +30,7 @@ def get_diff_iterables_items(diff_result: Mapping) -> Dict:
     if items_removed:
         for key, value in items_removed.items():
             re_key = get_dict_keys.match(key)
-            if re_key:
+            if re_key:  # Change only if there is a match, otherwise retain the key.
                 key, *_ = re_key.groups()
             result[key]["missing"].append(value)
 
@@ -62,8 +62,8 @@ def fix_deepdiff_key_names(obj: Mapping) -> Dict:
     result = {}
     for key, value in obj.items():
         key_parts = re.findall(REGEX_PATTERN_RELEVANT_KEYS, key)
-        if not key_parts:
-            key_parts = [key]
+        if not key_parts:  # If key parts can't be find, keep original key so data is not lost.
+            key_parts = [key.replace("root", "index_element")]  # replace root from DeepDiff with more meaningful name.
         partial_res = group_value(key_parts, value)
         dict_merger(result, partial_res)
     return result
