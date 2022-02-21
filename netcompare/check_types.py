@@ -233,94 +233,69 @@ class OperatorType(CheckType):
             "in-range",
             "not-range"
         )
-        # ('all-same', ('is-in',
         bools = ("all-same",)
         numbers = ("is-gt","is-lt")
-        equals = ("is-equal", "not-equal")
+        # "equals" is redundant with check type "exact_match" an "parameter_match" 
+        # equals = ("is-equal", "not-equal")
         strings = ("contains", "not-contains")
         valid_options = (
             bools,
             ins,
             numbers,
             strings,
-            equals,
+            # equals,
         )
 
         # Validate "params" argument is not None.
         try:
-            params = kwargs['params']
+            kwargs['params']
         except KeyError:
             raise KeyError(f"'params' argument must be provided. You have {kwargs}. Read the docs for more info.")
 
+        params_key = kwargs['params'].keys()[0]
+        params_value = kwargs['params'].values()[0]
+
         # Validate "params" value is legal.
-        if not any(params in operator for operator in valid_options):
-            raise ValueError(f"'params' value must be one of the following: {[sub_element for element in valid_options for sub_element in element]}" )
+        if not any(params_key in operator for operator in valid_options):
+            raise ValueError(f"'params' value must be one of the following: {[sub_element for element in valid_options for sub_element in element]}") 
 
-
+        if params_key in ins:
+            #"is-in", "not-in", "in-range", "not-range" requires an iterable
+            if not isinstance(params_value, list) or not isinstance(params_value, tuple):
+                raise ValueError(f"Range check-option {ins} must have value of type list or tuple. i.e: dict(not-in=('Idle', 'Down')")
         
+            # "in-range", "not-range" requires int or float where value at index 0 is lower than value at index 1
+            if params_key in ('in-range', 'not-range'):
+                if not (isinstance(params_value[0], int) or isinstance(params_value[0], float)) and not (isinstance(params_value[1], float) or isinstance(params_value[1], int)):
+                    raise ValueError(f"Range check-option {params_key} must have value of type list or tuple with items of type float or int. i.e: dict(not-range=(70000000, 80000000)")
+                if not params_value[0] < params_value[1]:
+                    raise ValueError(f"'range' and 'not-range' must have value at index 0 lower than value at index 1. i.e: dict(not-range=(70000000, 80000000)")
+            # "is-in", "not-in" requires iterable of strings
+            elif params_key in ('is-in', 'not-in'):
+                for item in params_value:
+                    if not isinstance(item, str):
+                        raise ValueError(f"'is-in' and 'not-in' must be an iterable of strings. i.e: dict(is-in=(Idle, Down)")
+        
+        # "is-gt","is-lt"  require either int() or float()
+        elif params_key in numbers:
+            if not isinstance(params_value, float) or not isinstance(params_value, int):
+                raise ValueError(f"Range check-option {numbers} must have value of type float or int. i.e: dict(is-lt=80000000)")
+        
+        # "contains", "not-contains" require string.
+        elif params_key in strings:
+            if not isinstance(params_value, str):
+                raise ValueError(f"Range check-option {strings} must have value of type string. i.e: dict(contains='EVPN')")
+        
+        # "all-same" requires boolean True or False
+        elif params_key in bools:
+            if not isinstance(params_value, bool):
+                raise ValueError(f"Range check-option {bools} must have value of type bool. i.e: dict(all-same=True)")
 
 
-
-
-
-
-    # elif parameter_key in iter:
-    #     #"in", "not-in", "in-range", "not-range" requires an iterable
-    #     if not isinstance(parameter_value, list) or not isinstance(parameter_value, tuple):
-    #         raise ValueError(f"Range check-option {iter} must have value of type list or tuple. i.e: dict(not-in=('Idle', 'Down')")
-    #     # "in-range", "not-range" requires int or floar where value at index 0 is lower than value at index 1
-    #     if "range" in parameter_key:
-    #         if not (isinstance(parameter_value[0], int) or isinstance(parameter_value[0], float)) and not (isinstance(parameter_value[1], float) or isinstance(parameter_value[1], int)):
-    #             raise ValueError(f"Range check-option {iter} must have value of type list or tuple with items of type float or int. i.e: dict(not-range=(70000000, 80000000)")
-    #         if not parameter_value[0] < parameter_value[1]:
-    #             raise ValueError(f"'range' and 'not-range' must have value at index 0 lower than value at index 1. i.e: dict(not-range=(70000000, 80000000)")
-    #     else:
-    #         # "is-in", "not-in" requires iterable of strings
-    #         for item in parameter_value.values():
-    #             if not isinstance(item, str):
-    #                 raise ValueError(f"'is-in' and 'not-in' must be an iterable of strings. i.e: dict(is-in=(Idle, Down)")
-
-    # elif parameter_key in numbers:
-    #     if not isinstance(parameter_value, float) or not isinstance(parameter_value, int):
-    #         raise ValueError(f"Range check-option {numbers} must have value of type float or int. i.e: dict(is-lt=80000000)")
-
-    # elif parameter_key in strings:
-    #     if not isinstance(parameter_value, str):
-    #         raise ValueError(f"Range check-option {strings} must have value of type string. i.e: dict(contains='EVPN')")
-
-
-    def evaluate(self, reference_value: Mapping, value_to_compare: Mapping) -> Tuple[Mapping, bool]:
+    def evaluate(self, value_to_compare: Any, reference_data: Any, params: Any) -> Tuple[Mapping, bool]:
         """Operator evaluator implementation."""
-
         # Assert that check parameters are at index 1.
-        try:
-            parameter = value_to_compare[1]
-        except IndexError as error:
-            raise IndexError(
-                f"Evaluating parameter must be defined as dict at index 1. You have: {value_to_compare}"
-            ) from error
+        self.validate(params=params)
+        evaluation_result = diff_generator(reference_data, value_to_compare, params)
+        return evaluation_result, not evaluation_result
 
-        parameter: list
-        @validator('parameter')
-        def parameter_must_be_dict(cls, v):
-            if not isinstance(v, list):
-                raise TypeError("check-option must be of type dict().")
-            return parameter
-        
-        # parameter_key = list(parameter.keys())[0]
-        # parameter_value = list(parameter.values())[0]
-
-        # parameter_key: list
-        # parameter_value: list
-        # @validator(parameter_key)
-        # def check_option_must_be_legal_option(parameter_key):
-        #     if parameter_key not in self.valid_options:
-        #         raise KeyError(
-        #             f"Range check-type requires one of the following check-option: {self.valid_options}"
-        #         )
-
-        # # Assert data type for each range option.
-        # if parameter_key in bools:
-        #     # "all-same" requires boolean True or False
-        #     if not isinstance(parameter_value, bool):
-        #         raise ValueError(f"Range check-option {bools} must have value of type bool. i.e: dict(all-same=True)")
