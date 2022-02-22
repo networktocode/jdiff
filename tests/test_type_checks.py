@@ -2,7 +2,7 @@
 import pytest
 from netcompare.check_types import CheckType, ExactMatchType, OperatorType, ToleranceType, ParameterMatchType, RegexType
 from .utility import load_json_file, load_mocks, ASSERT_FAIL_MESSAGE
-
+import pdb
 
 def test_child_class_raises_exception():
     """Tests that exception is raised for child class when abstract methods are not implemented."""
@@ -54,8 +54,6 @@ def test_check_init(check_type_str, expected_class):
 exception_tests_init = [
     ("does_not_exist", NotImplementedError, ""),
 ]
-
-
 @pytest.mark.parametrize("check_type_str, exception_type, expected_in_output", exception_tests_init)
 def tests_exceptions_init(check_type_str, exception_type, expected_in_output):
     """Tests exceptions when check object is initialized."""
@@ -78,8 +76,6 @@ exception_tests_eval = [
         "Mode argument should be",
     ),
 ]
-
-
 @pytest.mark.parametrize("check_type_str, evaluate_args, exception_type, expected_in_output", exception_tests_eval)
 def tests_exceptions_eval(check_type_str, evaluate_args, exception_type, expected_in_output):
     """Tests exceptions when calling .evaluate() method."""
@@ -96,7 +92,6 @@ exact_match_test_values_no_change = (
     "result[0].vrfs.default.peerList[*].[$peerAddress$,establishedTransitions]",
     ({}, True),
 )
-
 exact_match_test_values_changed = (
     "exact_match",
     {},
@@ -110,7 +105,6 @@ exact_match_test_values_changed = (
         False,
     ),
 )
-
 tolerance_test_values_no_change = (
     "tolerance",
     {"tolerance": 10},
@@ -118,7 +112,6 @@ tolerance_test_values_no_change = (
     "result[0].vrfs.default.peerList[*].[$peerAddress$,establishedTransitions]",
     ({}, True),
 )
-
 tolerance_test_values_within_threshold = (
     "tolerance",
     {"tolerance": 10},
@@ -126,7 +119,6 @@ tolerance_test_values_within_threshold = (
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
     ({}, True),
 )
-
 tolerance_test_values_beyond_threshold = (
     "tolerance",
     {"tolerance": 10},
@@ -140,7 +132,6 @@ tolerance_test_values_beyond_threshold = (
         False,
     ),
 )
-
 check_type_tests = [
     exact_match_test_values_no_change,
     exact_match_test_values_changed,
@@ -148,8 +139,6 @@ check_type_tests = [
     tolerance_test_values_within_threshold,
     tolerance_test_values_beyond_threshold,
 ]
-
-
 @pytest.mark.parametrize("check_type_str, evaluate_args, folder_name, path, expected_results", check_type_tests)
 def test_check_type_results(check_type_str, evaluate_args, folder_name, path, expected_results):
     """Validate that CheckType.evaluate returns the expected_results."""
@@ -178,7 +167,6 @@ napalm_bgp_neighbor_status = (
         False,
     ),
 )
-
 napalm_bgp_neighbor_prefixes_ipv4 = (
     "napalm_get_bgp_neighbors",
     "tolerance",
@@ -186,7 +174,6 @@ napalm_bgp_neighbor_prefixes_ipv4 = (
     "global.$peers$.*.*.ipv4.[accepted_prefixes,received_prefixes,sent_prefixes]",
     ({"10.1.0.0": {"accepted_prefixes": {"new_value": 900, "old_value": 1000}}}, False),
 )
-
 napalm_bgp_neighbor_prefixes_ipv6 = (
     "napalm_get_bgp_neighbors",
     "tolerance",
@@ -194,7 +181,6 @@ napalm_bgp_neighbor_prefixes_ipv6 = (
     "global.$peers$.*.*.ipv6.[accepted_prefixes,received_prefixes,sent_prefixes]",
     ({"10.64.207.255": {"received_prefixes": {"new_value": 1100, "old_value": 1000}}}, False),
 )
-
 napalm_get_lldp_neighbors_exact_raw = (
     "napalm_get_lldp_neighbors",
     "exact_match",
@@ -216,7 +202,6 @@ napalm_get_lldp_neighbors_exact_raw = (
         False,
     ),
 )
-
 tolerance_no_path = (
     "tolerance",
     "tolerance",
@@ -358,7 +343,7 @@ def test_regex_match(filename, check_type_str, evaluate_args, path, expected_res
     )
 
 operator_all_same = (
-    "api",
+    "pre.json",
     "operator",
     {"params": {"all-same": True}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup,vrf,state]",
@@ -367,7 +352,6 @@ operator_all_same = (
         False,  #TBD
     ),
 )
-
 operator_all_tests = [
 #     # type() == str(), int(), float()
     operator_all_same,
@@ -386,119 +370,118 @@ operator_all_tests = [
 ]
 
 @pytest.mark.parametrize("filename, check_type_str, evaluate_args, path, expected_result", operator_all_tests)
-def test_operator(folder_name, check_args, path, expected_result):
+def test_operator(filename, check_type_str, evaluate_args, path, expected_result):
     """Validate all operator check types."""
-    pre_data, post_data = load_mocks(folder_name)
-
-    check = CheckType.init(*check_args)
-    pre_data, post_data = load_mocks(folder_name)
-    pre_value = check.get_value(pre_data, path)
-    post_value = check.get_value(post_data, path)
-    actual_results = check.evaluate(pre_value, post_value)
-
+    check = CheckType.init(check_type_str)
+    # There is not concept of "pre" and "post" in operator.
+    data = load_json_file("api", filename)
+    value = check.get_value(data, path)
+    actual_results = check.evaluate(value, **evaluate_args)
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
-        output=actual_results, expected_output=expected_result
+        output=actual_results,
+        expected_output=expected_result
     )
-# operator_is_equal = (
-#     "api",
-#     "operator",
-#     ("operator", {"is-equal": 100}),
-#     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]",
-#     (
-#         {},     #TBD
-#         False,  #TBD
-#     ),
-# )
 
-# operator_not_equal = (
-#     "api",
-#     ("operator", {"not-equal": "internal"}),
-#     "result[0].vrfs.default.peerList[*].[$peerAddress$,linkType]",
-#     (
-#         {},     #TBD
-#         False,  #TBD
-#     ),
-# )
+# # operator_is_equal = (
+# #     "api",
+# #     "operator",
+# #     ("operator", {"is-equal": 100}),
+# #     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]",
+# #     (
+# #         {},     #TBD
+# #         False,  #TBD
+# #     ),
+# # )
 
-# operator_contains = (
-#     "api",
-#     ("operator", {"contains": "EVPN"}),
-#     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
-#     (
-#         {},     #TBD
-#         False,  #TBD
-#     ),
-# )
+# # operator_not_equal = (
+# #     "api",
+# #     ("operator", {"not-equal": "internal"}),
+# #     "result[0].vrfs.default.peerList[*].[$peerAddress$,linkType]",
+# #     (
+# #         {},     #TBD
+# #         False,  #TBD
+# #     ),
+# # )
 
-# operator_not_contains = (
-#     "api",
-#     ("operator", {"not-contains": "OVERLAY"}),
-#     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
-#     (
-#         {},     #TBD
-#         False,  #TBD
-#     ),
-# )
+# # operator_contains = (
+# #     "api",
+# #     ("operator", {"contains": "EVPN"}),
+# #     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
+# #     (
+# #         {},     #TBD
+# #         False,  #TBD
+# #     ),
+# # )
 
-# operator_is_gt = (
-#     "api",
-#     ("operator", {"is-gt": 70000000}),
-#     "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
-#     (
-#         {},     #TBD
-#         False,  #TBD
-#     ),
-# )
+# # operator_not_contains = (
+# #     "api",
+# #     ("operator", {"not-contains": "OVERLAY"}),
+# #     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
+# #     (
+# #         {},     #TBD
+# #         False,  #TBD
+# #     ),
+# # )
 
-# operator_is_lt = (
-#     "api",
-#     ("operator", {"is-lt": 80000000}),
-#     "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
-#     (
-#         {},     #TBD
-#         False,  #TBD
-#     ),
-# )
+# # operator_is_gt = (
+# #     "api",
+# #     ("operator", {"is-gt": 70000000}),
+# #     "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
+# #     (
+# #         {},     #TBD
+# #         False,  #TBD
+# #     ),
+# # )
 
-# operator_in_operator = (
-#     "api",
-#     ("operator", {"in-operator": (70000000, 80000000)}),
-#     "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
-#     (
-#         {},     #TBD
-#         False,  #TBD
-#     ),
-# )
+# # operator_is_lt = (
+# #     "api",
+# #     ("operator", {"is-lt": 80000000}),
+# #     "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
+# #     (
+# #         {},     #TBD
+# #         False,  #TBD
+# #     ),
+# # )
 
-# operator_not_operator = (
-#     "api",
-#     ("operator", {"not-range": (70000000, 80000000)}),
-#     "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
-#     (
-#         {},     #TBD
-#         False,  #TBD
-#     ),
-# )
+# # operator_in_operator = (
+# #     "api",
+# #     ("operator", {"in-operator": (70000000, 80000000)}),
+# #     "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
+# #     (
+# #         {},     #TBD
+# #         False,  #TBD
+# #     ),
+# # )
 
-# operator_is_in = (
-#     "api",
-#     ("operator", {"is-in": ("Idle", "Down")}),
-#     "result[0].vrfs.default.peerList[*].[$peerAddress$,state]",
-#     (
-#         {},     #TBD
-#         False,  #TBD
-#     ),
-# )
+# # operator_not_operator = (
+# #     "api",
+# #     ("operator", {"not-range": (70000000, 80000000)}),
+# #     "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
+# #     (
+# #         {},     #TBD
+# #         False,  #TBD
+# #     ),
+# # )
 
-# operator_not_in = (
-#     "api",
-#     ("operator", {"not-in": ("Idle", "Down")}),
-#     "result[0].vrfs.default.peerList[*].[$peerAddress$,state]",
-#     (
-#         {},     #TBD
-#         False,  #TBD
-#     ),
-# )
+# # operator_is_in = (
+# #     "api",
+# #     ("operator", {"is-in": ("Idle", "Down")}),
+# #     "result[0].vrfs.default.peerList[*].[$peerAddress$,state]",
+# #     (
+# #         {},     #TBD
+# #         False,  #TBD
+# #     ),
+# # )
+
+# # operator_not_in = (
+# #     "api",
+# #     ("operator", {"not-in": ("Idle", "Down")}),
+# #     "result[0].vrfs.default.peerList[*].[$peerAddress$,state]",
+# #     (
+# #         {},     #TBD
+# #         False,  #TBD
+# #     ),
+# # )
 
 
 

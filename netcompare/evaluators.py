@@ -1,5 +1,6 @@
 """Evaluators."""
 import re
+import pdb
 from typing import Any, Mapping, Dict
 from deepdiff import DeepDiff
 from .utils.diff_helpers import get_diff_iterables_items, fix_deepdiff_key_names
@@ -99,3 +100,8 @@ def regex_evaluator(values: Mapping, regex_expression: str, mode: str) -> Dict:
                     result.update(item)
 
     return result
+
+
+def operator_evaluator(referance_data: Mapping, value_to_compare: Mapping) -> Dict:
+    pdb.set_trace()
+    pass

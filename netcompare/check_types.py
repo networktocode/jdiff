@@ -1,5 +1,6 @@
 """CheckType Implementation."""
 import re
+import pdb
 from typing import Mapping, Tuple, List, Dict, Any, Union
 from abc import ABC, abstractmethod
 import jmespath
@@ -13,7 +14,7 @@ from .utils.jmespath_parsers import (
     keys_values_zipper,
 )
 from .utils.data_normalization import exclude_filter, flatten_list
-from .evaluators import diff_generator, parameter_evaluator, regex_evaluator
+from .evaluators import diff_generator, parameter_evaluator, regex_evaluator, operator_evaluator
 
 # pylint: disable=arguments-differ
 
@@ -30,12 +31,14 @@ class CheckType(ABC):
         """
         if check_type == "exact_match":
             return ExactMatchType()
-        if check_type == "tolerance":
+        elif check_type == "tolerance":
             return ToleranceType()
-        if check_type == "parameter_match":
+        elif check_type == "parameter_match":
             return ParameterMatchType()
-        if check_type == "regex":
+        elif check_type == "regex":
             return RegexType()
+        elif check_type == "operator":
+            return OperatorType()
 
         raise NotImplementedError
 
@@ -247,17 +250,14 @@ class OperatorType(CheckType):
         )
 
         # Validate "params" argument is not None.
-        try:
-            kwargs['params']
-        except KeyError:
+        if not kwargs:
             raise KeyError(f"'params' argument must be provided. You have {kwargs}. Read the docs for more info.")
 
-        params_key = kwargs['params'].keys()[0]
-        params_value = kwargs['params'].values()[0]
-
+        params_key = list(kwargs.keys())[0]
+        params_value = list(kwargs.values())[0]
         # Validate "params" value is legal.
         if not any(params_key in operator for operator in valid_options):
-            raise ValueError(f"'params' value must be one of the following: {[sub_element for element in valid_options for sub_element in element]}") 
+            raise ValueError(f"'params' value must be one of the following: {[sub_element for element in valid_options for sub_element in element]}. You have: {params_key}") 
 
         if params_key in ins:
             #"is-in", "not-in", "in-range", "not-range" requires an iterable
@@ -292,10 +292,11 @@ class OperatorType(CheckType):
                 raise ValueError(f"Range check-option {bools} must have value of type bool. i.e: dict(all-same=True)")
 
 
-    def evaluate(self, value_to_compare: Any, reference_data: Any, params: Any) -> Tuple[Mapping, bool]:
+    def evaluate(self, value_to_compare: Any, params: Any) -> Tuple[Mapping, bool]:
         """Operator evaluator implementation."""
-        # Assert that check parameters are at index 1.
-        self.validate(params=params)
-        evaluation_result = diff_generator(reference_data, value_to_compare, params)
+        self.validate(**params)
+        # For naming consistency
+        reference_data=params
+        evaluation_result = operator_evaluator(reference_data, value_to_compare)
         return evaluation_result, not evaluation_result
 
