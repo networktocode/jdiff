@@ -1,11 +1,11 @@
 """Evaluators."""
-import imp
 import re
+
 import pdb
 from typing import Any, Mapping, Dict
 from deepdiff import DeepDiff
-from .utils.diff_helpers import get_diff_iterables_items, fix_deepdiff_key_name
-from operator import Operator
+from .utils.diff_helpers import get_diff_iterables_items
+from .operator import Operator
 
 def diff_generator(pre_result: Any, post_result: Any) -> Dict:
     """Generates diff between pre and post data based on check definition.
@@ -109,5 +109,6 @@ def operator_evaluator(referance_data: Mapping, value_to_compare: Mapping) -> Di
     operator_type = list(referance_data.keys())[0].replace('-', '_')
     operator = Operator(referance_data, value_to_compare)
 
-    getattr(operator, operator_type)()
+    result = getattr(operator, operator_type)()
+    return result
 

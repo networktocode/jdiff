@@ -1,6 +1,5 @@
-from unittest import result
-
-
+import pdb
+from collections import defaultdict
 class Operator():    
     
     def __init__(self, referance_data, value_to_compare) -> None:
@@ -11,35 +10,30 @@ class Operator():
 
     
     def all_same(self):
-
         # [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}, 
-        # {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}]
-        
-        index_key = dict()
+        # {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}, 
+        # {'10.2.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}, 
+        # {'10.64.207.255': {'peerGroup': 'IPv4-UNDERLAY-MLAG-PEER', 'vrf': 'default', 'state': 'Idle'}}]
         list_of_values = list()
         result = list()
 
-        for number, item in enumerate(self.value_to_compare):
-            for key, value in item.keys():
-                # Create a mapping between index and key: i.e. {'1': '7.7.7.7', '2': '10.1.0.0'}. We will later use to build the result.
-                index_key[number] = key
+        for item in self.value_to_compare:
+            for value in item.values():
                 # Create a list for compare valiues.
                 list_of_values.append(value)
 
-        for number,element in enumerate(list_of_values):
+        for element in list_of_values:
             if not element == list_of_values[0]:
-                result.append({index_key[number]: element})
-        
-        if self.referance_data_value and result:
-            return (False, result)
-        elif self.referance_data_value and not result:
-            return (True, result)
-        elif not self.referance_data_value and result:
-            return (True, result)
-        elif not self.referance_data_value and not result:
-            return (False, result)
+                result.append(False)
+            else:
+                result.append(True)
 
-            
+        if self.referance_data_value and not all(result):
+            return (False, self.value_to_compare)
+        elif self.referance_data_value and all(result):
+            return (True, self.value_to_compare)
+        elif not self.referance_data_value and not all(result):
+            return (True, self.value_to_compare)
+        elif not self.referance_data_value and all(result):
+            return (False, self.value_to_compare)
 
-        else:
-            pass
