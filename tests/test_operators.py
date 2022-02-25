@@ -45,11 +45,28 @@ operator_all_same = (
         False,
     ),
 )
+operator_contains = (
+    "pre.json",
+    "operator",
+    {"params": {"contains": "EVPN"}},
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
+    (
+        (
+            False,
+            [
+                {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE'}},
+                {'10.2.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE'}},
+                {'10.64.207.255': {'peerGroup': 'IPv4-UNDERLAY-MLAG-PEER'}}
+            ]
+        ),
+        False
+    )
+)
+
+
 operator_all_tests = [
     operator_all_same,
-#     operator_is_equal,
-#     operator_not_equal,
-#     operator_contains,
+    operator_contains,
 #     operator_not_contains,
 #     # type() == int(), float()
 #     operator_is_gt,
@@ -95,15 +112,7 @@ def test_operator(filename, check_type_str, evaluate_args, path, expected_result
 # #     ),
 # # )
 
-# # operator_contains = (
-# #     "api",
-# #     ("operator", {"contains": "EVPN"}),
-# #     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
-# #     (
-# #         {},     #TBD
-# #         False,  #TBD
-# #     ),
-# # )
+
 
 # # operator_not_contains = (
 # #     "api",

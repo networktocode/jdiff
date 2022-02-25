@@ -3,8 +3,6 @@ from collections import defaultdict
 class Operator():    
     
     def __init__(self, referance_data, value_to_compare) -> None:
-        
-        self.referance_data_type = list(referance_data.keys())[0]
         self.referance_data_value = list(referance_data.values())[0]
         self.value_to_compare = value_to_compare
 
@@ -36,4 +34,22 @@ class Operator():
             return (True, self.value_to_compare)
         elif not self.referance_data_value and all(result):
             return (False, self.value_to_compare)
+
+
+    def contains(self):
+        result = list()
+        for item in self.value_to_compare:
+            for value in item.values():
+                for evaluated_value in value.values():
+                    if self.referance_data_value not in evaluated_value:
+                    # Create a list for compare valiues.
+                        result.append(item)
+
+        if result:
+            return (False, result)
+        else:
+            return (True, result)
+
+    def not_contains(self):
+        pass
 
