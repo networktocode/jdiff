@@ -1,17 +1,15 @@
-import pdb
-from collections import defaultdict
 class Operator():    
     
     def __init__(self, referance_data, value_to_compare) -> None:
+        # [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}, 
+        # {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}, 
+        # {'10.2.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}, 
+        # {'10.64.207.255': {'peerGroup': 'IPv4-UNDERLAY-MLAG-PEER', 'vrf': 'default', 'state': 'Idle'}}]
         self.referance_data_value = list(referance_data.values())[0]
         self.value_to_compare = value_to_compare
 
     
     def all_same(self):
-        # [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}, 
-        # {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}, 
-        # {'10.2.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}, 
-        # {'10.64.207.255': {'peerGroup': 'IPv4-UNDERLAY-MLAG-PEER', 'vrf': 'default', 'state': 'Idle'}}]
         list_of_values = list()
         result = list()
 
@@ -44,7 +42,6 @@ class Operator():
                     if self.referance_data_value in evaluated_value:
                         # Create a list for compare valiues.
                         result.append(item)
-
         if result:
             return (True, result)
         else:
@@ -59,9 +56,35 @@ class Operator():
                     if self.referance_data_value not in evaluated_value:
                         # Create a list for compare valiues.
                         result.append(item)
-
         if result:
             return (True, result)
         else:
             return (False, result)
 
+
+    def is_gt(self):
+        result = list()
+        for item in self.value_to_compare:
+            for value in item.values():
+                for evaluated_value in value.values():
+                    if evaluated_value > self.referance_data_value:
+                        # Create a list for compare valiues.
+                        result.append(item)
+        if result:
+            return (True, result)
+        else:
+            return (False, result)
+
+
+    def is_lt(self):
+        result = list()
+        for item in self.value_to_compare:
+            for value in item.values():
+                for evaluated_value in value.values():
+                    if evaluated_value < self.referance_data_value:
+                        # Create a list for compare valiues.
+                        result.append(item)
+        if result:
+            return (True, result)
+        else:
+            return (False, result)

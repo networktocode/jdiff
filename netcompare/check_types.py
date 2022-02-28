@@ -274,12 +274,12 @@ class OperatorType(CheckType):
             elif params_key in ('is-in', 'not-in'):
                 for item in params_value:
                     if not isinstance(item, str):
-                        raise ValueError(f"'is-in' and 'not-in' must be an iterable of strings. i.e: dict(is-in=(Idle, Down)")
+                        raise ValueError(f"'is-in' and 'not-in' must be an iterable of strings. i.e: dict(is-in=(Idle, Down). You have: {item} of type {type(item)}")
         
         # "is-gt","is-lt"  require either int() or float()
         elif params_key in numbers:
-            if not isinstance(params_value, float) or not isinstance(params_value, int):
-                raise ValueError(f"Range check-option {numbers} must have value of type float or int. i.e: dict(is-lt=80000000)")
+            if not isinstance(params_value, float) and not isinstance(params_value, int):
+                raise ValueError(f"Check-option {numbers} must have value of type float or int. i.e: dict(is-lt=50). You have: {params_value} of type {type(params_value)}")
         
         # "contains", "not-contains" require string.
         elif params_key in strings:
@@ -289,7 +289,7 @@ class OperatorType(CheckType):
         # "all-same" requires boolean True or False
         elif params_key in bools:
             if not isinstance(params_value, bool):
-                raise ValueError(f"Range check-option {bools} must have value of type bool. i.e: dict(all-same=True)")
+                raise ValueError(f"Range check-option {bools} must have value of type bool. i.e: dict(all-same=True). You have: {params_value} of type {type(params_value)}")
 
 
     def evaluate(self, value_to_compare: Any, params: Any) -> Tuple[Mapping, bool]:
