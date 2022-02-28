@@ -41,15 +41,27 @@ class Operator():
         for item in self.value_to_compare:
             for value in item.values():
                 for evaluated_value in value.values():
-                    if self.referance_data_value not in evaluated_value:
-                    # Create a list for compare valiues.
+                    if self.referance_data_value in evaluated_value:
+                        # Create a list for compare valiues.
                         result.append(item)
 
         if result:
-            return (False, result)
-        else:
             return (True, result)
+        else:
+            return (False, result)
+
 
     def not_contains(self):
-        pass
+        result = list()
+        for item in self.value_to_compare:
+            for value in item.values():
+                for evaluated_value in value.values():
+                    if self.referance_data_value not in evaluated_value:
+                        # Create a list for compare valiues.
+                        result.append(item)
+
+        if result:
+            return (True, result)
+        else:
+            return (False, result)
 

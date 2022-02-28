@@ -52,7 +52,20 @@ operator_contains = (
     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
     (
         (
-            False,
+            True,
+            [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE'}}]
+        ),
+        False
+    )
+)
+operator_not_contains = (
+    "pre.json",
+    "operator",
+    {"params": {"not-contains": "EVPN"}},
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
+    (
+        (
+            True,
             [
                 {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE'}},
                 {'10.2.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE'}},
@@ -63,12 +76,10 @@ operator_contains = (
     )
 )
 
-
 operator_all_tests = [
     operator_all_same,
     operator_contains,
-#     operator_not_contains,
-#     # type() == int(), float()
+    operator_not_contains,
 #     operator_is_gt,
 #     operator_is_lt,
 #     operator_in_operator,
