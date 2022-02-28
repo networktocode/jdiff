@@ -88,3 +88,59 @@ class Operator():
             return (True, result)
         else:
             return (False, result)
+
+
+    def is_in(self):
+        result = list()
+        for item in self.value_to_compare:
+            for value in item.values():
+                for evaluated_value in value.values():
+                    if evaluated_value in self.referance_data_value:
+                        # Create a list for compare valiues.
+                        result.append(item)
+        if result:
+            return (True, result)
+        else:
+            return (False, result)
+
+
+    def not_in(self):
+        result = list()
+        for item in self.value_to_compare:
+            for value in item.values():
+                for evaluated_value in value.values():
+                    if evaluated_value not in self.referance_data_value:
+                        # Create a list for compare valiues.
+                        result.append(item)
+        if result:
+            return (True, result)
+        else:
+            return (False, result)
+
+    def in_range(self):
+        result = list()
+        for item in self.value_to_compare:
+            for value in item.values():
+                for evaluated_value in value.values():
+                    if self.referance_data_value[0] < evaluated_value < self.referance_data_value[1]:
+                        # Create a list for compare valiues.
+                        result.append(item)
+
+        if result:
+            return (True, result)
+        else:
+            return (False, result)
+
+    def not_range(self):
+        result = list()
+        for item in self.value_to_compare:
+            for value in item.values():
+                for evaluated_value in value.values():
+                    if not self.referance_data_value[0] < evaluated_value < self.referance_data_value[1]:
+                        # Create a list for compare valiues.
+                        result.append(item)
+
+        if result:
+            return (True, result)
+        else:
+            return (False, result)

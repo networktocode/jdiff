@@ -111,6 +111,78 @@ operator_is_lt = (
         False
     )
 )
+operator_is_in = (
+    "pre.json",
+    "operator",
+    {"params": {"is-in": [20, 40, 50]}},
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
+    (
+        (
+            True,
+            [
+                {'7.7.7.7': {'prefixesSent': 50}},
+                {'10.1.0.0': {'prefixesSent': 50}},
+                {'10.2.0.0': {'prefixesSent': 50}},
+                {'10.64.207.255': {'prefixesSent': 50}}
+            ],
+        ),
+        False
+    )
+)
+operator_not_in = (
+    "pre.json",
+    "operator",
+    {"params": {"not-in": [20, 40, 60]}},
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
+    (
+        (
+            True,
+            [
+                {'7.7.7.7': {'prefixesSent': 50}},
+                {'10.1.0.0': {'prefixesSent': 50}},
+                {'10.2.0.0': {'prefixesSent': 50}},
+                {'10.64.207.255': {'prefixesSent': 50}}
+            ],
+        ),
+        False
+    )
+)
+operator_in_range = (
+    "pre.json",
+    "operator",
+    {"params": {"in-range": (20, 60)}},
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
+    (
+        (
+            True,
+            [
+                {'7.7.7.7': {'prefixesSent': 50}},
+                {'10.1.0.0': {'prefixesSent': 50}},
+                {'10.2.0.0': {'prefixesSent': 50}},
+                {'10.64.207.255': {'prefixesSent': 50}}
+            ],
+        ),
+        False
+    )
+)
+operator_not_in_range = (
+    "pre.json",
+    "operator",
+    {"params": {"not-range": (20, 40)}},
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
+    (
+        (
+            True,
+            [
+                {'7.7.7.7': {'prefixesSent': 50}},
+                {'10.1.0.0': {'prefixesSent': 50}},
+                {'10.2.0.0': {'prefixesSent': 50}},
+                {'10.64.207.255': {'prefixesSent': 50}}
+            ],
+        ),
+        False
+    )
+)
 
 operator_all_tests = [
     operator_all_same,
@@ -118,11 +190,10 @@ operator_all_tests = [
     operator_not_contains,
     operator_is_gt,
     operator_is_lt,
-#     operator_in_operator,
-#     operator_not_operator,
-#     # type() == dict()
-#     operator_is_in,
-#     operator_not_in,
+    operator_is_in,
+    operator_not_in,
+    operator_in_range,
+    operator_not_in_range,
 ]
 
 @pytest.mark.parametrize("filename, check_type_str, evaluate_args, path, expected_result", operator_all_tests)

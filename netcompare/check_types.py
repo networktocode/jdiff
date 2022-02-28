@@ -261,21 +261,16 @@ class OperatorType(CheckType):
 
         if params_key in ins:
             #"is-in", "not-in", "in-range", "not-range" requires an iterable
-            if not isinstance(params_value, list) or not isinstance(params_value, tuple):
-                raise ValueError(f"Range check-option {ins} must have value of type list or tuple. i.e: dict(not-in=('Idle', 'Down')")
+            if not isinstance(params_value, list) and not isinstance(params_value, tuple):
+                raise ValueError(f"Range check-option {ins} must have value of type list or tuple. i.e: dict(not-in=('Idle', 'Down'). You have: {params_value} of type {type(params_value)}You have: {params_value} of type {type(params_value)}")
         
             # "in-range", "not-range" requires int or float where value at index 0 is lower than value at index 1
             if params_key in ('in-range', 'not-range'):
                 if not (isinstance(params_value[0], int) or isinstance(params_value[0], float)) and not (isinstance(params_value[1], float) or isinstance(params_value[1], int)):
-                    raise ValueError(f"Range check-option {params_key} must have value of type list or tuple with items of type float or int. i.e: dict(not-range=(70000000, 80000000)")
+                    raise ValueError(f"Range check-option {params_key} must have value of type list or tuple with items of type float or int. i.e: dict(not-range=(70000000, 80000000). You have: {params_value} of type {type(params_value)}")
                 if not params_value[0] < params_value[1]:
-                    raise ValueError(f"'range' and 'not-range' must have value at index 0 lower than value at index 1. i.e: dict(not-range=(70000000, 80000000)")
-            # "is-in", "not-in" requires iterable of strings
-            elif params_key in ('is-in', 'not-in'):
-                for item in params_value:
-                    if not isinstance(item, str):
-                        raise ValueError(f"'is-in' and 'not-in' must be an iterable of strings. i.e: dict(is-in=(Idle, Down). You have: {item} of type {type(item)}")
-        
+                    raise ValueError(f"'range' and 'not-range' must have value at index 0 lower than value at index 1. i.e: dict(not-range=(70000000, 80000000). You have: {params_value} of type {type(params_value)}")
+
         # "is-gt","is-lt"  require either int() or float()
         elif params_key in numbers:
             if not isinstance(params_value, float) and not isinstance(params_value, int):
@@ -284,7 +279,7 @@ class OperatorType(CheckType):
         # "contains", "not-contains" require string.
         elif params_key in strings:
             if not isinstance(params_value, str):
-                raise ValueError(f"Range check-option {strings} must have value of type string. i.e: dict(contains='EVPN')")
+                raise ValueError(f"Range check-option {strings} must have value of type string. i.e: dict(contains='EVPN'). You have: {params_value} of type {type(params_value)}")
         
         # "all-same" requires boolean True or False
         elif params_key in bools:
