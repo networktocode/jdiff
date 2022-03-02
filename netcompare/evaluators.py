@@ -103,6 +103,7 @@ def regex_evaluator(values: Mapping, regex_expression: str, mode: str) -> Dict:
 
 
 def operator_evaluator(referance_data: Mapping, value_to_compare: Mapping) -> Dict:
+    """Operator evaluator call."""
     # referance_data
     # {'all-same': True}
     operator_type = list(referance_data.keys())[0].replace("-", "_")

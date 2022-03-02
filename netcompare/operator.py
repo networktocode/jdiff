@@ -1,7 +1,10 @@
+"""Operator diff."""
 import operator
 
 
 class Operator:
+    """Operator class implementation."""
+
     def __init__(self, referance_data, value_to_compare) -> None:
         # [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}},
         # {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}},
@@ -11,6 +14,7 @@ class Operator:
         self.value_to_compare = value_to_compare
 
     def _loop_through(self, call_ops):
+        """Method for operator evaluation."""
         ops = {
             ">": operator.gt,
             "<": operator.lt,
@@ -20,7 +24,7 @@ class Operator:
             "not_contains": operator.contains,
         }
 
-        result = list()
+        result = []
         for item in self.value_to_compare:
             for value in item.values():
                 for evaluated_value in value.values():
@@ -45,12 +49,12 @@ class Operator:
                             result.append(item)
         if result:
             return (True, result)
-        else:
-            return (False, result)
+        return (False, result)
 
     def all_same(self):
-        list_of_values = list()
-        result = list()
+        """All same operator implementation."""
+        list_of_values = []
+        result = []
 
         for item in self.value_to_compare:
             for value in item.values():
@@ -65,33 +69,41 @@ class Operator:
 
         if self.referance_data_value and not all(result):
             return (False, self.value_to_compare)
-        elif self.referance_data_value and all(result):
+        if self.referance_data_value and all(result):
             return (True, self.value_to_compare)
-        elif not self.referance_data_value and not all(result):
+        if not self.referance_data_value and not all(result):
             return (True, self.value_to_compare)
-        elif not self.referance_data_value and all(result):
+        if not self.referance_data_value and all(result):
             return (False, self.value_to_compare)
 
     def contains(self):
+        """Contains operator implementation."""
         return self._loop_through("contains")
 
     def not_contains(self):
+        """Not contains operator implementation."""
         return self._loop_through("not_contains")
 
     def is_gt(self):
+        """Is greather than operator implementation."""
         return self._loop_through(">")
 
     def is_lt(self):
+        """Is lower than operator implementation."""
         return self._loop_through("<")
 
     def is_in(self):
+        """Is in operator implementation."""
         return self._loop_through("is_in")
 
     def not_in(self):
+        """Is not in operator implementation."""
         return self._loop_through("not_in")
 
     def in_range(self):
+        """Is in range operator implementation."""
         return self._loop_through("in_range")
 
     def not_range(self):
+        """Is not in range operator implementation."""
         return self._loop_through("not_range")

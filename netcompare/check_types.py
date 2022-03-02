@@ -13,9 +13,8 @@ from .utils.jmespath_parsers import (
 from .utils.data_normalization import exclude_filter, flatten_list
 from .evaluators import diff_generator, parameter_evaluator, regex_evaluator, operator_evaluator
 
+
 # pylint: disable=arguments-differ
-
-
 class CheckType(ABC):
     """Check Type Base Abstract Class."""
 
