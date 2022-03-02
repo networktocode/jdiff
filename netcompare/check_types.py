@@ -149,9 +149,17 @@ class ToleranceType(CheckType):
     def _remove_within_tolerance(self, diff: Dict, tolerance: int) -> None:
         """Recursively look into diff and apply tolerance check, remove reported difference when within tolerance."""
 
-        def _within_tolerance(*, old_value: float, new_value: float) -> bool:
+        def _make_float(value):
+            """Make float, treat non-convertable as 0."""
+            try:
+                return float(value)
+            except ValueError:
+                return 0
+
+        def _within_tolerance(*, old_value: Union[str, int, float], new_value: Union[str, int, float]) -> bool:
             """Return True if new value is within the tolerance range of the previous value."""
             tolerance_factor = tolerance / 100
+            old_value, new_value = _make_float(old_value), _make_float(new_value)
             max_diff = old_value * tolerance_factor
             return (old_value - max_diff) < new_value < (old_value + max_diff)
 
