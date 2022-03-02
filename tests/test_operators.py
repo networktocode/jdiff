@@ -1,7 +1,6 @@
 import pytest
-from netcompare.check_types import CheckType, ExactMatchType, OperatorType, ToleranceType, ParameterMatchType, RegexType
+from netcompare.check_types import CheckType
 from .utility import load_json_file, ASSERT_FAIL_MESSAGE
-import pdb
 
 operator_all_same = (
     "pre.json",
@@ -50,13 +49,7 @@ operator_contains = (
     "operator",
     {"params": {"contains": "EVPN"}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
-    (
-        (
-            True,
-            [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE'}}]
-        ),
-        False
-    )
+    ((True, [{"7.7.7.7": {"peerGroup": "EVPN-OVERLAY-SPINE"}}]), False),
 )
 operator_not_contains = (
     "pre.json",
@@ -67,13 +60,13 @@ operator_not_contains = (
         (
             True,
             [
-                {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE'}},
-                {'10.2.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE'}},
-                {'10.64.207.255': {'peerGroup': 'IPv4-UNDERLAY-MLAG-PEER'}}
-            ]
+                {"10.1.0.0": {"peerGroup": "IPv4-UNDERLAY-SPINE"}},
+                {"10.2.0.0": {"peerGroup": "IPv4-UNDERLAY-SPINE"}},
+                {"10.64.207.255": {"peerGroup": "IPv4-UNDERLAY-MLAG-PEER"}},
+            ],
         ),
-        False
-    )
+        False,
+    ),
 )
 operator_is_gt = (
     "pre.json",
@@ -84,14 +77,14 @@ operator_is_gt = (
         (
             True,
             [
-                {'7.7.7.7': {'prefixesSent': 50}},
-                {'10.1.0.0': {'prefixesSent': 50}},
-                {'10.2.0.0': {'prefixesSent': 50}},
-                {'10.64.207.255': {'prefixesSent': 50}}
+                {"7.7.7.7": {"prefixesSent": 50}},
+                {"10.1.0.0": {"prefixesSent": 50}},
+                {"10.2.0.0": {"prefixesSent": 50}},
+                {"10.64.207.255": {"prefixesSent": 50}},
             ],
         ),
-        False
-    )
+        False,
+    ),
 )
 operator_is_lt = (
     "pre.json",
@@ -102,14 +95,14 @@ operator_is_lt = (
         (
             True,
             [
-                {'7.7.7.7': {'prefixesSent': 50}},
-                {'10.1.0.0': {'prefixesSent': 50}},
-                {'10.2.0.0': {'prefixesSent': 50}},
-                {'10.64.207.255': {'prefixesSent': 50}}
+                {"7.7.7.7": {"prefixesSent": 50}},
+                {"10.1.0.0": {"prefixesSent": 50}},
+                {"10.2.0.0": {"prefixesSent": 50}},
+                {"10.64.207.255": {"prefixesSent": 50}},
             ],
         ),
-        False
-    )
+        False,
+    ),
 )
 operator_is_in = (
     "pre.json",
@@ -120,14 +113,14 @@ operator_is_in = (
         (
             True,
             [
-                {'7.7.7.7': {'prefixesSent': 50}},
-                {'10.1.0.0': {'prefixesSent': 50}},
-                {'10.2.0.0': {'prefixesSent': 50}},
-                {'10.64.207.255': {'prefixesSent': 50}}
+                {"7.7.7.7": {"prefixesSent": 50}},
+                {"10.1.0.0": {"prefixesSent": 50}},
+                {"10.2.0.0": {"prefixesSent": 50}},
+                {"10.64.207.255": {"prefixesSent": 50}},
             ],
         ),
-        False
-    )
+        False,
+    ),
 )
 operator_not_in = (
     "pre.json",
@@ -138,14 +131,14 @@ operator_not_in = (
         (
             True,
             [
-                {'7.7.7.7': {'prefixesSent': 50}},
-                {'10.1.0.0': {'prefixesSent': 50}},
-                {'10.2.0.0': {'prefixesSent': 50}},
-                {'10.64.207.255': {'prefixesSent': 50}}
+                {"7.7.7.7": {"prefixesSent": 50}},
+                {"10.1.0.0": {"prefixesSent": 50}},
+                {"10.2.0.0": {"prefixesSent": 50}},
+                {"10.64.207.255": {"prefixesSent": 50}},
             ],
         ),
-        False
-    )
+        False,
+    ),
 )
 operator_in_range = (
     "pre.json",
@@ -156,14 +149,14 @@ operator_in_range = (
         (
             True,
             [
-                {'7.7.7.7': {'prefixesSent': 50}},
-                {'10.1.0.0': {'prefixesSent': 50}},
-                {'10.2.0.0': {'prefixesSent': 50}},
-                {'10.64.207.255': {'prefixesSent': 50}}
+                {"7.7.7.7": {"prefixesSent": 50}},
+                {"10.1.0.0": {"prefixesSent": 50}},
+                {"10.2.0.0": {"prefixesSent": 50}},
+                {"10.64.207.255": {"prefixesSent": 50}},
             ],
         ),
-        False
-    )
+        False,
+    ),
 )
 operator_not_in_range = (
     "pre.json",
@@ -174,14 +167,14 @@ operator_not_in_range = (
         (
             True,
             [
-                {'7.7.7.7': {'prefixesSent': 50}},
-                {'10.1.0.0': {'prefixesSent': 50}},
-                {'10.2.0.0': {'prefixesSent': 50}},
-                {'10.64.207.255': {'prefixesSent': 50}}
+                {"7.7.7.7": {"prefixesSent": 50}},
+                {"10.1.0.0": {"prefixesSent": 50}},
+                {"10.2.0.0": {"prefixesSent": 50}},
+                {"10.64.207.255": {"prefixesSent": 50}},
             ],
         ),
-        False
-    )
+        False,
+    ),
 )
 
 operator_all_tests = [
@@ -196,6 +189,7 @@ operator_all_tests = [
     operator_not_in_range,
 ]
 
+
 @pytest.mark.parametrize("filename, check_type_str, evaluate_args, path, expected_result", operator_all_tests)
 def test_operator(filename, check_type_str, evaluate_args, path, expected_result):
     """Validate all operator check types."""
@@ -205,102 +199,5 @@ def test_operator(filename, check_type_str, evaluate_args, path, expected_result
     value = check.get_value(data, path)
     actual_results = check.evaluate(value, **evaluate_args)
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
-        output=actual_results,
-        expected_output=expected_result
+        output=actual_results, expected_output=expected_result
     )
-
-# # operator_is_equal = (
-# #     "api",
-# #     "operator",
-# #     ("operator", {"is-equal": 100}),
-# #     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]",
-# #     (
-# #         {},     #TBD
-# #         False,  #TBD
-# #     ),
-# # )
-
-# # operator_not_equal = (
-# #     "api",
-# #     ("operator", {"not-equal": "internal"}),
-# #     "result[0].vrfs.default.peerList[*].[$peerAddress$,linkType]",
-# #     (
-# #         {},     #TBD
-# #         False,  #TBD
-# #     ),
-# # )
-
-
-
-# # operator_not_contains = (
-# #     "api",
-# #     ("operator", {"not-contains": "OVERLAY"}),
-# #     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
-# #     (
-# #         {},     #TBD
-# #         False,  #TBD
-# #     ),
-# # )
-
-# # operator_is_gt = (
-# #     "api",
-# #     ("operator", {"is-gt": 70000000}),
-# #     "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
-# #     (
-# #         {},     #TBD
-# #         False,  #TBD
-# #     ),
-# # )
-
-# # operator_is_lt = (
-# #     "api",
-# #     ("operator", {"is-lt": 80000000}),
-# #     "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
-# #     (
-# #         {},     #TBD
-# #         False,  #TBD
-# #     ),
-# # )
-
-# # operator_in_operator = (
-# #     "api",
-# #     ("operator", {"in-operator": (70000000, 80000000)}),
-# #     "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
-# #     (
-# #         {},     #TBD
-# #         False,  #TBD
-# #     ),
-# # )
-
-# # operator_not_operator = (
-# #     "api",
-# #     ("operator", {"not-range": (70000000, 80000000)}),
-# #     "result[0].vrfs.default.peerList[*].[$peerAddress$,bgpPeerCaps]",
-# #     (
-# #         {},     #TBD
-# #         False,  #TBD
-# #     ),
-# # )
-
-# # operator_is_in = (
-# #     "api",
-# #     ("operator", {"is-in": ("Idle", "Down")}),
-# #     "result[0].vrfs.default.peerList[*].[$peerAddress$,state]",
-# #     (
-# #         {},     #TBD
-# #         False,  #TBD
-# #     ),
-# # )
-
-# # operator_not_in = (
-# #     "api",
-# #     ("operator", {"not-in": ("Idle", "Down")}),
-# #     "result[0].vrfs.default.peerList[*].[$peerAddress$,state]",
-# #     (
-# #         {},     #TBD
-# #         False,  #TBD
-# #     ),
-# # )
-
-
-

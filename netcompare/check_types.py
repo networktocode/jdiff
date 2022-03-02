@@ -1,11 +1,8 @@
 """CheckType Implementation."""
 import re
-import pdb
 from typing import Mapping, Tuple, List, Dict, Any, Union
 from abc import ABC, abstractmethod
 import jmespath
-
-
 from .utils.jmespath_parsers import (
     jmespath_value_parser,
     jmespath_refkey_parser,
@@ -31,13 +28,13 @@ class CheckType(ABC):
         """
         if check_type == "exact_match":
             return ExactMatchType()
-        elif check_type == "tolerance":
+        if check_type == "tolerance":
             return ToleranceType()
-        elif check_type == "parameter_match":
+        if check_type == "parameter_match":
             return ParameterMatchType()
-        elif check_type == "regex":
+        if check_type == "regex":
             return RegexType()
-        elif check_type == "operator":
+        if check_type == "operator":
             return OperatorType()
 
         raise NotImplementedError
@@ -230,15 +227,10 @@ class OperatorType(CheckType):
 
     @staticmethod
     def validate(**kwargs) -> None:
-        ins = (
-            "is-in", 
-            "not-in",
-            "in-range",
-            "not-range"
-        )
+        ins = ("is-in", "not-in", "in-range", "not-range")
         bools = ("all-same",)
-        numbers = ("is-gt","is-lt")
-        # "equals" is redundant with check type "exact_match" an "parameter_match" 
+        numbers = ("is-gt", "is-lt")
+        # "equals" is redundant with check type "exact_match" an "parameter_match"
         # equals = ("is-equal", "not-equal")
         strings = ("contains", "not-contains")
         valid_options = (
@@ -257,41 +249,55 @@ class OperatorType(CheckType):
         params_value = list(kwargs.values())[0]
         # Validate "params" value is legal.
         if not any(params_key in operator for operator in valid_options):
-            raise ValueError(f"'params' value must be one of the following: {[sub_element for element in valid_options for sub_element in element]}. You have: {params_key}") 
+            raise ValueError(
+                f"'params' value must be one of the following: {[sub_element for element in valid_options for sub_element in element]}. You have: {params_key}"
+            )
 
         if params_key in ins:
-            #"is-in", "not-in", "in-range", "not-range" requires an iterable
+            # "is-in", "not-in", "in-range", "not-range" requires an iterable
             if not isinstance(params_value, list) and not isinstance(params_value, tuple):
-                raise ValueError(f"Range check-option {ins} must have value of type list or tuple. i.e: dict(not-in=('Idle', 'Down'). You have: {params_value} of type {type(params_value)}You have: {params_value} of type {type(params_value)}")
-        
+                raise ValueError(
+                    f"Range check-option {ins} must have value of type list or tuple. i.e: dict(not-in=('Idle', 'Down'). You have: {params_value} of type {type(params_value)}You have: {params_value} of type {type(params_value)}"
+                )
+
             # "in-range", "not-range" requires int or float where value at index 0 is lower than value at index 1
-            if params_key in ('in-range', 'not-range'):
-                if not (isinstance(params_value[0], int) or isinstance(params_value[0], float)) and not (isinstance(params_value[1], float) or isinstance(params_value[1], int)):
-                    raise ValueError(f"Range check-option {params_key} must have value of type list or tuple with items of type float or int. i.e: dict(not-range=(70000000, 80000000). You have: {params_value} of type {type(params_value)}")
+            if params_key in ("in-range", "not-range"):
+                if not (isinstance(params_value[0], int) or isinstance(params_value[0], float)) and not (
+                    isinstance(params_value[1], float) or isinstance(params_value[1], int)
+                ):
+                    raise ValueError(
+                        f"Range check-option {params_key} must have value of type list or tuple with items of type float or int. i.e: dict(not-range=(70000000, 80000000). You have: {params_value} of type {type(params_value)}"
+                    )
                 if not params_value[0] < params_value[1]:
-                    raise ValueError(f"'range' and 'not-range' must have value at index 0 lower than value at index 1. i.e: dict(not-range=(70000000, 80000000). You have: {params_value} of type {type(params_value)}")
+                    raise ValueError(
+                        f"'range' and 'not-range' must have value at index 0 lower than value at index 1. i.e: dict(not-range=(70000000, 80000000). You have: {params_value} of type {type(params_value)}"
+                    )
 
         # "is-gt","is-lt"  require either int() or float()
         elif params_key in numbers:
             if not isinstance(params_value, float) and not isinstance(params_value, int):
-                raise ValueError(f"Check-option {numbers} must have value of type float or int. i.e: dict(is-lt=50). You have: {params_value} of type {type(params_value)}")
-        
+                raise ValueError(
+                    f"Check-option {numbers} must have value of type float or int. i.e: dict(is-lt=50). You have: {params_value} of type {type(params_value)}"
+                )
+
         # "contains", "not-contains" require string.
         elif params_key in strings:
             if not isinstance(params_value, str):
-                raise ValueError(f"Range check-option {strings} must have value of type string. i.e: dict(contains='EVPN'). You have: {params_value} of type {type(params_value)}")
-        
+                raise ValueError(
+                    f"Range check-option {strings} must have value of type string. i.e: dict(contains='EVPN'). You have: {params_value} of type {type(params_value)}"
+                )
+
         # "all-same" requires boolean True or False
         elif params_key in bools:
             if not isinstance(params_value, bool):
-                raise ValueError(f"Range check-option {bools} must have value of type bool. i.e: dict(all-same=True). You have: {params_value} of type {type(params_value)}")
-
+                raise ValueError(
+                    f"Range check-option {bools} must have value of type bool. i.e: dict(all-same=True). You have: {params_value} of type {type(params_value)}"
+                )
 
     def evaluate(self, value_to_compare: Any, params: Any) -> Tuple[Mapping, bool]:
         """Operator evaluator implementation."""
         self.validate(**params)
         # For naming consistency
-        reference_data=params
+        reference_data = params
         evaluation_result = operator_evaluator(reference_data, value_to_compare)
         return evaluation_result, not evaluation_result
-

@@ -2,7 +2,7 @@
 import pytest
 from netcompare.check_types import CheckType, ExactMatchType, OperatorType, ToleranceType, ParameterMatchType, RegexType
 from .utility import load_json_file, load_mocks, ASSERT_FAIL_MESSAGE
-import pdb
+
 
 def test_child_class_raises_exception():
     """Tests that exception is raised for child class when abstract methods are not implemented."""
@@ -43,7 +43,7 @@ def test_child_class_proper_implementation():
         ("tolerance", ToleranceType),
         ("parameter_match", ParameterMatchType),
         ("regex", RegexType),
-        ("operator", OperatorType)
+        ("operator", OperatorType),
     ],
 )
 def test_check_init(check_type_str, expected_class):
@@ -54,6 +54,8 @@ def test_check_init(check_type_str, expected_class):
 exception_tests_init = [
     ("does_not_exist", NotImplementedError, ""),
 ]
+
+
 @pytest.mark.parametrize("check_type_str, exception_type, expected_in_output", exception_tests_init)
 def tests_exceptions_init(check_type_str, exception_type, expected_in_output):
     """Tests exceptions when check object is initialized."""
@@ -76,6 +78,8 @@ exception_tests_eval = [
         "Mode argument should be",
     ),
 ]
+
+
 @pytest.mark.parametrize("check_type_str, evaluate_args, exception_type, expected_in_output", exception_tests_eval)
 def tests_exceptions_eval(check_type_str, evaluate_args, exception_type, expected_in_output):
     """Tests exceptions when calling .evaluate() method."""
@@ -139,6 +143,8 @@ check_type_tests = [
     tolerance_test_values_within_threshold,
     tolerance_test_values_beyond_threshold,
 ]
+
+
 @pytest.mark.parametrize("check_type_str, evaluate_args, folder_name, path, expected_results", check_type_tests)
 def test_check_type_results(check_type_str, evaluate_args, folder_name, path, expected_results):
     """Validate that CheckType.evaluate returns the expected_results."""
