@@ -44,8 +44,8 @@ class Operator:
                     elif call_ops == "not_range":
                         if not self.referance_data_value[0] < evaluated_value < self.referance_data_value[1]:
                             result.append(item)
-                    else:
-                        if ops[call_ops](evaluated_value, self.referance_data_value):
+                    # "<", ">", "contains"
+                    elif ops[call_ops](evaluated_value, self.referance_data_value):
                             result.append(item)
         if result:
             return (True, result)
@@ -62,19 +62,29 @@ class Operator:
                 list_of_values.append(value)
 
         for element in list_of_values:
-            if not element == list_of_values[0]:
+            if element != list_of_values[0]:
                 result.append(False)
             else:
                 result.append(True)
 
+        # if self.referance_data_value and not all(result):
+        #     return (False, self.value_to_compare)
+        # if self.referance_data_value and all(result):
+        #     return (True, self.value_to_compare)
+        # if not self.referance_data_value and not all(result):
+        #     return (True, self.value_to_compare)
+        # if not self.referance_data_value and all(result):
+        #     return (False, self.value_to_compare)
+
+
         if self.referance_data_value and not all(result):
             return (False, self.value_to_compare)
-        if self.referance_data_value and all(result):
+        if self.referance_data_value:
             return (True, self.value_to_compare)
-        if not self.referance_data_value and not all(result):
+        if not all(result):
             return (True, self.value_to_compare)
-        if not self.referance_data_value and all(result):
-            return (False, self.value_to_compare)
+        return (False, self.value_to_compare)
+
 
     def contains(self):
         """Contains operator implementation."""
