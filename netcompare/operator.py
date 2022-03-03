@@ -10,11 +10,11 @@ class Operator:
         # {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}},
         # {'10.2.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}},
         # {'10.64.207.255': {'peerGroup': 'IPv4-UNDERLAY-MLAG-PEER', 'vrf': 'default', 'state': 'Idle'}}]
-        self.referance_data_value = list(referance_data.values())[0]
+        self.referance_data = referance_data
         self.value_to_compare = value_to_compare
 
-    def _loop_through(self, call_ops):
-        """Method for operator evaluation."""
+    def _loop_through_wrapper(self, call_ops):
+        """Wrappoer method for operator evaluation."""
         ops = {
             ">": operator.gt,
             "<": operator.lt,
@@ -30,22 +30,22 @@ class Operator:
                 for evaluated_value in value.values():
                     # reverse operands (??? WHY ???) https://docs.python.org/3.8/library/operator.html#operator.contains
                     if call_ops == "is_in":
-                        if ops[call_ops](self.referance_data_value, evaluated_value):
+                        if ops[call_ops](self.referance_data, evaluated_value):
                             result.append(item)
                     elif call_ops == "not_contains":
-                        if not ops[call_ops](evaluated_value, self.referance_data_value):
+                        if not ops[call_ops](evaluated_value, self.referance_data):
                             result.append(item)
                     elif call_ops == "not_in":
-                        if not ops[call_ops](self.referance_data_value, evaluated_value):
+                        if not ops[call_ops](self.referance_data, evaluated_value):
                             result.append(item)
                     elif call_ops == "in_range":
-                        if self.referance_data_value[0] < evaluated_value < self.referance_data_value[1]:
+                        if self.referance_data[0] < evaluated_value < self.referance_data[1]:
                             result.append(item)
                     elif call_ops == "not_range":
-                        if not self.referance_data_value[0] < evaluated_value < self.referance_data_value[1]:
+                        if not self.referance_data[0] < evaluated_value < self.referance_data[1]:
                             result.append(item)
                     # "<", ">", "contains"
-                    elif ops[call_ops](evaluated_value, self.referance_data_value):
+                    elif ops[call_ops](evaluated_value, self.referance_data):
                             result.append(item)
         if result:
             return (True, result)
@@ -67,19 +67,10 @@ class Operator:
             else:
                 result.append(True)
 
-        # if self.referance_data_value and not all(result):
-        #     return (False, self.value_to_compare)
-        # if self.referance_data_value and all(result):
-        #     return (True, self.value_to_compare)
-        # if not self.referance_data_value and not all(result):
-        #     return (True, self.value_to_compare)
-        # if not self.referance_data_value and all(result):
-        #     return (False, self.value_to_compare)
 
-
-        if self.referance_data_value and not all(result):
+        if self.referance_data and not all(result):
             return (False, self.value_to_compare)
-        if self.referance_data_value:
+        if self.referance_data:
             return (True, self.value_to_compare)
         if not all(result):
             return (True, self.value_to_compare)
@@ -88,32 +79,32 @@ class Operator:
 
     def contains(self):
         """Contains operator implementation."""
-        return self._loop_through("contains")
+        return self._loop_through_wrapper("contains")
 
     def not_contains(self):
         """Not contains operator implementation."""
-        return self._loop_through("not_contains")
+        return self._loop_through_wrapper("not_contains")
 
     def is_gt(self):
         """Is greather than operator implementation."""
-        return self._loop_through(">")
+        return self._loop_through_wrapper(">")
 
     def is_lt(self):
         """Is lower than operator implementation."""
-        return self._loop_through("<")
+        return self._loop_through_wrapper("<")
 
     def is_in(self):
         """Is in operator implementation."""
-        return self._loop_through("is_in")
+        return self._loop_through_wrapper("is_in")
 
     def not_in(self):
         """Is not in operator implementation."""
-        return self._loop_through("not_in")
+        return self._loop_through_wrapper("not_in")
 
     def in_range(self):
         """Is in range operator implementation."""
-        return self._loop_through("in_range")
+        return self._loop_through_wrapper("in_range")
 
     def not_range(self):
         """Is not in range operator implementation."""
-        return self._loop_through("not_range")
+        return self._loop_through_wrapper("not_range")

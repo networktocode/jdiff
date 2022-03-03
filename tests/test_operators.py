@@ -5,7 +5,7 @@ from .utility import load_json_file, ASSERT_FAIL_MESSAGE
 operator_all_same = (
     "pre.json",
     "operator",
-    {"params": {"all-same": True}},
+    {"params": {"mode": "all-same", "operator_data": True}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup,vrf,state]",
     (
         (
@@ -47,7 +47,7 @@ operator_all_same = (
 operator_contains = (
     "pre.json",
     "operator",
-    {"params": {"contains": "EVPN"}},
+    {"params": {"mode": "contains", "operator_data": "EVPN"}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
     ((True, [{"7.7.7.7": {"peerGroup": "EVPN-OVERLAY-SPINE"}}]), False),
 )
@@ -71,7 +71,7 @@ operator_not_contains = (
 operator_is_gt = (
     "pre.json",
     "operator",
-    {"params": {"is-gt": 20}},
+    {"params": {"mode": "is-gt", "operator_data": 20}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
     (
         (
@@ -89,7 +89,7 @@ operator_is_gt = (
 operator_is_lt = (
     "pre.json",
     "operator",
-    {"params": {"is-lt": 60}},
+    {"params": {"mode": "is-lt", "operator_data": 60}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
     (
         (
@@ -107,7 +107,7 @@ operator_is_lt = (
 operator_is_in = (
     "pre.json",
     "operator",
-    {"params": {"is-in": [20, 40, 50]}},
+    {"params": {"mode": "is-in", "operator_data": [20, 40, 50]}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
     (
         (
@@ -125,7 +125,7 @@ operator_is_in = (
 operator_not_in = (
     "pre.json",
     "operator",
-    {"params": {"not-in": [20, 40, 60]}},
+    {"params": {"mode": "not-in", "operator_data": [20, 40, 60]}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
     (
         (
@@ -143,7 +143,7 @@ operator_not_in = (
 operator_in_range = (
     "pre.json",
     "operator",
-    {"params": {"in-range": (20, 60)}},
+    {"params": {"mode": "in-range", "operator_data":(20, 60)}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
     (
         (
@@ -161,7 +161,7 @@ operator_in_range = (
 operator_not_in_range = (
     "pre.json",
     "operator",
-    {"params": {"not-range": (20, 40)}},
+    {"params": {"mode": "not-range", "operator_data": (20, 40)}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
     (
         (

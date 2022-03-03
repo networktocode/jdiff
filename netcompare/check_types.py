@@ -248,12 +248,14 @@ class OperatorType(CheckType):
             # equal_operators,
         )
 
+        import pdb
+        pdb.set_trace()
         # Validate "params" argument is not None.
         if not kwargs:
             raise KeyError(f"'params' argument must be provided. You have {kwargs}. Read the docs for more info.")
 
-        params_key = list(kwargs.keys())[0]
-        params_value = list(kwargs.values())[0]
+        params_key = kwargs['mode']
+        params_value = kwargs['operator_data']
         # Validate "params" value is legal.
         if all(params_key in operator for operator in valid_options):
             raise ValueError(
