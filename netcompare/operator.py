@@ -6,6 +6,7 @@ class Operator:
     """Operator class implementation."""
 
     def __init__(self, referance_data, value_to_compare) -> None:
+        """__init__ method."""
         # [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}},
         # {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}},
         # {'10.2.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}},
@@ -46,7 +47,7 @@ class Operator:
                             result.append(item)
                     # "<", ">", "contains"
                     elif ops[call_ops](evaluated_value, self.referance_data):
-                            result.append(item)
+                        result.append(item)
         if result:
             return (True, result)
         return (False, result)
@@ -67,7 +68,6 @@ class Operator:
             else:
                 result.append(True)
 
-
         if self.referance_data and not all(result):
             return (False, self.value_to_compare)
         if self.referance_data:
@@ -75,7 +75,6 @@ class Operator:
         if not all(result):
             return (True, self.value_to_compare)
         return (False, self.value_to_compare)
-
 
     def contains(self):
         """Contains operator implementation."""

@@ -1,3 +1,4 @@
+"""Unit tests for operator check-type."""
 import pytest
 from netcompare.check_types import CheckType
 from .utility import load_json_file, ASSERT_FAIL_MESSAGE
@@ -54,7 +55,7 @@ operator_contains = (
 operator_not_contains = (
     "pre.json",
     "operator",
-    {"params": {"not-contains": "EVPN"}},
+    {"params": {"mode": "not-contains", "operator_data": "EVPN"}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
     (
         (
@@ -143,7 +144,7 @@ operator_not_in = (
 operator_in_range = (
     "pre.json",
     "operator",
-    {"params": {"mode": "in-range", "operator_data":(20, 60)}},
+    {"params": {"mode": "in-range", "operator_data": (20, 60)}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
     (
         (

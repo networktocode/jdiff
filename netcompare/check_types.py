@@ -234,6 +234,7 @@ class OperatorType(CheckType):
 
     @staticmethod
     def validate(**kwargs) -> None:
+        """Validate operator parameters."""
         in_operators = ("is-in", "not-in", "in-range", "not-range")
         bool_operators = ("all-same",)
         number_operators = ("is-gt", "is-lt")
@@ -248,14 +249,12 @@ class OperatorType(CheckType):
             # equal_operators,
         )
 
-        import pdb
-        pdb.set_trace()
         # Validate "params" argument is not None.
         if not kwargs:
             raise KeyError(f"'params' argument must be provided. You have {kwargs}. Read the docs for more info.")
 
-        params_key = kwargs['mode']
-        params_value = kwargs['operator_data']
+        params_key = kwargs["mode"]
+        params_value = kwargs["operator_data"]
         # Validate "params" value is legal.
         if all(params_key in operator for operator in valid_options):
             raise ValueError(
@@ -271,9 +270,7 @@ class OperatorType(CheckType):
 
             # "in-range", "not-range" requires int or float where value at index 0 is lower than value at index 1
             if params_key in ("in-range", "not-range"):
-                if not (isinstance(params_value[0], int) or isinstance(params_value[0], float)) and not (
-                    isinstance(params_value[1], float) or isinstance(params_value[1], int)
-                ):
+                if not isinstance(params_value[0], (int, float)) and not isinstance(params_value[1], float, int):
                     raise ValueError(
                         f"Range check-option {params_key} must have value of type list or tuple with items of type float or int. i.e: dict(not-range=(70000000, 80000000). You have: {params_value} of type {type(params_value)}"
                     )
