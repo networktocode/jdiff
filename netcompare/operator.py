@@ -44,7 +44,8 @@ class Operator:
                     elif call_ops == "not_range":
                         if not self.referance_data_value[0] < evaluated_value < self.referance_data_value[1]:
                             result.append(item)
-                    else:
+                    elif ops[call_ops](evaluated_value, self.referance_data_value):
+                        result.append(item)
                         if ops[call_ops](evaluated_value, self.referance_data_value):
                             result.append(item)
         if result:
