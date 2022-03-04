@@ -30,8 +30,7 @@ exact_match_of_bgp_peer_caps_via_api = (
 
 exact_match_of_bgp_neigh_via_textfsm = (
     "textfsm",
-    "",
-    # "result[*].[$bgp_neigh$,state]",
+    "result[*].[$bgp_neigh$,state]",
     [],
     {"10.17.254.2": {"state": {"new_value": "Up", "old_value": "Idle"}}},
 )
