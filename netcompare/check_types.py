@@ -134,9 +134,9 @@ class ToleranceType(CheckType):
         # reference_data = getattr(kwargs, "reference_data")
         tolerance = kwargs.get("tolerance")
         if not tolerance:
-            raise ValueError("Tolerance argument is mandatory for Tolerance Check Type.")
+            raise ValueError("'tolerance' argument is mandatory for Tolerance Check Type.")
         if not isinstance(tolerance, int):
-            raise ValueError(f"Tolerance argument must be an integer, and it's {type(tolerance)}.")
+            raise ValueError(f"Tolerance argument's value must be an integer. You have: {type(tolerance)}.")
 
     def evaluate(self, value_to_compare: Any, reference_data: Any, tolerance: int) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean. Overwrites method in base class."""
