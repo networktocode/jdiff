@@ -33,3 +33,68 @@ def test_tolerance_value_type(check_type_str, evaluate_args,expected_results):
         check.validate(**evaluate_args)
     
     assert exc_info.type is ValueError and  exc_info.value.args[0] == expected_results
+
+
+
+parameter_no_params = (
+    "parameter_match",
+    {"mode": "match", "wrong_key": {"localAsn": "65130.1100", "linkType": "external"}},
+    "'params' argument is mandatory for ParameterMatch Check Type.",
+)
+@pytest.mark.parametrize("check_type_str, evaluate_args, expected_results", [parameter_no_params])
+def test_parameter_param(check_type_str, evaluate_args,expected_results):
+    """Validate that CheckType parameter has 'params' key."""
+    check = CheckType.init(check_type_str)
+    
+    with pytest.raises(ValueError) as exc_info:
+        check.validate(**evaluate_args)
+    
+    assert exc_info.type is ValueError and  exc_info.value.args[0] == expected_results
+
+
+parameter_wrong_type = (
+    "parameter_match",
+    {"mode": "match", "params": [{"localAsn": "65130.1100", "linkType": "external"}]},
+    "'params' argument must be a dict. You have: <class 'list'>.",
+)
+@pytest.mark.parametrize("check_type_str, evaluate_args, expected_results", [parameter_wrong_type])
+def test_parameter_value_type(check_type_str, evaluate_args, expected_results):
+    """Validate that CheckType parameter 'params' value type."""
+    check = CheckType.init(check_type_str)
+    
+    with pytest.raises(ValueError) as exc_info:
+        check.validate(**evaluate_args)
+    
+    assert exc_info.type is ValueError and  exc_info.value.args[0] == expected_results
+
+
+parameter_no_mode = (
+    "parameter_match",
+    {"mode-no-mode": "match", "params": {"localAsn": "65130.1100", "linkType": "external"}},
+    "'mode' argument is mandatory for ParameterMatch Check Type.",
+)
+@pytest.mark.parametrize("check_type_str, evaluate_args, expected_results", [parameter_no_mode])
+def test_parameter_mode(check_type_str, evaluate_args, expected_results):
+    """Validate that CheckType parameter has mode key."""
+    check = CheckType.init(check_type_str)
+    
+    with pytest.raises(ValueError) as exc_info:
+        check.validate(**evaluate_args)
+    
+    assert exc_info.type is ValueError and  exc_info.value.args[0] == expected_results
+
+
+parameter_no_mode = (
+    "parameter_match",
+    {"mode": ["match"], "params": {"localAsn": "65130.1100", "linkType": "external"}},
+    "'mode' argument should be one of the following: match, no-match. You have: ['match']",
+)
+@pytest.mark.parametrize("check_type_str, evaluate_args, expected_results", [parameter_no_mode])
+def test_parameter_mode_value(check_type_str, evaluate_args, expected_results):
+    """Validate that CheckType parameter 'mode' has value of typ str."""
+    check = CheckType.init(check_type_str)
+    
+    with pytest.raises(ValueError) as exc_info:
+        check.validate(**evaluate_args)
+    
+    assert exc_info.type is ValueError and  exc_info.value.args[0] == expected_results

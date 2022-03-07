@@ -181,17 +181,15 @@ class ParameterMatchType(CheckType):
         mode_options = ["match", "no-match"]
         params = kwargs.get("params")
         if not params:
-            raise ValueError("Params argument is mandatory for ParameterMatch Check Type.")
+            raise ValueError("'params' argument is mandatory for ParameterMatch Check Type.")
         if not isinstance(params, dict):
-            raise ValueError(f"Params argument must be a dict, and it's {type(params)}.")
+            raise ValueError(f"'params' argument must be a dict. You have: {type(params)}.")
 
         mode = kwargs.get("mode")
         if not mode:
-            raise ValueError("Mode argument is mandatory for ParameterMatch Check Type.")
-        if not isinstance(mode, str):
-            raise ValueError(f"Mode argument must be a string, and it's {type(mode)}.")
+            raise ValueError("'mode' argument is mandatory for ParameterMatch Check Type.")
         if mode not in mode_options:
-            raise ValueError(f"Mode argument should be {mode_options}, and it's {mode}")
+            raise ValueError(f"'mode' argument should be one of the following: {', '.join(mode_options)}. You have: {mode}")
 
     def evaluate(self, value_to_compare: Mapping, params: Dict, mode: str) -> Tuple[Dict, bool]:
         """Parameter Match evaluator implementation."""
