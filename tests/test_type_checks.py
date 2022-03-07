@@ -1,6 +1,6 @@
 """Check Type unit tests."""
 import pytest
-from netcompare.check_types import CheckType, ExactMatchType, ToleranceType, ParameterMatchType, RegexType
+from netcompare.check_types import CheckType, ExactMatchType, OperatorType, ToleranceType, ParameterMatchType, RegexType
 from .utility import load_json_file, load_mocks, ASSERT_FAIL_MESSAGE
 
 
@@ -43,6 +43,7 @@ def test_child_class_proper_implementation():
         ("tolerance", ToleranceType),
         ("parameter_match", ParameterMatchType),
         ("regex", RegexType),
+        ("operator", OperatorType),
     ],
 )
 def test_check_init(check_type_str, expected_class):
@@ -95,7 +96,6 @@ exact_match_test_values_no_change = (
     "result[0].vrfs.default.peerList[*].[$peerAddress$,establishedTransitions]",
     ({}, True),
 )
-
 exact_match_test_values_changed = (
     "exact_match",
     {},
@@ -109,7 +109,6 @@ exact_match_test_values_changed = (
         False,
     ),
 )
-
 tolerance_test_values_no_change = (
     "tolerance",
     {"tolerance": 10},
@@ -117,7 +116,6 @@ tolerance_test_values_no_change = (
     "result[0].vrfs.default.peerList[*].[$peerAddress$,establishedTransitions]",
     ({}, True),
 )
-
 tolerance_test_values_within_threshold = (
     "tolerance",
     {"tolerance": 10},
@@ -125,7 +123,6 @@ tolerance_test_values_within_threshold = (
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
     ({}, True),
 )
-
 tolerance_test_values_beyond_threshold = (
     "tolerance",
     {"tolerance": 10},
@@ -139,7 +136,6 @@ tolerance_test_values_beyond_threshold = (
         False,
     ),
 )
-
 check_type_tests = [
     exact_match_test_values_no_change,
     exact_match_test_values_changed,
@@ -177,7 +173,6 @@ napalm_bgp_neighbor_status = (
         False,
     ),
 )
-
 napalm_bgp_neighbor_prefixes_ipv4 = (
     "napalm_get_bgp_neighbors",
     "tolerance",
@@ -185,7 +180,6 @@ napalm_bgp_neighbor_prefixes_ipv4 = (
     "global.$peers$.*.*.ipv4.[accepted_prefixes,received_prefixes,sent_prefixes]",
     ({"10.1.0.0": {"accepted_prefixes": {"new_value": 900, "old_value": 1000}}}, False),
 )
-
 napalm_bgp_neighbor_prefixes_ipv6 = (
     "napalm_get_bgp_neighbors",
     "tolerance",
@@ -193,7 +187,6 @@ napalm_bgp_neighbor_prefixes_ipv6 = (
     "global.$peers$.*.*.ipv6.[accepted_prefixes,received_prefixes,sent_prefixes]",
     ({"10.64.207.255": {"received_prefixes": {"new_value": 1100, "old_value": 1000}}}, False),
 )
-
 napalm_get_lldp_neighbors_exact_raw = (
     "napalm_get_lldp_neighbors",
     "exact_match",
@@ -215,7 +208,6 @@ napalm_get_lldp_neighbors_exact_raw = (
         False,
     ),
 )
-
 tolerance_no_path = (
     "tolerance",
     "tolerance",

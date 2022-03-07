@@ -3,6 +3,7 @@ import re
 from typing import Any, Mapping, Dict
 from deepdiff import DeepDiff
 from .utils.diff_helpers import get_diff_iterables_items, fix_deepdiff_key_names
+from .operator import Operator
 
 
 def diff_generator(pre_result: Any, post_result: Any) -> Dict:
@@ -98,4 +99,15 @@ def regex_evaluator(values: Mapping, regex_expression: str, mode: str) -> Dict:
                 elif mode == "no-match" and match_result:
                     result.update(item)
 
+    return result
+
+
+def operator_evaluator(referance_data: Mapping, value_to_compare: Mapping) -> Dict:
+    """Operator evaluator call."""
+    # referance_data
+    # {'mode': 'all-same', 'operator_data': True}
+    operator_mode = referance_data["mode"].replace("-", "_")
+    operator = Operator(referance_data["operator_data"], value_to_compare)
+
+    result = getattr(operator, operator_mode)()
     return result

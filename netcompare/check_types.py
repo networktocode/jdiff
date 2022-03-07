@@ -3,8 +3,6 @@ import re
 from typing import Mapping, Tuple, List, Dict, Any, Union
 from abc import ABC, abstractmethod
 import jmespath
-
-
 from .utils.jmespath_parsers import (
     jmespath_value_parser,
     jmespath_refkey_parser,
@@ -13,11 +11,10 @@ from .utils.jmespath_parsers import (
     keys_values_zipper,
 )
 from .utils.data_normalization import exclude_filter, flatten_list
-from .evaluators import diff_generator, parameter_evaluator, regex_evaluator
+from .evaluators import diff_generator, parameter_evaluator, regex_evaluator, operator_evaluator
+
 
 # pylint: disable=arguments-differ
-
-
 class CheckType(ABC):
     """Check Type Base Abstract Class."""
 
@@ -36,6 +33,8 @@ class CheckType(ABC):
             return ParameterMatchType()
         if check_type == "regex":
             return RegexType()
+        if check_type == "operator":
+            return OperatorType()
 
         raise NotImplementedError
 
@@ -115,7 +114,7 @@ class ExactMatchType(CheckType):
     """Exact Match class docstring."""
 
     @staticmethod
-    def validate(**kwargs):
+    def validate(**kwargs) -> None:
         """Method to validate arguments."""
         # reference_data = getattr(kwargs, "reference_data")
 
@@ -130,7 +129,7 @@ class ToleranceType(CheckType):
     """Tolerance class docstring."""
 
     @staticmethod
-    def validate(**kwargs):
+    def validate(**kwargs) -> None:
         """Method to validate arguments."""
         # reference_data = getattr(kwargs, "reference_data")
         tolerance = kwargs.get("tolerance")
@@ -177,7 +176,7 @@ class ParameterMatchType(CheckType):
     """Parameter Match class implementation."""
 
     @staticmethod
-    def validate(**kwargs):
+    def validate(**kwargs) -> None:
         """Method to validate arguments."""
         mode_options = ["match", "no-match"]
         params = kwargs.get("params")
@@ -206,7 +205,7 @@ class RegexType(CheckType):
     """Regex Match class implementation."""
 
     @staticmethod
-    def validate(**kwargs):
+    def validate(**kwargs) -> None:
         """Method to validate arguments."""
         mode_options = ["match", "no-match"]
         regex = kwargs.get("regex")
@@ -228,3 +227,80 @@ class RegexType(CheckType):
         self.validate(regex=regex, mode=mode)
         diff = regex_evaluator(value_to_compare, regex, mode)
         return diff, not diff
+
+
+class OperatorType(CheckType):
+    """Operator class implementation."""
+
+    @staticmethod
+    def validate(**kwargs) -> None:
+        """Validate operator parameters."""
+        in_operators = ("is-in", "not-in", "in-range", "not-range")
+        bool_operators = ("all-same",)
+        number_operators = ("is-gt", "is-lt")
+        # "equals" is redundant with check type "exact_match" an "parameter_match"
+        # equal_operators = ("is-equal", "not-equal")
+        string_operators = ("contains", "not-contains")
+        valid_options = (
+            in_operators,
+            bool_operators,
+            number_operators,
+            string_operators,
+            # equal_operators,
+        )
+
+        # Validate "params" argument is not None.
+        if not kwargs:
+            raise KeyError(f"'params' argument must be provided. You have {kwargs}. Read the docs for more info.")
+
+        params_key = kwargs["mode"]
+        params_value = kwargs["operator_data"]
+        # Validate "params" value is legal.
+        if all(params_key in operator for operator in valid_options):
+            raise ValueError(
+                f"'params' value must be one of the following: {[sub_element for element in valid_options for sub_element in element]}. You have: {params_key}"
+            )
+
+        if params_key in in_operators:
+            # "is-in", "not-in", "in-range", "not-range" requires an iterable
+            if not isinstance(params_value, (list, tuple)):
+                raise ValueError(
+                    f"Range check-option {in_operators} must have value of type list or tuple. i.e: dict(not-in=('Idle', 'Down'). You have: {params_value} of type {type(params_value)}You have: {params_value} of type {type(params_value)}"
+                )
+
+            # "in-range", "not-range" requires int or float where value at index 0 is lower than value at index 1
+            if params_key in ("in-range", "not-range"):
+                if not isinstance(params_value[0], (int, float)) and not isinstance(params_value[1], float, int):
+                    raise ValueError(
+                        f"Range check-option {params_key} must have value of type list or tuple with items of type float or int. i.e: dict(not-range=(70000000, 80000000). You have: {params_value} of type {type(params_value)}"
+                    )
+                if not params_value[0] < params_value[1]:
+                    raise ValueError(
+                        f"'range' and 'not-range' must have value at index 0 lower than value at index 1. i.e: dict(not-range=(70000000, 80000000). You have: {params_value} of type {type(params_value)}"
+                    )
+
+        # "is-gt","is-lt"  require either int() or float()
+        elif params_key in number_operators and not isinstance(params_value, (float, int)):
+            raise ValueError(
+                f"Check-option {number_operators} must have value of type float or int. i.e: dict(is-lt=50). You have: {params_value} of type {type(params_value)}"
+            )
+
+        # "contains", "not-contains" require string.
+        elif params_key in string_operators and not isinstance(params_value, str):
+            raise ValueError(
+                f"Range check-option {string_operators} must have value of type string. i.e: dict(contains='EVPN'). You have: {params_value} of type {type(params_value)}"
+            )
+
+        # "all-same" requires boolean True or False
+        elif params_key in bool_operators and not isinstance(params_value, bool):
+            raise ValueError(
+                f"Range check-option {bool_operators} must have value of type bool. i.e: dict(all-same=True). You have: {params_value} of type {type(params_value)}"
+            )
+
+    def evaluate(self, value_to_compare: Any, params: Any) -> Tuple[Mapping, bool]:
+        """Operator evaluator implementation."""
+        self.validate(**params)
+        # For naming consistency
+        reference_data = params
+        evaluation_result = operator_evaluator(reference_data, value_to_compare)
+        return evaluation_result, not evaluation_result
