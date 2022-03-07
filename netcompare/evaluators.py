@@ -36,7 +36,7 @@ def diff_generator(pre_result: Any, post_result: Any) -> Dict:
     return fix_deepdiff_key_names(result)
 
 
-def parameter_evaluator(values: Mapping, parameters: Mapping) -> Dict:
+def parameter_evaluator(values: Mapping, parameters: Mapping, mode: str) -> Dict:
     """Parameter Match evaluator engine.
 
     Args:
@@ -71,8 +71,11 @@ def parameter_evaluator(values: Mapping, parameters: Mapping) -> Dict:
         inner_value = list(value.values())[0]
 
         for parameter_key, parameter_value in parameters.items():
-            if inner_value[parameter_key] != parameter_value:
+            if mode == 'match' and inner_value[parameter_key] != parameter_value:
                 result_item[parameter_key] = inner_value[parameter_key]
+            elif mode == 'no-match' and inner_value[parameter_key] == parameter_value:
+                result_item[parameter_key] = inner_value[parameter_key]
+
 
         if result_item:
             result[inner_key] = result_item

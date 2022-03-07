@@ -195,7 +195,7 @@ class ParameterMatchType(CheckType):
         """Parameter Match evaluator implementation."""
         self.validate(params=params, mode=mode)
         # TODO: we don't use the mode?
-        evaluation_result = parameter_evaluator(value_to_compare, params)
+        evaluation_result = parameter_evaluator(value_to_compare, params, mode)
         return evaluation_result, not evaluation_result
 
 
