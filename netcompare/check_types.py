@@ -208,17 +208,15 @@ class RegexType(CheckType):
         mode_options = ["match", "no-match"]
         regex = kwargs.get("regex")
         if not regex:
-            raise ValueError("Params argument is mandatory for Regex Match Check Type.")
+            raise ValueError("'regex' argument is mandatory for Regex Check Type.")
         if not isinstance(regex, str):
-            raise ValueError(f"Params argument must be a string, and it's {type(regex)}.")
+            raise ValueError(f"'regex' argument must be a string. You have: {type(regex)}.")
 
         mode = kwargs.get("mode")
         if not mode:
-            raise ValueError("Mode argument is mandatory for Regex Match Check Type.")
-        if not isinstance(mode, str):
-            raise ValueError(f"Mode argument must be a string, and it's {type(mode)}.")
+            raise ValueError("'mode' argument is mandatory for Regex Check Type.")
         if mode not in mode_options:
-            raise ValueError(f"Mode argument should be {mode_options}, and it's {mode}")
+            raise ValueError(f"'mode' argument should be {mode_options}. You have: {mode}")
 
     def evaluate(self, value_to_compare: Mapping, regex: str, mode: str) -> Tuple[Mapping, bool]:
         """Regex Match evaluator implementation."""
