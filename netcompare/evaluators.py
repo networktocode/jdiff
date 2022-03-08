@@ -71,11 +71,10 @@ def parameter_evaluator(values: Mapping, parameters: Mapping, mode: str) -> Dict
         inner_value = list(value.values())[0]
 
         for parameter_key, parameter_value in parameters.items():
-            if mode == 'match' and inner_value[parameter_key] != parameter_value:
+            if mode == "match" and inner_value[parameter_key] != parameter_value:
                 result_item[parameter_key] = inner_value[parameter_key]
-            elif mode == 'no-match' and inner_value[parameter_key] == parameter_value:
+            elif mode == "no-match" and inner_value[parameter_key] == parameter_value:
                 result_item[parameter_key] = inner_value[parameter_key]
-
 
         if result_item:
             result[inner_key] = result_item

@@ -189,7 +189,9 @@ class ParameterMatchType(CheckType):
         if not mode:
             raise ValueError("'mode' argument is mandatory for ParameterMatch Check Type.")
         if mode not in mode_options:
-            raise ValueError(f"'mode' argument should be one of the following: {', '.join(mode_options)}. You have: {mode}")
+            raise ValueError(
+                f"'mode' argument should be one of the following: {', '.join(mode_options)}. You have: {mode}"
+            )
 
     def evaluate(self, value_to_compare: Mapping, params: Dict, mode: str) -> Tuple[Dict, bool]:
         """Parameter Match evaluator implementation."""
@@ -246,17 +248,19 @@ class OperatorType(CheckType):
         )
 
         # Validate "params" argument is not None.
-        if not kwargs or list(kwargs.keys())[0] != 'params':
+        if not kwargs or list(kwargs.keys())[0] != "params":
             raise ValueError(f"'params' argument must be provided. You have: {list(kwargs.keys())[0]}.")
 
-        params_key = kwargs['params'].get("mode")
-        params_value = kwargs['params'].get("operator_data")
+        params_key = kwargs["params"].get("mode")
+        params_value = kwargs["params"].get("operator_data")
 
         if not params_key or not params_value:
-            raise ValueError(f"'mode' and 'operator_data' arguments must be provided. You have: {list(kwargs['params'].keys())}.")
+            raise ValueError(
+                f"'mode' and 'operator_data' arguments must be provided. You have: {list(kwargs['params'].keys())}."
+            )
 
         # Validate "params" value is legal.
-        if not all(params_key in operator for operator in valid_options):
+        if not any(params_key in sub_element for element in valid_options for sub_element in element):
             raise ValueError(
                 f"'params' value must be one of the following: {[sub_element for element in valid_options for sub_element in element]}. You have: {params_key}"
             )
@@ -265,36 +269,40 @@ class OperatorType(CheckType):
             # "is-in", "not-in", "in-range", "not-range" requires an iterable
             if not isinstance(params_value, (list, tuple)):
                 raise ValueError(
-                    f"'range' check-option {in_operators} must have value of type list or tuple. i.e: dict(not-in=('Idle', 'Down'). You have: {params_value} of type {type(params_value)}You have: {params_value} of type {type(params_value)}"
+                    f"check options {in_operators} must have value of type list or tuple. i.e: dict(not-in=('Idle', 'Down'). You have: {params_value} of type {type(params_value)}."
                 )
 
             # "in-range", "not-range" requires int or float where value at index 0 is lower than value at index 1
             if params_key in ("in-range", "not-range"):
-                if not isinstance(params_value[0], (int, float)) and not isinstance(params_value[1], float, int):
+                if (
+                    not len(params_value) == 2
+                    or not isinstance(params_value[0], (int, float))
+                    or not isinstance(params_value[1], (float, int))
+                ):
                     raise ValueError(
-                        f"Range check-option {params_key} must have value of type list or tuple with items of type float or int. i.e: dict(not-range=(70000000, 80000000). You have: {params_value} of type {type(params_value)}"
+                        f"'range' check-option {params_key} must have value of type list or tuple with items of type float or int. i.e: dict(not-range=(70000000, 80000000). You have: {params_value}."
                     )
                 if not params_value[0] < params_value[1]:
                     raise ValueError(
-                        f"'range' and 'not-range' must have value at index 0 lower than value at index 1. i.e: dict(not-range=(70000000, 80000000). You have: {params_value} of type {type(params_value)}"
+                        f"'range' and 'not-range' must have value at index 0 lower than value at index 1. i.e: dict(not-range=(70000000, 80000000). You have: {params_value}."
                     )
 
         # "is-gt","is-lt"  require either int() or float()
         elif params_key in number_operators and not isinstance(params_value, (float, int)):
             raise ValueError(
-                f"Check-option {number_operators} must have value of type float or int. i.e: dict(is-lt=50). You have: {params_value} of type {type(params_value)}"
+                f"check options {number_operators} must have value of type float or int. You have: {params_value} of type {type(params_value)}"
             )
 
         # "contains", "not-contains" require string.
         elif params_key in string_operators and not isinstance(params_value, str):
             raise ValueError(
-                f"Range check-option {string_operators} must have value of type string. i.e: dict(contains='EVPN'). You have: {params_value} of type {type(params_value)}"
+                f"check options {string_operators} must have value of type string. You have: {params_value} of type {type(params_value)}"
             )
 
         # "all-same" requires boolean True or False
         elif params_key in bool_operators and not isinstance(params_value, bool):
             raise ValueError(
-                f"Range check-option {bool_operators} must have value of type bool. i.e: dict(all-same=True). You have: {params_value} of type {type(params_value)}"
+                f"check option all-same must have value of type bool. You have: {params_value} of type {type(params_value)}"
             )
 
     def evaluate(self, value_to_compare: Any, params: Any) -> Tuple[Mapping, bool]:
@@ -302,5 +310,5 @@ class OperatorType(CheckType):
         self.validate(**params)
         # For naming consistency
         reference_data = params
-        evaluation_result = operator_evaluator(reference_data['params'], value_to_compare)
+        evaluation_result = operator_evaluator(reference_data["params"], value_to_compare)
         return evaluation_result, not evaluation_result

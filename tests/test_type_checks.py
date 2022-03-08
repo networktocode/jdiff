@@ -269,14 +269,18 @@ parameter_no_match_api = (
     "result[0].vrfs.default.peerList[*].[$peerAddress$,localAsn,linkType]",
     (
         {
-            '10.1.0.0': {'linkType': 'external'},
-            '10.2.0.0': {'localAsn': '65130.1100', 'linkType': 'external'}, 
-            '10.64.207.255': {'localAsn': '65130.1100', 'linkType': 'external'}
+            "10.1.0.0": {"linkType": "external"},
+            "10.2.0.0": {"localAsn": "65130.1100", "linkType": "external"},
+            "10.64.207.255": {"localAsn": "65130.1100", "linkType": "external"},
         },
         False,
     ),
 )
-@pytest.mark.parametrize("filename, check_type_str, evaluate_args, path, expected_result", [parameter_match_api, parameter_no_match_api])
+
+
+@pytest.mark.parametrize(
+    "filename, check_type_str, evaluate_args, path, expected_result", [parameter_match_api, parameter_no_match_api]
+)
 def test_param_match(filename, check_type_str, evaluate_args, path, expected_result):
     """Validate parameter_match check type."""
     check = CheckType.init(check_type_str)
