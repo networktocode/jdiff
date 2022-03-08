@@ -246,13 +246,17 @@ class OperatorType(CheckType):
         )
 
         # Validate "params" argument is not None.
-        if not kwargs:
-            raise KeyError(f"'params' argument must be provided. You have {kwargs}. Read the docs for more info.")
+        if not kwargs or list(kwargs.keys())[0] != 'params':
+            raise ValueError(f"'params' argument must be provided. You have: {list(kwargs.keys())[0]}.")
 
-        params_key = kwargs["mode"]
-        params_value = kwargs["operator_data"]
+        params_key = kwargs['params'].get("mode")
+        params_value = kwargs['params'].get("operator_data")
+
+        if not params_key or not params_value:
+            raise ValueError(f"'mode' and 'operator_data' arguments must be provided. You have: {list(kwargs['params'].keys())}.")
+
         # Validate "params" value is legal.
-        if all(params_key in operator for operator in valid_options):
+        if not all(params_key in operator for operator in valid_options):
             raise ValueError(
                 f"'params' value must be one of the following: {[sub_element for element in valid_options for sub_element in element]}. You have: {params_key}"
             )
@@ -261,7 +265,7 @@ class OperatorType(CheckType):
             # "is-in", "not-in", "in-range", "not-range" requires an iterable
             if not isinstance(params_value, (list, tuple)):
                 raise ValueError(
-                    f"Range check-option {in_operators} must have value of type list or tuple. i.e: dict(not-in=('Idle', 'Down'). You have: {params_value} of type {type(params_value)}You have: {params_value} of type {type(params_value)}"
+                    f"'range' check-option {in_operators} must have value of type list or tuple. i.e: dict(not-in=('Idle', 'Down'). You have: {params_value} of type {type(params_value)}You have: {params_value} of type {type(params_value)}"
                 )
 
             # "in-range", "not-range" requires int or float where value at index 0 is lower than value at index 1
@@ -298,5 +302,5 @@ class OperatorType(CheckType):
         self.validate(**params)
         # For naming consistency
         reference_data = params
-        evaluation_result = operator_evaluator(reference_data, value_to_compare)
+        evaluation_result = operator_evaluator(reference_data['params'], value_to_compare)
         return evaluation_result, not evaluation_result

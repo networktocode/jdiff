@@ -1,7 +1,6 @@
 """Unit tests for validator CheckType method."""
 import pytest
 from netcompare.check_types import CheckType
-from .utility import load_mocks
 
 tolerance_wrong_argumet = (
     "tolerance",
@@ -158,6 +157,54 @@ def test_regex_mode_value(check_type_str, evaluate_args, expected_results):
     """Validate that CheckType regex 'mode' has value of typ str."""
     check = CheckType.init(check_type_str)
     
+    with pytest.raises(ValueError) as exc_info:
+        check.validate(**evaluate_args)
+    
+    assert exc_info.type is ValueError and  exc_info.value.args[0] == expected_results
+
+
+operator_params = (
+    "operator",
+    {"my_params": {"mode": "not-in", "operator_data": [20, 40, 60]}},
+    "'params' argument must be provided. You have: my_params.",
+)
+@pytest.mark.parametrize("check_type_str, evaluate_args, expected_results", [operator_params])
+def test_operator_params(check_type_str, evaluate_args, expected_results):
+    """Validate that CheckType operator if has 'params' argument."""
+    check = CheckType.init(check_type_str)
+
+    with pytest.raises(ValueError) as exc_info:
+        check.validate(**evaluate_args)
+    
+    assert exc_info.type is ValueError and  exc_info.value.args[0] == expected_results
+
+
+operator_params_mode = (
+    "operator",
+    {"params": {"no-mode": "not-in", "not-operator_data": [20, 40, 60]}},
+    "'mode' and 'operator_data' arguments must be provided. You have: ['no-mode', 'not-operator_data'].",
+)
+@pytest.mark.parametrize("check_type_str, evaluate_args, expected_results", [operator_params_mode])
+def test_operator_params_mode(check_type_str, evaluate_args, expected_results):
+    """Validate that CheckType operator if has 'mode' and 'operator_data' arguments."""
+    check = CheckType.init(check_type_str)
+
+    with pytest.raises(ValueError) as exc_info:
+        check.validate(**evaluate_args)
+    
+    assert exc_info.type is ValueError and  exc_info.value.args[0] == expected_results
+
+
+operator_params_wrong_operator = (
+    "operator",
+    {"params": {"mode": "random", "operator_data": [20, 40, 60]}},
+    "'params' value must be one of the following: ['is-in', 'not-in', 'in-range', 'not-range', 'all-same', 'is-gt', 'is-lt', 'contains', 'not-contains']. You have: random",
+)
+@pytest.mark.parametrize("check_type_str, evaluate_args, expected_results", [operator_params_wrong_operator])
+def test_operator_params_wrong_operator(check_type_str, evaluate_args, expected_results):
+    """Validate that CheckType operator if has 'mode' and 'operator_data' arguments."""
+    check = CheckType.init(check_type_str)
+
     with pytest.raises(ValueError) as exc_info:
         check.validate(**evaluate_args)
     
