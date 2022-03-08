@@ -227,7 +227,7 @@ operator_params_wrong_operator = (
 
 @pytest.mark.parametrize("check_type_str, evaluate_args, expected_results", [operator_params_wrong_operator])
 def test_operator_params_wrong_operator(check_type_str, evaluate_args, expected_results):
-    """Validate that CheckType operator if has 'mode' and 'operator_data' arguments."""
+    """Validate that CheckType operator 'mode' and 'operator_data' values arguments."""
     check = CheckType.init(check_type_str)
 
     with pytest.raises(ValueError) as exc_info:
@@ -245,7 +245,7 @@ operator_params_in = (
 
 @pytest.mark.parametrize("check_type_str, evaluate_args, expected_results", [operator_params_in])
 def test_operator_params_in(check_type_str, evaluate_args, expected_results):
-    """Validate that CheckType operator if has 'mode' and 'operator_data' arguments."""
+    """Validate that CheckType operator range arguments data-type."""
     check = CheckType.init(check_type_str)
 
     with pytest.raises(ValueError) as exc_info:
@@ -263,7 +263,7 @@ operator_params_in_range = (
 
 @pytest.mark.parametrize("check_type_str, evaluate_args, expected_results", [operator_params_in_range])
 def test_operator_params_in_range(check_type_str, evaluate_args, expected_results):
-    """Validate that CheckType operator if has 'mode' and 'operator_data' arguments."""
+    """Validate that CheckType operator range values data-type."""
     check = CheckType.init(check_type_str)
 
     with pytest.raises(ValueError) as exc_info:
@@ -281,7 +281,7 @@ operator_params_in_range_lower_than = (
 
 @pytest.mark.parametrize("check_type_str, evaluate_args, expected_results", [operator_params_in_range_lower_than])
 def test_operator_params_in_range_lower_than(check_type_str, evaluate_args, expected_results):
-    """Validate that CheckType operator if has 'mode' and 'operator_data' arguments."""
+    """Validate that CheckType operator range values order."""
     check = CheckType.init(check_type_str)
 
     with pytest.raises(ValueError) as exc_info:
@@ -299,7 +299,7 @@ operator_params_number = (
 
 @pytest.mark.parametrize("check_type_str, evaluate_args, expected_results", [operator_params_number])
 def test_operator_params_in_params_number(check_type_str, evaluate_args, expected_results):
-    """Validate that CheckType operator if has 'mode' and 'operator_data' arguments."""
+    """Validate that CheckType operator gt/lt data-type."""
     check = CheckType.init(check_type_str)
 
     with pytest.raises(ValueError) as exc_info:
@@ -317,7 +317,7 @@ operator_params_contains = (
 
 @pytest.mark.parametrize("check_type_str, evaluate_args, expected_results", [operator_params_contains])
 def test_operator_params_contains(check_type_str, evaluate_args, expected_results):
-    """Validate that CheckType operator if has 'mode' and 'operator_data' arguments."""
+    """Validate that CheckType operator contains data-type."""
     check = CheckType.init(check_type_str)
 
     with pytest.raises(ValueError) as exc_info:
@@ -335,7 +335,7 @@ operator_params_bool = (
 
 @pytest.mark.parametrize("check_type_str, evaluate_args, expected_results", [operator_params_bool])
 def test_operator_params_bool(check_type_str, evaluate_args, expected_results):
-    """Validate that CheckType operator if has 'mode' and 'operator_data' arguments."""
+    """Validate that CheckType operator all-same data-type."""
     check = CheckType.init(check_type_str)
 
     with pytest.raises(ValueError) as exc_info:
