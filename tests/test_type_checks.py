@@ -64,31 +64,6 @@ def tests_exceptions_init(check_type_str, exception_type, expected_in_output):
     assert expected_in_output in error.value.__str__()
 
 
-exception_tests_eval = [
-    (
-        "parameter_match",
-        {"value_to_compare": {}, "mode": "some mode", "params": {"some": "thing"}},
-        ValueError,
-        "Mode argument should be",
-    ),
-    (
-        "regex",
-        {"value_to_compare": {}, "mode": "some mode", "regex": "some regex"},
-        ValueError,
-        "Mode argument should be",
-    ),
-]
-
-
-@pytest.mark.parametrize("check_type_str, evaluate_args, exception_type, expected_in_output", exception_tests_eval)
-def tests_exceptions_eval(check_type_str, evaluate_args, exception_type, expected_in_output):
-    """Tests exceptions when calling .evaluate() method."""
-    with pytest.raises(exception_type) as error:
-        check = CheckType.init(check_type_str)
-        check.evaluate(**evaluate_args)
-    assert expected_in_output in error.value.__str__()
-
-
 exact_match_test_values_no_change = (
     "exact_match",
     {},
@@ -287,9 +262,25 @@ parameter_match_api = (
         False,
     ),
 )
+parameter_no_match_api = (
+    "pre.json",
+    "parameter_match",
+    {"mode": "no-match", "params": {"localAsn": "65130.1100", "linkType": "external"}},
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,localAsn,linkType]",
+    (
+        {
+            "10.1.0.0": {"linkType": "external"},
+            "10.2.0.0": {"localAsn": "65130.1100", "linkType": "external"},
+            "10.64.207.255": {"localAsn": "65130.1100", "linkType": "external"},
+        },
+        False,
+    ),
+)
 
 
-@pytest.mark.parametrize("filename, check_type_str, evaluate_args, path, expected_result", [parameter_match_api])
+@pytest.mark.parametrize(
+    "filename, check_type_str, evaluate_args, path, expected_result", [parameter_match_api, parameter_no_match_api]
+)
 def test_param_match(filename, check_type_str, evaluate_args, path, expected_result):
     """Validate parameter_match check type."""
     check = CheckType.init(check_type_str)
