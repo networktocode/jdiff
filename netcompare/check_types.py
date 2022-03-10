@@ -275,7 +275,7 @@ class OperatorType(CheckType):
             # "in-range", "not-range" requires int or float where value at index 0 is lower than value at index 1
             if params_key in ("in-range", "not-range"):
                 if (
-                    not len(params_value) == 2
+                    len(params_value) != 2
                     or not isinstance(params_value[0], (int, float))
                     or not isinstance(params_value[1], (float, int))
                 ):

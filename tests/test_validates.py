@@ -123,7 +123,7 @@ all_tests = [
 
 @pytest.mark.parametrize("check_type_str, evaluate_args, expected_results", all_tests)
 def test_tolerance_key_name(check_type_str, evaluate_args, expected_results):
-    """Validate that CheckType tolerance has `tolerance` key."""
+    """Test CheckType validate method for each check-type."""
     check = CheckType.init(check_type_str)
 
     with pytest.raises(ValueError) as exc_info:
