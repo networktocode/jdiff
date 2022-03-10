@@ -260,7 +260,7 @@ class OperatorType(CheckType):
             )
 
         # Validate "params" value is legal.
-        if not any(params_key in sub_element for element in valid_options for sub_element in element):
+        if all(params_key not in sub_element for element in valid_options for sub_element in element):
             raise ValueError(
                 f"'params' value must be one of the following: {[sub_element for element in valid_options for sub_element in element]}. You have: {params_key}"
             )
