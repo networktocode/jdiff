@@ -1,12 +1,125 @@
 # netcompare
 
-netcompare is a python library targeted at intelligently deep diffing structured data objects of different types. In addition, netcompare provides some basic tests of keys and values within the data structure. Ultimately, this library is meant to be a light-weight way to compare structured output from network device 'show' commands. 
+This library is meant to be a light-weight way to compare structured output from network device `show` commands. `netcompare` is a python library targeted at intelligently deep diffing structured data objects of json type. In addition, `netcompare` provides some basic tests of keys and values within the data structure.
+
+The libraly heavely rely on [jmspath](https://jmespath.org/) for traversing the json object and find the wanted value to be evaluated. More on that later.
 
 ## Use Case
 
-netcompare enables an easy and direct way to see the outcome of network change windows. The intended usage is to collect raw show command output before and after a change window. Prior to closing the change window, the results are compared to help determine if the change was successful and if the network is in an acceptable state. The output can be stored with the change's documentation for easy reference and proof of completion.
+`netcompare` enables an easy and direct way to see the outcome of network configuration or operational status change. The intended usage is to collect structured `show` command output before and after a change window. Prior to closing the change window, the results are compared to help determine if the change was successful as intended and if the network is in an acceptable state. The output can be stored with the change's documentation for easy reference and proof of completion.
 
-## Check Types
+## Library Architecture
+
+![netcompare HLD](./docs/images/hld.png)
+
+As first thing, an instance of `CheckType` object must be created passing one of the below check types as argument:
+
+- `exact_match`
+- `tolerance`
+- `parameters`
+- `regex`
+- `operator`
+
+
+```python
+my_check = "exact_match"
+check = CheckType.init(my_check)
+```
+
+We would then need to define our json object used as reference data, as well as a JMSPATH expression to extract the value wanted and pass them to `get_value` method. Be aware! `netcompare` works with a customized version of JMSPATH. More on that later.
+
+```python
+bgp_pre_change = "./pre/bgp.json"
+bgp_jmspath_exp =  "result[0].vrfs.default.peerList[*].[$peerAddress$,establishedTransitions]"
+pre_value = check.get_value(bgp_pre_change, bgp_jmspath_exp)
+```
+
+Once extracted our pre-change value, we would need to evaluate it against our post-change value. In case of chec-type `exact_match` our post-value would be another json object:
+
+```python
+bgp_post_change = "./post/bgp.json"
+post_value = check.get_value(bgp_post_change, bgp_jmspath_exp)
+```
+
+Every check type expect different type of arguments. For example, in case of check type `tolerance` we would also need to pass `tolerance` argument; `parameters` expect only a dictionary...
+
+Now that we have pre and post data, we just need to compare them with `evaluate` method which will return our evaluation result.
+
+```python
+results = check.evaluate(post_value, pre_value, **evaluate_args)
+```
+
+## Customized JMSPATH
+
+Since `netcompare` work with json object as data inputs, JMSPATH was the obvous choise for traversing the data and extract the value wanted from it.
+
+However, JMSPATH comes with a limitation where is not possible to define a `key` to which the `value` belongs to.
+
+Let's have a look to the below `show bgp` output example.
+
+```json
+{
+  "result": [
+    {
+      "vrfs": {
+        "default": {
+          "peerList": [
+            {
+              "linkType": "external",
+              "localAsn": "65130.1100",
+              "prefixesSent": 50,
+              "receivedUpdates": 0,
+              "peerAddress": "7.7.7.7",
+              "state": "Idle",
+              "updownTime": 1394,
+              "asn": "1.2354",
+              "routerId": "0.0.0.0"
+            },
+            {
+              "linkType": "external",
+              "localAsn": "65130.1100",
+              "receivedUpdates": 0,
+              "peerAddress": "10.1.0.0",
+              "state": "Connected",
+              "updownTime": 1394,
+              "asn": "1.2354",
+              "routerId": "0.0.0.0"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+If we would define a JMSPATH expression to extract `state` we would have something like...
+
+```python
+"result[0].vrfs.default.peerList[*].state
+```
+
+...which will return
+
+```python
+["Idle", "Connected"]
+```
+
+How can we understand that `Idle` is relative to peer 7.7.7.7 and `Connected` to peer `10.1.0.0` ? 
+We could index the output but that would require some post-processing data. For that reason, `netcompare` use a customized version of JMSPATH where is possible to define a reference key for the value(s) wanted. The reference key must be within `$` sign anchors and defined in a list, together with the value(s):
+
+```python
+"result[0].vrfs.default.peerList[*].[$peerAddress$,state]
+```
+
+That  would give us...
+
+```python
+{"7.7.7.7": ["Idle"], "10.1.0.0": ["Connected"]}
+
+
+```
+## check typea explained
+
 
 ### exact_match
 
