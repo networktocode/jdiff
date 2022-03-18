@@ -57,6 +57,9 @@ class CheckType(ABC):
             Evaluated data, may be anything depending on JMESPath used.
         """
         if exclude and isinstance(output, Dict):
+            if not isinstance(exclude, list):
+                raise ValueError(f"Exclude list must be defined as a list. You have {type(exclude)}")
+
             exclude_filter(output, exclude)  # exclude unwanted elements
 
         if not path:
