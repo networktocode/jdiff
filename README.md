@@ -116,35 +116,110 @@ That  would give us...
 ```python
 {"7.7.7.7": ["Idle"], "10.1.0.0": ["Connected"]}
 
-
 ```
-## check typea explained
 
+## Check types explained
 
 ### exact_match
 
-exact_match is concerned about the value of the elements within the data structure. The keys and values should match between the pre and post values.
+Check type `exact_match` is concerned about the value of the elements within the data structure. The keys and values should match between the pre and post values. A diff is generated between the two data sets. 
+As some outputs might be too verbose or includes fields that constantly change (i.e. interface counter), is possible to exclude a portion of data traversed by JMSPATH, defining a list of keys that we want to exclude.
 
-```
-PASS 
---------------------
-pre: [{"A": 1}]
-post: [{"A": 1}]
+Examples:
+
+
+```python
+>>> from netcompare import CheckType
+>>> pre_data = {
+      "jsonrpc": "2.0",
+      "id": "EapiExplorer-1",
+      "result": [
+        {
+          "interfaces": {
+            "Management1": {
+              "lastStatusChangeTimestamp": 1626247820.0720868,
+              "lanes": 0,
+              "name": "Management1",
+              "interfaceStatus": "connected",
+              "autoNegotiate": "success",
+              "burnedInAddress": "08:00:27:e6:b2:f8",
+              "loopbackMode": "loopbackNone",
+              "interfaceStatistics": {
+                "inBitsRate": 3582.5323982177174,
+                "inPktsRate": 3.972702352461616,
+                "outBitsRate": 17327.65267220522,
+                "updateInterval": 300,
+                "outPktsRate": 2.216220664406746
+              }
+            }
+          }
+        }
+      ]
+    }
+>>> post_data = {
+      "jsonrpc": "2.0",
+      "id": "EapiExplorer-1",
+      "result": [
+        {
+          "interfaces": {
+            "Management1": {
+              "lastStatusChangeTimestamp": 1626247821.123456,
+              "lanes": 0,
+              "name": "Management1",
+              "interfaceStatus": "down",
+              "autoNegotiate": "success",
+              "burnedInAddress": "08:00:27:e6:b2:f8",
+              "loopbackMode": "loopbackNone",
+              "interfaceStatistics": {
+                "inBitsRate": 3403.4362520883615,
+                "inPktsRate": 3.7424095978179257,
+                "outBitsRate": 16249.69114419833,
+                "updateInterval": 300,
+                "outPktsRate": 2.1111866059750692
+              }
+            }
+          }
+        }
+      ]
+    }
+>>> my_jmspath = "result[*]"
+>>> exclude_fields = ["interfaceStatistics", "lastStatusChangeTimestamp"]
+>>> # Create an instance of CheckType object with 'exact_match' as check-type argument.
+>>> my_check = CheckType.init(check_type="exact_match")
+>>> my_check
+>>> <netcompare.check_types.ExactMatchType object at 0x10ac00f10>
+>>> # Extract the wanted value from pre_dat to later compare with post_data. As we want compare all the body (excluding "interfaceStatistics"), we do not need to define any reference key
+>>> pre_value = my_check.get_value(output=pre_data, path=my_jmspath, exclude=exclude_fields)
+>>> pre_value
+>>> [{'interfaces': {'Management1': {'lastStatusChangeTimestamp': 1626247820.0720868, 'lanes': 0, 'name': 'Management1', 'interfaceStatus': 'connected', 'autoNegotiate': 'success', 'burnedInAddress': '08:00:27:e6:b2:f8', 'loopbackMode': 'loopbackNone'}}}]
+>>> post_value = my_check.get_value(output=post_data, path=my_jmspath, exclude=exclude_fields)
+>>> post_value
+>>> [{'interfaces': {'Management1': {'lastStatusChangeTimestamp': 1626247821.123456, 'lanes': 0, 'name': 'Management1', 'interfaceStatus': 'down', 'autoNegotiate': 'success', 'burnedInAddress': '08:00:27:e6:b2:f8', 'loopbackMode': 'loopbackNone'}}}]
+>>> # The pre_value is our intended state for interface Management1, therefore we will use it as reference data. post_value will be our value_to_compare as we want compare the actual state of our interface Management1 (perhaps after a network maintenance) with the its status before the change.
+>>> result = my_check.evaluate(value_to_compare=post_value, reference_data=pre_value)
+>>> result
+>>> ({'interfaces': {'Management1': {'interfaceStatus': {'new_value': 'down', 'old_value': 'connected'}}}}, False)
 ```
 
-```
-FAIL
---------------------
-pre: [{"A": 1}]
-post: [{"A": 2}]
-```
+As we can see, we return a tuple containing a diff betwee the pre and post data as well as a boolean for the overall test result. In this case a diff has been found so the status of the test is `False`.
 
+Let's see a better way to run `exact_match` for this specific case. Since we are interested only into `interfaceStatus` we could write our JMSPATH expression as:
+
+```python
+
+>>> pre_value = my_check.get_value(output=pre_data, path=my_jmspath)
+>>> pre_value
+['connected']
+>>> post_value = my_check.get_value(output=post_data, path=my_jmspath)
+>>> post_value
+['down']
+>>> result = my_check.evaluate(value_to_compare=post_value, reference_data=pre_value)
+>>> result
+({'Management1': {'new_value': 'down', 'old_value': 'connected'}}, False)
 ```
-FAIL
---------------------
-pre: [{ "A": 1}]
-post: []
-```
+Targeting only `interfaceStatus` key, we would need to define a reference key (in this case `$Management1$`) as well as we would not need to define any exclusion list. 
+
+This logic applies to all check-types available in `netcompare`
 
 ### parameter_match
 
