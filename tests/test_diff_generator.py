@@ -149,9 +149,16 @@ exact_match_textfsm_ospf_int_br_normalized = (
     },
 )
 
-exact_match_test_issue_44 = (
+exact_match_test_issue_44_case_1 = (
     "raw_novalue_exclude",
     "result[*].interfaces.*.[$name$,interfaceStatus]",
+    [],
+    {"Management1": {"interfaceStatus": {"new_value": "connected", "old_value": "down"}}},
+)
+
+exact_match_test_issue_44_case_2 = (
+    "raw_novalue_exclude",
+    "result[0].interfaces.*.[$name$,interfaceStatus]",
     [],
     {"Management1": {"interfaceStatus": {"new_value": "connected", "old_value": "down"}}},
 )
@@ -170,7 +177,8 @@ eval_tests = [
     exact_match_multi_nested_list,
     exact_match_textfsm_ospf_int_br_raw,
     exact_match_textfsm_ospf_int_br_normalized,
-    exact_match_test_issue_44,
+    exact_match_test_issue_44_case_1,
+    exact_match_test_issue_44_case_2,
 ]
 
 
