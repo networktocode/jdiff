@@ -206,7 +206,7 @@ As we can see, we return a tuple containing a diff betwee the pre and post data 
 Let's see a better way to run `exact_match` for this specific case. Since we are interested only into `interfaceStatus` we could write our JMSPATH expression as:
 
 ```python
-
+>>> my_jmspath = "result[*].interfaces.Management1.[$name$,interfaceStatus]"
 >>> pre_value = my_check.get_value(output=pre_data, path=my_jmspath)
 >>> pre_value
 ['connected']
@@ -217,7 +217,7 @@ Let's see a better way to run `exact_match` for this specific case. Since we are
 >>> result
 ({'Management1': {'new_value': 'down', 'old_value': 'connected'}}, False)
 ```
-Targeting only `interfaceStatus` key, we would need to define a reference key (in this case `$Management1$`) as well as we would not need to define any exclusion list. 
+Targeting only `interfaceStatus` key, we would need to define a reference key (in this case `$name$`) as well as we would not need to define any exclusion list. 
 
 This logic applies to all check-types available in `netcompare`
 
