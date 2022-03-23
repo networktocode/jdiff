@@ -411,231 +411,57 @@ Let's run an example where e want to check that `burnedInAddress` key has a stri
 ({'Management1': {'burnedInAddress': '08:00:27:e6:b2:f8'}}, False)
 ```
 
-## How To Define A Check
+### Operator
 
-The check requires at least 2 arguments: `check_type` which can be `exact_match`, `tolerance`, `parameter_match` or `path`. The `path` argument is JMESPath based but uses `$` to anchor the reference key needed to generate the diff - more on this later. 
+Operator is a check which includes an array o different evaluation logic. Here a summary of the available options:
 
-Example #1:
 
-Run an `exact_match` between 2 files where `peerAddress` is the reference key (note the anchors used - `$` ) for `statebgpPeerCaps`. In this example, key and value are at the same level.
+#### `in` operators
 
-Check Definition:
-```
-{
-  "check_type": "exact_match",
-  "path": "result[0].vrfs.default.peerList[*].[$peerAddress$,statebgpPeerCaps]",
-}
-```
 
-Show Command Output - Pre:
-```
-{
-  "jsonrpc": "2.0",
-  "id": "EapiExplorer-1",
-  "result": [
-    {
-      "vrfs": {
-        "default": {
-          "peerList": [
-            {
-              "linkType": "external",
-              "localAsn": "65130.1100",
-              "prefixesSent": 52,
-              "receivedUpdates": 0,
-              "peerAddress": "7.7.7.7",
-              "v6PrefixesSent": 0,
-              "establishedTransitions": 0,
-              "bgpPeerCaps": 75759616,
-              "negotiatedVersion": 0,
-              "sentUpdates": 0,
-              "v4SrTePrefixesSent": 0,
-              "lastEvent": "NoEvent",
-              "configuredKeepaliveTime": 5,
-              "ttl": 2,
-              "state": "Idle",
-              ...
-```
-Show Command Output - Post:
-```
-{
-  "jsonrpc": "2.0",
-  "id": "EapiExplorer-1",
-  "result": [
-    {
-      "vrfs": {
-        "default": {
-          "peerList": [
-            {
-              "linkType": "external",
-              "localAsn": "65130.1100",
-              "prefixesSent": 50,
-              "receivedUpdates": 0,
-              "peerAddress": "7.7.7.7",
-              "v6PrefixesSent": 0,
-              "establishedTransitions": 0,
-              "bgpPeerCaps": 75759616,
-              "negotiatedVersion": 0,
-              "sentUpdates": 0,
-              "v4SrTePrefixesSent": 0,
-              "lastEvent": "NoEvent",
-              "configuredKeepaliveTime": 5,
-              "ttl": 2,
-              "state": "Connected",
-```
+    1. is-in: Check if the specified element string value is included in a given list of strings.
+          - is-in: ["down", "up"] 
+            check if value is in list (down, up)  
 
-Result:
-```
-{
-    "7.7.7.7": {
-        "state": {
-            "new_value": "Connected",
-            "old_value": "Idle"
-        }
-    }
-}
-```
-`result[0].vrfs.default.peerList[*].$peerAddress$` is the reference key (`7.7.7.7`) that we want associated to our value used to generate diff (`state`)...otherwise, how can we understand which `statebgpPeerCaps` is associated to which `peerAddress` ?
+    2. not-in: Check if the specified element string value is NOT included in a given list of strings.
+           - not-in: ["down", "up"] 
+             check if value is not in list (down, up) 
 
-Example #2:
+    3. in-range: Check if the value of a specified element is in the given numeric range.
+            - in-range: [ 20, 70 ]
+              check if value is in range between 20 nad 70 
 
-Similar to Example 1 but with key and value on different level. In this example `peers` will be our reference key, `accepted_prefixes` and `received_prefixes` the values used to generate diff.
+    4. not-range: Check if the value of a specified element is outside of a given numeric range.
+              - not-range: [5 , 40]
+                checks if value is not in range between 5 and 40
 
-Check Definition:
-```
-{
-  "check_type": "exact_match",
-  "path": "global.$peers$.*.*.ipv4.[accepted_prefixes,received_prefixes]",
-}
-```
+#### `bool` operators
 
-Show Command Output - Pre:
-```
-{
-    "global": {
-        "peers": {
-            "10.1.0.0": {
-                "address_family": {
-                    "ipv4": {
-                        "accepted_prefixes": -9,
-                        "received_prefixes": 0,
-                        "sent_prefixes": 0
-                    },
-                    ....
-```
+    1. all-same: Check if all content values for the specified element are the same. It can also be used to compare all content values against another specified element.
+           - all-same: flap-count
+             checks if all values of node <flap-count> in given path is same or not.
 
-Show Command Output - Post:
-```
-{
-    "global": {
-        "peers": {
-            "10.1.0.0": {
-                "address_family": {
-                    "ipv4": {
-                        "accepted_prefixes": -1,
-                        "received_prefixes": 0,
-                        "sent_prefixes": 0
-                        ...
-```
+#### `str` operators
 
-Result:
-```
-{
-    "10.1.0.0": {
-        "accepted_prefixes": {
-            "new_value": -1,
-            "old_value": -9
-        }
-    },
-    ...
-```
+    1. contains: determines if an element string value contains the provided test-string value.
+           - contains: "underlay"
+           checks if "underlay" is present in given data or not. 
 
-Example #3:
+    2. not-contains: determines if an element string value does not contain the provided test-string value.
+           - not-contains: "overlay"
+           checks if "overlay" is present in given node or not.
 
-Similar to Example 1 and 2 but without a reference key defined in `path`, plus some excluded fields to remove verbosity from diff output
+#### `int`, `float` operators
 
-Check Definition:
-```
-{
-  "check_type": "exact_match", 
-  "path": "result[*]", 
-  "exclude": ["interfaceStatistics", "interfaceCounters"],
-}
-```
+    1. is-gt: Check if the value of a specified element is greater than a given numeric value.
+            - is-gt: 2
+              checks if value should be greater than 2  
 
-Show Command Output - Pre:
-```
-{
-    "jsonrpc": "2.0",
-    "id": "EapiExplorer-1",
-    "result": [
-      {
-        "interfaces": {
-          "Management1": {
-            "lastStatusChangeTimestamp": 1626247820.0720868,
-            "lanes": 0,
-            "name": "Management1",
-            "interfaceStatus": "connected",
-            "autoNegotiate": "success",
-            "burnedInAddress": "08:00:27:e6:b2:f8",
-            "loopbackMode": "loopbackNone",
-            "interfaceStatistics": {
-              "inBitsRate": 3582.5323982177174,
-              "inPktsRate": 3.972702352461616,
-              "outBitsRate": 17327.65267220522,
-              "updateInterval": 300,
-              "outPktsRate": 2.216220664406746
-            },
-            ...
-```
+    2. is-lt: Check if the value of a specified element is lesser than a given numeric value.
+            - is-lt: 55
+              checks if value is lower than 55 or not.  
 
-Show Command Output - Post:
-```
-{
-    "jsonrpc": "2.0",
-    "id": "EapiExplorer-1",
-    "result": [
-      {
-        "interfaces": {
-          "Management1": {
-            "lastStatusChangeTimestamp": 1626247821.123456,
-            "lanes": 0,
-            "name": "Management1",
-            "interfaceStatus": "connected",
-            "autoNegotiate": "success",
-            "burnedInAddress": "08:00:27:e6:b2:f8",
-            "loopbackMode": "loopbackNone",
-            "interfaceStatistics": {
-              "inBitsRate": 3403.4362520883615,
-              "inPktsRate": 3.7424095978179257,
-              "outBitsRate": 16249.69114419833,
-              "updateInterval": 300,
-              "outPktsRate": 2.1111866059750692
-            },
-          ...
-```
 
-Result:
-
-```
-{
-  "interfaces": {
-      "Management1": {
-          "lastStatusChangeTimestamp": {
-              "new_value": 1626247821.123456,
-              "old_value": 1626247820.0720868
-          },
-          "interfaceAddress": {
-              "primaryIp": {
-                  "address": {
-                      "new_value": "10.2.2.15",
-                      "old_value": "10.0.2.15"
-                  }
-              }
-          }
-      }
-  }
-}
-```
 
 See [test](./tests) folder for more examples.
 

@@ -340,4 +340,90 @@ def test_regex_match(filename, check_type_str, evaluate_args, path, expected_res
     )
 
 
+paramere_match_issue_45_case1 = [
+    {
+        "jsonrpc": "2.0",
+        "id": "EapiExplorer-1",
+        "result": [
+            {
+                "interfaces": {
+                    "Management1": {
+                        "lastStatusChangeTimestamp": 1626247821.123456,
+                        "lanes": 0,
+                        "name": "Management1",
+                        "interfaceStatus": "down",
+                        "autoNegotiate": "success",
+                        "burnedInAddress": "08:00:27:e6:b2:f8",
+                        "loopbackMode": "loopbackNone",
+                        "interfaceStatistics": {
+                            "inBitsRate": 3403.4362520883615,
+                            "inPktsRate": 3.7424095978179257,
+                            "outBitsRate": 16249.69114419833,
+                            "updateInterval": 300,
+                            "outPktsRate": 2.1111866059750692,
+                        },
+                    }
+                }
+            }
+        ],
+    },
+    "parameter_match",
+    {"mode": "match", "params": {"interfaceStatus": "connected", "autoNegotiate": "success"}},
+    "result[*].interfaces.*.[$name$,interfaceStatus,autoNegotiate]",
+    ({"Management1": {"interfaceStatus": "down"}}, False)
+]
 
+@pytest.mark.parametrize("data, check_type_str, evaluate_args, path, expected_result", [paramere_match_issue_45_case1])
+def test_issue_45_case1(data, check_type_str, evaluate_args, path, expected_result):
+    """Validate regex check type."""
+    check = CheckType.init(check_type_str)
+    # There is not concept of "pre" and "post" in parameter_match.
+    value = check.get_value(data, path)
+    actual_results = check.evaluate(value, **evaluate_args)
+    assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
+        output=actual_results, expected_output=expected_result
+    )
+
+
+paramere_match_issue_45_case2 = [
+    {
+        "jsonrpc": "2.0",
+        "id": "EapiExplorer-1",
+        "result": [
+            {
+                "interfaces": {
+                    "Management1": {
+                        "lastStatusChangeTimestamp": 1626247821.123456,
+                        "lanes": 0,
+                        "name": "Management1",
+                        "interfaceStatus": "down",
+                        "autoNegotiate": "success",
+                        "burnedInAddress": "08:00:27:e6:b2:f8",
+                        "loopbackMode": "loopbackNone",
+                        "interfaceStatistics": {
+                            "inBitsRate": 3403.4362520883615,
+                            "inPktsRate": 3.7424095978179257,
+                            "outBitsRate": 16249.69114419833,
+                            "updateInterval": 300,
+                            "outPktsRate": 2.1111866059750692,
+                        },
+                    }
+                }
+            }
+        ],
+    },
+    "parameter_match",
+    {"mode": "no-match", "params": {"interfaceStatus": "connected", "autoNegotiate": "success"}},
+    "result[*].interfaces.*.[$name$,interfaceStatus,autoNegotiate]",
+    ({'Management1': {'autoNegotiate': 'success'}}, False)
+]
+@pytest.mark.parametrize("data, check_type_str, evaluate_args, path, expected_result", [paramere_match_issue_45_case2])
+def test_issue_45_case2(data, check_type_str, evaluate_args, path, expected_result):
+    """Validate regex check type."""
+    check = CheckType.init(check_type_str)
+    # There is not concept of "pre" and "post" in parameter_match.
+    value = check.get_value(data, path)
+    actual_results = check.evaluate(value, **evaluate_args)
+    assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
+        output=actual_results, expected_output=expected_result
+    )
