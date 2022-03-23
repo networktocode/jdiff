@@ -206,7 +206,7 @@ As we can see, we return a tuple containing a diff betwee the pre and post data 
 Let's see a better way to run `exact_match` for this specific case. Since we are interested only into `interfaceStatus` we could write our JMSPATH expression as:
 
 ```python
->>> my_jmspath = "result[*].interfaces.Management1.[$name$,interfaceStatus]"
+>>> my_jmspath = "result[*].interfaces.*.[$name$,interfaceStatus]"
 >>> pre_value = my_check.get_value(output=pre_data, path=my_jmspath)
 >>> pre_value
 ['connected']
@@ -215,39 +215,57 @@ Let's see a better way to run `exact_match` for this specific case. Since we are
 ['down']
 >>> result = my_check.evaluate(value_to_compare=post_value, reference_data=pre_value)
 >>> result
-({'Management1': {'new_value': 'down', 'old_value': 'connected'}}, False)
+({"Management1": {"interfaceStatus": {"new_value": "connected", "old_value": "down"}}}, False)
 ```
 Targeting only `interfaceStatus` key, we would need to define a reference key (in this case `$name$`) as well as we would not need to define any exclusion list. 
 
-This logic applies to all check-types available in `netcompare`
+The anchor logic for reference key applies to all check-types available in `netcompare`
+
 
 ### parameter_match
 
 parameter_match provides a way to match keys and values in the output with known good values. 
 
-The test defines key/value pairs known to be the good value - type `dict()` - to match against the parsed output. The test FAILS if any status has changed based on what is defined in pre/post. If there are new values not contained in the input/test value, that will not count as a failure.
+The test defines key/value pairs known to be the good value - type `dict()` - as well as a mode - `match`, `no-match` - to match or not against the parsed output. The test fails if any status has changed based on what is defined in pre/post. If there are new values not contained in the input/test value, that will not count as a failure.
 
 
 Examples:
 
-```
-{"A": 1, "B": 2}
-
-PASS/PASS
-{"A": 1, "B": 2}
-{"A": 1, "B": 2}
-
-PASS/PASS
-{"A": 1, "B": 2}
-{"A": 1, "B": 2, "C": 3}
-
-PASS/FAIL
-{"A": 1, "B": 2}
-{"A": 1, "B": 666}
-
-FAIL/PASS
-{"A": 1}
-{"A": 1, "B": 2}
+```python
+>>> from netcompare import CheckType
+>>> post_data = {
+...       "jsonrpc": "2.0",
+...       "id": "EapiExplorer-1",
+...       "result": [
+...         {
+...           "interfaces": {
+...             "Management1": {
+...               "lastStatusChangeTimestamp": 1626247821.123456,
+...               "lanes": 0,
+...               "name": "Management1",
+...               "interfaceStatus": "down",
+...               "autoNegotiate": "success",
+...               "burnedInAddress": "08:00:27:e6:b2:f8",
+...               "loopbackMode": "loopbackNone",
+...               "interfaceStatistics": {
+...                 "inBitsRate": 3403.4362520883615,
+...                 "inPktsRate": 3.7424095978179257,
+...                 "outBitsRate": 16249.69114419833,
+...                 "updateInterval": 300,
+...                 "outPktsRate": 2.1111866059750692
+...               }
+...             }
+...           }
+...         }
+...       ]
+>>> my_check = CheckType.init(check_type="parameter_match")
+>>> my_jmspath = "result[*].interfaces.*.[$name$,interfaceStatus,autoNegotiate]"
+>>> post_value = my_check.get_value(output=pre_data, path=my_jmspath)
+>>> my_parameter_match = {"mode": "match", "params": {"interfaceStatus": "connected", "autoNegotiate": "success"}}
+>>> my_parameter_match = {"mode": "match", "params": {"interfaceStatus": "connected", "autoNegotiate": "success"}}
+>>> actual_results = my_check.evaluate(post_value, **my_parameter_match)
+>>> actual_result
+({}, True)
 ```
 
 In network data, this could be a state of bgp neighbors being Established or the connectedness of certain interfaces being up.
