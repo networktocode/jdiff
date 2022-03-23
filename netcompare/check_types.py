@@ -85,7 +85,13 @@ class CheckType(ABC):
         paired_key_value = associate_key_of_my_value(jmespath_value_parser(path), values)
 
         if re.search(r"\$.*\$", path):  # normalize
+
             wanted_reference_keys = jmespath.search(jmespath_refkey_parser(path), output)
+            try:
+                if isinstance(wanted_reference_keys[0], list):
+                    wanted_reference_keys = flatten_list(wanted_reference_keys)[0]
+            except KeyError:
+                pass
             list_of_reference_keys = keys_cleaner(wanted_reference_keys)
             return keys_values_zipper(list_of_reference_keys, paired_key_value)
 
