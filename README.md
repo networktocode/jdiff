@@ -358,6 +358,59 @@ Lets have a look to a couple of examples:
 
 This test can test the tolerance for changing quantities of certain things such as routes, or L2 or L3 neighbors. It could also test actual outputted values such as transmitted light levels for optics.
 
+
+### Regex
+
+The `regex` check type evaluates data against a python regular expression defined as check-tyoe argument. As per `parameter_match` the option `match`, `no-match` is also supported.
+
+Let's run an example where e want to check that `burnedInAddress` key has a string rappresentig a MAC Address as value
+
+```python
+>>> data = {
+...       "jsonrpc": "2.0",
+...       "id": "EapiExplorer-1",
+...       "result": [
+...         {
+...           "interfaces": {
+...             "Management1": {
+...               "lastStatusChangeTimestamp": 1626247821.123456,
+...               "lanes": 0,
+...               "name": "Management1",
+...               "interfaceStatus": "down",
+...               "autoNegotiate": "success",
+...               "burnedInAddress": "08:00:27:e6:b2:f8",
+...               "loopbackMode": "loopbackNone",
+...               "interfaceStatistics": {
+...                 "inBitsRate": 3403.4362520883615,
+...                 "inPktsRate": 3.7424095978179257,
+...                 "outBitsRate": 16249.69114419833,
+...                 "updateInterval": 300,
+...                 "outPktsRate": 2.1111866059750692
+...               }
+...             }
+...           }
+...         }
+...       ]
+...     }
+>>> # Python regex for matching MAC Address string
+>>> regex_args = {"regex": "(?:[0-9a-fA-F]:?){12}", "mode": "match"}
+>>> path = "result[*].interfaces.*.[$name$,burnedInAddress]"
+>>> check = CheckType.init(check_type="regex")
+>>> value = check.get_value(output=data, path=path)
+>>> value
+[{'Management1': {'burnedInAddress': '08:00:27:e6:b2:f8'}}]
+>>> result = check.evaluate(value, **regex_args)
+>>> # The test is passed as the burnedInAddress value match our regex
+>>> result
+({}, True)
+>>> # What if we want "no-match"?
+>>> regex_args = {"regex": "(?:[0-9a-fA-F]:?){12}", "mode": "no-match"}
+>>> result = check.evaluate(value, **regex_args)
+>>> # Netcompare return the failing data as the regex match the value
+>>> result
+({'Management1': {'burnedInAddress': '08:00:27:e6:b2:f8'}}, False)
+```
+
 ## How To Define A Check
 
 The check requires at least 2 arguments: `check_type` which can be `exact_match`, `tolerance`, `parameter_match` or `path`. The `path` argument is JMESPath based but uses `$` to anchor the reference key needed to generate the diff - more on this later. 
