@@ -260,50 +260,100 @@ Examples:
 ...       ]
 >>> my_check = CheckType.init(check_type="parameter_match")
 >>> my_jmspath = "result[*].interfaces.*.[$name$,interfaceStatus,autoNegotiate]"
->>> post_value = my_check.get_value(output=pre_data, path=my_jmspath)
->>> my_parameter_match = {"mode": "match", "params": {"interfaceStatus": "connected", "autoNegotiate": "success"}}
+>>> post_value = my_check.get_value(output=post_data, path=my_jmspath)
+>>> # mode: match - Match in the ouptut what is defined under 'params'
 >>> my_parameter_match = {"mode": "match", "params": {"interfaceStatus": "connected", "autoNegotiate": "success"}}
 >>> actual_results = my_check.evaluate(post_value, **my_parameter_match)
->>> actual_result
-({}, True)
+>>> actual_results
+({'Management1': {'interfaceStatus': 'down'}}, False)
+>>> # mode: no-match - Return what does nto match in the ouptut as defined under 'params'
+>>> my_parameter_match = {"mode": "no-match", "params": {"interfaceStatus": "connected", "autoNegotiate": "success"}}
+>>> actual_results = my_check.evaluate(post_value, **my_parameter_match)
+>>> actual_results
+({'Management1': {'autoNegotiate': 'success'}}, False
 ```
 
 In network data, this could be a state of bgp neighbors being Established or the connectedness of certain interfaces being up.
 
 ### Tolerance
 
-The `tolerance` test defines a percentage of differing `float()` between the pre and post checks. The threshold is defined as a percentage that can be different either from the value stated in pre and post fields. 
+The `tolerance` test defines a percentage of differing `float()` between pre and post checks numeric value. The threshold is defined as a percentage that can be different either from the value stated in pre and post fields. 
 
 The threshold must be `float > 0`, is percentge based, and will be counted as a range centered on the value in pre and post.
 
-```
-Pre: 100 
-Post: 110
-Threshold: 10
------------------
-PASS/PASS
-Pre:  [100]
-Post: [110]
+Lets have a look to a couple of examples:
 
-PASS/PASS
-Pre:  [100]
-Post: [120]
-
-PASS/PASS
-Pre:  [100]
-Post: [100]
-
-PASS/FAIL
-Pre:  [100]
-Post: [90]
-
-PASS/FAIL
-Pre:  [90]
-Post: [20]
-
-FAIL/FAIL
-Pre:  [80]
-Post: [120]
+```python
+>>> pre_data = {
+...     "global": {
+...         "peers": {
+...             "10.1.0.0": {
+...                 "address_family": {
+...                     "ipv4": {
+...                         "accepted_prefixes": 900,
+...                         "received_prefixes": 999,
+...                         "sent_prefixes": 1011
+...                     },
+...                     "ipv6": {
+...                         "accepted_prefixes": 1000,
+...                         "received_prefixes": 1000,
+...                         "sent_prefixes": 1000
+...                     }
+...                 },
+...                 "description": "",
+...                 "is_enabled": True,
+...                 "is_up": True,
+...                 "local_as": 4268360780,
+...                 "remote_as": 67890,
+...                 "remote_id": "0.0.0.0",
+...                 "uptime": 1783
+...             }
+...         }
+...     }
+... }
+>>> post_data = {
+...     "global": {
+...         "peers": {
+...             "10.1.0.0": {
+...                 "address_family": {
+...                     "ipv4": {
+...                         "accepted_prefixes": 500,
+...                         "received_prefixes": 599,
+...                         "sent_prefixes": 511
+...                     },
+...                     "ipv6": {
+...                         "accepted_prefixes": 1000,
+...                         "received_prefixes": 1000,
+...                         "sent_prefixes": 1000
+...                     }
+...                 },
+...                 "description": "",
+...                 "is_enabled": True,
+...                 "is_up": True,
+...                 "local_as": 4268360780,
+...                 "remote_as": 67890,
+...                 "remote_id": "0.0.0.0",
+...                 "uptime": 1783
+...             }
+...         }
+...     }
+... }
+>>> my_check = CheckType.init(check_type="tolerance")
+>>> my_jmspath = "global.$peers$.*.*.ipv4.[accepted_prefixes,received_prefixes,sent_prefixes]"
+>>> # Tolerance define as 10% delta between pre and post values
+>>> my_tolerance_arguments = {"tolerance": 10}
+>>> pre_value = my_check.get_value(pre_data, my_jmspath)
+>>> post_value = my_check.get_value(post_data, my_jmspath)
+>>> actual_results = my_check.evaluate(post_value, pre_value, **my_tolerance_arguments)
+>>> # Netcompare returns the value that are not within the 10%
+>>> actual_results
+({'10.1.0.0': {'accepted_prefixes': {'new_value': 500, 'old_value': 900}, 'received_prefixes': {'new_value': 599, 'old_value': 999}, 'sent_prefixes': {'new_value': 511, 'old_value': 1011}}}, False)
+>>> # Let's difine a higher tolerance 
+>>> my_tolerance_arguments = {"tolerance": 80}
+>>> # In this case, all the values are within the 80% so the check is passed.
+>>> actual_results = my_check.evaluate(post_value, pre_value, **my_tolerance_arguments)
+>>> actual_results
+({}, True)
 ```
 
 This test can test the tolerance for changing quantities of certain things such as routes, or L2 or L3 neighbors. It could also test actual outputted values such as transmitted light levels for optics.
