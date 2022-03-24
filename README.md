@@ -53,7 +53,7 @@ results = check.evaluate(post_value, pre_value, **evaluate_args)
 
 Since `netcompare` works with json objects as data inputs, JMESPATH was the obvious choice for traversing the data and extracting the value(s) to compare.
 
-However, JMSPATH comes with a limitation where is not possible to define a `key` to which the `value` belongs to.
+However, JMESPATH comes with a limitation where is not possible to define a `key` to which the `value` belongs to.
 
 Let's have a look to the below `show bgp` output example.
 
