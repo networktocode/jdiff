@@ -203,7 +203,7 @@ Examples:
 
 As we can see, we return a tuple containing a diff betwee the pre and post data as well as a boolean for the overall test result. In this case a diff has been found so the status of the test is `False`.
 
-Let's see a better way to run `exact_match` for this specific case. Since we are interested only into `interfaceStatus` we could write our JMSPATH expression as:
+Let's see a better way to run `exact_match` for this specific case. Since we are interested only in. `interfaceStatus` we could write our JMESPATH expression as:
 
 ```python
 >>> my_jmspath = "result[*].interfaces.*.[$name$,interfaceStatus]"
