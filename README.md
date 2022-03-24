@@ -105,7 +105,7 @@ If we would define a JMSPATH expression to extract `state` we would have somethi
 ```
 
 How can we understand that `Idle` is relative to peer 7.7.7.7 and `Connected` to peer `10.1.0.0` ? 
-We could index the output but that would require some post-processing data. For that reason, `netcompare` use a customized version of JMSPATH where is possible to define a reference key for the value(s) wanted. The reference key must be within `$` sign anchors and defined in a list, together with the value(s):
+We could index the output but that would require some post-processing of the data. For that reason, `netcompare` use a customized version of JMESPATH where it is possible to define a reference key for the value(s) wanted. The reference key must be within `$` sign anchors and defined in a list, together with the value(s):
 
 ```python
 "result[0].vrfs.default.peerList[*].[$peerAddress$,state]
