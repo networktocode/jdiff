@@ -43,7 +43,7 @@ post_value = check.get_value(bgp_post_change, bgp_jmspath_exp)
 
 Every check type expects different types of arguments. For example; check type, `tolerance` needs a `tolerance` argument; `parameters` expect only a dictionary.
 
-Now that we have pre and post data, we just need to compare them with `evaluate` method which will return our evaluation result.
+Now that we have pre and post data, we just need to compare them with the `evaluate` method which will return our evaluation result.
 
 ```python
 results = check.evaluate(post_value, pre_value, **evaluate_args)
