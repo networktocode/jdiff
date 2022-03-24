@@ -55,7 +55,7 @@ Since `netcompare` works with json objects as data inputs, JMESPATH was the obvi
 
 However, JMESPATH comes with a limitation where is not possible to define a `key` to which the `value` belongs to.
 
-Let's have a look to the below `show bgp` output example.
+Below is the output of `show bgp`.
 
 ```json
 {
