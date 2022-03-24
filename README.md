@@ -41,7 +41,7 @@ bgp_post_change = "./post/bgp.json"
 post_value = check.get_value(bgp_post_change, bgp_jmspath_exp)
 ```
 
-Every check type expect different type of arguments. For example, in case of check type `tolerance` we would also need to pass `tolerance` argument; `parameters` expect only a dictionary...
+Every check type expects different types of arguments. For example; check type, `tolerance` needs a `tolerance` argument; `parameters` expect only a dictionary.
 
 Now that we have pre and post data, we just need to compare them with `evaluate` method which will return our evaluation result.
 
