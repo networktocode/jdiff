@@ -12,7 +12,7 @@ The library heavily relies on [jmespath](https://jmespath.org/) for traversing t
 
 ![netcompare HLD](./docs/images/hld.png)
 
-As first thing, an instance of `CheckType` object must be created passing one of the below check types as argument:
+An instance of `CheckType` object must be created first before passing one of the below check types as an argument:
 
 - `exact_match`
 - `tolerance`
