@@ -360,7 +360,7 @@ This test can test the tolerance for changing quantities of certain things such 
 
 ### Regex
 
-The `regex` check type evaluates data against a python regular expression defined as check-tyoe argument. As per `parameter_match` the option `match`, `no-match` is also supported.
+The `regex` check type evaluates data against a python regular expression defined as check-type argument. As per `parameter_match` the option `match`, `no-match` is also supported.
 
 Let's run an example where e want to check that `burnedInAddress` key has a string rappresentig a MAC Address as value
 
