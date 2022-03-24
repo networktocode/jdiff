@@ -34,7 +34,7 @@ bgp_jmspath_exp =  "result[0].vrfs.default.peerList[*].[$peerAddress$,establishe
 pre_value = check.get_value(bgp_pre_change, bgp_jmspath_exp)
 ```
 
-Once extracted our pre-change value, we would need to evaluate it against our post-change value. In case of chec-type `exact_match` our post-value would be another json object:
+Once the pre-change values are extracted, we would need to evaluate it against our post-change value. In case of check-type `exact_match` our post-value would be another json object:
 
 ```python
 bgp_post_change = "./post/bgp.json"
