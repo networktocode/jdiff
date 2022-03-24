@@ -122,7 +122,7 @@ That  would give us...
 
 ### exact_match
 
-Check type `exact_match` is concerned about the value of the elements within the data structure. The keys and values should match between the pre and post values. A diff is generated between the two data sets. 
+Check type `exact_match` is concerned about the value of the elements within the data structure. The key/values should match between the pre and post values. A diff is generated between the two data sets. 
 As some outputs might be too verbose or includes fields that constantly change (i.e. interface counter), is possible to exclude a portion of data traversed by JMSPATH, defining a list of keys that we want to exclude.
 
 Examples:
