@@ -2,7 +2,7 @@
 
 This library is meant to be a light-weight way to compare structured output from network devices `show` commands. `netcompare` is a python library targeted at intelligently deep diffing structured data objects of json type. In addition, `netcompare` can also provide some basic testing of key/values within a data structure.
 
-The libraly heavely rely on [jmspath](https://jmespath.org/) for traversing the json object and find the wanted value to be evaluated. More on that later.
+The library heavily relies on [jmespath](https://jmespath.org/) for traversing the json object and finding the value(s) to be evaluated. More on that later.
 
 ## Use Case
 
