@@ -51,7 +51,7 @@ results = check.evaluate(post_value, pre_value, **evaluate_args)
 
 ## Customized JMESPATH
 
-Since `netcompare` work with json object as data inputs, JMSPATH was the obvous choise for traversing the data and extract the value wanted from it.
+Since `netcompare` works with json objects as data inputs, JMESPATH was the obvious choice for traversing the data and extracting the value(s) to compare.
 
 However, JMSPATH comes with a limitation where is not possible to define a `key` to which the `value` belongs to.
 
