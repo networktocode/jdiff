@@ -26,7 +26,7 @@ my_check = "exact_match"
 check = CheckType.init(my_check)
 ```
 
-We would then need to define our json object used as reference data, as well as a JMSPATH expression to extract the value wanted and pass them to `get_value` method. Be aware! `netcompare` works with a customized version of JMSPATH. More on that later.
+Next, define a json object as reference data, as well as a JMESPATH expression to extract the value wanted and pass them to `get_value` method. Be aware! `netcompare` works with a customized version of JMESPATH. More on that later.
 
 ```python
 bgp_pre_change = "./pre/bgp.json"
