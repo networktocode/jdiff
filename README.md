@@ -412,7 +412,7 @@ Let's run an example where e want to check that `burnedInAddress` key has a stri
 
 ### Operator
 
-Operator is a check which includes an array o different evaluation logic. Here a summary of the available options:
+Operator is a check which includes an array of different evaluation logic. Here a summary of the available options:
 
 
 #### `in` operators
