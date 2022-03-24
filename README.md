@@ -219,7 +219,7 @@ Let's see a better way to run `exact_match` for this specific case. Since we are
 ```
 Targeting only `interfaceStatus` key, we would need to define a reference key (in this case `$name$`) as well as we would not need to define any exclusion list. 
 
-The anchor logic for reference key applies to all check-types available in `netcompare`
+The anchor logic for the reference key applies to all check-types available in `netcompare`
 
 
 ### parameter_match
