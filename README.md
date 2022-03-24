@@ -118,7 +118,7 @@ That  would give us...
 
 ```
 
-## Check types explained
+## Check Types Explained
 
 ### exact_match
 
