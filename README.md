@@ -49,7 +49,7 @@ Now that we have pre and post data, we just need to compare them with the `evalu
 results = check.evaluate(post_value, pre_value, **evaluate_args)
 ```
 
-## Customized JMSPATH
+## Customized JMESPATH
 
 Since `netcompare` work with json object as data inputs, JMSPATH was the obvous choise for traversing the data and extract the value wanted from it.
 
