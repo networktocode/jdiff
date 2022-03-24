@@ -92,7 +92,7 @@ Below is the output of `show bgp`.
   ]
 }
 ```
-If we would define a JMSPATH expression to extract `state` we would have something like...
+A JMESPATH expression to extract `state` is shown below.
 
 ```python
 "result[0].vrfs.default.peerList[*].state
