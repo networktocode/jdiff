@@ -527,7 +527,7 @@ Examples:
 >>> result = check.evaluate(value, check_args)
 >>> # We are looking for peers that have the same peerGroup,vrf and state. If not, return those are not. 
 >>> result
-((False, [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE', 'vrf': 'default', 'state': 'Connected'}}, {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}]))
+((False, [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE', 'vrf': 'default', 'state': 'Connected'}}, {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}]), False)
 ```
 
 Let's now look to an example for the `in` operator. Keeping the same `data` and class object as above:
@@ -541,7 +541,7 @@ Let's now look to an example for the `in` operator. Keeping the same `data` and 
 >>> # We are looking for prefixesReceived value in operator_data list.
 >>> result = check.evaluate(value, check_args)
 >>> result
-((True, [{'10.1.0.0': {'prefixesReceived': 50}}]))
+((True, [{'10.1.0.0': {'prefixesReceived': 50}}]), False)
 ```
 
 What about `str` operator?
@@ -554,7 +554,7 @@ What about `str` operator?
 [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE'}}, {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE'}}]
 >>> result = check.evaluate(value, check_args)
 >>> result
-((True, [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE'}}]))
+((True, [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE'}}]), False)
 ```
 
 Can you guess what would ne the outcome for an `int`, `float` operator?
@@ -567,7 +567,7 @@ Can you guess what would ne the outcome for an `int`, `float` operator?
 [{'7.7.7.7': {'prefixesReceived': 101}}, {'10.1.0.0': {'prefixesReceived': 50}}]
 >>> result = check.evaluate(value, check_args)
 >>> result
-((True, [{'7.7.7.7': {'prefixesReceived': 101}}, {'10.1.0.0': {'prefixesReceived': 50}}]))
+((True, [{'7.7.7.7': {'prefixesReceived': 101}}, {'10.1.0.0': {'prefixesReceived': 50}}]), False)
 ```
 
 See [test](./tests) folder for more examples.
