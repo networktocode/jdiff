@@ -320,4 +320,4 @@ class OperatorType(CheckType):
         # For naming consistency
         reference_data = params
         evaluation_result = operator_evaluator(reference_data["params"], value_to_compare)
-        return evaluation_result, not evaluation_result
+        return evaluation_result

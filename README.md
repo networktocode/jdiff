@@ -232,7 +232,6 @@ The test defines key/value pairs known to be the good value - type `dict()` - as
 Examples:
 
 ```python
->>> from netcompare import CheckType
 >>> post_data = {
 ...       "jsonrpc": "2.0",
 ...       "id": "EapiExplorer-1",
@@ -428,7 +427,7 @@ Operator is a check which includes an array o different evaluation logic. Here a
              check if value is not in list (down, up) 
 
     3. in-range: Check if the value of a specified element is in the given numeric range.
-            - in-range: [ 20, 70 ]
+            - in-range: [20, 70]
               check if value is in range between 20 nad 70 
 
     4. not-range: Check if the value of a specified element is outside of a given numeric range.
@@ -462,6 +461,114 @@ Operator is a check which includes an array o different evaluation logic. Here a
               checks if value is lower than 55 or not.  
 
 
+Examples:
+
+```python
+>>> data = {
+...     "jsonrpc": "2.0",
+...     "id": "EapiExplorer-1",
+...     "result": [
+...       {
+...         "vrfs": {
+...           "default": {
+...             "peerList": [
+...               {
+...                 "linkType": "external",
+...                 "localAsn": "65130.1100",
+...                 "peerAddress": "7.7.7.7",
+...                 "lastEvent": "NoEvent",
+...                 "bgpSoftReconfigInbound": "Default",
+...                 "state": "Connected",
+...                 "asn": "1.2354",
+...                 "routerId": "0.0.0.0",
+...                 "prefixesReceived": 101,
+...                 "maintenance": False,
+...                 "autoLocalAddress": "disabled",
+...                 "lastState": "NoState",
+...                 "establishFailHint": "Peer is not activated in any address-family mode",
+...                 "maxTtlHops": None,
+...                 "vrf": "default",
+...                 "peerGroup": "EVPN-OVERLAY-SPINE",
+...                 "idleReason": "Peer is not activated in any address-family mode",
+...               },
+...               {
+...                 "linkType": "external",
+...                 "localAsn": "65130.1100",
+...                 "peerAddress": "10.1.0.0",
+...                 "lastEvent": "Stop",
+...                 "bgpSoftReconfigInbound": "Default",
+...                 "state": "Idle",
+...                 "asn": "1.2354",
+...                 "routerId": "0.0.0.0",
+...                 "prefixesReceived": 50,
+...                 "maintenance": False,
+...                 "autoLocalAddress": "disabled",
+...                 "lastState": "Active",
+...                 "establishFailHint": "Could not find interface for peer",
+...                 "vrf": "default",
+...                 "peerGroup": "IPv4-UNDERLAY-SPINE",
+...                 "idleReason": "Could not find interface for peer",
+...                 "localRouterId": "1.1.0.1",
+...               }
+...             ]
+...           }
+...         }
+...       }
+...     ]
+...   }
+>>> path = "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup,vrf,state]"
+>>> # "operator" checks requires "mode" argument - which specify the operator logic to apply - 
+>>> # and "operator_data" required for the mode defined.
+>>> check_args = {"params": {"mode": "all-same", "operator_data": True}}
+>>> check = CheckType.init("operator")
+>>> value = check.get_value(data, path)
+>>> value
+[{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE', 'vrf': 'default', 'state': 'Connected'}}, {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}]
+>>> result = check.evaluate(value, check_args)
+>>> # We are looking for peers that have the same peerGroup,vrf and state. If not, return those are not. 
+>>> result
+((False, [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE', 'vrf': 'default', 'state': 'Connected'}}, {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}]))
+```
+
+Let's now look to an example for the `in` operator. Keeping the same `data` and class object as above:
+
+```python
+>>> check_args = {"params": {"mode": "is-in", "operator_data": [20, 40, 50]}}
+>>> path = "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]"
+>>> value = check.get_value(data, path)
+>>> value
+[{'7.7.7.7': {'prefixesReceived': 101}}, {'10.1.0.0': {'prefixesReceived': 50}}]
+>>> # We are looking for prefixesReceived value in operator_data list.
+>>> result = check.evaluate(value, check_args)
+>>> result
+((True, [{'10.1.0.0': {'prefixesReceived': 50}}]))
+```
+
+What about `str` operator?
+
+```python
+>>> path = "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]"
+>>> check_args = {"params": {"mode": "contains", "operator_data": "EVPN"}}
+>>> value = check.get_value(data, path)
+>>> value
+[{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE'}}, {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE'}}]
+>>> result = check.evaluate(value, check_args)
+>>> result
+((True, [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE'}}]))
+```
+
+Can you guess what would ne the outcome for an `int`, `float` operator?
+
+```python
+>>> path = "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]"
+>>> check_args = {"params": {"mode": "is-gt", "operator_data": 20}}
+>>> value = check.get_value(data, path)
+>>> value
+[{'7.7.7.7': {'prefixesReceived': 101}}, {'10.1.0.0': {'prefixesReceived': 50}}]
+>>> result = check.evaluate(value, check_args)
+>>> result
+((True, [{'7.7.7.7': {'prefixesReceived': 101}}, {'10.1.0.0': {'prefixesReceived': 50}}]))
+```
 
 See [test](./tests) folder for more examples.
 
