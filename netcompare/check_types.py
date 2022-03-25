@@ -84,15 +84,24 @@ class CheckType(ABC):
 
         paired_key_value = associate_key_of_my_value(jmespath_value_parser(path), values)
 
-        if re.search(r"\$.*\$", path):  # normalize
-
+        # We need to get a list of reference keys - list of strings.
+        # Based on the expression or output type we might have differen data types
+        # therefore we need to normalize.
+        if re.search(r"\$.*\$", path):
             wanted_reference_keys = jmespath.search(jmespath_refkey_parser(path), output)
-            try:
-                if isinstance(wanted_reference_keys[0], list):
-                    wanted_reference_keys = flatten_list(wanted_reference_keys)[0]
-            except KeyError:
-                pass
-            list_of_reference_keys = keys_cleaner(wanted_reference_keys)
+
+            # if dict()
+            if isinstance(wanted_reference_keys, dict):
+                list_of_reference_keys = keys_cleaner(wanted_reference_keys)
+            # if list(list())
+            elif any(isinstance(element, list) for element in wanted_reference_keys):
+                list_of_reference_keys = flatten_list(wanted_reference_keys)[0]
+            # if list()
+            elif isinstance(wanted_reference_keys, list):
+                list_of_reference_keys = wanted_reference_keys
+            else:
+                raise ValueError("Reference Key normalization failure. Please verify datat type returned.")
+
             return keys_values_zipper(list_of_reference_keys, paired_key_value)
 
         return values
