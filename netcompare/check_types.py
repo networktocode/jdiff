@@ -100,7 +100,7 @@ class CheckType(ABC):
             elif isinstance(wanted_reference_keys, list):
                 list_of_reference_keys = wanted_reference_keys
             else:
-                raise ValueError("Reference Key normalization failure. Please verify datat type returned.")
+                raise ValueError("Reference Key normalization failure. Please verify data type returned.")
 
             return keys_values_zipper(list_of_reference_keys, paired_key_value)
 
