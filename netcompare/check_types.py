@@ -57,6 +57,9 @@ class CheckType(ABC):
             Evaluated data, may be anything depending on JMESPath used.
         """
         if exclude and isinstance(output, Dict):
+            if not isinstance(exclude, list):
+                raise ValueError(f"Exclude list must be defined as a list. You have {type(exclude)}")
+
             exclude_filter(output, exclude)  # exclude unwanted elements
 
         if not path:
@@ -81,9 +84,21 @@ class CheckType(ABC):
 
         paired_key_value = associate_key_of_my_value(jmespath_value_parser(path), values)
 
-        if re.search(r"\$.*\$", path):  # normalize
+        # We need to get a list of reference keys - list of strings.
+        # Based on the expression or output type we might have different data types
+        # therefore we need to normalize.
+        if re.search(r"\$.*\$", path):
             wanted_reference_keys = jmespath.search(jmespath_refkey_parser(path), output)
-            list_of_reference_keys = keys_cleaner(wanted_reference_keys)
+
+            if isinstance(wanted_reference_keys, dict):  # when wanted_reference_keys is dict() type
+                list_of_reference_keys = keys_cleaner(wanted_reference_keys)
+            elif any(isinstance(element, list) for element in wanted_reference_keys):  # when wanted_reference_keys is a nested list
+                list_of_reference_keys = flatten_list(wanted_reference_keys)[0]
+            elif isinstance(wanted_reference_keys, list):  # when wanted_reference_keys is a list
+                list_of_reference_keys = wanted_reference_keys
+            else:
+                raise ValueError("Reference Key normalization failure. Please verify data type returned.")
+
             return keys_values_zipper(list_of_reference_keys, paired_key_value)
 
         return values

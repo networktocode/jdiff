@@ -8,7 +8,7 @@
             "lastStatusChangeTimestamp": 1626247820.0720868,
             "lanes": 0,
             "name": "Management1",
-            "interfaceStatus": "connected",
+            "interfaceStatus": "down",
             "autoNegotiate": "success",
             "burnedInAddress": "08:00:27:e6:b2:f8",
             "loopbackMode": "loopbackNone",
