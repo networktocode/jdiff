@@ -85,7 +85,7 @@ class CheckType(ABC):
         paired_key_value = associate_key_of_my_value(jmespath_value_parser(path), values)
 
         # We need to get a list of reference keys - list of strings.
-        # Based on the expression or output type we might have differen data types
+        # Based on the expression or output type we might have different data types
         # therefore we need to normalize.
         if re.search(r"\$.*\$", path):
             wanted_reference_keys = jmespath.search(jmespath_refkey_parser(path), output)
