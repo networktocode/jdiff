@@ -90,8 +90,7 @@ class CheckType(ABC):
         if re.search(r"\$.*\$", path):
             wanted_reference_keys = jmespath.search(jmespath_refkey_parser(path), output)
 
-            # if dict()
-            if isinstance(wanted_reference_keys, dict):
+            if isinstance(wanted_reference_keys, dict):  # when wanted_reference_keys is dict() type
                 list_of_reference_keys = keys_cleaner(wanted_reference_keys)
             elif any(isinstance(element, list) for element in wanted_reference_keys):  # when wanted_reference_keys is a nested list
                 list_of_reference_keys = flatten_list(wanted_reference_keys)[0]
