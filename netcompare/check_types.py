@@ -165,7 +165,7 @@ class ToleranceType(CheckType):
     def _remove_within_tolerance(self, diff: Dict, tolerance: int) -> None:
         """Recursively look into diff and apply tolerance check, remove reported difference when within tolerance."""
 
-        def _make_float(value):
+        def _make_float(value: Any) -> float:
             """Make float, treat non-convertable as 0."""
             try:
                 return float(value)
