@@ -93,8 +93,7 @@ class CheckType(ABC):
             # if dict()
             if isinstance(wanted_reference_keys, dict):
                 list_of_reference_keys = keys_cleaner(wanted_reference_keys)
-            # if list(list())
-            elif any(isinstance(element, list) for element in wanted_reference_keys):
+            elif any(isinstance(element, list) for element in wanted_reference_keys):  # when wanted_reference_keys is a nested list
                 list_of_reference_keys = flatten_list(wanted_reference_keys)[0]
             # if list()
             elif isinstance(wanted_reference_keys, list):
