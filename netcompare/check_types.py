@@ -7,7 +7,6 @@ from .utils.jmespath_parsers import (
     jmespath_value_parser,
     jmespath_refkey_parser,
     associate_key_of_my_value,
-    keys_cleaner,
     keys_values_zipper,
 )
 from .utils.data_normalization import exclude_filter, flatten_list
@@ -91,7 +90,7 @@ class CheckType(ABC):
             wanted_reference_keys = jmespath.search(jmespath_refkey_parser(path), output)
 
             if isinstance(wanted_reference_keys, dict):  # when wanted_reference_keys is dict() type
-                list_of_reference_keys = keys_cleaner(wanted_reference_keys)
+                list_of_reference_keys = list(wanted_reference_keys.keys())
             elif any(
                 isinstance(element, list) for element in wanted_reference_keys
             ):  # when wanted_reference_keys is a nested list
@@ -165,7 +164,7 @@ class ToleranceType(CheckType):
     def _remove_within_tolerance(self, diff: Dict, tolerance: int) -> None:
         """Recursively look into diff and apply tolerance check, remove reported difference when within tolerance."""
 
-        def _make_float(value):
+        def _make_float(value: Any) -> float:
             """Make float, treat non-convertable as 0."""
             try:
                 return float(value)

@@ -110,6 +110,4 @@ def operator_evaluator(referance_data: Mapping, value_to_compare: Mapping) -> Di
     # {'mode': 'all-same', 'operator_data': True}
     operator_mode = referance_data["mode"].replace("-", "_")
     operator = Operator(referance_data["operator_data"], value_to_compare)
-
-    result = getattr(operator, operator_mode)()
-    return result
+    return getattr(operator, operator_mode)()

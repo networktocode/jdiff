@@ -1,6 +1,6 @@
 """jmespath expression parsers and related utilities."""
 import re
-from typing import Mapping, List, Optional
+from typing import Mapping, List, Union
 
 
 def jmespath_value_parser(path: str):
@@ -84,25 +84,17 @@ def associate_key_of_my_value(paths: str, wanted_value: List) -> List:
     return final_list
 
 
-def keys_cleaner(wanted_reference_keys: Mapping) -> Optional[List[Mapping]]:
+def keys_cleaner(wanted_reference_keys: Union[Mapping, List]) -> List:
     """Get every required reference key from output."""
     if isinstance(wanted_reference_keys, list):
-        return wanted_reference_keys
-
-    if isinstance(wanted_reference_keys, dict):
-        my_keys_list = []
-
-        if isinstance(wanted_reference_keys, dict):
-            for key in wanted_reference_keys.keys():
-                my_keys_list.append(key)
-        else:
-            raise TypeError(
-                f"Must be a dictionary. You have type:{type(wanted_reference_keys)} output:{wanted_reference_keys}'."
-            )
-
-        return my_keys_list
-
-    return None
+        final_result = wanted_reference_keys
+    elif isinstance(wanted_reference_keys, dict):
+        final_result = list(wanted_reference_keys.keys())
+    else:
+        raise TypeError(
+            f"Must be a dictionary. You have type:{type(wanted_reference_keys)} output:{wanted_reference_keys}'."
+        )
+    return final_result
 
 
 def keys_values_zipper(list_of_reference_keys: List, wanted_value_with_key: List) -> List:
