@@ -1,8 +1,26 @@
 [tool.poetry]
 name = "netcompare"
 version = "0.0.1-beta.1"
-description = ""
+description = "A light-weight library to compare structured output from network devices show commands."
 authors = ["Network to Code, LLC <info@networktocode.com>"]
+license = "Apache-2.0"
+homepage = "https://github.com/networktocode-llc/netcompare"
+repository = "https://github.com/networktocode-llc/netcompare"
+readme = "README.md"
+keywords = ["json", "diff", "network"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+]
+include = [
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "LICENSE",
+]
 
 [tool.poetry.dependencies]
 python = "^3.6.2"
