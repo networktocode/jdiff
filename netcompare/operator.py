@@ -1,11 +1,12 @@
 """Operator diff."""
 import operator
+from typing import Any, List, Tuple
 
 
 class Operator:
     """Operator class implementation."""
 
-    def __init__(self, referance_data, value_to_compare) -> None:
+    def __init__(self, referance_data: Any, value_to_compare: Any) -> None:
         """__init__ method."""
         # [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}},
         # {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}},
@@ -14,8 +15,8 @@ class Operator:
         self.referance_data = referance_data
         self.value_to_compare = value_to_compare
 
-    def _loop_through_wrapper(self, call_ops):
-        """Wrappoer method for operator evaluation."""
+    def _loop_through_wrapper(self, call_ops: str) -> Tuple[bool, List]:
+        """Wrapper method for operator evaluation."""
         ops = {
             ">": operator.gt,
             "<": operator.lt,
@@ -52,14 +53,14 @@ class Operator:
             return (True, result)
         return (False, result)
 
-    def all_same(self):
+    def all_same(self) -> Tuple[bool, Any]:
         """All same operator implementation."""
         list_of_values = []
         result = []
 
         for item in self.value_to_compare:
             for value in item.values():
-                # Create a list for compare valiues.
+                # Create a list for compare values.
                 list_of_values.append(value)
 
         for element in list_of_values:
@@ -76,34 +77,34 @@ class Operator:
             return (True, self.value_to_compare)
         return (False, self.value_to_compare)
 
-    def contains(self):
+    def contains(self) -> Tuple[bool, List]:
         """Contains operator implementation."""
         return self._loop_through_wrapper("contains")
 
-    def not_contains(self):
+    def not_contains(self) -> Tuple[bool, List]:
         """Not contains operator implementation."""
         return self._loop_through_wrapper("not_contains")
 
-    def is_gt(self):
+    def is_gt(self) -> Tuple[bool, List]:
         """Is greather than operator implementation."""
         return self._loop_through_wrapper(">")
 
-    def is_lt(self):
+    def is_lt(self) -> Tuple[bool, List]:
         """Is lower than operator implementation."""
         return self._loop_through_wrapper("<")
 
-    def is_in(self):
+    def is_in(self) -> Tuple[bool, List]:
         """Is in operator implementation."""
         return self._loop_through_wrapper("is_in")
 
-    def not_in(self):
+    def not_in(self) -> Tuple[bool, List]:
         """Is not in operator implementation."""
         return self._loop_through_wrapper("not_in")
 
-    def in_range(self):
+    def in_range(self) -> Tuple[bool, List]:
         """Is in range operator implementation."""
         return self._loop_through_wrapper("in_range")
 
-    def not_range(self):
+    def not_range(self) -> Tuple[bool, List]:
         """Is not in range operator implementation."""
         return self._loop_through_wrapper("not_range")
