@@ -9,39 +9,36 @@ operator_all_same = (
     {"params": {"mode": "all-same", "operator_data": True}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup,vrf,state]",
     (
-        (
-            False,
-            [
-                {
-                    "7.7.7.7": {
-                        "peerGroup": "EVPN-OVERLAY-SPINE",
-                        "state": "Idle",
-                        "vrf": "default",
-                    }
-                },
-                {
-                    "10.1.0.0": {
-                        "peerGroup": "IPv4-UNDERLAY-SPINE",
-                        "state": "Idle",
-                        "vrf": "default",
-                    }
-                },
-                {
-                    "10.2.0.0": {
-                        "peerGroup": "IPv4-UNDERLAY-SPINE",
-                        "state": "Idle",
-                        "vrf": "default",
-                    }
-                },
-                {
-                    "10.64.207.255": {
-                        "peerGroup": "IPv4-UNDERLAY-MLAG-PEER",
-                        "state": "Idle",
-                        "vrf": "default",
-                    }
-                },
-            ],
-        ),
+        [
+            {
+                "7.7.7.7": {
+                    "peerGroup": "EVPN-OVERLAY-SPINE",
+                    "state": "Idle",
+                    "vrf": "default",
+                }
+            },
+            {
+                "10.1.0.0": {
+                    "peerGroup": "IPv4-UNDERLAY-SPINE",
+                    "state": "Idle",
+                    "vrf": "default",
+                }
+            },
+            {
+                "10.2.0.0": {
+                    "peerGroup": "IPv4-UNDERLAY-SPINE",
+                    "state": "Idle",
+                    "vrf": "default",
+                }
+            },
+            {
+                "10.64.207.255": {
+                    "peerGroup": "IPv4-UNDERLAY-MLAG-PEER",
+                    "state": "Idle",
+                    "vrf": "default",
+                }
+            },
+        ],
         False,
     ),
 )
@@ -50,7 +47,7 @@ operator_contains = (
     "operator",
     {"params": {"mode": "contains", "operator_data": "EVPN"}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
-    ((True, [{"7.7.7.7": {"peerGroup": "EVPN-OVERLAY-SPINE"}}]), False),
+    ([{"7.7.7.7": {"peerGroup": "EVPN-OVERLAY-SPINE"}}], True),
 )
 operator_not_contains = (
     "pre.json",
@@ -58,15 +55,12 @@ operator_not_contains = (
     {"params": {"mode": "not-contains", "operator_data": "EVPN"}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
     (
-        (
-            True,
-            [
-                {"10.1.0.0": {"peerGroup": "IPv4-UNDERLAY-SPINE"}},
-                {"10.2.0.0": {"peerGroup": "IPv4-UNDERLAY-SPINE"}},
-                {"10.64.207.255": {"peerGroup": "IPv4-UNDERLAY-MLAG-PEER"}},
-            ],
-        ),
-        False,
+        [
+            {"10.1.0.0": {"peerGroup": "IPv4-UNDERLAY-SPINE"}},
+            {"10.2.0.0": {"peerGroup": "IPv4-UNDERLAY-SPINE"}},
+            {"10.64.207.255": {"peerGroup": "IPv4-UNDERLAY-MLAG-PEER"}},
+        ],
+        True,
     ),
 )
 operator_is_gt = (
@@ -75,16 +69,13 @@ operator_is_gt = (
     {"params": {"mode": "is-gt", "operator_data": 20}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
     (
-        (
-            True,
-            [
-                {"7.7.7.7": {"prefixesSent": 50}},
-                {"10.1.0.0": {"prefixesSent": 50}},
-                {"10.2.0.0": {"prefixesSent": 50}},
-                {"10.64.207.255": {"prefixesSent": 50}},
-            ],
-        ),
-        False,
+        [
+            {"7.7.7.7": {"prefixesSent": 50}},
+            {"10.1.0.0": {"prefixesSent": 50}},
+            {"10.2.0.0": {"prefixesSent": 50}},
+            {"10.64.207.255": {"prefixesSent": 50}},
+        ],
+        True,
     ),
 )
 operator_is_lt = (
@@ -93,16 +84,13 @@ operator_is_lt = (
     {"params": {"mode": "is-lt", "operator_data": 60}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
     (
-        (
-            True,
-            [
-                {"7.7.7.7": {"prefixesSent": 50}},
-                {"10.1.0.0": {"prefixesSent": 50}},
-                {"10.2.0.0": {"prefixesSent": 50}},
-                {"10.64.207.255": {"prefixesSent": 50}},
-            ],
-        ),
-        False,
+        [
+            {"7.7.7.7": {"prefixesSent": 50}},
+            {"10.1.0.0": {"prefixesSent": 50}},
+            {"10.2.0.0": {"prefixesSent": 50}},
+            {"10.64.207.255": {"prefixesSent": 50}},
+        ],
+        True,
     ),
 )
 operator_is_in = (
@@ -111,16 +99,13 @@ operator_is_in = (
     {"params": {"mode": "is-in", "operator_data": [20, 40, 50]}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
     (
-        (
-            True,
-            [
-                {"7.7.7.7": {"prefixesSent": 50}},
-                {"10.1.0.0": {"prefixesSent": 50}},
-                {"10.2.0.0": {"prefixesSent": 50}},
-                {"10.64.207.255": {"prefixesSent": 50}},
-            ],
-        ),
-        False,
+        [
+            {"7.7.7.7": {"prefixesSent": 50}},
+            {"10.1.0.0": {"prefixesSent": 50}},
+            {"10.2.0.0": {"prefixesSent": 50}},
+            {"10.64.207.255": {"prefixesSent": 50}},
+        ],
+        True,
     ),
 )
 operator_not_in = (
@@ -129,16 +114,13 @@ operator_not_in = (
     {"params": {"mode": "not-in", "operator_data": [20, 40, 60]}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
     (
-        (
-            True,
-            [
-                {"7.7.7.7": {"prefixesSent": 50}},
-                {"10.1.0.0": {"prefixesSent": 50}},
-                {"10.2.0.0": {"prefixesSent": 50}},
-                {"10.64.207.255": {"prefixesSent": 50}},
-            ],
-        ),
-        False,
+        [
+            {"7.7.7.7": {"prefixesSent": 50}},
+            {"10.1.0.0": {"prefixesSent": 50}},
+            {"10.2.0.0": {"prefixesSent": 50}},
+            {"10.64.207.255": {"prefixesSent": 50}},
+        ],
+        True,
     ),
 )
 operator_in_range = (
@@ -147,16 +129,13 @@ operator_in_range = (
     {"params": {"mode": "in-range", "operator_data": (20, 60)}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
     (
-        (
-            True,
-            [
-                {"7.7.7.7": {"prefixesSent": 50}},
-                {"10.1.0.0": {"prefixesSent": 50}},
-                {"10.2.0.0": {"prefixesSent": 50}},
-                {"10.64.207.255": {"prefixesSent": 50}},
-            ],
-        ),
-        False,
+        [
+            {"7.7.7.7": {"prefixesSent": 50}},
+            {"10.1.0.0": {"prefixesSent": 50}},
+            {"10.2.0.0": {"prefixesSent": 50}},
+            {"10.64.207.255": {"prefixesSent": 50}},
+        ],
+        True,
     ),
 )
 operator_not_in_range = (
@@ -165,16 +144,13 @@ operator_not_in_range = (
     {"params": {"mode": "not-range", "operator_data": (20, 40)}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
     (
-        (
-            True,
-            [
-                {"7.7.7.7": {"prefixesSent": 50}},
-                {"10.1.0.0": {"prefixesSent": 50}},
-                {"10.2.0.0": {"prefixesSent": 50}},
-                {"10.64.207.255": {"prefixesSent": 50}},
-            ],
-        ),
-        False,
+        [
+            {"7.7.7.7": {"prefixesSent": 50}},
+            {"10.1.0.0": {"prefixesSent": 50}},
+            {"10.2.0.0": {"prefixesSent": 50}},
+            {"10.64.207.255": {"prefixesSent": 50}},
+        ],
+        True,
     ),
 )
 

@@ -324,7 +324,6 @@ class OperatorType(CheckType):
     def evaluate(self, value_to_compare: Any, params: Any) -> Tuple[Mapping, bool]:
         """Operator evaluator implementation."""
         self.validate(**params)
-        # For naming consistency
+        # For name consistency.
         reference_data = params
-        evaluation_result = operator_evaluator(reference_data["params"], value_to_compare)
-        return evaluation_result, not evaluation_result
+        return operator_evaluator(reference_data["params"], value_to_compare)
