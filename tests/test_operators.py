@@ -39,7 +39,7 @@ operator_all_same = (
                 }
             },
         ],
-        True,
+        False,
     ),
 )
 operator_contains = (
@@ -47,7 +47,7 @@ operator_contains = (
     "operator",
     {"params": {"mode": "contains", "operator_data": "EVPN"}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]",
-    ([{"7.7.7.7": {"peerGroup": "EVPN-OVERLAY-SPINE"}}], False),
+    ([{"7.7.7.7": {"peerGroup": "EVPN-OVERLAY-SPINE"}}], True),
 )
 operator_not_contains = (
     "pre.json",
@@ -60,7 +60,7 @@ operator_not_contains = (
             {"10.2.0.0": {"peerGroup": "IPv4-UNDERLAY-SPINE"}},
             {"10.64.207.255": {"peerGroup": "IPv4-UNDERLAY-MLAG-PEER"}},
         ],
-        False,
+        True,
     ),
 )
 operator_is_gt = (
@@ -75,7 +75,7 @@ operator_is_gt = (
             {"10.2.0.0": {"prefixesSent": 50}},
             {"10.64.207.255": {"prefixesSent": 50}},
         ],
-        False,
+        True,
     ),
 )
 operator_is_lt = (
@@ -90,7 +90,7 @@ operator_is_lt = (
             {"10.2.0.0": {"prefixesSent": 50}},
             {"10.64.207.255": {"prefixesSent": 50}},
         ],
-        False,
+        True,
     ),
 )
 operator_is_in = (
@@ -105,7 +105,7 @@ operator_is_in = (
             {"10.2.0.0": {"prefixesSent": 50}},
             {"10.64.207.255": {"prefixesSent": 50}},
         ],
-        False,
+        True,
     ),
 )
 operator_not_in = (
@@ -120,7 +120,7 @@ operator_not_in = (
             {"10.2.0.0": {"prefixesSent": 50}},
             {"10.64.207.255": {"prefixesSent": 50}},
         ],
-        False,
+        True,
     ),
 )
 operator_in_range = (
@@ -135,7 +135,7 @@ operator_in_range = (
             {"10.2.0.0": {"prefixesSent": 50}},
             {"10.64.207.255": {"prefixesSent": 50}},
         ],
-        False,
+        True,
     ),
 )
 operator_not_in_range = (
@@ -150,7 +150,7 @@ operator_not_in_range = (
             {"10.2.0.0": {"prefixesSent": 50}},
             {"10.64.207.255": {"prefixesSent": 50}},
         ],
-        False,
+        True,
     ),
 )
 

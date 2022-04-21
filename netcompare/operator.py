@@ -50,8 +50,8 @@ class Operator:
                     elif ops[call_ops](evaluated_value, self.referance_data):
                         result.append(item)
         if result:
-            return (True, result)
-        return (False, result)
+            return (result, True)
+        return (result, False)
 
     def all_same(self) -> Tuple[bool, Any]:
         """All same operator implementation."""
@@ -70,12 +70,12 @@ class Operator:
                 result.append(True)
 
         if self.referance_data and not all(result):
-            return (False, self.value_to_compare)
+            return (self.value_to_compare, False)
         if self.referance_data:
-            return (True, self.value_to_compare)
+            return (self.value_to_compare, True)
         if not all(result):
-            return (True, self.value_to_compare)
-        return (False, self.value_to_compare)
+            return (self.value_to_compare, True)
+        return (self.value_to_compare, False)
 
     def contains(self) -> Tuple[bool, List]:
         """Contains operator implementation."""

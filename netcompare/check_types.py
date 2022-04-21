@@ -326,5 +326,4 @@ class OperatorType(CheckType):
         self.validate(**params)
         # For name consistency.
         reference_data = params
-        evaluation_result = operator_evaluator(reference_data["params"], value_to_compare)
-        return evaluation_result[1], not evaluation_result[0]
+        return operator_evaluator(reference_data["params"], value_to_compare)
