@@ -1,5 +1,6 @@
 """CheckType Implementation."""
 import re
+import warnings
 from typing import Mapping, Tuple, List, Dict, Any, Union
 from abc import ABC, abstractmethod
 import jmespath
@@ -38,7 +39,7 @@ class CheckType(ABC):
         raise NotImplementedError
 
     @staticmethod
-    def get_value(output: Union[Mapping, List], path: str, exclude: List = None) -> Any:
+    def get_value(output: Union[Mapping, List], path: str = "*", exclude: List = None) -> Any:
         """Return data from output depending on the check path. See unit test for complete example.
 
         Get the wanted values to be evaluated if JMESPath expression is defined,
@@ -62,6 +63,10 @@ class CheckType(ABC):
             exclude_filter(output, exclude)  # exclude unwanted elements
 
         if not path:
+            warnings.warn("JMSPath cannot be of type 'None'. Path argumente reverted to default value '*'")
+            path = "*"
+
+        if path == "*":
             return output  # return if path is not specified
 
         values = jmespath.search(jmespath_value_parser(path), output)
