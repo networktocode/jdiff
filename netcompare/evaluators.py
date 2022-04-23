@@ -1,6 +1,6 @@
 """Evaluators."""
 import re
-from typing import Any, Mapping, Dict
+from typing import Any, Mapping, Dict, Tuple
 from deepdiff import DeepDiff
 from .utils.diff_helpers import get_diff_iterables_items, fix_deepdiff_key_names
 from .operator import Operator
@@ -104,7 +104,7 @@ def regex_evaluator(values: Mapping, regex_expression: str, mode: str) -> Dict:
     return result
 
 
-def operator_evaluator(referance_data: Mapping, value_to_compare: Mapping) -> Dict:
+def operator_evaluator(referance_data: Mapping, value_to_compare: Mapping) -> Tuple[Dict, bool]:
     """Operator evaluator call."""
     # referance_data
     # {'mode': 'all-same', 'operator_data': True}
