@@ -326,7 +326,7 @@ class OperatorType(CheckType):
                 f"check option all-same must have value of type bool. You have: {params_value} of type {type(params_value)}"
             )
 
-    def evaluate(self, value_to_compare: Any, params: Any) -> Tuple[Mapping, bool]:
+    def evaluate(self, value_to_compare: Any, params: Any) -> Tuple[Dict, bool]:
         """Operator evaluator implementation."""
         self.validate(**params)
         # For name consistency.
