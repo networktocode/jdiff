@@ -428,7 +428,7 @@ Operator is a check which includes an array of different evaluation logic. Here 
 
     3. in-range: Check if the value of a specified element is in the given numeric range.
             - in-range: [20, 70]
-              check if value is in range between 20 nad 70 
+              check if value is in range between 20 and 70 
 
     4. not-range: Check if the value of a specified element is outside of a given numeric range.
               - not-range: [5 , 40]
