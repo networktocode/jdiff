@@ -1,18 +1,38 @@
 # netcompare
 
-This library is meant to be a light-weight way to compare structured output from network devices `show` commands. `netcompare` is a python library targeted at intelligently deep diffing structured data objects of json type. In addition, `netcompare` can also provide some basic testing of key/values within a data structure.
+This library is meant to be a light-weight way to compare structured output. `netcompare` is a python library targeted at intelligently deep diffing structured data objects of json type. 
+
+`netcompare` also provides some basic testing of key/values within data structures.
 
 The library heavily relies on [jmespath](https://jmespath.org/) for traversing the json object and finding the value(s) to be evaluated. More on that later.
 
+## Use Cases
 
-## Use Case
+`netcompare` is meant to be a building block used within testing frameworks. Originally devised specifically to test structured data returned from network device show commands, `netcompare` is designed to deeply and intelligently diff data structures while also providing tests for specific values in the data structure. `netcompare` evolved to be agnostic from the collection of that data and can compare and test and type of data structure. 
 
-`netcompare` enables an easy and direct way to see the outcome of network configuration or operational status change. The intended usage is to collect structured `show` command output before and after a change window. Prior to closing the change window, the results are compared to help determine if the change was successful as intended and if the network is in an acceptable state. The output can be stored with the change's documentation for easy reference and proof of completion.
+With that said, it is perfectly suited to diff data gathered from network devices via show commands, Ansible playbooks, in Django based applications such as Nautobot or Netbox, and is targeted at being the 'plumbing' behind a full network automation validation solution.
+
+`netcompare` was developed for checking the state of the network before and after a change; however, `netcompare` is also well suited for comparing intended state derived from a Source-of-Truth or other source of intended state. 
+
+The intended usage is to collect structured `show` command output before and after a change window. Prior to closing the change window, the results are compared to help determine if the change was successful as intended and if the network is in an acceptable state. The output can be stored with the change's documentation for easy reference and proof of completion.
+
+With `netcompare` we've left the collection of the data up to you, to easily fit within your preferred method.
+
+### Testing data structures
+
+Briefly, these tests are provided to test the objects, to aide in determining the status of the data. 
+
+- `exact_match`: the keys and values much match between the two objects
+- `tolerance`: the keys must match and the values can differ according to the 'tolerance' value provided
+- `parameter_match`: provide a known good key/value 'parameter' and check for it's presence or absence in the provided objects 
+- `regex`: provide a regex and check for the presence or absence of a match in the provided object
+- `operator`: evaluate or compare values with a number of different operators: 'in', 'bool', 'string', and numerical comparison with 'int' and 'float'
+
+
 
 ## Workflow
 
 ![netcompare workflow](./docs/images/workflow.png)
-
 
 ## Library Architecture
 
@@ -22,7 +42,7 @@ An instance of `CheckType` object must be created first before passing one of th
 
 - `exact_match`
 - `tolerance`
-- `parameters`
+- `parameter_match`
 - `regex`
 - `operator`
 
@@ -228,58 +248,6 @@ Targeting only the `interfaceStatus` key, we would need to define a reference ke
 The anchor logic for the reference key applies to all check-types available in `netcompare`
 
 
-### parameter_match
-
-parameter_match provides a way to match keys and values in the output with known good values. 
-
-The test defines key/value pairs known to be the good value - type `dict()` - as well as a mode - `match`, `no-match` - to match or not against the parsed output. The test fails if any status has changed based on what is defined in pre/post. If there are new values not contained in the input/test value, that will not count as a failure.
-
-
-Examples:
-
-```python
->>> post_data = {
-...       "jsonrpc": "2.0",
-...       "id": "EapiExplorer-1",
-...       "result": [
-...         {
-...           "interfaces": {
-...             "Management1": {
-...               "lastStatusChangeTimestamp": 1626247821.123456,
-...               "lanes": 0,
-...               "name": "Management1",
-...               "interfaceStatus": "down",
-...               "autoNegotiate": "success",
-...               "burnedInAddress": "08:00:27:e6:b2:f8",
-...               "loopbackMode": "loopbackNone",
-...               "interfaceStatistics": {
-...                 "inBitsRate": 3403.4362520883615,
-...                 "inPktsRate": 3.7424095978179257,
-...                 "outBitsRate": 16249.69114419833,
-...                 "updateInterval": 300,
-...                 "outPktsRate": 2.1111866059750692
-...               }
-...             }
-...           }
-...         }
-...       ]
->>> my_check = CheckType.init(check_type="parameter_match")
->>> my_jmspath = "result[*].interfaces.*.[$name$,interfaceStatus,autoNegotiate]"
->>> post_value = my_check.get_value(output=post_data, path=my_jmspath)
->>> # mode: match - Match in the ouptut what is defined under 'params'
->>> my_parameter_match = {"mode": "match", "params": {"interfaceStatus": "connected", "autoNegotiate": "success"}}
->>> actual_results = my_check.evaluate(post_value, **my_parameter_match)
->>> actual_results
-({'Management1': {'interfaceStatus': 'down'}}, False)
->>> # mode: no-match - Return what does nto match in the ouptut as defined under 'params'
->>> my_parameter_match = {"mode": "no-match", "params": {"interfaceStatus": "connected", "autoNegotiate": "success"}}
->>> actual_results = my_check.evaluate(post_value, **my_parameter_match)
->>> actual_results
-({'Management1': {'autoNegotiate': 'success'}}, False
-```
-
-In network data, this could be a state of bgp neighbors being Established or the connectedness of certain interfaces being up.
-
 ### Tolerance
 
 The `tolerance` test defines a percentage of differing `float()` between pre and post checks numeric value. The threshold is defined as a percentage that can be different either from the value stated in pre and post fields. 
@@ -362,6 +330,59 @@ Lets have a look to a couple of examples:
 ```
 
 This test can test the tolerance for changing quantities of certain things such as routes, or L2 or L3 neighbors. It could also test actual outputted values such as transmitted light levels for optics.
+
+
+### Parameter_match
+
+parameter_match provides a way to match keys and values in the output with known good values. 
+
+The test defines key/value pairs known to be the good value - type `dict()` - as well as a mode - `match`, `no-match` - to match or not against the parsed output. The test fails if any status has changed based on what is defined in pre/post. If there are new values not contained in the input/test value, that will not count as a failure.
+
+
+Examples:
+
+```python
+>>> post_data = {
+...       "jsonrpc": "2.0",
+...       "id": "EapiExplorer-1",
+...       "result": [
+...         {
+...           "interfaces": {
+...             "Management1": {
+...               "lastStatusChangeTimestamp": 1626247821.123456,
+...               "lanes": 0,
+...               "name": "Management1",
+...               "interfaceStatus": "down",
+...               "autoNegotiate": "success",
+...               "burnedInAddress": "08:00:27:e6:b2:f8",
+...               "loopbackMode": "loopbackNone",
+...               "interfaceStatistics": {
+...                 "inBitsRate": 3403.4362520883615,
+...                 "inPktsRate": 3.7424095978179257,
+...                 "outBitsRate": 16249.69114419833,
+...                 "updateInterval": 300,
+...                 "outPktsRate": 2.1111866059750692
+...               }
+...             }
+...           }
+...         }
+...       ]
+>>> my_check = CheckType.init(check_type="parameter_match")
+>>> my_jmspath = "result[*].interfaces.*.[$name$,interfaceStatus,autoNegotiate]"
+>>> post_value = my_check.get_value(output=post_data, path=my_jmspath)
+>>> # mode: match - Match in the ouptut what is defined under 'params'
+>>> my_parameter_match = {"mode": "match", "params": {"interfaceStatus": "connected", "autoNegotiate": "success"}}
+>>> actual_results = my_check.evaluate(post_value, **my_parameter_match)
+>>> actual_results
+({'Management1': {'interfaceStatus': 'down'}}, False)
+>>> # mode: no-match - Return what does nto match in the ouptut as defined under 'params'
+>>> my_parameter_match = {"mode": "no-match", "params": {"interfaceStatus": "connected", "autoNegotiate": "success"}}
+>>> actual_results = my_check.evaluate(post_value, **my_parameter_match)
+>>> actual_results
+({'Management1': {'autoNegotiate': 'success'}}, False
+```
+
+In network data, this could be a state of bgp neighbors being Established or the connectedness of certain interfaces being up.
 
 
 ### Regex
