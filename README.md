@@ -4,9 +4,15 @@ This library is meant to be a light-weight way to compare structured output from
 
 The library heavily relies on [jmespath](https://jmespath.org/) for traversing the json object and finding the value(s) to be evaluated. More on that later.
 
+
 ## Use Case
 
 `netcompare` enables an easy and direct way to see the outcome of network configuration or operational status change. The intended usage is to collect structured `show` command output before and after a change window. Prior to closing the change window, the results are compared to help determine if the change was successful as intended and if the network is in an acceptable state. The output can be stored with the change's documentation for easy reference and proof of completion.
+
+## Workflow
+
+![netcompare workflow](./docs/images/workflow.png)
+
 
 ## Library Architecture
 
