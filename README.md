@@ -1,6 +1,6 @@
 # netcompare
 
-The `netcompare` is a light-weight way to examine structured data. `netcompare` provides an interface to intelligently compare json data objects as well as test for the presence (or absence) of keys, and to examine and compare their values.
+The `netcompare` is a light-weight library to examine structured data. `netcompare` provides an interface to intelligently compare json data objects as well as test for the presence (or absence) of keys, and to examine and compare their values.
 
 The library heavily relies on [jmespath](https://jmespath.org/) for traversing the json object and finding the value(s) to be evaluated. More on that [here](#customized-jmespath).
 
