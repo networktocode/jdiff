@@ -8,11 +8,11 @@ The library heavily relies on [jmespath](https://jmespath.org/) for traversing t
 
 A `netcompare` Check accepts two objects as input: the reference object, and the comparison object. The reference object is used as the intended or accepted state and it's keys and values are compared against the comparison object.
 
-`netcompare` does not collect the data for you, it simply works on data passed into it. This allows for maximum flexibility in collecting the data. For instance, the reference state can be collected from the network directly, a common use case for checking the network before and after a change. You could also choose to generate the reference state from an SoT, such as [Nautobot](https://github.com/nautobot/nautobot/), and have a true intended state. 
+`netcompare` does not collect the data for you, it simply works on data passed into it. This allows for maximum flexibility in collecting the data. 
 
-This also allows maximum flexibility in how the data is collected: ansible, napalm, nornir, and any other mechanism used to collect data may be used. 
+For instance, the reference state can be collected from the network directly using any method that returns structured data: ansible, napalm, nornir to name a few. You could also choose to generate the reference state from an SoT, such as [Nautobot](https://github.com/nautobot/nautobot/), and have a true intended state. 
 
-`netcompare` is perfectly suited to work with data gathered from networ devices via show command, Ansible playbooks, as well as in applications such as [Nautobot](https://github.com/nautobot/nautobot/), or [Netbox](https://github.com/netbox-community/netbox). `netcompare` is focused on being the 'plumbing' behind a full network automation validation solution. 
+`netcompare` is perfectly suited to work with data gathered from network devices via show commands, Ansible playbooks, as well as in applications such as [Nautobot](https://github.com/nautobot/nautobot/), or [Netbox](https://github.com/netbox-community/netbox). `netcompare` is focused on being the 'plumbing' behind a full network automation validation solution. 
 
 ### Testing data structures
 
