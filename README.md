@@ -1,42 +1,53 @@
 # netcompare
 
-This library is meant to be a light-weight way to compare structured output. `netcompare` is a python library targeted at intelligently deep diffing structured data objects of json type. 
+The `netcompare` is a light-weight way to examine structured data. `netcompare` provides an interface to intelligently compare json data objects as well as test for the presence (or absence) of keys, and to examine and compare their values.
 
-`netcompare` also provides some basic testing of key/values within data structures.
+The library heavily relies on [jmespath](https://jmespath.org/) for traversing the json object and finding the value(s) to be evaluated. More on that [here](#customized-jmespath).
 
-The library heavily relies on [jmespath](https://jmespath.org/) for traversing the json object and finding the value(s) to be evaluated. More on that later.
+## Usage
 
-## Use Cases
+A `netcompare` Check accepts two objects as input: the reference object, and the comparison object. The reference object is used as the intended or accepted state and it's keys and values are compared against the comparison object.
 
-`netcompare` is meant to be a building block used within testing frameworks. Originally devised specifically to test structured data returned from network device show commands, `netcompare` is designed to deeply and intelligently diff data structures while also providing tests for specific values in the data structure. `netcompare` evolved to be agnostic from the collection of that data and can compare and test and type of data structure. 
+`netcompare` does not collect the data for you, it simply works on data passed into it. This allows for maximum flexibility in collecting the data. For instance, the reference state can be collected from the network directly, a common use case for checking the network before and after a change. You could also choose to generate the reference state from an SoT, such as [Nautobot](https://github.com/nautobot/nautobot/), and have a true intended state. 
 
-With that said, it is perfectly suited to diff data gathered from network devices via show commands, Ansible playbooks, in Django based applications such as Nautobot or Netbox, and is targeted at being the 'plumbing' behind a full network automation validation solution.
+This also allows maximum flexibility in how the data is collected: ansible, napalm, nornir, and any other mechanism used to collect data may be used. 
 
-`netcompare` was developed for checking the state of the network before and after a change; however, `netcompare` is also well suited for comparing intended state derived from a Source-of-Truth or other source of intended state. 
-
-The intended usage is to collect structured `show` command output before and after a change window. Prior to closing the change window, the results are compared to help determine if the change was successful as intended and if the network is in an acceptable state. The output can be stored with the change's documentation for easy reference and proof of completion.
-
-With `netcompare` we've left the collection of the data up to you, to easily fit within your preferred method.
+`netcompare` is perfectly suited to work with data gathered from networ devices via show command, Ansible playbooks, as well as in applications such as [Nautobot](https://github.com/nautobot/nautobot/), or [Netbox](https://github.com/netbox-community/netbox). `netcompare` is focused on being the 'plumbing' behind a full network automation validation solution. 
 
 ### Testing data structures
 
-Briefly, these tests are provided to test the objects, to aide in determining the status of the data. 
+Briefly, these tests, or `CheckTypes`, are provided to test the objects, to aide in determining the status of the data. 
 
-- `exact_match`: the keys and values much match between the two objects
+- `exact_match`: the keys and values much match, exactly, between the two objects
 - `tolerance`: the keys must match and the values can differ according to the 'tolerance' value provided
-- `parameter_match`: provide a known good key/value 'parameter' and check for it's presence or absence in the provided objects 
-- `regex`: provide a regex and check for the presence or absence of a match in the provided object
-- `operator`: evaluate or compare values with a number of different operators: 'in', 'bool', 'string', and numerical comparison with 'int' and 'float'
+- `parameter_match`: a reference key and value is provided and it's presence (or absence) is checked in the provided object
+- `regex`: a reference regex pattern is provided and it's presence (or absence) is checked for a match in the provided object
+- `operator`: similar to parameter match, but the reference includes several different possible operators: 'in', 'bool', 'string', and numerical comparison with 'int' and 'float' to check against
 
+`CheckTypes` are explained in more detail in the [CheckTypes Explained section](#check-types-explained).
 
 
 ## Workflow
 
-![netcompare workflow](./docs/images/workflow.png)
+| ![netcompare workflow](./docs/images/workflow.png) |
+|:---:|
+| **`netcompare` workflow** |
+
+
+1. The reference state object is assembled. The structured data may be collected from: 
+
+    - an SoT
+    - Directly from the network using any Automation that returns structured data
+
+2. The Network Engineer makes changes to the network, whether it is an upgrade, peering change, or migration.
+3. The comparison state is collected, typically directly from the network, but any method is acceptable.
+4. The reference state is then compared to the current state using the netcompare library.
 
 ## Library Architecture
 
-![netcompare HLD](./docs/images/hld.png)
+| ![netcompare HLD](./docs/images/hld.png) |
+|:---:|
+| **`netcompare` architecture** |
 
 An instance of `CheckType` object must be created first before passing one of the below check types as an argument:
 
@@ -52,7 +63,7 @@ my_check = "exact_match"
 check = CheckType.init(my_check)
 ```
 
-Next, define a json object as reference data, as well as a JMESPATH expression to extract the value wanted and pass them to `get_value` method. Be aware! `netcompare` works with a customized version of JMESPATH. More on that later.
+Next, define a json object as reference data, as well as a JMESPATH expression to extract the value wanted and pass them to `get_value` method. Be aware! `netcompare` works with a customized version of JMESPATH. More on that [below](#customized-jmespath).
 
 ```python
 bgp_pre_change = "./pre/bgp.json"
@@ -144,7 +155,7 @@ That  would give us...
 
 ```
 
-## Check Types Explained
+## `CheckTypes` Explained
 
 ### exact_match
 
