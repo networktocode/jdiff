@@ -6,13 +6,13 @@ from typing import Any, List, Tuple
 class Operator:
     """Operator class implementation."""
 
-    def __init__(self, referance_data: Any, value_to_compare: Any) -> None:
+    def __init__(self, reference_data: Any, value_to_compare: Any) -> None:
         """__init__ method."""
         # [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}},
         # {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}},
         # {'10.2.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}},
         # {'10.64.207.255': {'peerGroup': 'IPv4-UNDERLAY-MLAG-PEER', 'vrf': 'default', 'state': 'Idle'}}]
-        self.referance_data = referance_data
+        self.reference_data = reference_data
         self.value_to_compare = value_to_compare
 
     def _loop_through_wrapper(self, call_ops: str) -> Tuple[bool, List]:
@@ -32,22 +32,22 @@ class Operator:
                 for evaluated_value in value.values():
                     # reverse operands (??? WHY ???) https://docs.python.org/3.8/library/operator.html#operator.contains
                     if call_ops == "is_in":
-                        if ops[call_ops](self.referance_data, evaluated_value):
+                        if ops[call_ops](self.reference_data, evaluated_value):
                             result.append(item)
                     elif call_ops == "not_contains":
-                        if not ops[call_ops](evaluated_value, self.referance_data):
+                        if not ops[call_ops](evaluated_value, self.reference_data):
                             result.append(item)
                     elif call_ops == "not_in":
-                        if not ops[call_ops](self.referance_data, evaluated_value):
+                        if not ops[call_ops](self.reference_data, evaluated_value):
                             result.append(item)
                     elif call_ops == "in_range":
-                        if self.referance_data[0] < evaluated_value < self.referance_data[1]:
+                        if self.reference_data[0] < evaluated_value < self.reference_data[1]:
                             result.append(item)
                     elif call_ops == "not_range":
-                        if not self.referance_data[0] < evaluated_value < self.referance_data[1]:
+                        if not self.reference_data[0] < evaluated_value < self.reference_data[1]:
                             result.append(item)
                     # "<", ">", "contains"
-                    elif ops[call_ops](evaluated_value, self.referance_data):
+                    elif ops[call_ops](evaluated_value, self.reference_data):
                         result.append(item)
         if result:
             return (result, True)
@@ -69,9 +69,9 @@ class Operator:
             else:
                 result.append(True)
 
-        if self.referance_data and not all(result):
+        if self.reference_data and not all(result):
             return (self.value_to_compare, False)
-        if self.referance_data:
+        if self.reference_data:
             return (self.value_to_compare, True)
         if not all(result):
             return (self.value_to_compare, True)

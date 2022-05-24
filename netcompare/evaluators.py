@@ -104,10 +104,10 @@ def regex_evaluator(values: Mapping, regex_expression: str, mode: str) -> Dict:
     return result
 
 
-def operator_evaluator(referance_data: Mapping, value_to_compare: Mapping) -> Tuple[Dict, bool]:
+def operator_evaluator(reference_data: Mapping, value_to_compare: Mapping) -> Tuple[Dict, bool]:
     """Operator evaluator call."""
-    # referance_data
+    # reference_data
     # {'mode': 'all-same', 'operator_data': True}
-    operator_mode = referance_data["mode"].replace("-", "_")
-    operator = Operator(referance_data["operator_data"], value_to_compare)
+    operator_mode = reference_data["mode"].replace("-", "_")
+    operator = Operator(reference_data["operator_data"], value_to_compare)
     return getattr(operator, operator_mode)()
