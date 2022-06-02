@@ -1,11 +1,18 @@
-"""jmespath expression parsers and related utilities."""
+"""
+jmespath expression parsers and related utilities. 
+This utility interfaces the custome netcompare jmespath expression with the jmespath library.
+From one expression defined in netcompare, we will derive two expressions: one expression that traverse the json output and get the  
+evaluated bit of it, the second will target the reference key relative to the value to evaluate. More on README.md
+"""
 import re
 from typing import Mapping, List, Union
 
 
 def jmespath_value_parser(path: str):
     """
-    Get the jmespath value path from 'path'.
+    Extract the jmespath value path from 'path' argument.
+    This is required as we use custom anchors ($$) to identify the reference key.
+    So the expression must be parsed and stripped of the refernece key anchor. More info on README.md
 
     Two combinations are possible based on where reference key is defined. See example below.
 
@@ -37,7 +44,8 @@ def jmespath_value_parser(path: str):
 
 def jmespath_refkey_parser(path: str):
     """
-    Get the jmespath reference key path from 'path'.
+    Get the jmespath reference key path from 'path' argument. Reference key is define within $$ in 'path'
+    and will be associated to the value/s to be evaluated. More on README.md
 
     Args:
         path: "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]"
@@ -59,7 +67,7 @@ def jmespath_refkey_parser(path: str):
 
 
 def associate_key_of_my_value(paths: str, wanted_value: List) -> List:
-    """Associate each key defined in path to every value found in output."""
+    """Associate each reference key (from: jmespath_refkey_parser) to every value found in output (from: jmespath_value_parser)."""
     # global.peers.*.[is_enabled,is_up] / result.[*].state
     find_the_key_of_my_values = paths.split(".")[-1]
 
@@ -85,7 +93,7 @@ def associate_key_of_my_value(paths: str, wanted_value: List) -> List:
 
 
 def keys_cleaner(wanted_reference_keys: Union[Mapping, List]) -> List:
-    """Get every required reference key from output."""
+    """Get every required reference key from output and build a dictionary from it."""
     if isinstance(wanted_reference_keys, list):
         final_result = wanted_reference_keys
     elif isinstance(wanted_reference_keys, dict):
