@@ -114,6 +114,7 @@ jobs:
         python-version: ["3.7"]
     env:
       PYTHON_VER: "${{ matrix.python-version }}"
+      INVOKE_LOCAL: "True"
     steps:
       - name: "Check out repository code"
         uses: "actions/checkout@v2"
@@ -151,6 +152,7 @@ jobs:
     runs-on: "ubuntu-20.04"
     env:
       PYTHON_VER: "${{ matrix.python-version }}"
+      INVOKE_LOCAL: "True"
     steps:
       - name: "Check out repository code"
         uses: "actions/checkout@v2"
