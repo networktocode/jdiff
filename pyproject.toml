@@ -38,7 +38,7 @@ bandit = "*"
 invoke = "*"
 toml = "*"
 flake8 = "*"
-
+mypy = "*"
 
 [tool.black]
 line-length = 120

@@ -147,6 +147,12 @@ def bandit(context, path=".", local=INVOKE_LOCAL):
     exec_cmd = f"bandit --recursive ./{path} --configfile .bandit.yml"
     run_cmd(context, exec_cmd, local)
 
+@task(help={"local": "Run locally or within the Docker container"})
+def mypy(context, path=".", local=INVOKE_LOCAL):
+    """Run mypy to validate type hinting."""
+    exec_cmd = f"mypy {path}"
+    run_cmd(context, exec_cmd, local)
+
 
 @task
 def cli(context):
@@ -165,5 +171,5 @@ def tests(context, path=".", local=INVOKE_LOCAL):
     pydocstyle(context, path, local)
     bandit(context, path, local)
     pytest(context, local)
-
+    mypy(context, local)
     print("All tests have passed!")
