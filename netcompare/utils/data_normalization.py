@@ -1,5 +1,5 @@
 """Data Normalization utilities."""
-from typing import List, Generator, Mapping
+from typing import List, Generator, Union, Dict
 
 
 def flatten_list(my_list: List) -> List:
@@ -37,7 +37,7 @@ def flatten_list(my_list: List) -> List:
     return list(iter_flatten_list(my_list))
 
 
-def exclude_filter(data: Mapping, exclude: List):
+def exclude_filter(data: Union[Dict, List], exclude: List):
     """
     Recusively look through all dict keys and pop out the one defined in "exclude".
 
