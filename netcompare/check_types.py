@@ -156,7 +156,7 @@ class ToleranceType(CheckType):
         tolerance = kwargs.get("tolerance")
         if not tolerance:
             raise ValueError("'tolerance' argument is mandatory for Tolerance Check Type.")
-        if not isinstance(tolerance, int):
+        if not isinstance(tolerance, (int, float)):
             raise ValueError(f"Tolerance argument's value must be an integer. You have: {type(tolerance)}.")
 
     def evaluate(self, value_to_compare: Any, reference_data: Any, tolerance: int) -> Tuple[Dict, bool]:
@@ -166,7 +166,7 @@ class ToleranceType(CheckType):
         self._remove_within_tolerance(diff, tolerance)
         return diff, not diff
 
-    def _remove_within_tolerance(self, diff: Dict, tolerance: int) -> None:
+    def _remove_within_tolerance(self, diff: Dict, tolerance: Union[int, float]) -> None:
         """Recursively look into diff and apply tolerance check, remove reported difference when within tolerance."""
 
         def _make_float(value: Any) -> float:
