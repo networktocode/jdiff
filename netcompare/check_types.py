@@ -130,6 +130,9 @@ class CheckType(ABC):
     def validate(**kwargs) -> None:
         """Method to validate arguments that raises proper exceptions."""
 
+    def result(self, evaluation_result) -> Tuple[Dict, bool]:
+        return evaluation_result, not evaluation_result
+
 
 class ExactMatchType(CheckType):
     """Exact Match class docstring."""
@@ -143,7 +146,7 @@ class ExactMatchType(CheckType):
         """Returns the difference between values and the boolean."""
         self.validate(reference_data=reference_data)
         evaluation_result = diff_generator(reference_data, value_to_compare)
-        return evaluation_result, not evaluation_result
+        return self.result(evaluation_result)
 
 
 class ToleranceType(CheckType):
@@ -162,9 +165,9 @@ class ToleranceType(CheckType):
     def evaluate(self, value_to_compare: Any, reference_data: Any, tolerance: int) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean. Overwrites method in base class."""
         self.validate(reference_data=reference_data, tolerance=tolerance)
-        diff = diff_generator(reference_data, value_to_compare)
-        self._remove_within_tolerance(diff, tolerance)
-        return diff, not diff
+        evaluation_result = diff_generator(reference_data, value_to_compare)
+        self._remove_within_tolerance(evaluation_result, tolerance)
+        return self.result(evaluation_result)
 
     def _remove_within_tolerance(self, diff: Dict, tolerance: Union[int, float]) -> None:
         """Recursively look into diff and apply tolerance check, remove reported difference when within tolerance."""
@@ -219,7 +222,7 @@ class ParameterMatchType(CheckType):
         self.validate(params=params, mode=mode)
         # TODO: we don't use the mode?
         evaluation_result = parameter_evaluator(value_to_compare, params, mode)
-        return evaluation_result, not evaluation_result
+        return self.result(evaluation_result) 
 
 
 class RegexType(CheckType):
@@ -244,8 +247,8 @@ class RegexType(CheckType):
     def evaluate(self, value_to_compare: Mapping, regex: str, mode: str) -> Tuple[Mapping, bool]:
         """Regex Match evaluator implementation."""
         self.validate(regex=regex, mode=mode)
-        diff = regex_evaluator(value_to_compare, regex, mode)
-        return diff, not diff
+        evaluation_result = regex_evaluator(value_to_compare, regex, mode)
+        return self.result(evaluation_result)
 
 
 class OperatorType(CheckType):
@@ -257,15 +260,12 @@ class OperatorType(CheckType):
         in_operators = ("is-in", "not-in", "in-range", "not-range")
         bool_operators = ("all-same",)
         number_operators = ("is-gt", "is-lt")
-        # "equals" is redundant with check type "exact_match" an "parameter_match"
-        # equal_operators = ("is-equal", "not-equal")
         string_operators = ("contains", "not-contains")
         valid_options = (
             in_operators,
             bool_operators,
             number_operators,
             string_operators,
-            # equal_operators,
         )
 
         # Validate "params" argument is not None.
@@ -332,4 +332,4 @@ class OperatorType(CheckType):
         # For name consistency.
         reference_data = params
         evaluation_result, evaluation_bool = operator_evaluator(reference_data["params"], value_to_compare)
-        return evaluation_result, not evaluation_bool
+        return self.result(evaluation_result)

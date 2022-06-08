@@ -6,7 +6,7 @@ from typing import Any, List, Tuple
 class Operator:
     """Operator class implementation."""
 
-    def __init__(self, reference_data: Any, value_to_compare: Any) -> Tuple(List, bool):
+    def __init__(self, reference_data: Any, value_to_compare: Any) -> None:
         """__init__ method for Operator class."""
         # [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}},
         # {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}},
