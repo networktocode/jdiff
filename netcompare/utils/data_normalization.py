@@ -4,7 +4,12 @@ from typing import List, Generator, Union, Dict
 
 def flatten_list(my_list: List) -> List:
     """
-    Flatten a multi level nested list and returns a list of lists.
+    Flatten a multi level nested list and returns a list of lists. 
+    This normalization step is requaride since jmspath can returned netsed lists containing the 
+    wanted value - this depends by the json traversed from jsmpath regex.
+    
+    Having a list of lists will help us to assert that we have the number of values we have, will
+    match the number of reference keys found in json object.
 
     Args:
         my_list: nested list to be flattened.

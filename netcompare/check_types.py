@@ -59,26 +59,27 @@ class CheckType(ABC):
         if exclude and isinstance(output, Dict):
             if not isinstance(exclude, list):
                 raise ValueError(f"Exclude list must be defined as a list. You have {type(exclude)}")
-
-            exclude_filter(output, exclude)  # exclude unwanted elements
+            # exclude unwanted elements
+            exclude_filter(output, exclude)  
 
         if not path:
             warnings.warn("JMSPath cannot be of type 'None'. Path argumente reverted to default value '*'")
             path = "*"
 
         if path == "*":
-            return output  # return if path is not specified
+            # return if path is not specified
+            return output 
 
         values = jmespath.search(jmespath_value_parser(path), output)
 
         if not any(isinstance(i, list) for i in values):  # check for multi-nested lists if not found return here
             return values
 
-        for element in values:  # process elements to check is lists should be flatten
-            # TODO: Not sure how this is working because from `jmespath.search` it's supposed to get a flat list
-            # of str or Decimals, not another list...
+        # process elements to check is lists should be flatten
+        for element in values:  
             for item in element:
-                if isinstance(item, dict):  # raise if there is a dict, path must be more specific to extract data
+                # raise if there is a dict, path must be more specific to extract data
+                if isinstance(item, dict): 
                     raise TypeError(
                         f'Must be list of lists i.e. [["Idle", 75759616], ["Idle", 75759620]].' f"You have {values}'."
                     )
