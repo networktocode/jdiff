@@ -56,9 +56,10 @@ class CheckType(ABC):
         Returns:
             Evaluated data, may be anything depending on JMESPath used.
         """
-        if not isinstance(output, Dict):
-            raise ValueError(f"Output must be of type dict(). You have {type(output)}")
-        if exclude:
+        # Exclude filter make sense only when jmspath traverse a verbose json object.
+        # In case of list of dicts - tesxtFSM case - exclude filter is not needed.
+        # See 'sw_upgrade' tests vs 'raw_novalue_exclude'
+        if exclude and isinstance(output, Dict):
             if not isinstance(exclude, list):
                 raise ValueError(f"Exclude list must be defined as a list. You have {type(exclude)}")
             # exclude unwanted elements
