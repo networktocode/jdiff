@@ -56,7 +56,9 @@ class CheckType(ABC):
         Returns:
             Evaluated data, may be anything depending on JMESPath used.
         """
-        if exclude and isinstance(output, Dict):
+        if not isinstance(output, Dict):
+            raise ValueError(f"Output must be of type dict(). You have {type(output)}")
+        if exclude:
             if not isinstance(exclude, list):
                 raise ValueError(f"Exclude list must be defined as a list. You have {type(exclude)}")
             # exclude unwanted elements
