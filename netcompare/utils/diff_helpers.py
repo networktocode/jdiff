@@ -21,6 +21,7 @@ def get_diff_iterables_items(diff_result: Mapping) -> Dict:
     Returns:
         Return a dict with new and missing values where the values are in a list.
     """
+
     get_dict_keys = re.compile(r"^root((\['\w.*'\])+)\[\d+\]$")
 
     defaultdict_list = partial(defaultdict, list)
@@ -69,7 +70,6 @@ def fix_deepdiff_key_names(obj: Mapping) -> Dict:
     return result
 
 
-# TODO: Add testing
 def group_value(tree_list: List, value: Dict) -> Dict:
     """Function to create a nested Dict by recursively use the tree_list as nested keys."""
     if tree_list:
@@ -77,7 +77,6 @@ def group_value(tree_list: List, value: Dict) -> Dict:
     return value
 
 
-# TODO: Add testing
 def dict_merger(original_dict: Dict, dict_to_merge: Dict):
     """Function to merge a dictionary (dict_to_merge) recursively into the original_dict."""
     for key in dict_to_merge.keys():
