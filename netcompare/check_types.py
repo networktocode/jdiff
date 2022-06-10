@@ -165,6 +165,9 @@ class ToleranceType(CheckType):
             raise ValueError("'tolerance' argument is mandatory for Tolerance Check Type.")
         if not isinstance(tolerance, (int, float)):
             raise ValueError(f"Tolerance argument's value must be an integer. You have: {type(tolerance)}.")
+        if tolerance < 0:
+            raise ValueError(f"Tolerance value must be greater than 0. You have: {tolerance}.")
+
 
     def evaluate(self, value_to_compare: Any, reference_data: Any, tolerance: int) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean. Overwrites method in base class."""
