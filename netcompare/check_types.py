@@ -56,14 +56,22 @@ class CheckType(ABC):
         Returns:
             Evaluated data, may be anything depending on JMESPath used.
         """
-        # Exclude filter make sense only when jmspath traverse a verbose json object.
-        # In case of list of dicts - tesxtFSM case - exclude filter is not needed.
-        # See 'sw_upgrade' tests vs 'raw_novalue_exclude'
-        if exclude and isinstance(output, Dict):
-            if not isinstance(exclude, list):
-                raise ValueError(f"Exclude list must be defined as a list. You have {type(exclude)}")
-            # exclude unwanted elements
-            exclude_filter(output, exclude)  
+
+        def assert_filter_definition():
+            """
+            Assert exclude filter definition in check.
+
+            Exclude filter make sense only when jmspath traverse a verbose json object.
+            In case of list of dicts - tesxtFSM case - exclude filter is not needed.
+            See 'sw_upgrade' tests vs 'raw_novalue_exclude'.
+            """
+            if exclude and isinstance(output, Dict):
+                if not isinstance(exclude, list):
+                    raise ValueError(f"Exclude list must be defined as a list. You have {type(exclude)}")
+                # exclude unwanted elements
+                exclude_filter(output, exclude)
+
+        assert_filter_definition()
 
         if not path:
             warnings.warn("JMSPath cannot be of type 'None'. Path argumente reverted to default value '*'")
@@ -71,18 +79,19 @@ class CheckType(ABC):
 
         if path == "*":
             # return if path is not specified
-            return output 
+            return output
 
         values = jmespath.search(jmespath_value_parser(path), output)
 
-        if not any(isinstance(i, list) for i in values):  # check for multi-nested lists if not found return here
+        # check for multi-nested lists if not found return here
+        if not any(isinstance(i, list) for i in values):
             return values
 
         # process elements to check is lists should be flatten
-        for element in values:  
+        for element in values:
             for item in element:
                 # raise if there is a dict, path must be more specific to extract data
-                if isinstance(item, dict): 
+                if isinstance(item, dict):
                     raise TypeError(
                         f'Must be list of lists i.e. [["Idle", 75759616], ["Idle", 75759620]].' f"You have {values}'."
                     )
@@ -134,7 +143,9 @@ class CheckType(ABC):
     def validate(**kwargs) -> None:
         """Method to validate arguments that raises proper exceptions."""
 
-    def result(self, evaluation_result) -> Tuple[Dict, bool]:
+    @staticmethod
+    def result(evaluation_result) -> Tuple[Dict, bool]:
+        """Result methond implementation. Will return diff data and bool for check failing result."""
         return evaluation_result, not evaluation_result
 
 
@@ -167,7 +178,6 @@ class ToleranceType(CheckType):
             raise ValueError(f"Tolerance argument's value must be an integer. You have: {type(tolerance)}.")
         if tolerance < 0:
             raise ValueError(f"Tolerance value must be greater than 0. You have: {tolerance}.")
-
 
     def evaluate(self, value_to_compare: Any, reference_data: Any, tolerance: int) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean. Overwrites method in base class."""
@@ -229,7 +239,7 @@ class ParameterMatchType(CheckType):
         self.validate(params=params, mode=mode)
         # TODO: we don't use the mode?
         evaluation_result = parameter_evaluator(value_to_compare, params, mode)
-        return self.result(evaluation_result) 
+        return self.result(evaluation_result)
 
 
 class RegexType(CheckType):
@@ -338,5 +348,5 @@ class OperatorType(CheckType):
         self.validate(**params)
         # For name consistency.
         reference_data = params
-        evaluation_result, evaluation_bool = operator_evaluator(reference_data["params"], value_to_compare)
+        evaluation_result = operator_evaluator(reference_data["params"], value_to_compare)
         return self.result(evaluation_result)

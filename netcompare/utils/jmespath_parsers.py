@@ -1,7 +1,8 @@
 """
-jmespath expression parsers and related utilities. 
+jmespath expression parsers and related utilities.
+
 This utility interfaces the custome netcompare jmespath expression with the jmespath library.
-From one expression defined in netcompare, we will derive two expressions: one expression that traverse the json output and get the  
+From one expression defined in netcompare, we will derive two expressions: one expression that traverse the json output and get the
 evaluated bit of it, the second will target the reference key relative to the value to evaluate. More on README.md
 """
 import re
@@ -11,6 +12,7 @@ from typing import Mapping, List, Union
 def jmespath_value_parser(path: str):
     """
     Extract the jmespath value path from 'path' argument.
+
     This is required as we use custom anchors ($$) to identify the reference key.
     So the expression must be parsed and stripped of the refernece key anchor. More info on README.md
 
@@ -44,8 +46,10 @@ def jmespath_value_parser(path: str):
 
 def jmespath_refkey_parser(path: str):
     """
-    Get the jmespath reference key path from 'path' argument. Reference key is define within $$ in 'path'
-    and will be associated to the value/s to be evaluated. More on README.md
+    Get the jmespath reference key path from 'path' argument.
+
+    Reference key is define within $$ in 'path' and will be associated to the value/s to be evaluated.
+    More on README.md.
 
     Args:
         path: "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]"

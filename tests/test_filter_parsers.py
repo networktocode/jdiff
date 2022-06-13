@@ -4,7 +4,7 @@ from netcompare.utils.data_normalization import exclude_filter
 from .utility import ASSERT_FAIL_MESSAGE
 
 
-test_exclude_filter = (
+exclude_filter_test_case_1 = (
     ["interfaceStatistics"],
     {
         "interfaces": {
@@ -30,7 +30,7 @@ test_exclude_filter = (
 )
 
 exclude_filter_tests = [
-    test_exclude_filter,
+    exclude_filter_test_case_1,
 ]
 
 

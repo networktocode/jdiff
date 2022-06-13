@@ -21,7 +21,6 @@ def get_diff_iterables_items(diff_result: Mapping) -> Dict:
     Returns:
         Return a dict with new and missing values where the values are in a list.
     """
-
     get_dict_keys = re.compile(r"^root((\['\w.*'\])+)\[\d+\]$")
 
     defaultdict_list = partial(defaultdict, list)
