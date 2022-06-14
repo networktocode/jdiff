@@ -61,8 +61,8 @@ class CheckType(ABC):
             """
             Assert exclude filter definition in check.
 
-            Exclude filter make sense only when jmspath traverse a verbose json object.
-            In case of list of dicts - tesxtFSM case - exclude filter is not needed.
+            Exclude filter makes sense only when jmespath traverses a verbose json object.
+            In case of list of dicts - textFSM case - exclude filter is not needed.
             See 'sw_upgrade' tests vs 'raw_novalue_exclude'.
             """
             if exclude and isinstance(output, Dict):
