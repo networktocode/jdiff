@@ -175,7 +175,7 @@ class ToleranceType(CheckType):
         if not tolerance:
             raise ValueError("'tolerance' argument is mandatory for Tolerance Check Type.")
         if not isinstance(tolerance, (int, float)):
-            raise ValueError(f"Tolerance argument's value must be an integer. You have: {type(tolerance)}.")
+            raise ValueError(f"Tolerance argument's value must be a number. You have: {type(tolerance)}.")
         if tolerance < 0:
             raise ValueError(f"Tolerance value must be greater than 0. You have: {tolerance}.")
 
