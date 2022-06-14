@@ -1,7 +1,7 @@
 """
 jmespath expression parsers and related utilities.
 
-This utility interfaces the custome netcompare jmespath expression with the jmespath library.
+This utility interfaces the custom netcompare jmespath expression with the jmespath library.
 From one expression defined in netcompare, we will derive two expressions: one expression that traverse the json output and get the
 evaluated bit of it, the second will target the reference key relative to the value to evaluate. More on README.md
 """
