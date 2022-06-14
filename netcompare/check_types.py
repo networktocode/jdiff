@@ -87,7 +87,7 @@ class CheckType(ABC):
         if not any(isinstance(i, list) for i in values):
             return values
 
-        # process elements to check is lists should be flatten
+        # process elements to check if lists should be flattened
         for element in values:
             for item in element:
                 # raise if there is a dict, path must be more specific to extract data
