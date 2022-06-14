@@ -14,7 +14,7 @@ def jmespath_value_parser(path: str):
     Extract the jmespath value path from 'path' argument.
 
     This is required as we use custom anchors ($$) to identify the reference key.
-    So the expression must be parsed and stripped of the refernece key anchor. More info on README.md
+    So the expression must be parsed and stripped of the reference key anchor. More info on README.md
 
     Two combinations are possible based on where reference key is defined. See example below.
 
