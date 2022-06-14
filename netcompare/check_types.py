@@ -74,7 +74,7 @@ class CheckType(ABC):
         assert_filter_definition()
 
         if not path:
-            warnings.warn("JMSPath cannot be of type 'None'. Path argumente reverted to default value '*'")
+            warnings.warn("JMSPath cannot be empty string or type 'None'. Path argument reverted to default value '*'")
             path = "*"
 
         if path == "*":
