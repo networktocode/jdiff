@@ -66,7 +66,7 @@ class Operator:
         return result
 
     def all_same(self) -> Tuple[bool, Any]:
-        """All same operator typr implementation."""
+        """All same operator type implementation."""
         list_of_values = []
         result = []
 
