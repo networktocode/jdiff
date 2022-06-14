@@ -145,7 +145,7 @@ class CheckType(ABC):
 
     @staticmethod
     def result(evaluation_result) -> Tuple[Dict, bool]:
-        """Result methond implementation. Will return diff data and bool for check failing result."""
+        """Result method implementation. Will return diff data and bool for check failing result."""
         return evaluation_result, not evaluation_result
 
 
