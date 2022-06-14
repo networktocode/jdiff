@@ -93,7 +93,7 @@ class CheckType(ABC):
                 # raise if there is a dict, path must be more specific to extract data
                 if isinstance(item, dict):
                     raise TypeError(
-                        f'Must be list of lists i.e. [["Idle", 75759616], ["Idle", 75759620]].' f"You have {values}'."
+                        f'Must be list of lists i.e. [["Idle", 75759616], ["Idle", 75759620]]. You have "{values}".'
                     )
                 if isinstance(item, list):
                     values = flatten_list(values)  # flatten list and rewrite values
