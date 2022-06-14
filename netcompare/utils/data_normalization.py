@@ -6,8 +6,8 @@ def flatten_list(my_list: List) -> List:
     """
     Flatten a multi level nested list and returns a list of lists.
 
-    This normalization step is requaride since jmspath can returned netsed lists containing the
-    wanted value - this depends by the json traversed from jsmpath regex.
+    This normalization step is required since jmespath can return nested lists containing the
+    wanted value. This depends how much nested is the wanted value in the json output.
 
     Having a list of lists will help us to assert that we have the number of values we have, will
     match the number of reference keys found in json object.
