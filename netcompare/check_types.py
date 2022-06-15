@@ -146,7 +146,7 @@ class ExactMatchType(CheckType):
         """Method to validate arguments."""
         # reference_data = getattr(kwargs, "reference_data")
 
-    def evaluate(self, value_to_compare: Any, reference_data: Any) -> Tuple[Dict, bool]:
+    def evaluate(self, value_to_compare: Any, reference_data: Any) -> Tuple[Dict, bool]:  # type: ignore[override]
         """Returns the difference between values and the boolean."""
         self._validate(reference_data=reference_data)
         evaluation_result = diff_generator(reference_data, value_to_compare)
@@ -168,7 +168,7 @@ class ToleranceType(CheckType):
         if tolerance < 0:
             raise ValueError(f"Tolerance value must be greater than 0. You have: {tolerance}.")
 
-    def evaluate(self, value_to_compare: Any, reference_data: Any, tolerance: int) -> Tuple[Dict, bool]:
+    def evaluate(self, value_to_compare: Any, reference_data: Any, tolerance: int) -> Tuple[Dict, bool]:  # type: ignore[override]
         """Returns the difference between values and the boolean. Overwrites method in base class."""
         self._validate(reference_data=reference_data, tolerance=tolerance)
         evaluation_result = diff_generator(reference_data, value_to_compare)
@@ -223,7 +223,7 @@ class ParameterMatchType(CheckType):
                 f"'mode' argument should be one of the following: {', '.join(mode_options)}. You have: {mode}"
             )
 
-    def evaluate(self, value_to_compare: Mapping, params: Dict, mode: str) -> Tuple[Dict, bool]:
+    def evaluate(self, value_to_compare: Mapping, params: Dict, mode: str) -> Tuple[Dict, bool]:  # type: ignore[override]
         """Parameter Match evaluator implementation."""
         self._validate(params=params, mode=mode)
         # TODO: we don't use the mode?
@@ -250,7 +250,7 @@ class RegexType(CheckType):
         if mode not in mode_options:
             raise ValueError(f"'mode' argument should be {mode_options}. You have: {mode}")
 
-    def evaluate(self, value_to_compare: Mapping, regex: str, mode: str) -> Tuple[Mapping, bool]:
+    def evaluate(self, value_to_compare: Mapping, regex: str, mode: str) -> Tuple[Dict, bool]:  # type: ignore[override]
         """Regex Match evaluator implementation."""
         self._validate(regex=regex, mode=mode)
         evaluation_result = regex_evaluator(value_to_compare, regex, mode)
@@ -332,7 +332,7 @@ class OperatorType(CheckType):
                 f"check option all-same must have value of type bool. You have: {params_value} of type {type(params_value)}"
             )
 
-    def evaluate(self, value_to_compare: Any, params: Any) -> Tuple[Dict, bool]:
+    def evaluate(self, value_to_compare: Any, params: Any) -> Tuple[Dict, bool]:  # type: ignore[override]
         """Operator evaluator implementation."""
         self._validate(**params)
         # For name consistency.

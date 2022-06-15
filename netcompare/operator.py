@@ -15,7 +15,7 @@ class Operator:
         self.reference_data = reference_data
         self.value_to_compare = value_to_compare
 
-    def _loop_through_wrapper(self, call_ops: str) -> Tuple[bool, List]:
+    def _loop_through_wrapper(self, call_ops: str) -> Tuple[List, bool]:
         """Private wrapper method for operator evaluation based on 'operator' lib.
 
         Based on value passed to the method, the appropriate operator logic is triggered.
@@ -58,7 +58,7 @@ class Operator:
             "not_contains": operator.contains,
         }
 
-        result = []
+        result = []  # type: List
         for item in self.value_to_compare:
             for value in item.values():
                 for evaluated_value in value.values():
@@ -73,10 +73,8 @@ class Operator:
         result = []
 
         for item in self.value_to_compare:
-            for value in item.values():
-                # Create a list for compare values.
-                list_of_values.append(value)
-
+            # Create a list for compare values.
+            list_of_values.extend(iter(item.values()))
         for element in list_of_values:
             if element != list_of_values[0]:
                 result.append(False)
@@ -91,34 +89,34 @@ class Operator:
             return (self.value_to_compare, True)
         return (self.value_to_compare, False)
 
-    def contains(self) -> Tuple[bool, List]:
+    def contains(self) -> Tuple[List, bool]:
         """Contains operator caller."""
         return self._loop_through_wrapper("contains")
 
-    def not_contains(self) -> Tuple[bool, List]:
+    def not_contains(self) -> Tuple[List, bool]:
         """Not contains operator caller."""
         return self._loop_through_wrapper("not_contains")
 
-    def is_gt(self) -> Tuple[bool, List]:
+    def is_gt(self) -> Tuple[List, bool]:
         """Is greather than operator caller."""
         return self._loop_through_wrapper(">")
 
-    def is_lt(self) -> Tuple[bool, List]:
+    def is_lt(self) -> Tuple[List, bool]:
         """Is lower than operator caller."""
         return self._loop_through_wrapper("<")
 
-    def is_in(self) -> Tuple[bool, List]:
+    def is_in(self) -> Tuple[List, bool]:
         """Is in operator caller."""
         return self._loop_through_wrapper("is_in")
 
-    def not_in(self) -> Tuple[bool, List]:
+    def not_in(self) -> Tuple[List, bool]:
         """Is not in operator caller."""
         return self._loop_through_wrapper("not_in")
 
-    def in_range(self) -> Tuple[bool, List]:
+    def in_range(self) -> Tuple[List, bool]:
         """Is in range operator caller."""
         return self._loop_through_wrapper("in_range")
 
-    def not_range(self) -> Tuple[bool, List]:
+    def not_range(self) -> Tuple[List, bool]:
         """Is not in range operator caller."""
         return self._loop_through_wrapper("not_range")

@@ -107,3 +107,19 @@ testpaths = [
     "tests"
 ]
 addopts = "-vv --doctest-modules"
+
+[tool.mypy]
+exclude = [
+    '^tasks\.py',
+]
+
+[[tool.mypy.overrides]]
+module = [
+    "deepdiff",
+    "jmespath",
+]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+ignore_errors = true
