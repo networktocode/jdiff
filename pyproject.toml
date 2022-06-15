@@ -71,10 +71,12 @@ no-docstring-rgx="^(_|test_|Meta$)"
 # Line length is enforced by Black, so pylint doesn't need to check it.
 # Pylint and Black disagree about how to format multi-line arrays; Black wins.
 # too-many-branches disabled to supported nested logic in Operator.
+# protected-access disabled as we want test the method
 disable = """,
     line-too-long,
     bad-continuation,
-    too-many-branches     
+    too-many-branches,
+    protected-access
     """
 
 [tool.pylint.miscellaneous]

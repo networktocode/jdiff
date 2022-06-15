@@ -127,6 +127,6 @@ def test_tolerance_key_name(check_type_str, evaluate_args, expected_results):
     check = CheckType.init(check_type_str)
 
     with pytest.raises(ValueError) as exc_info:
-        check.validate(**evaluate_args)
+        check._validate(**evaluate_args)
 
     assert exc_info.type is ValueError and exc_info.value.args[0] == expected_results

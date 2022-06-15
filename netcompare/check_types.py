@@ -129,7 +129,7 @@ class CheckType(ABC):
 
     @staticmethod
     @abstractmethod
-    def validate(**kwargs) -> None:
+    def _validate(**kwargs) -> None:
         """Method to validate arguments that raises proper exceptions."""
 
     @staticmethod
@@ -142,13 +142,13 @@ class ExactMatchType(CheckType):
     """Exact Match class docstring."""
 
     @staticmethod
-    def validate(**kwargs) -> None:
+    def _validate(**kwargs) -> None:
         """Method to validate arguments."""
         # reference_data = getattr(kwargs, "reference_data")
 
     def evaluate(self, value_to_compare: Any, reference_data: Any) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean."""
-        self.validate(reference_data=reference_data)
+        self._validate(reference_data=reference_data)
         evaluation_result = diff_generator(reference_data, value_to_compare)
         return self.result(evaluation_result)
 
@@ -157,7 +157,7 @@ class ToleranceType(CheckType):
     """Tolerance class docstring."""
 
     @staticmethod
-    def validate(**kwargs) -> None:
+    def _validate(**kwargs) -> None:
         """Method to validate arguments."""
         # reference_data = getattr(kwargs, "reference_data")
         tolerance = kwargs.get("tolerance")
@@ -170,7 +170,7 @@ class ToleranceType(CheckType):
 
     def evaluate(self, value_to_compare: Any, reference_data: Any, tolerance: int) -> Tuple[Dict, bool]:
         """Returns the difference between values and the boolean. Overwrites method in base class."""
-        self.validate(reference_data=reference_data, tolerance=tolerance)
+        self._validate(reference_data=reference_data, tolerance=tolerance)
         evaluation_result = diff_generator(reference_data, value_to_compare)
         self._remove_within_tolerance(evaluation_result, tolerance)
         return self.result(evaluation_result)
@@ -206,7 +206,7 @@ class ParameterMatchType(CheckType):
     """Parameter Match class implementation."""
 
     @staticmethod
-    def validate(**kwargs) -> None:
+    def _validate(**kwargs) -> None:
         """Method to validate arguments."""
         mode_options = ["match", "no-match"]
         params = kwargs.get("params")
@@ -225,7 +225,7 @@ class ParameterMatchType(CheckType):
 
     def evaluate(self, value_to_compare: Mapping, params: Dict, mode: str) -> Tuple[Dict, bool]:
         """Parameter Match evaluator implementation."""
-        self.validate(params=params, mode=mode)
+        self._validate(params=params, mode=mode)
         # TODO: we don't use the mode?
         evaluation_result = parameter_evaluator(value_to_compare, params, mode)
         return self.result(evaluation_result)
@@ -235,7 +235,7 @@ class RegexType(CheckType):
     """Regex Match class implementation."""
 
     @staticmethod
-    def validate(**kwargs) -> None:
+    def _validate(**kwargs) -> None:
         """Method to validate arguments."""
         mode_options = ["match", "no-match"]
         regex = kwargs.get("regex")
@@ -252,7 +252,7 @@ class RegexType(CheckType):
 
     def evaluate(self, value_to_compare: Mapping, regex: str, mode: str) -> Tuple[Mapping, bool]:
         """Regex Match evaluator implementation."""
-        self.validate(regex=regex, mode=mode)
+        self._validate(regex=regex, mode=mode)
         evaluation_result = regex_evaluator(value_to_compare, regex, mode)
         return self.result(evaluation_result)
 
@@ -261,7 +261,7 @@ class OperatorType(CheckType):
     """Operator class implementation."""
 
     @staticmethod
-    def validate(**kwargs) -> None:
+    def _validate(**kwargs) -> None:
         """Validate operator parameters."""
         in_operators = ("is-in", "not-in", "in-range", "not-range")
         bool_operators = ("all-same",)
@@ -334,7 +334,7 @@ class OperatorType(CheckType):
 
     def evaluate(self, value_to_compare: Any, params: Any) -> Tuple[Dict, bool]:
         """Operator evaluator implementation."""
-        self.validate(**params)
+        self._validate(**params)
         # For name consistency.
         reference_data = params
         evaluation_result = operator_evaluator(reference_data["params"], value_to_compare)
