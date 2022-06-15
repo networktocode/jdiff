@@ -2,12 +2,12 @@
 import re
 from collections import defaultdict
 from functools import partial
-from typing import Mapping, Dict, List
+from typing import Mapping, Dict, List, DefaultDict
 
 REGEX_PATTERN_RELEVANT_KEYS = r"'([A-Za-z0-9_\./\\-]*)'"
 
 
-def get_diff_iterables_items(diff_result: Mapping) -> Dict:
+def get_diff_iterables_items(diff_result: Mapping) -> DefaultDict:
     """Helper function for diff_generator to postprocess changes reported by DeepDiff for iterables.
 
     DeepDiff iterable_items are returned when the source data is a list
@@ -24,7 +24,7 @@ def get_diff_iterables_items(diff_result: Mapping) -> Dict:
     get_dict_keys = re.compile(r"^root((\['\w.*'\])+)\[\d+\]$")
 
     defaultdict_list = partial(defaultdict, list)
-    result = defaultdict(defaultdict_list)
+    result = defaultdict(defaultdict_list)  # type: DefaultDict
 
     items_removed = diff_result.get("iterable_item_removed")
     if items_removed:
@@ -59,7 +59,7 @@ def fix_deepdiff_key_names(obj: Mapping) -> Dict:
         Dict: aggregated output, for example: {'7.7.7.7': {'is_enabled': {'new_value': False, 'old_value': True},
                                                 'is_up': {'new_value': False, 'old_value': True}}}
     """
-    result = {}
+    result = {}  # type: Dict
     for key, value in obj.items():
         key_parts = re.findall(REGEX_PATTERN_RELEVANT_KEYS, key)
         if not key_parts:  # If key parts can't be find, keep original key so data is not lost.
