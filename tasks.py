@@ -172,5 +172,5 @@ def tests(context, path=".", local=INVOKE_LOCAL):
     pydocstyle(context, path, local)
     bandit(context, path, local)
     pytest(context, local)
-    mypy(context, local)
+    # mypy(context, local)
     print("All tests have passed!")

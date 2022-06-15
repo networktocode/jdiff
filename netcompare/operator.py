@@ -63,7 +63,9 @@ class Operator:
             for value in item.values():
                 for evaluated_value in value.values():
                     call_evaluation_logic()
-        return result
+        if result:
+            return (result, True)
+        return (result, False)
 
     def all_same(self) -> Tuple[bool, Any]:
         """All same operator type implementation."""

@@ -10,7 +10,7 @@ tolerance_wrong_argumet = (
 tolerance_wrong_value = (
     "tolerance",
     {"tolerance": "10"},
-    "Tolerance argument's value must be an integer. You have: <class 'str'>.",
+    "Tolerance argument's value must be a number. You have: <class 'str'>.",
 )
 parameter_no_params = (
     "parameter_match",

@@ -56,22 +56,11 @@ class CheckType(ABC):
         Returns:
             Evaluated data, may be anything depending on JMESPath used.
         """
-
-        def assert_filter_definition():
-            """
-            Assert exclude filter definition in check.
-
-            Exclude filter makes sense only when jmespath traverses a verbose json object.
-            In case of list of dicts - textFSM case - exclude filter is not needed.
-            See 'sw_upgrade' tests vs 'raw_novalue_exclude'.
-            """
-            if exclude and isinstance(output, Dict):
-                if not isinstance(exclude, list):
-                    raise ValueError(f"Exclude list must be defined as a list. You have {type(exclude)}")
-                # exclude unwanted elements
-                exclude_filter(output, exclude)
-
-        assert_filter_definition()
+        if exclude and isinstance(output, Dict):
+            if not isinstance(exclude, list):
+                raise ValueError(f"Exclude list must be defined as a list. You have {type(exclude)}")
+            # exclude unwanted elements
+            exclude_filter(output, exclude)
 
         if not path:
             warnings.warn("JMSPath cannot be empty string or type 'None'. Path argument reverted to default value '*'")
@@ -145,7 +134,7 @@ class CheckType(ABC):
 
     @staticmethod
     def result(evaluation_result) -> Tuple[Dict, bool]:
-        """Result method implementation. Will return diff data and bool for check failing result."""
+        """Result method implementation. Will return diff data and bool for checking failed result."""
         return evaluation_result, not evaluation_result
 
 
@@ -350,3 +339,11 @@ class OperatorType(CheckType):
         reference_data = params
         evaluation_result = operator_evaluator(reference_data["params"], value_to_compare)
         return self.result(evaluation_result)
+
+    def result(self, evaluation_result):
+        """
+        Operator result method overwrite.
+
+        This is required as Opertor return its own boolean within result.
+        """
+        return evaluation_result[0], not evaluation_result[1]
