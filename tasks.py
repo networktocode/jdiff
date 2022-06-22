@@ -171,6 +171,6 @@ def tests(context, path=".", local=INVOKE_LOCAL):
     yamllint(context, path, local)
     pydocstyle(context, path, local)
     bandit(context, path, local)
-    pytest(context, local)
     mypy(context, path, local)
+    pytest(context, local)
     print("All tests have passed!")

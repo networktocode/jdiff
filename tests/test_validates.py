@@ -122,18 +122,18 @@ all_tests = [
 
 
 @pytest.mark.parametrize("check_type_str, evaluate_args, expected_results", all_tests)
-def test_tolerance_key_name(check_type_str, evaluate_args, expected_results):
+def test_validate_arguments(check_type_str, evaluate_args, expected_results):
     """Test CheckType validate method for each check-type."""
     check = CheckType.init(check_type_str)
 
     with pytest.raises(ValueError) as exc_info:
-        if check_type_str == 'tolerance':
-            check._validate(tolerance=evaluate_args)
-        elif check_type_str == 'parameter':
-            check._validate(params=evaluate_args['params'], mode=evaluate_args['mode'])
-        elif check_type_str == 'regex':
-            check._validate(regex=evaluate_args['regex'], mode=evaluate_args['mode'])
-        elif check_type_str == 'operator':
-            check._validate(params=evaluate_args)
- 
+        if check_type_str == "tolerance":
+            check._validate(evaluate_args.get("tolerance"))
+        elif check_type_str == "parameter_match":
+            check._validate(params=evaluate_args.get("params"), mode=evaluate_args.get("mode"))
+        elif check_type_str == "regex":
+            check._validate(regex=evaluate_args.get("regex"), mode=evaluate_args.get("mode"))
+        elif check_type_str == "operator":
+            check._validate(evaluate_args)
+
     assert exc_info.type is ValueError and exc_info.value.args[0] == expected_results

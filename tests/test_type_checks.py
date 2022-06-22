@@ -26,7 +26,7 @@ def test_child_class_proper_implementation():
         """Test Class."""
 
         @staticmethod
-        def _validate(**kwargs):
+        def _validate(*args):
             return None
 
         def evaluate(self, *args, **kwargs):

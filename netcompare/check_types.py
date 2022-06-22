@@ -129,7 +129,7 @@ class CheckType(ABC):
 
     @staticmethod
     @abstractmethod
-    def _validate(**kwargs) -> None:
+    def _validate(*args) -> None:
         """Method to validate arguments that raises proper exceptions."""
 
     @staticmethod
@@ -141,13 +141,13 @@ class CheckType(ABC):
 class ExactMatchType(CheckType):
     """Exact Match class docstring."""
 
-    def _validate(referece_data):
+    @staticmethod
+    def _validate(reference_data):
         # No need for _validate method as exact-match does not take any specific arguments.
         pass
 
     def evaluate(self, value_to_compare: Any, reference_data: Any) -> Tuple[Dict, bool]:  # type: ignore[override]
         """Returns the difference between values and the boolean."""
-        
         evaluation_result = diff_generator(reference_data, value_to_compare)
         return self.result(evaluation_result)
 
@@ -156,7 +156,7 @@ class ToleranceType(CheckType):
     """Tolerance class docstring."""
 
     @staticmethod
-    def _validate(tolerance) -> None:
+    def _validate(tolerance) -> None:  # type: ignore[override]
         """Method to validate arguments."""
         # reference_data = getattr(kwargs, "reference_data")
         if not tolerance:
@@ -204,7 +204,7 @@ class ParameterMatchType(CheckType):
     """Parameter Match class implementation."""
 
     @staticmethod
-    def _validate(params, mode) -> None:
+    def _validate(params, mode) -> None:  # type: ignore[override]
         """Method to validate arguments."""
         mode_options = ["match", "no-match"]
         if not params:
@@ -231,7 +231,7 @@ class RegexType(CheckType):
     """Regex Match class implementation."""
 
     @staticmethod
-    def _validate(regex, mode) -> None:
+    def _validate(regex, mode) -> None:  # type: ignore[override]
         """Method to validate arguments."""
         mode_options = ["match", "no-match"]
         if not regex:
@@ -255,7 +255,7 @@ class OperatorType(CheckType):
     """Operator class implementation."""
 
     @staticmethod
-    def _validate(params) -> None:
+    def _validate(params) -> None:  # type: ignore[override]
         """Validate operator parameters."""
         in_operators = ("is-in", "not-in", "in-range", "not-range")
         bool_operators = ("all-same",)
@@ -273,8 +273,8 @@ class OperatorType(CheckType):
         if not params or list(params.keys())[0] != "params":
             raise ValueError(f"'params' argument must be provided. You have: {list(params.keys())[0]}.")
 
-        params_key = params.get("mode")
-        params_value = params.get("operator_data")
+        params_key = params.get("params", {}).get("mode")
+        params_value = params.get("params", {}).get("operator_data")
 
         if not params_key or not params_value:
             raise ValueError(
