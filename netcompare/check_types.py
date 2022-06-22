@@ -125,7 +125,7 @@ class CheckType(ABC):
             tuple: Dictionary representing check result, bool indicating if differences are found.
         """
         # This method should call before any other logic the validation of the arguments
-        # self.validate(**kwargs)
+        # self._validate(**kwargs)
 
     @staticmethod
     @abstractmethod
