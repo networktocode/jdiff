@@ -127,6 +127,13 @@ def test_tolerance_key_name(check_type_str, evaluate_args, expected_results):
     check = CheckType.init(check_type_str)
 
     with pytest.raises(ValueError) as exc_info:
-        check._validate(**evaluate_args)
-
+        if check_type_str == 'tolerance':
+            check._validate(tolerance=evaluate_args)
+        elif check_type_str == 'parameter':
+            check._validate(params=evaluate_args['params'], mode=evaluate_args['mode'])
+        elif check_type_str == 'regex':
+            check._validate(regex=evaluate_args['regex'], mode=evaluate_args['mode'])
+        elif check_type_str == 'operator':
+            check._validate(params=evaluate_args)
+ 
     assert exc_info.type is ValueError and exc_info.value.args[0] == expected_results
