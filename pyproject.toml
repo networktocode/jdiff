@@ -10,7 +10,6 @@ readme = "README.md"
 keywords = ["json", "diff", "network"]
 classifiers = [
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -23,7 +22,7 @@ include = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6.2"
+python = "^3.7.0"
 deepdiff = "^5.5.0"
 jmespath = "^0.10.0"
 
@@ -39,7 +38,7 @@ bandit = "*"
 invoke = "*"
 toml = "*"
 flake8 = "*"
-
+mypy = "*"
 
 [tool.black]
 line-length = 120
@@ -71,12 +70,13 @@ no-docstring-rgx="^(_|test_|Meta$)"
 [tool.pylint.messages_control]
 # Line length is enforced by Black, so pylint doesn't need to check it.
 # Pylint and Black disagree about how to format multi-line arrays; Black wins.
+# too-many-branches disabled to supported nested logic in Operator.
+# protected-access disabled as we want test the method
 disable = """,
     line-too-long,
     bad-continuation,
-    E5110,
-    R0912,
-    R0801
+    too-many-branches,
+    protected-access
     """
 
 [tool.pylint.miscellaneous]
@@ -107,3 +107,19 @@ testpaths = [
     "tests"
 ]
 addopts = "-vv --doctest-modules"
+
+[tool.mypy]
+exclude = [
+    '^tasks\.py',
+]
+
+[[tool.mypy.overrides]]
+module = [
+    "deepdiff",
+    "jmespath",
+]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+ignore_errors = true

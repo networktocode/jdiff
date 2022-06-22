@@ -15,7 +15,7 @@ def test_child_class_raises_exception():
 
     assert (
         "Can't instantiate abstract class CheckTypeChild"
-        " with abstract methods evaluate, validate" in error.value.__str__()
+        " with abstract methods _validate, evaluate" in error.value.__str__()
     )
 
 
@@ -26,14 +26,14 @@ def test_child_class_proper_implementation():
         """Test Class."""
 
         @staticmethod
-        def validate(**kwargs):
+        def _validate(*args):
             return None
 
         def evaluate(self, *args, **kwargs):
             return {}, True
 
     check = CheckTypeChild()
-    assert isinstance(check, CheckTypeChild) and check.validate() is None and check.evaluate() == ({}, True)
+    assert isinstance(check, CheckTypeChild) and check._validate() is None and check.evaluate() == ({}, True)
 
 
 @pytest.mark.parametrize(

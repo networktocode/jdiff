@@ -30,7 +30,7 @@ PYPROJECT_CONFIG = toml.load("pyproject.toml")
 TOOL_CONFIG = PYPROJECT_CONFIG["tool"]["poetry"]
 
 # Can be set to a separate Python version to be used for launching or building image
-PYTHON_VER = os.getenv("PYTHON_VER", "3.6")
+PYTHON_VER = os.getenv("PYTHON_VER", "3.7")
 # Name of the docker image/image
 IMAGE_NAME = os.getenv("IMAGE_NAME", TOOL_CONFIG["name"])
 # Tag for the image
@@ -148,6 +148,13 @@ def bandit(context, path=".", local=INVOKE_LOCAL):
     run_cmd(context, exec_cmd, local)
 
 
+@task(help={"local": "Run locally or within the Docker container"})
+def mypy(context, path=".", local=INVOKE_LOCAL):
+    """Run mypy to validate type hinting."""
+    exec_cmd = f"mypy {path}"
+    run_cmd(context, exec_cmd, local)
+
+
 @task
 def cli(context):
     """Enter the image to perform troubleshooting or dev work."""
@@ -164,6 +171,6 @@ def tests(context, path=".", local=INVOKE_LOCAL):
     yamllint(context, path, local)
     pydocstyle(context, path, local)
     bandit(context, path, local)
+    mypy(context, path, local)
     pytest(context, local)
-
     print("All tests have passed!")

@@ -5,7 +5,8 @@ from netcompare.check_types import CheckType
 from .utility import load_mocks, ASSERT_FAIL_MESSAGE
 
 
-exact_match_of_global_peers_via_napalm_getter = (
+# Diff test case 1.
+global_peers = (
     "napalm_getter_peer_state_change",
     "global.$peers$.*.[is_enabled,is_up]",
     [],
@@ -21,21 +22,24 @@ exact_match_of_global_peers_via_napalm_getter = (
     },
 )
 
-exact_match_of_bgp_peer_caps_via_api = (
+# Diff test case 2.
+bgp_peer_caps = (
     "api",
     "result[0].vrfs.default.peerList[*].[$peerAddress$,state,bgpPeerCaps]",
     [],
     {"7.7.7.7": {"state": {"new_value": "Connected", "old_value": "Idle"}}},
 )
 
-exact_match_of_bgp_neigh_via_textfsm = (
+# Diff test case 3.
+bgp_neigh = (
     "textfsm",
     "result[*].[$bgp_neigh$,state]",
     [],
     {"10.17.254.2": {"state": {"new_value": "Up", "old_value": "Idle"}}},
 )
 
-raw_diff_of_interface_ma1_via_api_value_exclude = (
+# Diff test case 4. Exclude filter applied.
+raw_diff_of_interface_ma1_value_exclude = (
     "raw_value_exclude",
     "result[*]",
     ["interfaceStatistics", "interfaceCounters"],
@@ -49,7 +53,8 @@ raw_diff_of_interface_ma1_via_api_value_exclude = (
     },
 )
 
-raw_diff_of_interface_ma1_via_api_novalue_exclude = (
+# Diff test case 5. Raw diff (no jmspath expression defined) and exclude filter applied.
+raw_diff_of_interface_ma1_novalue_exclude = (
     "raw_novalue_exclude",
     None,
     ["interfaceStatistics", "interfaceCounters"],
@@ -68,7 +73,8 @@ raw_diff_of_interface_ma1_via_api_novalue_exclude = (
     },
 )
 
-raw_diff_of_interface_ma1_via_api_novalue_noexclude = (
+# Diff test case 5. Raw diff (no jmspath expression defined) and no exclude filter applied.
+raw_diff_of_interface_ma1_novalue_noexclude = (
     "raw_novalue_noexclude",
     None,
     [],
@@ -101,28 +107,32 @@ raw_diff_of_interface_ma1_via_api_novalue_noexclude = (
     },
 )
 
-exact_match_missing_item = (
+# Diff test case 6. Missing item in post.
+missing_item = (
     "napalm_getter_missing_peer",
     None,
     [],
     {"global": {"peers": {"7.7.7.7": "missing"}}},
 )
 
-exact_match_additional_item = (
+# Diff test case 7. Extra item in post.
+additional_item = (
     "napalm_getter_additional_peer",
     None,
     [],
     {"global": {"peers": {"8.8.8.8": "new"}}},
 )
 
-exact_match_changed_item = (
+# Diff test case 8. Item changed in post.
+changed_item = (
     "napalm_getter_changed_peer",
     None,
     [],
     {"global": {"peers": {"7.7.7.7": "missing", "8.8.8.8": "new"}}},
 )
 
-exact_match_multi_nested_list = (
+# Diff test case 9. Value in multiple nested lists.
+multi_nested_list = (
     "exact_match_nested",
     "global.$peers$.*.*.ipv4.[accepted_prefixes,received_prefixes]",
     [],
@@ -132,14 +142,16 @@ exact_match_multi_nested_list = (
     },
 )
 
-exact_match_textfsm_ospf_int_br_raw = (
+# Diff test case 10. JMSPath empty string.
+ospf_int_br_raw = (
     "textfsm_ospf_int_br",
     "",
     [],
     {"state": {"new_value": "DOWN", "old_value": "P2P", "new_value_dup!": "DR", "old_value_dup!": "BDR"}},
 )
 
-exact_match_textfsm_ospf_int_br_normalized = (
+# Diff test case 11. Extensive nu,ber of values.
+ospf_int_br_normalized = (
     "textfsm_ospf_int_br",
     "[*].[$interface$,area,ip_address_mask,cost,state,neighbors_fc]",
     [],
@@ -149,14 +161,16 @@ exact_match_textfsm_ospf_int_br_normalized = (
     },
 )
 
-exact_match_test_issue_44_case_1 = (
+# Test GitLab Issues
+# Test issue #44: https://github.com/networktocode-llc/netcompare/issues/44
+test_issue_44_case_1 = (
     "raw_novalue_exclude",
     "result[*].interfaces.*.[$name$,interfaceStatus]",
     [],
     {"Management1": {"interfaceStatus": {"new_value": "connected", "old_value": "down"}}},
 )
 
-exact_match_test_issue_44_case_2 = (
+test_issue_44_case_2 = (
     "raw_novalue_exclude",
     "result[0].interfaces.*.[$name$,interfaceStatus]",
     [],
@@ -165,20 +179,20 @@ exact_match_test_issue_44_case_2 = (
 
 
 eval_tests = [
-    exact_match_of_global_peers_via_napalm_getter,
-    exact_match_of_bgp_peer_caps_via_api,
-    exact_match_of_bgp_neigh_via_textfsm,
-    raw_diff_of_interface_ma1_via_api_value_exclude,
-    raw_diff_of_interface_ma1_via_api_novalue_exclude,
-    raw_diff_of_interface_ma1_via_api_novalue_noexclude,
-    exact_match_missing_item,
-    exact_match_additional_item,
-    exact_match_changed_item,
-    exact_match_multi_nested_list,
-    exact_match_textfsm_ospf_int_br_raw,
-    exact_match_textfsm_ospf_int_br_normalized,
-    exact_match_test_issue_44_case_1,
-    exact_match_test_issue_44_case_2,
+    global_peers,
+    bgp_peer_caps,
+    bgp_neigh,
+    raw_diff_of_interface_ma1_value_exclude,
+    raw_diff_of_interface_ma1_novalue_exclude,
+    raw_diff_of_interface_ma1_novalue_noexclude,
+    missing_item,
+    additional_item,
+    changed_item,
+    multi_nested_list,
+    ospf_int_br_raw,
+    ospf_int_br_normalized,
+    test_issue_44_case_1,
+    test_issue_44_case_2,
 ]
 
 
