@@ -1,5 +1,6 @@
 """CheckType Implementation."""
 import re
+import json
 import warnings
 from typing import Mapping, Tuple, List, Dict, Any, Union
 from abc import ABC, abstractmethod
@@ -56,6 +57,11 @@ class CheckType(ABC):
         Returns:
             Evaluated data, may be anything depending on JMESPath used.
         """
+        try: 
+            json.loads(output)
+        except TypeError:
+            raise TypeError(f"'output' must be a valid JSON object. You have {type(output)}")
+        
         if exclude and isinstance(output, Dict):
             if not isinstance(exclude, list):
                 raise ValueError(f"Exclude list must be defined as a list. You have {type(exclude)}")
