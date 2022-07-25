@@ -3,16 +3,12 @@ import pytest
 from netcompare import CheckType
 
 
-issue_67 = {"global": {"peers": {"10.1.0.0": "peer1", "10.2.0.0": "peer2"}}}
-
-issue_67_test = [
-    issue_67,
-]
+my_data = {"global": {"peers": {"10.1.0.0": "peer1", "10.2.0.0": "peer2"}}}
 
 
-@pytest.mark.parametrize("data", issue_67_test)
-def test_issue_67(data):
-    """Resolve issue 67: https://github.com/networktocode-llc/netcompare/issues/67"""
+@pytest.mark.parametrize("data", [my_data])
+def test_jmspath_return_none(data):
+    """Habdle exception when JMSPath retunr None."""
     my_jmspath = "global[*]"
     my_check = CheckType.init(check_type="exact_match")
     with pytest.raises(TypeError) as error:
