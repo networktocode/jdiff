@@ -57,11 +57,6 @@ class CheckType(ABC):
         Returns:
             Evaluated data, may be anything depending on JMESPath used.
         """
-        try: 
-            json.loads(output)
-        except TypeError:
-            raise TypeError(f"'output' must be a valid JSON object. You have {type(output)}")
-        
         if exclude and isinstance(output, Dict):
             if not isinstance(exclude, list):
                 raise ValueError(f"Exclude list must be defined as a list. You have {type(exclude)}")
@@ -77,6 +72,9 @@ class CheckType(ABC):
             return output
 
         values = jmespath.search(jmespath_value_parser(path), output)
+
+        if values is None:
+            raise TypeError("JMSPath returned 'None'. Please, verify your JMSPath regex.")
 
         # check for multi-nested lists if not found return here
         if not any(isinstance(i, list) for i in values):
