@@ -1,6 +1,5 @@
 """CheckType Implementation."""
 import re
-import json
 import warnings
 from typing import Mapping, Tuple, List, Dict, Any, Union
 from abc import ABC, abstractmethod

@@ -1,12 +1,9 @@
 """Test GitHub issues."""
 import pytest
 from netcompare import CheckType
-from .utility import ASSERT_FAIL_MESSAGE
 
 
-issue_67 = (
-    {"global": {"peers": {"10.1.0.0": "peer1", "10.2.0.0": "peer2"}}}
-    )
+issue_67 = {"global": {"peers": {"10.1.0.0": "peer1", "10.2.0.0": "peer2"}}}
 
 issue_67_test = [
     issue_67,
@@ -21,6 +18,4 @@ def test_issue_67(data):
     with pytest.raises(TypeError) as error:
         my_check.get_value(output=data, path=my_jmspath)()  # pylint: disable=E0110
 
-    assert (
-        "JMSPath returned 'None'. Please, verify your JMSPath regex." in error.value.__str__()
-    )
+    assert "JMSPath returned 'None'. Please, verify your JMSPath regex." in error.value.__str__()
