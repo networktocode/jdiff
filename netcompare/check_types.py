@@ -72,6 +72,9 @@ class CheckType(ABC):
 
         values = jmespath.search(jmespath_value_parser(path), output)
 
+        if values is None:
+            raise TypeError("JMSPath returned 'None'. Please, verify your JMSPath regex.")
+
         # check for multi-nested lists if not found return here
         if not any(isinstance(i, list) for i in values):
             return values
