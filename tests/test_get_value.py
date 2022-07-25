@@ -3,7 +3,7 @@ import pytest
 from netcompare import CheckType
 
 
-my_data = {"global": {"peers": {"10.1.0.0": "peer1", "10.2.0.0": "peer2"}}}
+my_data = [{"global": {"peers": {"10.1.0.0": "peer1", "10.2.0.0": "peer2"}}}]
 
 
 @pytest.mark.parametrize("data", my_data)
