@@ -8,7 +8,7 @@ my_data = {"global": {"peers": {"10.1.0.0": "peer1", "10.2.0.0": "peer2"}}}
 
 @pytest.mark.parametrize("data", [my_data])
 def test_jmspath_return_none(data):
-    """Habdle exception when JMSPath retunr None."""
+    """Handle exception when JMSPath retunr None."""
     my_jmspath = "global[*]"
     my_check = CheckType.init(check_type="exact_match")
     with pytest.raises(TypeError) as error:
