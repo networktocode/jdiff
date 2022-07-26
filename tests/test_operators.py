@@ -170,7 +170,7 @@ operator_all_tests = [
 @pytest.mark.parametrize("filename, check_type_str, evaluate_args, path, expected_result", operator_all_tests)
 def test_operator(filename, check_type_str, evaluate_args, path, expected_result):
     """Validate all operator check types."""
-    check = CheckType.init(check_type_str)
+    check = CheckType.create(check_type_str)
     # There is not concept of "pre" and "post" in operator.
     data = load_json_file("api", filename)
     value = check.get_value(data, path)

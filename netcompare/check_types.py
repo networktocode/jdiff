@@ -19,7 +19,7 @@ class CheckType(ABC):
     """Check Type Base Abstract Class."""
 
     @staticmethod
-    def init(check_type: str):
+    def create(check_type: str):
         """Factory pattern to get the appropriate CheckType implementation.
 
         Args:
@@ -71,6 +71,9 @@ class CheckType(ABC):
             return output
 
         values = jmespath.search(jmespath_value_parser(path), output)
+
+        if values is None:
+            raise TypeError("JMSPath returned 'None'. Please, verify your JMSPath regex.")
 
         # check for multi-nested lists if not found return here
         if not any(isinstance(i, list) for i in values):

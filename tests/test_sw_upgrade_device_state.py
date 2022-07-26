@@ -21,7 +21,7 @@ def test_show_version(platform, command, jpath, expected_parameter, check_should
     filename = f"{platform}_{command}.json"
     command = load_json_file("sw_upgrade", filename)
 
-    check = CheckType.init("parameter_match")
+    check = CheckType.create("parameter_match")
     value = check.get_value(command, jpath)
     eval_results, passed = check.evaluate(value, expected_parameter, "match")  # pylint: disable=E1121
     assert passed is check_should_pass, f"FAILED, eval_result: {eval_results}"
@@ -50,7 +50,7 @@ def test_show_interfaces_state(platform, command, jpath, check_should_pass):
             command_post[0]["link_status"] = "down"
             command_post[1]["protocol_status"] = "down"
 
-    check = CheckType.init("exact_match")
+    check = CheckType.create("exact_match")
     pre_value = CheckType.get_value(command_pre, jpath)
     post_value = CheckType.get_value(command_post, jpath)
     eval_results, passed = check.evaluate(post_value, pre_value)
@@ -69,7 +69,7 @@ def test_show_ip_route_exact_match(platform, command):
     """Test identical route table pass the test with exact_match."""
     command_pre = command_post = load_json_file("sw_upgrade", f"{platform}_{command}.json")
 
-    check = CheckType.init("exact_match")
+    check = CheckType.create("exact_match")
     eval_results, passed = check.evaluate(command_post, command_pre)
     assert passed is True, f"FAILED, eval_result: {eval_results}"
 
@@ -85,7 +85,7 @@ def test_show_ip_route_exact_match(platform, command):
 def test_show_ip_route_missing_and_additional_routes(platform, command):
     """Test missing or additional routes fail the test with exact_match."""
     command_pre = command_post = load_json_file("sw_upgrade", f"{platform}_{command}.json")
-    check = CheckType.init("exact_match")
+    check = CheckType.create("exact_match")
     print(len(command_pre))
     eval_results_missing, passed_missing = check.evaluate(command_post[:30], command_pre)
     eval_results_additional, passed_additional = check.evaluate(command_post, command_pre[:30])
@@ -114,7 +114,7 @@ def test_bgp_neighbor_state(platform, command, jpath, check_should_pass):
         state_key = "state" if "arista" in platform else "bgp_state"
         command_post[0][state_key] = "Idle"
 
-    check = CheckType.init("exact_match")
+    check = CheckType.create("exact_match")
     pre_value = CheckType.get_value(command_pre, jpath)
     post_value = CheckType.get_value(command_post, jpath)
     eval_results, passed = check.evaluate(post_value, pre_value)
@@ -139,7 +139,7 @@ def test_bgp_prefix_tolerance(platform, command, prfx_post_value, tolerance, che
 
     command_post[1]["state_pfxrcd"] = command_post[1]["state_pfxrcd"] = prfx_post_value
 
-    check = CheckType.init("tolerance")
+    check = CheckType.create("tolerance")
     jpath = "[*].[$bgp_neigh$,state_pfxrcd]"
     pre_value = CheckType.get_value(command_pre, jpath)
     post_value = CheckType.get_value(command_post, jpath)
@@ -168,7 +168,7 @@ def test_ospf_neighbor_state(platform, command, jpath, check_should_pass):
         command_post[0]["state"] = "2WAY"
         command_post = command_post[:1]
 
-    check = CheckType.init("exact_match")
+    check = CheckType.create("exact_match")
     pre_value = CheckType.get_value(command_pre, jpath)
     post_value = CheckType.get_value(command_post, jpath)
     eval_results, passed = check.evaluate(post_value, pre_value)
@@ -199,6 +199,6 @@ def test_lldp_neighbor_state(platform, command, check_should_pass):
     if check_should_pass is False:
         command_post = command_post[:2]
 
-    check = CheckType.init("exact_match")
+    check = CheckType.create("exact_match")
     eval_results, passed = check.evaluate(command_post, command_pre)
     assert passed is check_should_pass, f"FAILED, eval_result: {eval_results}"
