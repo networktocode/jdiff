@@ -1,7 +1,7 @@
 """Diff generator tests."""
 import pytest
-from netcompare.evaluators import diff_generator
-from netcompare.check_types import CheckType
+from jdiff.evaluators import diff_generator
+from jdiff.check_types import CheckType
 from .utility import load_mocks, ASSERT_FAIL_MESSAGE
 
 
@@ -162,7 +162,7 @@ ospf_int_br_normalized = (
 )
 
 # Test GitLab Issues
-# Test issue #44: https://github.com/networktocode-llc/netcompare/issues/44
+# Test issue #44: https://github.com/networktocode-llc/jdiff/issues/44
 test_issue_44_case_1 = (
     "raw_novalue_exclude",
     "result[*].interfaces.*.[$name$,interfaceStatus]",

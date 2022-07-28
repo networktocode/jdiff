@@ -19,7 +19,7 @@ class CheckType(ABC):
     """Check Type Base Abstract Class."""
 
     @staticmethod
-    def init(check_type: str):
+    def create(check_type: str):
         """Factory pattern to get the appropriate CheckType implementation.
 
         Args:

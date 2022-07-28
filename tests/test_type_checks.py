@@ -1,6 +1,6 @@
 """Check Type unit tests."""
 import pytest
-from netcompare.check_types import CheckType, ExactMatchType, OperatorType, ToleranceType, ParameterMatchType, RegexType
+from jdiff.check_types import CheckType, ExactMatchType, OperatorType, ToleranceType, ParameterMatchType, RegexType
 from .utility import load_json_file, load_mocks, ASSERT_FAIL_MESSAGE
 
 
@@ -48,7 +48,7 @@ def test_child_class_proper_implementation():
 )
 def test_check_init(check_type_str, expected_class):
     """Validate that the returned class is the expected one."""
-    assert isinstance(CheckType.init(check_type_str), expected_class)
+    assert isinstance(CheckType.create(check_type_str), expected_class)
 
 
 exception_tests_init = [
@@ -60,7 +60,7 @@ exception_tests_init = [
 def tests_exceptions_init(check_type_str, exception_type, expected_in_output):
     """Tests exceptions when check object is initialized."""
     with pytest.raises(exception_type) as error:
-        CheckType.init(check_type_str)
+        CheckType.create(check_type_str)
     assert expected_in_output in error.value.__str__()
 
 
@@ -123,7 +123,7 @@ check_type_tests = [
 @pytest.mark.parametrize("check_type_str, evaluate_args, folder_name, path, expected_results", check_type_tests)
 def test_check_type_results(check_type_str, evaluate_args, folder_name, path, expected_results):
     """Validate that CheckType.evaluate returns the expected_results."""
-    check = CheckType.init(check_type_str)
+    check = CheckType.create(check_type_str)
     pre_data, post_data = load_mocks(folder_name)
     pre_value = check.get_value(pre_data, path)
     post_value = check.get_value(post_data, path)
@@ -238,7 +238,7 @@ check_tests = [
 @pytest.mark.parametrize("folder_name, check_type_str, evaluate_args, path, expected_result", check_tests)
 def test_checks(folder_name, check_type_str, evaluate_args, path, expected_result):
     """Validate multiple checks on the same data to catch corner cases."""
-    check = CheckType.init(check_type_str)
+    check = CheckType.create(check_type_str)
     pre_data, post_data = load_mocks(folder_name)
     pre_value = check.get_value(pre_data, path)
     post_value = check.get_value(post_data, path)
@@ -283,7 +283,7 @@ parameter_no_match_api = (
 )
 def test_param_match(filename, check_type_str, evaluate_args, path, expected_result):
     """Validate parameter_match check type."""
-    check = CheckType.init(check_type_str)
+    check = CheckType.create(check_type_str)
     # There is not concept of "pre" and "post" in parameter_match.
     data = load_json_file("parameter_match", filename)
     value = check.get_value(data, path)
@@ -330,7 +330,7 @@ regex_match = [
 @pytest.mark.parametrize("filename, check_type_str, evaluate_args, path, expected_result", regex_match)
 def test_regex_match(filename, check_type_str, evaluate_args, path, expected_result):
     """Validate regex check type."""
-    check = CheckType.init(check_type_str)
+    check = CheckType.create(check_type_str)
     # There is not concept of "pre" and "post" in parameter_match.
     data = load_json_file("api", filename)
     value = check.get_value(data, path)

@@ -1,6 +1,6 @@
 "Filter parser unit tests."
 import pytest
-from netcompare.utils.data_normalization import exclude_filter
+from jdiff.utils.data_normalization import exclude_filter
 from .utility import ASSERT_FAIL_MESSAGE
 
 

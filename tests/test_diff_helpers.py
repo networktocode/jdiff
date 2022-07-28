@@ -1,5 +1,5 @@
 """DIff helpers unit tests."""
-from netcompare.utils.diff_helpers import dict_merger, group_value, fix_deepdiff_key_names, get_diff_iterables_items
+from jdiff.utils.diff_helpers import dict_merger, group_value, fix_deepdiff_key_names, get_diff_iterables_items
 
 
 def test_dict_merger():

@@ -5,7 +5,7 @@ about: Propose a new feature or enhancement
 ---
 
 ### Environment
-* netcompare version:  <!-- Example: 1.0.0 -->
+* jdiff version:  <!-- Example: 1.0.0 -->
 
 <!--
     Describe in detail the new functionality you are proposing.

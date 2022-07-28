@@ -1,18 +1,18 @@
-# netcompare
+# jdiff
 
-The `netcompare` is a light-weight library to examine structured data. `netcompare` provides an interface to intelligently compare json data objects as well as test for the presence (or absence) of keys, and to examine and compare their values.
+The `jdiff` is a light-weight library to examine structured data. `jdiff` provides an interface to intelligently compare json data objects as well as test for the presence (or absence) of keys, and to examine and compare their values.
 
 The library heavily relies on [jmespath](https://jmespath.org/) for traversing the json object and finding the value(s) to be evaluated. More on that [here](#customized-jmespath).
 
 ## Usage
 
-A `netcompare` Check accepts two objects as input: the reference object, and the comparison object. The reference object is used as the intended or accepted state and it's keys and values are compared against the comparison object.
+A `jdiff` Check accepts two objects as input: the reference object, and the comparison object. The reference object is used as the intended or accepted state and it's keys and values are compared against the comparison object.
 
-`netcompare` does not collect the data for you, it simply works on data passed into it. This allows for maximum flexibility in collecting the data. 
+`jdiff` does not collect the data for you, it simply works on data passed into it. This allows for maximum flexibility in collecting the data. 
 
 For instance, the reference state can be collected from the network directly using any method that returns structured data: ansible, napalm, nornir to name a few. You could also choose to generate the reference state from an SoT, such as [Nautobot](https://github.com/nautobot/nautobot/), and have a true intended state. 
 
-`netcompare` is perfectly suited to work with data gathered from network devices via show commands, Ansible playbooks, as well as in applications such as [Nautobot](https://github.com/nautobot/nautobot/), or [Netbox](https://github.com/netbox-community/netbox). `netcompare` is focused on being the 'plumbing' behind a full network automation validation solution. 
+`jdiff` is perfectly suited to work with data gathered from network devices via show commands, Ansible playbooks, as well as in applications such as [Nautobot](https://github.com/nautobot/nautobot/), or [Netbox](https://github.com/netbox-community/netbox). `jdiff` is focused on being the 'plumbing' behind a full network automation validation solution. 
 
 ### Testing data structures
 
@@ -29,9 +29,9 @@ Briefly, these tests, or `CheckTypes`, are provided to test the objects, to aide
 
 ## Workflow
 
-| ![netcompare workflow](./docs/images/workflow.png) |
+| ![jdiff workflow](./docs/images/workflow.png) |
 |:---:|
-| **`netcompare` workflow** |
+| **`jdiff` workflow** |
 
 
 1. The reference state object is assembled. The structured data may be collected from: 
@@ -41,13 +41,13 @@ Briefly, these tests, or `CheckTypes`, are provided to test the objects, to aide
 
 2. The Network Engineer makes changes to the network, whether it is an upgrade, peering change, or migration.
 3. The comparison state is collected, typically directly from the network, but any method is acceptable.
-4. The reference state is then compared to the current state using the netcompare library.
+4. The reference state is then compared to the current state using the jdiff library.
 
 ## Library Architecture
 
-| ![netcompare HLD](./docs/images/hld.png) |
+| ![jdiff HLD](./docs/images/hld.png) |
 |:---:|
-| **`netcompare` architecture** |
+| **`jdiff` architecture** |
 
 An instance of `CheckType` object must be created first before passing one of the below check types as an argument:
 
@@ -63,7 +63,7 @@ my_check = "exact_match"
 check = CheckType.init(my_check)
 ```
 
-Next, define a json object as reference data, as well as a JMESPATH expression to extract the value wanted and pass them to `get_value` method. Be aware! `netcompare` works with a customized version of JMESPATH. More on that [below](#customized-jmespath).
+Next, define a json object as reference data, as well as a JMESPATH expression to extract the value wanted and pass them to `get_value` method. Be aware! `jdiff` works with a customized version of JMESPATH. More on that [below](#customized-jmespath).
 
 ```python
 bgp_pre_change = "./pre/bgp.json"
@@ -88,7 +88,7 @@ results = check.evaluate(post_value, pre_value, **evaluate_args)
 
 ## Customized JMESPATH
 
-Since `netcompare` works with json objects as data inputs, JMESPATH was the obvious choice for traversing the data and extracting the value(s) to compare.
+Since `jdiff` works with json objects as data inputs, JMESPATH was the obvious choice for traversing the data and extracting the value(s) to compare.
 
 However, JMESPATH comes with a limitation where is not possible to define a `key` to which the `value` belongs to.
 
@@ -142,7 +142,7 @@ A JMESPATH expression to extract `state` is shown below.
 ```
 
 How can we understand that `Idle` is relative to peer 7.7.7.7 and `Connected` to peer `10.1.0.0` ? 
-We could index the output but that would require some post-processing of the data. For that reason, `netcompare` use a customized version of JMESPATH where it is possible to define a reference key for the value(s) wanted. The reference key must be within `$` sign anchors and defined in a list, together with the value(s):
+We could index the output but that would require some post-processing of the data. For that reason, `jdiff` use a customized version of JMESPATH where it is possible to define a reference key for the value(s) wanted. The reference key must be within `$` sign anchors and defined in a list, together with the value(s):
 
 ```python
 "result[0].vrfs.default.peerList[*].[$peerAddress$,state]
@@ -166,7 +166,7 @@ Examples:
 
 
 ```python
->>> from netcompare import CheckType
+>>> from jdiff import CheckType
 >>> pre_data = {
       "jsonrpc": "2.0",
       "id": "EapiExplorer-1",
@@ -224,7 +224,7 @@ Examples:
 >>> # Create an instance of CheckType object with 'exact_match' as check-type argument.
 >>> my_check = CheckType.init(check_type="exact_match")
 >>> my_check
->>> <netcompare.check_types.ExactMatchType object at 0x10ac00f10>
+>>> <jdiff.check_types.ExactMatchType object at 0x10ac00f10>
 >>> # Extract the wanted value from pre_dat to later compare with post_data. As we want compare all the body (excluding "interfaceStatistics"), we do not need to define any reference key
 >>> pre_value = my_check.get_value(output=pre_data, path=my_jmspath, exclude=exclude_fields)
 >>> pre_value
@@ -256,7 +256,7 @@ Let's see a better way to run `exact_match` for this specific case. Since we are
 ```
 Targeting only the `interfaceStatus` key, we would need to define a reference key (in this case `$name$`), we would not define any exclusion list. 
 
-The anchor logic for the reference key applies to all check-types available in `netcompare`
+The anchor logic for the reference key applies to all check-types available in `jdiff`
 
 
 ### Tolerance
@@ -329,7 +329,7 @@ Lets have a look to a couple of examples:
 >>> pre_value = my_check.get_value(pre_data, my_jmspath)
 >>> post_value = my_check.get_value(post_data, my_jmspath)
 >>> actual_results = my_check.evaluate(post_value, pre_value, **my_tolerance_arguments)
->>> # Netcompare returns the value that are not within the 10%
+>>> # jdiff returns the value that are not within the 10%
 >>> actual_results
 ({'10.1.0.0': {'accepted_prefixes': {'new_value': 500, 'old_value': 900}, 'received_prefixes': {'new_value': 599, 'old_value': 999}, 'sent_prefixes': {'new_value': 511, 'old_value': 1011}}}, False)
 >>> # Let's difine a higher tolerance 
@@ -443,7 +443,7 @@ Let's run an example where we want to check the `burnedInAddress` key has a stri
 >>> # What if we want "no-match"?
 >>> regex_args = {"regex": "(?:[0-9a-fA-F]:?){12}", "mode": "no-match"}
 >>> result = check.evaluate(value, **regex_args)
->>> # Netcompare return the failing data as the regex match the value
+>>> # jdiff return the failing data as the regex match the value
 >>> result
 ({'Management1': {'burnedInAddress': '08:00:27:e6:b2:f8'}}, False)
 ```

@@ -1,6 +1,6 @@
 """Unit tests for validator CheckType method."""
 import pytest
-from netcompare.check_types import CheckType
+from jdiff.check_types import CheckType
 
 tolerance_wrong_argumet = (
     "tolerance",
@@ -124,7 +124,7 @@ all_tests = [
 @pytest.mark.parametrize("check_type_str, evaluate_args, expected_results", all_tests)
 def test_validate_arguments(check_type_str, evaluate_args, expected_results):
     """Test CheckType validate method for each check-type."""
-    check = CheckType.init(check_type_str)
+    check = CheckType.create(check_type_str)
 
     with pytest.raises(ValueError) as exc_info:
         if check_type_str == "tolerance":

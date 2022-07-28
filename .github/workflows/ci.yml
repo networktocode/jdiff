@@ -5,7 +5,7 @@ on: # yamllint disable-line rule:truthy rule:comments
   - "pull_request"
 
 env:
-  IMAGE_NAME: "netcompare"
+  IMAGE_NAME: "jdiff"
 
 jobs:
   black:
