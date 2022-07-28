@@ -1,11 +1,11 @@
 ---
 name: 🐛 Bug Report
-about: Report a reproducible bug in the current release of netcompare
+about: Report a reproducible bug in the current release of jdiff
 ---
 
 ### Environment
 * Python version:  <!-- Example: 3.7.7 -->
-* netcompare version:  <!-- Example: 1.0.0 -->
+* jdiff version:  <!-- Example: 1.0.0 -->
 
 <!-- What did you expect to happen? -->
 ### Expected Behavior

@@ -1,5 +1,6 @@
 """CheckType Implementation."""
 import re
+import warnings
 from typing import Mapping, Tuple, List, Dict, Any, Union
 from abc import ABC, abstractmethod
 import jmespath
@@ -18,7 +19,7 @@ class CheckType(ABC):
     """Check Type Base Abstract Class."""
 
     @staticmethod
-    def init(check_type: str):
+    def create(check_type: str):
         """Factory pattern to get the appropriate CheckType implementation.
 
         Args:
@@ -38,7 +39,7 @@ class CheckType(ABC):
         raise NotImplementedError
 
     @staticmethod
-    def get_value(output: Union[Mapping, List], path: str, exclude: List = None) -> Any:
+    def get_value(output: Union[Mapping, List], path: str = "*", exclude: List = None) -> Any:
         """Return data from output depending on the check path. See unit test for complete example.
 
         Get the wanted values to be evaluated if JMESPath expression is defined,
@@ -58,24 +59,33 @@ class CheckType(ABC):
         if exclude and isinstance(output, Dict):
             if not isinstance(exclude, list):
                 raise ValueError(f"Exclude list must be defined as a list. You have {type(exclude)}")
-
-            exclude_filter(output, exclude)  # exclude unwanted elements
+            # exclude unwanted elements
+            exclude_filter(output, exclude)
 
         if not path:
-            return output  # return if path is not specified
+            warnings.warn("JMSPath cannot be empty string or type 'None'. Path argument reverted to default value '*'")
+            path = "*"
+
+        if path == "*":
+            # return if path is not specified
+            return output
 
         values = jmespath.search(jmespath_value_parser(path), output)
 
-        if not any(isinstance(i, list) for i in values):  # check for multi-nested lists if not found return here
+        if values is None:
+            raise TypeError("JMSPath returned 'None'. Please, verify your JMSPath regex.")
+
+        # check for multi-nested lists if not found return here
+        if not any(isinstance(i, list) for i in values):
             return values
 
-        for element in values:  # process elements to check is lists should be flatten
-            # TODO: Not sure how this is working because from `jmespath.search` it's supposed to get a flat list
-            # of str or Decimals, not another list...
+        # process elements to check if lists should be flattened
+        for element in values:
             for item in element:
-                if isinstance(item, dict):  # raise if there is a dict, path must be more specific to extract data
+                # raise if there is a dict, path must be more specific to extract data
+                if isinstance(item, dict):
                     raise TypeError(
-                        f'Must be list of lists i.e. [["Idle", 75759616], ["Idle", 75759620]].' f"You have {values}'."
+                        f'Must be list of lists i.e. [["Idle", 75759616], ["Idle", 75759620]]. You have "{values}".'
                     )
                 if isinstance(item, list):
                     values = flatten_list(values)  # flatten list and rewrite values
@@ -118,50 +128,55 @@ class CheckType(ABC):
             tuple: Dictionary representing check result, bool indicating if differences are found.
         """
         # This method should call before any other logic the validation of the arguments
-        # self.validate(**kwargs)
+        # self._validate(**kwargs)
 
     @staticmethod
     @abstractmethod
-    def validate(**kwargs) -> None:
+    def _validate(*args) -> None:
         """Method to validate arguments that raises proper exceptions."""
+
+    @staticmethod
+    def result(evaluation_result) -> Tuple[Dict, bool]:
+        """Result method implementation. Will return diff data and bool for checking failed result."""
+        return evaluation_result, not evaluation_result
 
 
 class ExactMatchType(CheckType):
     """Exact Match class docstring."""
 
     @staticmethod
-    def validate(**kwargs) -> None:
-        """Method to validate arguments."""
-        # reference_data = getattr(kwargs, "reference_data")
+    def _validate(reference_data):
+        # No need for _validate method as exact-match does not take any specific arguments.
+        pass
 
-    def evaluate(self, value_to_compare: Any, reference_data: Any) -> Tuple[Dict, bool]:
+    def evaluate(self, value_to_compare: Any, reference_data: Any) -> Tuple[Dict, bool]:  # type: ignore[override]
         """Returns the difference between values and the boolean."""
-        self.validate(reference_data=reference_data)
         evaluation_result = diff_generator(reference_data, value_to_compare)
-        return evaluation_result, not evaluation_result
+        return self.result(evaluation_result)
 
 
 class ToleranceType(CheckType):
     """Tolerance class docstring."""
 
     @staticmethod
-    def validate(**kwargs) -> None:
+    def _validate(tolerance) -> None:  # type: ignore[override]
         """Method to validate arguments."""
         # reference_data = getattr(kwargs, "reference_data")
-        tolerance = kwargs.get("tolerance")
         if not tolerance:
             raise ValueError("'tolerance' argument is mandatory for Tolerance Check Type.")
-        if not isinstance(tolerance, int):
-            raise ValueError(f"Tolerance argument's value must be an integer. You have: {type(tolerance)}.")
+        if not isinstance(tolerance, (int, float)):
+            raise ValueError(f"Tolerance argument's value must be a number. You have: {type(tolerance)}.")
+        if tolerance < 0:
+            raise ValueError(f"Tolerance value must be greater than 0. You have: {tolerance}.")
 
-    def evaluate(self, value_to_compare: Any, reference_data: Any, tolerance: int) -> Tuple[Dict, bool]:
+    def evaluate(self, value_to_compare: Any, reference_data: Any, tolerance: int) -> Tuple[Dict, bool]:  # type: ignore[override]
         """Returns the difference between values and the boolean. Overwrites method in base class."""
-        self.validate(reference_data=reference_data, tolerance=tolerance)
-        diff = diff_generator(reference_data, value_to_compare)
-        self._remove_within_tolerance(diff, tolerance)
-        return diff, not diff
+        self._validate(tolerance=tolerance)
+        evaluation_result = diff_generator(reference_data, value_to_compare)
+        self._remove_within_tolerance(evaluation_result, tolerance)
+        return self.result(evaluation_result)
 
-    def _remove_within_tolerance(self, diff: Dict, tolerance: int) -> None:
+    def _remove_within_tolerance(self, diff: Dict, tolerance: Union[int, float]) -> None:
         """Recursively look into diff and apply tolerance check, remove reported difference when within tolerance."""
 
         def _make_float(value: Any) -> float:
@@ -192,16 +207,14 @@ class ParameterMatchType(CheckType):
     """Parameter Match class implementation."""
 
     @staticmethod
-    def validate(**kwargs) -> None:
+    def _validate(params, mode) -> None:  # type: ignore[override]
         """Method to validate arguments."""
         mode_options = ["match", "no-match"]
-        params = kwargs.get("params")
         if not params:
             raise ValueError("'params' argument is mandatory for ParameterMatch Check Type.")
         if not isinstance(params, dict):
             raise ValueError(f"'params' argument must be a dict. You have: {type(params)}.")
 
-        mode = kwargs.get("mode")
         if not mode:
             raise ValueError("'mode' argument is mandatory for ParameterMatch Check Type.")
         if mode not in mode_options:
@@ -209,70 +222,66 @@ class ParameterMatchType(CheckType):
                 f"'mode' argument should be one of the following: {', '.join(mode_options)}. You have: {mode}"
             )
 
-    def evaluate(self, value_to_compare: Mapping, params: Dict, mode: str) -> Tuple[Dict, bool]:
+    def evaluate(self, value_to_compare: Mapping, params: Dict, mode: str) -> Tuple[Dict, bool]:  # type: ignore[override]
         """Parameter Match evaluator implementation."""
-        self.validate(params=params, mode=mode)
+        self._validate(params=params, mode=mode)
         # TODO: we don't use the mode?
         evaluation_result = parameter_evaluator(value_to_compare, params, mode)
-        return evaluation_result, not evaluation_result
+        return self.result(evaluation_result)
 
 
 class RegexType(CheckType):
     """Regex Match class implementation."""
 
     @staticmethod
-    def validate(**kwargs) -> None:
+    def _validate(regex, mode) -> None:  # type: ignore[override]
         """Method to validate arguments."""
         mode_options = ["match", "no-match"]
-        regex = kwargs.get("regex")
         if not regex:
             raise ValueError("'regex' argument is mandatory for Regex Check Type.")
         if not isinstance(regex, str):
             raise ValueError(f"'regex' argument must be a string. You have: {type(regex)}.")
 
-        mode = kwargs.get("mode")
         if not mode:
             raise ValueError("'mode' argument is mandatory for Regex Check Type.")
         if mode not in mode_options:
             raise ValueError(f"'mode' argument should be {mode_options}. You have: {mode}")
 
-    def evaluate(self, value_to_compare: Mapping, regex: str, mode: str) -> Tuple[Mapping, bool]:
+    def evaluate(self, value_to_compare: Mapping, regex: str, mode: str) -> Tuple[Dict, bool]:  # type: ignore[override]
         """Regex Match evaluator implementation."""
-        self.validate(regex=regex, mode=mode)
-        diff = regex_evaluator(value_to_compare, regex, mode)
-        return diff, not diff
+        self._validate(regex=regex, mode=mode)
+        evaluation_result = regex_evaluator(value_to_compare, regex, mode)
+        return self.result(evaluation_result)
 
 
 class OperatorType(CheckType):
     """Operator class implementation."""
 
     @staticmethod
-    def validate(**kwargs) -> None:
+    def _validate(params) -> None:  # type: ignore[override]
         """Validate operator parameters."""
         in_operators = ("is-in", "not-in", "in-range", "not-range")
         bool_operators = ("all-same",)
         number_operators = ("is-gt", "is-lt")
-        # "equals" is redundant with check type "exact_match" an "parameter_match"
-        # equal_operators = ("is-equal", "not-equal")
         string_operators = ("contains", "not-contains")
         valid_options = (
             in_operators,
             bool_operators,
             number_operators,
             string_operators,
-            # equal_operators,
         )
 
         # Validate "params" argument is not None.
-        if not kwargs or list(kwargs.keys())[0] != "params":
-            raise ValueError(f"'params' argument must be provided. You have: {list(kwargs.keys())[0]}.")
+        # {'params': {'mode': 'all-same', 'operator_data': True}}
+        if not params or list(params.keys())[0] != "params":
+            raise ValueError(f"'params' argument must be provided. You have: {list(params.keys())[0]}.")
 
-        params_key = kwargs["params"].get("mode")
-        params_value = kwargs["params"].get("operator_data")
+        params_key = params.get("params", {}).get("mode")
+        params_value = params.get("params", {}).get("operator_data")
 
         if not params_key or not params_value:
             raise ValueError(
-                f"'mode' and 'operator_data' arguments must be provided. You have: {list(kwargs['params'].keys())}."
+                f"'mode' and 'operator_data' arguments must be provided. You have: {list(params['params'].keys())}."
             )
 
         # Validate "params" value is legal.
@@ -321,10 +330,18 @@ class OperatorType(CheckType):
                 f"check option all-same must have value of type bool. You have: {params_value} of type {type(params_value)}"
             )
 
-    def evaluate(self, value_to_compare: Any, params: Any) -> Tuple[Mapping, bool]:
+    def evaluate(self, value_to_compare: Any, params: Any) -> Tuple[Dict, bool]:  # type: ignore[override]
         """Operator evaluator implementation."""
-        self.validate(**params)
-        # For naming consistency
+        self._validate(params)
+        # For name consistency.
         reference_data = params
         evaluation_result = operator_evaluator(reference_data["params"], value_to_compare)
-        return evaluation_result, not evaluation_result
+        return self.result(evaluation_result)
+
+    def result(self, evaluation_result):
+        """
+        Operator result method overwrite.
+
+        This is required as Opertor return its own boolean within result.
+        """
+        return evaluation_result[0], not evaluation_result[1]

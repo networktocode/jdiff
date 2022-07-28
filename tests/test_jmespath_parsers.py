@@ -1,6 +1,6 @@
 """jmespath parser unit tests."""
 import pytest
-from netcompare.utils.jmespath_parsers import (
+from jdiff.utils.jmespath_parsers import (
     jmespath_value_parser,
     jmespath_refkey_parser,
     keys_values_zipper,

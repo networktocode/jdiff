@@ -1,6 +1,6 @@
 """Unit tests for validator CheckType method."""
 import pytest
-from netcompare.check_types import CheckType
+from jdiff.check_types import CheckType
 
 tolerance_wrong_argumet = (
     "tolerance",
@@ -10,7 +10,7 @@ tolerance_wrong_argumet = (
 tolerance_wrong_value = (
     "tolerance",
     {"tolerance": "10"},
-    "Tolerance argument's value must be an integer. You have: <class 'str'>.",
+    "Tolerance argument's value must be a number. You have: <class 'str'>.",
 )
 parameter_no_params = (
     "parameter_match",
@@ -122,11 +122,18 @@ all_tests = [
 
 
 @pytest.mark.parametrize("check_type_str, evaluate_args, expected_results", all_tests)
-def test_tolerance_key_name(check_type_str, evaluate_args, expected_results):
+def test_validate_arguments(check_type_str, evaluate_args, expected_results):
     """Test CheckType validate method for each check-type."""
-    check = CheckType.init(check_type_str)
+    check = CheckType.create(check_type_str)
 
     with pytest.raises(ValueError) as exc_info:
-        check.validate(**evaluate_args)
+        if check_type_str == "tolerance":
+            check._validate(evaluate_args.get("tolerance"))
+        elif check_type_str == "parameter_match":
+            check._validate(params=evaluate_args.get("params"), mode=evaluate_args.get("mode"))
+        elif check_type_str == "regex":
+            check._validate(regex=evaluate_args.get("regex"), mode=evaluate_args.get("mode"))
+        elif check_type_str == "operator":
+            check._validate(evaluate_args)
 
     assert exc_info.type is ValueError and exc_info.value.args[0] == expected_results

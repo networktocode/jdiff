@@ -1,10 +1,10 @@
 "Filter parser unit tests."
 import pytest
-from netcompare.utils.data_normalization import exclude_filter
+from jdiff.utils.data_normalization import exclude_filter
 from .utility import ASSERT_FAIL_MESSAGE
 
 
-exclude_filter_case_1 = (
+exclude_filter_test_case_1 = (
     ["interfaceStatistics"],
     {
         "interfaces": {
@@ -30,11 +30,12 @@ exclude_filter_case_1 = (
 )
 
 exclude_filter_tests = [
-    exclude_filter_case_1,
+    exclude_filter_test_case_1,
 ]
 
 
 @pytest.mark.parametrize("exclude, data, expected_output", exclude_filter_tests)
 def test_exclude_filter(exclude, data, expected_output):
+    """Test exclude filter functionality."""
     exclude_filter(data, exclude)
     assert expected_output == data, ASSERT_FAIL_MESSAGE.format(output=data, expected_output=expected_output)
