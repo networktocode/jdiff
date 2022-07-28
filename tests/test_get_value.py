@@ -1,6 +1,6 @@
 """Test GitHub issues."""
 import pytest
-from netcompare import CheckType
+from jdiff import CheckType
 
 
 my_data = [{"global": {"peers": {"10.1.0.0": "peer1", "10.2.0.0": "peer2"}}}]

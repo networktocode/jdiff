@@ -1,6 +1,6 @@
 """Unit tests for validator CheckType method."""
 import pytest
-from netcompare.check_types import CheckType
+from jdiff.check_types import CheckType
 
 tolerance_wrong_argumet = (
     "tolerance",

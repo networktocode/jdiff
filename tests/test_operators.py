@@ -1,6 +1,6 @@
 """Unit tests for operator check-type."""
 import pytest
-from netcompare.check_types import CheckType
+from jdiff.check_types import CheckType
 from .utility import load_json_file, ASSERT_FAIL_MESSAGE
 
 operator_all_same = (

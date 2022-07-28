@@ -1,7 +1,7 @@
 """Tests for typical software upgrade device state check."""
 from copy import deepcopy
 import pytest
-from netcompare.check_types import CheckType
+from jdiff.check_types import CheckType
 from .utility import load_json_file
 
 
