@@ -1,40 +1,67 @@
 # jdiff
 
-The `jdiff` is a light-weight library to examine structured data. `jdiff` provides an interface to intelligently compare json data objects as well as test for the presence (or absence) of keys, and to examine and compare their values.
-
-| Przemek: Is "netcompare" what we want the library to be named? It seems to me that Netcompare or NetCompare would look better in a sentence.
+`jdiff` is a lightweight Python library allowing you to examine structured data. `jdiff` provides an interface to intelligently compare JSON data objects and test for the presence (or absence) of keys. You can also examine and compare corresponding key values.
 
 The library heavily relies on [JMESPath](https://jmespath.org/) for traversing the JSON object and finding the values to be evaluated. More on that [here](#customized-jmespath).
 
-| Przemek: Would be helpful to add a section on the use cases for the library. If our target audience is Network Automation Engineers we should have a few bullet points with example scenarios. If it's more generic then we should have scenarios drawn from different domains.
+## Use cases
 
-## Getting started
+`jdiff` has been developed around diffing and testing structured data returned from APIs and other python modules and libraries (such as TextFSM). The primary use case is structured data returned from networking devices, but we found the use case can apply to any structured data and is especially useful when working or dealing with structured data from APIs. 
 
-| Przemek: Reading through docs I can see there are a lot of moving parts. We should create getting started section where we go through a simple example from start to finish.
+### Use Case 1 
+### Use Case 2
+### Use Case 3
 
 ## Usage
 
-A `jdiff` Check accepts two objects as input: the reference object, and the comparison object. The reference object is used as the intended or accepted state and it's keys and values are compared against the comparison object.
+A `jdiff` Check accepts two Python dictionaries as input: the reference object and the comparison object. The reference object is used as the intended or accepted state and it's keys and values are compared against the comparison object. The comparison is done through a 'CheckType' object, which are further explained below. Additionally, `jdiff` is focused on the comparison of the two objects and the testing of the values, not retrieving the data.
 
-`jdiff` does not collect the data for you, it simply works on data passed into it. This allows for maximum flexibility in collecting the data. 
+### Getting started
 
+TODO: Write getting started guide in docs and link here.
+
+First you import the CheckType class.
+
+```python
+from jdiff import CheckType
+```
+
+Get (or fabricate) some data (this data may also be loaded from a file or from a string, more examples later in the doc).
+
+```python
+a = {"foo": "bar"}
+b = {"foo": "barbar"}
+```
+
+Use the CheckType class, use the create method to create an instance of the type of check you will perform.
+
+```python
+match = CheckType.create("exact_match")
+```
+
+Evaluate the check type and the diff.
+```python
+match.evaluate(a, b)
+> ({'foo': {'new_value': 'barbar', 'old_value': 'bar'}}, False)
+```
+This results in a tuple:
+- The first value is the diff between the two dictionaries
+- The second value is a boolean with the result of the test
+
+This diff can also show new or deleted keys if they exist. 
+The second value returned will be the boolean result of the test. In this case, the two dictionaries were not an exact match.
+
+| Stephen - we may want to remove these next two paragraphs
 For instance, the reference state can be collected from the network directly using any method that returns structured data: Ansible, NAPALM, Nornir to name a few. You could also choose to generate the reference state from an SoT, such as [Nautobot](https://github.com/nautobot/nautobot/), and have a true intended state.
 
 `jdiff` is perfectly suited to work with data gathered from network devices via show commands, Ansible playbooks, as well as in applications such as [Nautobot](https://github.com/nautobot/nautobot/), or [Netbox](https://github.com/netbox-community/netbox). `jdiff` is focused on being the 'plumbing' behind a full network automation validation solution. 
+### Checking data structures
 
-| Przemek: Sounds like Netcompare is a generic solution, but we envision it to be mostly used in network automation.
+As shown in the example, the Check evaluation both performs a diff and tests the objects. All of the CheckTypes both perform the diff and their specified check.
 
-### Testing data structures
+More on the 'check' part: the check provides a way to 'test' some keys or values in our collected data. The check portion is focused on providing a boolean result from the check. There are a few different ways to check our data. 
 
-| Przemek: Up until this point we talk about "comparing" and it's not clear what it means to "test" a data structure. Is there a distinction?
-
-| Przemek: Add a sentence about what tests are. Are they a feature of Netcompare? I feel that we're providing reference for tests without introducing them properly.
-
-Briefly, these tests, or `CheckTypes`, are provided to test the objects, to aide in determining the status of the data. 
-
-| Przemek: What does it mean to determine status of the data? Where do `CheckTypes` come from? Also we are now talking about "checks". Would it make sense to standardize on one term?
-
-| Przemek: What are the things below? Types of checks, arguments to a function?
+These are the different checks that can be performed on the data. These both describe the type of check and are also used as the argument to instantiate that type of check with the create method: `CheckType.create("check_type")`.
 
 - `exact_match`: the keys and values much match, exactly, between the two objects
 - `tolerance`: the keys must match and the values can differ according to the 'tolerance' value provided
