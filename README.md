@@ -119,9 +119,9 @@ CheckType.create("exact_match")
 Next, define a json object as reference data, as well as a JMESPATH expression to extract the value wanted and pass them to `extract_data_from_json` method. Be aware! `jdiff` works with a customized version of JMESPATH. More on that [below](#customized-jmespath).
 
 ```python
-bgp_pre_change = "./pre/bgp.json"
+bgp_reference_state = "./pre/bgp.json"
 bgp_jmspath_exp =  "result[0].vrfs.default.peerList[*].[$peerAddress$,establishedTransitions]"
-pre_value = check.extract_data_from_json(bgp_pre_change, bgp_jmspath_exp)
+bgp_reference_value = check.extract_data_from_json(bgp_reference_state, bgp_jmspath_exp)
 ```
 
 | Przemek: Does the JSON object have to be on the disk? Can it be an in-memory object? Does it have to a JSON object at all? Can it be a dictionary, or a dictionary-like object?
@@ -129,15 +129,13 @@ pre_value = check.extract_data_from_json(bgp_pre_change, bgp_jmspath_exp)
 Once the pre-change values are extracted, we would need to evaluate it against our post-change value. In case of check-type `exact_match` our post-value would be another json object:
 
 ```python
-bgp_post_change = "./post/bgp.json"
-post_value = check.extract_data_from_json(bgp_post_change, bgp_jmspath_exp)
+bgp_comparison_state = "./post/bgp.json"
+bgp_comparison_value = check.extract_data_from_json(bgp_post_change, bgp_jmspath_exp)
 ```
 
-Each check type expects different types of arguments. For example: check type `tolerance` needs a `tolerance` argument, Whereas `parameters` expects a dictionary.
+Each check type expects different types of arguments based on how and what they are checking. For example: check type `tolerance` needs a `tolerance` argument, Whereas `parameters` expects a dictionary.
 
 Now that we have pre and post data, we use `evaluate` method to compare them which will return our evaluation result.
-
-| Przemek: "pre" and "post" data doesn't flow very well.
 
 ```python
 results = check.evaluate(post_value, pre_value, **evaluate_args)
