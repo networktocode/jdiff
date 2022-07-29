@@ -1,6 +1,6 @@
 """Unit tests for operator check-type."""
 import pytest
-from jdiff.check_types import CheckType
+from jdiff import CheckType, extract_data_from_json
 from .utility import load_json_file, ASSERT_FAIL_MESSAGE
 
 operator_all_same = (
@@ -173,7 +173,7 @@ def test_operator(filename, check_type_str, evaluate_args, path, expected_result
     check = CheckType.create(check_type_str)
     # There is not concept of "pre" and "post" in operator.
     data = load_json_file("api", filename)
-    value = check.get_value(data, path)
+    value = extract_data_from_json(data, path)
     actual_results = check.evaluate(value, evaluate_args)
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
         output=actual_results, expected_output=expected_result
