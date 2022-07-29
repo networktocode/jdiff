@@ -115,12 +115,12 @@ CheckType.create("exact_match")
 
 | Stephen - This step may not be necessary at all? I would say this may come with more advanced use cases.
 
-Next, define a json object as reference data, as well as a JMESPATH expression to extract the value wanted and pass them to `get_value` method. Be aware! `jdiff` works with a customized version of JMESPATH. More on that [below](#customized-jmespath).
+Next, define a json object as reference data, as well as a JMESPATH expression to extract the value wanted and pass them to `extract_data_from_json` method. Be aware! `jdiff` works with a customized version of JMESPATH. More on that [below](#customized-jmespath).
 
 ```python
 bgp_pre_change = "./pre/bgp.json"
 bgp_jmspath_exp =  "result[0].vrfs.default.peerList[*].[$peerAddress$,establishedTransitions]"
-pre_value = check.get_value(bgp_pre_change, bgp_jmspath_exp)
+pre_value = check.extract_data_from_json(bgp_pre_change, bgp_jmspath_exp)
 ```
 
 | Przemek: Does the JSON object have to be on the disk? Can it be an in-memory object? Does it have to a JSON object at all? Can it be a dictionary, or a dictionary-like object?
@@ -129,7 +129,7 @@ Once the pre-change values are extracted, we would need to evaluate it against o
 
 ```python
 bgp_post_change = "./post/bgp.json"
-post_value = check.get_value(bgp_post_change, bgp_jmspath_exp)
+post_value = check.extract_data_from_json(bgp_post_change, bgp_jmspath_exp)
 ```
 
 Each check type expects different types of arguments. For example: check type `tolerance` needs a `tolerance` argument, Whereas `parameters` expects a dictionary.
@@ -222,7 +222,8 @@ That  would give us...
 Check type `exact_match` is concerned about the value of the elements within the data structure. The key/values should match between the reference and comparison values. A diff is generated between the two data sets.
 As some outputs might be too verbose or include fields that constantly change (i.e. interface counter), it is possible to exclude a portion of data traversed by JMESPath by defining a list of keys that we want to exclude.
 
-| Przemek: `get_value` is used without prior introduction. At this stage I'm not sure where this comes from, what it does, and what arguments does it accept.
+| Przemek: `extract_data_from_json` is used without prior introduction. At this stage I'm not sure where this comes from, what it does, and what arguments does it accept.
+
 
 Examples:
 
@@ -230,6 +231,7 @@ Examples:
 ```python
 >>> from jdiff import CheckType
 >>> reference = {
+
       "jsonrpc": "2.0",
       "id": "EapiExplorer-1",
       "result": [
@@ -288,10 +290,10 @@ Examples:
 >>> my_check
 >>> <jdiff.check_types.ExactMatchType object at 0x10ac00f10>
 >>> # Extract the wanted value from pre_dat to later compare with post_data. As we want compare all the body (excluding "interfaceStatistics"), we do not need to define any reference key
->>> pre_value = my_check.get_value(output=reference, path=my_jmspath, exclude=exclude_fields)
+>>> pre_value = extract_data_from_json(output=reference, path=my_jmspath, exclude=exclude_fields)
 >>> pre_value
 >>> [{'interfaces': {'Management1': {'lastStatusChangeTimestamp': 1626247820.0720868, 'lanes': 0, 'name': 'Management1', 'interfaceStatus': 'connected', 'autoNegotiate': 'success', 'burnedInAddress': '08:00:27:e6:b2:f8', 'loopbackMode': 'loopbackNone'}}}]
->>> post_value = my_check.get_value(output=comparison, path=my_jmspath, exclude=exclude_fields)
+>>> post_value = extract_data_from_json(output=reference, path=my_jmspath, exclude=exclude_fields)
 >>> post_value
 >>> [{'interfaces': {'Management1': {'lastStatusChangeTimestamp': 1626247821.123456, 'lanes': 0, 'name': 'Management1', 'interfaceStatus': 'down', 'autoNegotiate': 'success', 'burnedInAddress': '08:00:27:e6:b2:f8', 'loopbackMode': 'loopbackNone'}}}]
 >>> # The pre_value is our intended state for interface Management1, therefore we will use it as reference data. post_value will be our value_to_compare as we want compare the actual state of our interface Management1 (perhaps after a network maintenance) with the its status before the change.
@@ -300,7 +302,7 @@ Examples:
 >>> ({'interfaces': {'Management1': {'interfaceStatus': {'new_value': 'down', 'old_value': 'connected'}}}}, False)
 ```
 
-| Przemek: Why is the argument to `get_value` named `output` ? We are passing data structure to it, so perhaps `input` or `data`?
+| Przemek: Why is the argument to `extract_data_from_json` named `output` ? We are passing data structure to it, so perhaps `input` or `data`?
 
 
 As we can see, we return a tuple containing a diff between the pre and post data as well as a boolean for the overall test result. In this case a difference has been found so the status of the test is `False`.
@@ -309,10 +311,10 @@ Let's see a better way to run `exact_match` for this specific case. Since we are
 
 ```python
 >>> my_jmspath = "result[*].interfaces.*.[$name$,interfaceStatus]"
->>> pre_value = my_check.get_value(output=pre_data, path=my_jmspath)
+>>> pre_value = extract_data_from_json(output=pre_data, path=my_jmspath)
 >>> pre_value
 ['connected']
->>> post_value = my_check.get_value(output=post_data, path=my_jmspath)
+>>> post_value = extract_data_from_json(output=post_data, path=my_jmspath)
 >>> post_value
 ['down']
 >>> result = my_check.evaluate(value_to_compare=post_value, reference_data=pre_value)
@@ -325,10 +327,10 @@ Let's see a better way to run `exact_match` for this specific case. Since we are
 ```
 >>> my_check = CheckType.create(check_type="exact_match")
 >>> my_jmspath = "result[*].interfaces.*.[$name$,interfaceStatus]"
->>> pre_value = my_check.get_value(output=pre_data, path=my_jmspath)
+>>> pre_value = extract_data_from_json(output=pre_data, path=my_jmspath)
 >>> pre_value
 [{'Management1': {'interfaceStatus': 'connected'}}]
->>> post_value = my_check.get_value(output=post_data, path=my_jmspath)
+>>> post_value = extract_data_from_json(output=post_data, path=my_jmspath)
 >>> post_value
 [{'Management1': {'interfaceStatus': 'down'}}]
 >>> result = my_check.evaluate(value_to_compare=post_value, reference_data=pre_value)
@@ -411,8 +413,8 @@ Let's have a look at a couple of examples:
 >>> my_jmspath = "global.$peers$.*.*.ipv4.[accepted_prefixes,received_prefixes,sent_prefixes]"
 >>> # Tolerance define as 10% delta between pre and post values
 >>> my_tolerance_arguments = {"tolerance": 10}
->>> pre_value = my_check.get_value(pre_data, my_jmspath)
->>> post_value = my_check.get_value(post_data, my_jmspath)
+>>> pre_value = extract_data_from_json(pre_data, my_jmspath)
+>>> post_value = extract_data_from_json(post_data, my_jmspath)
 >>> actual_results = my_check.evaluate(post_value, pre_value, **my_tolerance_arguments)
 >>> # jdiff returns the value that are not within the 10%
 >>> actual_results
@@ -476,7 +478,7 @@ Examples:
 ...       ]
 >>> my_check = CheckType.create(check_type="parameter_match")
 >>> my_jmspath = "result[*].interfaces.*.[$name$,interfaceStatus,autoNegotiate]"
->>> post_value = my_check.get_value(output=post_data, path=my_jmspath)
+>>> post_value = extract_data_from_json(output=post_data, path=my_jmspath)
 >>> # mode: match - Match in the ouptut what is defined under 'params'
 >>> my_parameter_match = {"mode": "match", "params": {"interfaceStatus": "connected", "autoNegotiate": "success"}}
 >>> actual_results = my_check.evaluate(post_value, **my_parameter_match)
@@ -532,7 +534,7 @@ Let's run an example where we want to check the `burnedInAddress` key has a stri
 >>> regex_args = {"regex": "(?:[0-9a-fA-F]:?){12}", "mode": "match"}
 >>> path = "result[*].interfaces.*.[$name$,burnedInAddress]"
 >>> check = CheckType.create(check_type="regex")
->>> value = check.get_value(output=data, path=path)
+>>> value = check.extract_data_from_json(output=data, path=path)
 >>> value
 [{'Management1': {'burnedInAddress': '08:00:27:e6:b2:f8'}}]
 >>> result = check.evaluate(value, **regex_args)
@@ -661,7 +663,7 @@ Examples:
 >>> # and "operator_data" required for the mode defined.
 >>> check_args = {"params": {"mode": "all-same", "operator_data": True}}
 >>> check = CheckType.create("operator")
->>> value = check.get_value(data, path)
+>>> value = check.extract_data_from_json(data, path)
 >>> value
 [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE', 'vrf': 'default', 'state': 'Connected'}}, {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}]
 >>> result = check.evaluate(value, check_args)
@@ -675,7 +677,7 @@ Let's now look to an example for the `in` operator. Keeping the same `data` and 
 ```python
 >>> check_args = {"params": {"mode": "is-in", "operator_data": [20, 40, 50]}}
 >>> path = "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]"
->>> value = check.get_value(data, path)
+>>> value = check.extract_data_from_json(data, path)
 >>> value
 [{'7.7.7.7': {'prefixesReceived': 101}}, {'10.1.0.0': {'prefixesReceived': 50}}]
 >>> # We are looking for prefixesReceived value in operator_data list.
@@ -689,7 +691,7 @@ What about `str` operator?
 ```python
 >>> path = "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]"
 >>> check_args = {"params": {"mode": "contains", "operator_data": "EVPN"}}
->>> value = check.get_value(data, path)
+>>> value = check.extract_data_from_json(data, path)
 >>> value
 [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE'}}, {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE'}}]
 >>> result = check.evaluate(value, check_args)
@@ -702,7 +704,7 @@ Can you guess what would ne the outcome for an `int`, `float` operator?
 ```python
 >>> path = "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]"
 >>> check_args = {"params": {"mode": "is-gt", "operator_data": 20}}
->>> value = check.get_value(data, path)
+>>> value = check.extract_data_from_json(data, path)
 >>> value
 [{'7.7.7.7': {'prefixesReceived': 101}}, {'10.1.0.0': {'prefixesReceived': 50}}]
 >>> result = check.evaluate(value, check_args)

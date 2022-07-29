@@ -1,7 +1,7 @@
 """Diff generator tests."""
 import pytest
 from jdiff.evaluators import diff_generator
-from jdiff.check_types import CheckType
+from jdiff import extract_data_from_json
 from .utility import load_mocks, ASSERT_FAIL_MESSAGE
 
 
@@ -200,8 +200,8 @@ eval_tests = [
 def test_eval(folder_name, path, exclude, expected_output):
     """Run tests."""
     pre_data, post_data = load_mocks(folder_name)
-    pre_value = CheckType.get_value(pre_data, path, exclude)
-    post_value = CheckType.get_value(post_data, path, exclude)
+    pre_value = extract_data_from_json(pre_data, path, exclude)
+    post_value = extract_data_from_json(post_data, path, exclude)
     output = diff_generator(pre_value, post_value)
 
     assert expected_output == output, ASSERT_FAIL_MESSAGE.format(output=output, expected_output=expected_output)

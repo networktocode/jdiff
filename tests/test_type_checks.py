@@ -1,6 +1,14 @@
 """Check Type unit tests."""
 import pytest
-from jdiff.check_types import CheckType, ExactMatchType, OperatorType, ToleranceType, ParameterMatchType, RegexType
+from jdiff.check_types import (
+    CheckType,
+    ExactMatchType,
+    OperatorType,
+    ToleranceType,
+    ParameterMatchType,
+    RegexType,
+)
+from jdiff import extract_data_from_json
 from .utility import load_json_file, load_mocks, ASSERT_FAIL_MESSAGE
 
 
@@ -125,8 +133,8 @@ def test_check_type_results(check_type_str, evaluate_args, folder_name, path, ex
     """Validate that CheckType.evaluate returns the expected_results."""
     check = CheckType.create(check_type_str)
     pre_data, post_data = load_mocks(folder_name)
-    pre_value = check.get_value(pre_data, path)
-    post_value = check.get_value(post_data, path)
+    pre_value = extract_data_from_json(pre_data, path)
+    post_value = extract_data_from_json(post_data, path)
     actual_results = check.evaluate(post_value, pre_value, **evaluate_args)
     assert actual_results == expected_results, ASSERT_FAIL_MESSAGE.format(
         output=actual_results, expected_output=expected_results
@@ -240,8 +248,8 @@ def test_checks(folder_name, check_type_str, evaluate_args, path, expected_resul
     """Validate multiple checks on the same data to catch corner cases."""
     check = CheckType.create(check_type_str)
     pre_data, post_data = load_mocks(folder_name)
-    pre_value = check.get_value(pre_data, path)
-    post_value = check.get_value(post_data, path)
+    pre_value = extract_data_from_json(pre_data, path)
+    post_value = extract_data_from_json(post_data, path)
     actual_results = check.evaluate(post_value, pre_value, **evaluate_args)
 
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
@@ -286,7 +294,7 @@ def test_param_match(filename, check_type_str, evaluate_args, path, expected_res
     check = CheckType.create(check_type_str)
     # There is not concept of "pre" and "post" in parameter_match.
     data = load_json_file("parameter_match", filename)
-    value = check.get_value(data, path)
+    value = extract_data_from_json(data, path)
     actual_results = check.evaluate(value, **evaluate_args)
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
         output=actual_results, expected_output=expected_result
@@ -333,7 +341,7 @@ def test_regex_match(filename, check_type_str, evaluate_args, path, expected_res
     check = CheckType.create(check_type_str)
     # There is not concept of "pre" and "post" in parameter_match.
     data = load_json_file("api", filename)
-    value = check.get_value(data, path)
+    value = extract_data_from_json(data, path)
     actual_results = check.evaluate(value, **evaluate_args)
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
         output=actual_results, expected_output=expected_result
