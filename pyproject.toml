@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "netcompare"
+name = "jdiff"
 version = "0.0.1-beta.1"
 description = "A light-weight library to compare structured output from network devices show commands."
 authors = ["Network to Code, LLC <info@networktocode.com>"]
 license = "Apache-2.0"
-homepage = "https://github.com/networktocode-llc/netcompare"
-repository = "https://github.com/networktocode-llc/netcompare"
+homepage = "https://github.com/networktocode-llc/jdiff"
+repository = "https://github.com/networktocode-llc/jdiff"
 readme = "README.md"
 keywords = ["json", "diff", "network"]
 classifiers = [
