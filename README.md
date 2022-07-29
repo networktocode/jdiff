@@ -26,14 +26,14 @@ First you import the CheckType class.
 from jdiff import CheckType
 ```
 
-Get (or fabricate) some data (this data may also be loaded from a file or from a string, more examples later in the doc).
+Get (or fabricate) some data (this data may also be loaded from a file or from a string, more examples later).
 
 ```python
 a = {"foo": "bar"}
 b = {"foo": "barbar"}
 ```
 
-Use the CheckType class, use the create method to create an instance of the type of check you will perform.
+Using the CheckType class, call the create method to create an instance of the type of check you will perform.
 
 ```python
 match = CheckType.create("exact_match")
@@ -44,12 +44,13 @@ Evaluate the check type and the diff.
 match.evaluate(a, b)
 >>> ({'foo': {'new_value': 'barbar', 'old_value': 'bar'}}, False)
 ```
+
 This results in a tuple:
 - The first value is the diff between the two dictionaries
-- The second value is a boolean with the result of the test
+- The second value is a boolean with the result of the Check
 
 This diff can also show new or deleted keys if they exist. 
-The second value returned will be the boolean result of the test. In this case, the two dictionaries were not an exact match.
+The second value returned will be the boolean result of the Check. In this case, the two dictionaries were not an exact match.
 
 | Stephen - we may want to remove these next two paragraphs
 For instance, the reference state can be collected from the network directly using any method that returns structured data: Ansible, NAPALM, Nornir to name a few. You could also choose to generate the reference state from an SoT, such as [Nautobot](https://github.com/nautobot/nautobot/), and have a true intended state.
@@ -113,7 +114,7 @@ CheckType.create("exact_match")
 
 | Przemek: Perhaps create a table showing how each of the arguments maps to a concrete class?
 
-| Stephen - This step may not be necessary at all? I would say this may come with more advanced use cases.
+| Stephen - This step may not be necessary at all? I would say this may come with more advanced use cases. Note: the extract data from json is specifically for getting keys and values from larger dictionaries to make it easier to compare and check specific parts/branches of the object. 
 
 Next, define a json object as reference data, as well as a JMESPATH expression to extract the value wanted and pass them to `extract_data_from_json` method. Be aware! `jdiff` works with a customized version of JMESPATH. More on that [below](#customized-jmespath).
 
