@@ -26,14 +26,14 @@ First you import the CheckType class.
 from jdiff import CheckType
 ```
 
-Get (or fabricate) some data (this data may also be loaded from a file or from a string, more examples later in the doc).
+Get (or fabricate) some data (this data may also be loaded from a file or from a string, more examples later).
 
 ```python
 a = {"foo": "bar"}
 b = {"foo": "barbar"}
 ```
 
-Use the CheckType class, use the create method to create an instance of the type of check you will perform.
+Using the CheckType class, call the create method to create an instance of the type of check you will perform.
 
 ```python
 match = CheckType.create("exact_match")
@@ -42,14 +42,15 @@ match = CheckType.create("exact_match")
 Evaluate the check type and the diff.
 ```python
 match.evaluate(a, b)
-> ({'foo': {'new_value': 'barbar', 'old_value': 'bar'}}, False)
+>>> ({'foo': {'new_value': 'barbar', 'old_value': 'bar'}}, False)
 ```
+
 This results in a tuple:
 - The first value is the diff between the two dictionaries
-- The second value is a boolean with the result of the test
+- The second value is a boolean with the result of the Check
 
 This diff can also show new or deleted keys if they exist. 
-The second value returned will be the boolean result of the test. In this case, the two dictionaries were not an exact match.
+The second value returned will be the boolean result of the Check. In this case, the two dictionaries were not an exact match.
 
 | Stephen - we may want to remove these next two paragraphs
 For instance, the reference state can be collected from the network directly using any method that returns structured data: Ansible, NAPALM, Nornir to name a few. You could also choose to generate the reference state from an SoT, such as [Nautobot](https://github.com/nautobot/nautobot/), and have a true intended state.
@@ -81,16 +82,16 @@ These are the different checks that can be performed on the data. These both des
 | Przemek: I think this diagram would work better if it were wide, rather than tall. Netcompare name should match the name we choose for this library (e.g. Netcompare instead of NETCOMPARE). The individual Netcompare components are difficult to read in the vertical orientation.
 
 
-1. The reference state object is assembled. The structured data may be collected from:
+1. The reference state object is retrieved or assembled. The structured data may be from:
 
-    - an SoT
-    - Directly from the network using any Automation that returns structured data
+    - an API
+    - another python module/library
+    - retrieved from a saved file
+    - constructed 
 
-2. The Network Engineer makes changes to the network, whether it is an upgrade, peering change, or migration.
-3. The comparison state is collected, typically directly from the network, but any method is acceptable.
+2. Some time passes where some change to the data may occurr
+3. The comparison state is retrieved or assembled, in many cases, utilizing a similar process used to get the reference state
 4. The reference state is then compared to the current state using the jdiff library.
-
-| Przemek: This doesn't seem like a generic enough workflow. Ideally replace it using neutral, i.e. not-network related, terms.
 
 ## Library Architecture
 
@@ -98,9 +99,12 @@ These are the different checks that can be performed on the data. These both des
 |:---:|
 | **`jdiff` architecture** |
 
-An instance of `CheckType` object must be created first before passing one of the below check types as an argument:
+We use the `CheckType` factory class method `create` along with the specified checktype to instantiate a concrete class of the specified CheckType.
 
-| Przemek: I don't think that is correct. You call `init` method on the class directly and pass it the type of the check. This then returns concrete class implementing `CheckType` interface.
+```python
+CheckType.create("exact_match")
+>>> <jdiff.check_types.ExactMatchType at 0x10a618e80>
+```
 
 - `exact_match`
 - `tolerance`
@@ -110,18 +114,14 @@ An instance of `CheckType` object must be created first before passing one of th
 
 | Przemek: Perhaps create a table showing how each of the arguments maps to a concrete class?
 
-
-```python
-my_check = "exact_match"
-check = CheckType.init(my_check)
-```
+| Stephen - This step may not be necessary at all? I would say this may come with more advanced use cases. Note: the extract data from json is specifically for getting keys and values from larger dictionaries to make it easier to compare and check specific parts/branches of the object. 
 
 Next, define a json object as reference data, as well as a JMESPATH expression to extract the value wanted and pass them to `extract_data_from_json` method. Be aware! `jdiff` works with a customized version of JMESPATH. More on that [below](#customized-jmespath).
 
 ```python
-bgp_pre_change = "./pre/bgp.json"
+bgp_reference_state = "./pre/bgp.json"
 bgp_jmspath_exp =  "result[0].vrfs.default.peerList[*].[$peerAddress$,establishedTransitions]"
-pre_value = check.extract_data_from_json(bgp_pre_change, bgp_jmspath_exp)
+bgp_reference_value = check.extract_data_from_json(bgp_reference_state, bgp_jmspath_exp)
 ```
 
 | Przemek: Does the JSON object have to be on the disk? Can it be an in-memory object? Does it have to a JSON object at all? Can it be a dictionary, or a dictionary-like object?
@@ -129,15 +129,13 @@ pre_value = check.extract_data_from_json(bgp_pre_change, bgp_jmspath_exp)
 Once the pre-change values are extracted, we would need to evaluate it against our post-change value. In case of check-type `exact_match` our post-value would be another json object:
 
 ```python
-bgp_post_change = "./post/bgp.json"
-post_value = check.extract_data_from_json(bgp_post_change, bgp_jmspath_exp)
+bgp_comparison_state = "./post/bgp.json"
+bgp_comparison_value = check.extract_data_from_json(bgp_post_change, bgp_jmspath_exp)
 ```
 
-Each check type expects different types of arguments. For example: check type `tolerance` needs a `tolerance` argument, Whereas `parameters` expects a dictionary.
+Each check type expects different types of arguments based on how and what they are checking. For example: check type `tolerance` needs a `tolerance` argument, Whereas `parameters` expects a dictionary.
 
 Now that we have pre and post data, we use `evaluate` method to compare them which will return our evaluation result.
-
-| Przemek: "pre" and "post" data doesn't flow very well.
 
 ```python
 results = check.evaluate(post_value, pre_value, **evaluate_args)
@@ -145,11 +143,11 @@ results = check.evaluate(post_value, pre_value, **evaluate_args)
 
 ## Customized JMESPath
 
-Since `netcompare` works with json objects as data inputs, JMESPath was the obvious choice for traversing the data and extracting the value(s) to compare.
-
-Since `jdiff` works with json objects as data inputs, JMESPATH was the obvious choice for traversing the data and extracting the value(s) to compare.
+Since `jdiff` works with json objects as data inputs, JMESPATH was the obvious choice for traversing the data and extracting the value(s) to compare. However, JMESPath comes with a limitation where it is not possible to define a `key` to which the `value` belongs to, losing the context of the returned values.
 
 | Przemek: `key` and `value` are confusing here. This implies parent-child relationship but the example shows two keys, and their values, at the same level of hierarchy. I think something along the lines of "define relationship between two keys and their values" would work better.
+
+| Stephen: I've lost some context to the above comment. Is this point made more clear with what is here now?
 
 Below is the output of `show bgp`.
 
@@ -214,23 +212,25 @@ That  would give us...
 
 ```
 
+
+
 ## `CheckTypes` Explained
 
 ### exact_match
 
-Check type `exact_match` is concerned about the value of the elements within the data structure. The key/values should match between the pre and post values. A diff is generated between the two data sets.
+Check type `exact_match` is concerned about the value of the elements within the data structure. The key/values should match between the reference and comparison values. A diff is generated between the two data sets.
 As some outputs might be too verbose or include fields that constantly change (i.e. interface counter), it is possible to exclude a portion of data traversed by JMESPath by defining a list of keys that we want to exclude.
 
-| Przemek: Pre and post terminology is confusing. We should use more intuitive names.
-
 | Przemek: `extract_data_from_json` is used without prior introduction. At this stage I'm not sure where this comes from, what it does, and what arguments does it accept.
+
 
 Examples:
 
 
 ```python
->>> from jdiff import CheckType, extract_data_from_json
->>> pre_data = {
+>>> from jdiff import CheckType
+>>> reference = {
+
       "jsonrpc": "2.0",
       "id": "EapiExplorer-1",
       "result": [
@@ -256,7 +256,7 @@ Examples:
         }
       ]
     }
->>> post_data = {
+>>> comparison = {
       "jsonrpc": "2.0",
       "id": "EapiExplorer-1",
       "result": [
@@ -285,25 +285,24 @@ Examples:
 >>> my_jmspath = "result[*]"
 >>> exclude_fields = ["interfaceStatistics", "lastStatusChangeTimestamp"]
 >>> # Create an instance of CheckType object with 'exact_match' as check-type argument.
->>> my_check = CheckType.init(check_type="exact_match")
+>>> my_check = CheckType.create(check_type="exact_match")
 >>> my_check
 >>> <jdiff.check_types.ExactMatchType object at 0x10ac00f10>
 >>> # Extract the wanted value from pre_dat to later compare with post_data. As we want compare all the body (excluding "interfaceStatistics"), we do not need to define any reference key
->>> pre_value = extract_data_from_json(output=pre_data, path=my_jmspath, exclude=exclude_fields)
+>>> pre_value = extract_data_from_json(output=reference, path=my_jmspath, exclude=exclude_fields)
 >>> pre_value
 >>> [{'interfaces': {'Management1': {'lastStatusChangeTimestamp': 1626247820.0720868, 'lanes': 0, 'name': 'Management1', 'interfaceStatus': 'connected', 'autoNegotiate': 'success', 'burnedInAddress': '08:00:27:e6:b2:f8', 'loopbackMode': 'loopbackNone'}}}]
->>> post_value = extract_data_from_json(output=post_data, path=my_jmspath, exclude=exclude_fields)
+>>> post_value = extract_data_from_json(output=reference, path=my_jmspath, exclude=exclude_fields)
 >>> post_value
 >>> [{'interfaces': {'Management1': {'lastStatusChangeTimestamp': 1626247821.123456, 'lanes': 0, 'name': 'Management1', 'interfaceStatus': 'down', 'autoNegotiate': 'success', 'burnedInAddress': '08:00:27:e6:b2:f8', 'loopbackMode': 'loopbackNone'}}}]
 >>> # The pre_value is our intended state for interface Management1, therefore we will use it as reference data. post_value will be our value_to_compare as we want compare the actual state of our interface Management1 (perhaps after a network maintenance) with the its status before the change.
->>> result = my_check.evaluate(value_to_compare=post_value, reference_data=pre_value)
+>>> result = my_check.evaluate(reference, comparison)
 >>> result
 >>> ({'interfaces': {'Management1': {'interfaceStatus': {'new_value': 'down', 'old_value': 'connected'}}}}, False)
 ```
 
 | Przemek: Why is the argument to `extract_data_from_json` named `output` ? We are passing data structure to it, so perhaps `input` or `data`?
 
-| Przemek: I'm also not sure about `value_to_compare` and `reference_data` arguments.
 
 As we can see, we return a tuple containing a diff between the pre and post data as well as a boolean for the overall test result. In this case a difference has been found so the status of the test is `False`.
 
@@ -325,7 +324,7 @@ Let's see a better way to run `exact_match` for this specific case. Since we are
 | Przemek: The above example doesn't seem to match the latest version of the library, see my test below:
 
 ```
->>> my_check = CheckType.init(check_type="exact_match")
+>>> my_check = CheckType.create(check_type="exact_match")
 >>> my_jmspath = "result[*].interfaces.*.[$name$,interfaceStatus]"
 >>> pre_value = extract_data_from_json(output=pre_data, path=my_jmspath)
 >>> pre_value
@@ -346,13 +345,11 @@ The anchor logic for the reference key applies to all check-types available in `
 
 ### Tolerance
 
-The `tolerance` test defines a percentage of differing `float()` between pre and post checks numeric value. The threshold is defined as a percentage that can be different either from the value stated in pre and post fields. 
+The `tolerance` test defines a percentage deviation (of type `float()`) between reference and comparison values' numeric value. The `tolerance` is defined as a percentage that can be different between the reference and comparison values.
 
 | Przemek: This doesn't read very well. What does the `tolerance` check tests for? Looking at source code it seems we're checking if the deviation(variation) between the actual and expected value is within the percentage tolerance.
 
-The threshold must be `float > 0`, is percentge based, and will be counted as a range centered on the value in pre and post.
-
-| Przemek: Use `tolerance percentage` to be consistent, as that follows the name of the argument. What does this mean: "range centered on the value in pre and post" ?
+The `tolerance` must be a `float > 0`. The calculation is percentage based, and the test of the values may be +/- the `tolerance` percentage.
 
 Let's have a look at a couple of examples:
 
@@ -411,7 +408,7 @@ Let's have a look at a couple of examples:
 ...         }
 ...     }
 ... }
->>> my_check = CheckType.init(check_type="tolerance")
+>>> my_check = CheckType.create(check_type="tolerance")
 >>> my_jmspath = "global.$peers$.*.*.ipv4.[accepted_prefixes,received_prefixes,sent_prefixes]"
 >>> # Tolerance define as 10% delta between pre and post values
 >>> my_tolerance_arguments = {"tolerance": 10}
@@ -478,7 +475,7 @@ Examples:
 ...           }
 ...         }
 ...       ]
->>> my_check = CheckType.init(check_type="parameter_match")
+>>> my_check = CheckType.create(check_type="parameter_match")
 >>> my_jmspath = "result[*].interfaces.*.[$name$,interfaceStatus,autoNegotiate]"
 >>> post_value = extract_data_from_json(output=post_data, path=my_jmspath)
 >>> # mode: match - Match in the ouptut what is defined under 'params'
@@ -535,7 +532,7 @@ Let's run an example where we want to check the `burnedInAddress` key has a stri
 >>> # Python regex for matching MAC Address string
 >>> regex_args = {"regex": "(?:[0-9a-fA-F]:?){12}", "mode": "match"}
 >>> path = "result[*].interfaces.*.[$name$,burnedInAddress]"
->>> check = CheckType.init(check_type="regex")
+>>> check = CheckType.create(check_type="regex")
 >>> value = check.extract_data_from_json(output=data, path=path)
 >>> value
 [{'Management1': {'burnedInAddress': '08:00:27:e6:b2:f8'}}]
@@ -555,9 +552,7 @@ Let's run an example where we want to check the `burnedInAddress` key has a stri
 
 ### Operator
 
-Operator is a check which includes an array of different evaluation logic. Here a summary of the available options:
-
-| Przemek: What does it mean "array of different evaluation logic"? Can I ask for multiple checks to be performed at the same time? How do I define logic that should be used in the check?
+`operator` is a check which includes several different options of evaluation logic. The `operator` check introduces more flexibility in creating checks and like the other checks, they are defined and evaluated one at a time. Here a summary of the available `operator` options:
 
 | Przemek: The below is not very readable? Indented sections are rendered as code blocks. I would suggest naming these groups "categories" or "groups" and explaing that each of the names is the name of the check that needs to be passed as the argument.
 
@@ -666,7 +661,7 @@ Examples:
 >>> # "operator" checks requires "mode" argument - which specify the operator logic to apply - 
 >>> # and "operator_data" required for the mode defined.
 >>> check_args = {"params": {"mode": "all-same", "operator_data": True}}
->>> check = CheckType.init("operator")
+>>> check = CheckType.create("operator")
 >>> value = check.extract_data_from_json(data, path)
 >>> value
 [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE', 'vrf': 'default', 'state': 'Connected'}}, {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}]
