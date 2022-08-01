@@ -23,7 +23,7 @@ def test_show_version(platform, command, jpath, expected_parameter, check_should
 
     check = CheckType.create("parameter_match")
     value = extract_data_from_json(command, jpath)
-    eval_results, passed = check.evaluate(value, expected_parameter, "match")  # pylint: disable=E1121
+    eval_results, passed = check.evaluate(expected_parameter, value, "match")  # pylint: disable=E1121
     assert passed is check_should_pass, f"FAILED, eval_result: {eval_results}"
 
 
@@ -144,7 +144,7 @@ def test_bgp_prefix_tolerance(platform, command, prfx_post_value, tolerance, che
     pre_value = extract_data_from_json(command_pre, jpath)
     post_value = extract_data_from_json(command_post, jpath)
 
-    eval_results, passed = check.evaluate(post_value, pre_value, tolerance)  # pylint: disable=E1121
+    eval_results, passed = check.evaluate(pre_value, post_value, tolerance)  # pylint: disable=E1121
     assert passed is check_should_pass, f"FAILED, eval_result: {eval_results}"
 
 

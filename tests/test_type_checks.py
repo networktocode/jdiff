@@ -135,7 +135,7 @@ def test_check_type_results(check_type_str, evaluate_args, folder_name, path, ex
     pre_data, post_data = load_mocks(folder_name)
     pre_value = extract_data_from_json(pre_data, path)
     post_value = extract_data_from_json(post_data, path)
-    actual_results = check.evaluate(post_value, pre_value, **evaluate_args)
+    actual_results = check.evaluate(pre_value, post_value, **evaluate_args)
     assert actual_results == expected_results, ASSERT_FAIL_MESSAGE.format(
         output=actual_results, expected_output=expected_results
     )
@@ -250,7 +250,7 @@ def test_checks(folder_name, check_type_str, evaluate_args, path, expected_resul
     pre_data, post_data = load_mocks(folder_name)
     pre_value = extract_data_from_json(pre_data, path)
     post_value = extract_data_from_json(post_data, path)
-    actual_results = check.evaluate(post_value, pre_value, **evaluate_args)
+    actual_results = check.evaluate(pre_value, post_value, **evaluate_args)
 
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
         output=actual_results, expected_output=expected_result
@@ -295,7 +295,7 @@ def test_param_match(filename, check_type_str, evaluate_args, path, expected_res
     # There is not concept of "pre" and "post" in parameter_match.
     data = load_json_file("parameter_match", filename)
     value = extract_data_from_json(data, path)
-    actual_results = check.evaluate(value, **evaluate_args)
+    actual_results = check.evaluate(evaluate_args["params"], value, evaluate_args["mode"])
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
         output=actual_results, expected_output=expected_result
     )
@@ -342,7 +342,7 @@ def test_regex_match(filename, check_type_str, evaluate_args, path, expected_res
     # There is not concept of "pre" and "post" in parameter_match.
     data = load_json_file("api", filename)
     value = extract_data_from_json(data, path)
-    actual_results = check.evaluate(value, **evaluate_args)
+    actual_results = check.evaluate(evaluate_args["regex"], value, evaluate_args["mode"])
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
         output=actual_results, expected_output=expected_result
     )
