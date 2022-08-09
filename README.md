@@ -49,7 +49,7 @@ This results in a tuple:
 - The first value is the diff between the two data structures
 - The second value is a boolean with the result of the check
 
-This diff can also show new or deleted keys if they exist. 
+This diff can also show if any keys were added or deleted. 
 The second value returned will be the boolean result of the Check. In this case, the two dictionaries were not an exact match.
 
 | Stephen - we may want to remove these next two paragraphs
