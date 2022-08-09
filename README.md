@@ -50,7 +50,7 @@ This results in a tuple:
 - The second value is a boolean with the result of the check
 
 This diff can also show if any keys were added or deleted. 
-The second value returned will be the boolean result of the Check. In this case, the two dictionaries were not an exact match.
+The second value returned will be the boolean result of the check. In this case, the two data structures were not an exact match.
 
 | Stephen - we may want to remove these next two paragraphs
 For instance, the reference state can be collected from the network directly using any method that returns structured data: Ansible, NAPALM, Nornir to name a few. You could also choose to generate the reference state from an SoT, such as [Nautobot](https://github.com/nautobot/nautobot/), and have a true intended state.
