@@ -33,7 +33,7 @@ a = {"foo": "bar"}
 b = {"foo": "barbar"}
 ```
 
-Using the CheckType class, call the create method to create an instance of the type of check you will perform.
+Call the `create` method of the `CheckType` class to get an instance of the check type you want to perform.
 
 ```python
 match = CheckType.create("exact_match")
