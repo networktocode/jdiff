@@ -99,7 +99,7 @@ These are the different checks that can be performed on the data. These both des
 |:---:|
 | **`jdiff` architecture** |
 
-We use the `CheckType` factory class method `create` along with the specified checktype to instantiate a concrete class of the specified CheckType.
+We use the `CheckType` factory class method `create` along with the specified check type to instantiate a concrete object of the specified `CheckType` class.
 
 ```python
 CheckType.create("exact_match")
