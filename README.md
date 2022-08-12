@@ -58,7 +58,7 @@ For instance, the reference state can be collected from the network directly usi
 `jdiff` is perfectly suited to work with data gathered from network devices via show commands, Ansible playbooks, as well as in applications such as [Nautobot](https://github.com/nautobot/nautobot/), or [Netbox](https://github.com/netbox-community/netbox). `jdiff` is focused on being the 'plumbing' behind a full network automation validation solution. 
 ### Checking data structures
 
-As shown in the example, the Check evaluation both performs a diff and tests the objects. All of the CheckTypes both perform the diff and their specified check.
+As shown in the example, the check evaluation both performs a diff and tests the objects. All of the concrete `CheckTypes` both perform the diff and their specified check.
 
 More on the 'check' part: the check provides a way to 'test' some keys or values in our collected data. The check portion is focused on providing a boolean result from the check. There are a few different ways to check our data. 
 
