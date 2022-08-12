@@ -90,7 +90,7 @@ These are the different checks that can be performed on the data. These both des
     - constructed 
 
 2. Some time passes where some change to the data may occurr
-3. The comparison state is retrieved or assembled, in many cases, utilizing a similar process used to get the reference state
+3. The comparison state is retrieved or assembled, often using a similar process used to get the reference state.
 4. The reference state is then compared to the current state using the jdiff library.
 
 ## Library Architecture
