@@ -64,7 +64,7 @@ More on the **check** part: the check provides a way to test some keys or values
 
 These are the different checks that can be performed on the data. These both describe the type of check and are also used as the argument to instantiate that type of check with the create method: `CheckType.create("check_type")`.
 
-- `exact_match`: the keys and values much match, exactly, between the two objects
+- `exact_match`: the keys and values must match exactly between the two objects
 - `tolerance`: the keys must match and the values can differ according to the 'tolerance' value provided
 - `parameter_match`: a reference key and value is provided and its presence (or absence) is checked in the provided object
 - `regex`: a reference regex pattern is provided which is used to find a match in the provided object
