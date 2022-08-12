@@ -143,7 +143,7 @@ results = check.evaluate(post_value, pre_value, **evaluate_args)
 
 ## Customized JMESPath
 
-Since `jdiff` works with json objects as data inputs, JMESPATH was the obvious choice for traversing the data and extracting the value(s) to compare. However, JMESPath comes with a limitation where it is not possible to define a `key` to which the `value` belongs to, losing the context of the returned values.
+Since `jdiff` works with JSON objects as data inputs, JMESPATH was the obvious choice for traversing the data and extracting the value(s) to compare. However, JMESPath has a limitation where it is not possible to remap a `value` to a different `key` which can result in a loss of context.
 
 | Przemek: `key` and `value` are confusing here. This implies parent-child relationship but the example shows two keys, and their values, at the same level of hierarchy. I think something along the lines of "define relationship between two keys and their values" would work better.
 
