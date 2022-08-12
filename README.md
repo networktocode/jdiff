@@ -345,7 +345,7 @@ The anchor logic for the reference key applies to all check-types available in `
 
 ### Tolerance
 
-The `tolerance` test defines a percentage deviation (of type `float()`) between reference and comparison values' numeric value. The `tolerance` is defined as a percentage that can be different between the reference and comparison values.
+The `tolerance` test defines a percentage deviation (of type `float`) of numeric value between reference and comparison data structures. The `tolerance` is defined as a percentage that can be different between the reference and comparison values.
 
 | Przemek: This doesn't read very well. What does the `tolerance` check tests for? Looking at source code it seems we're checking if the deviation(variation) between the actual and expected value is within the percentage tolerance.
 
