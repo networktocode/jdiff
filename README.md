@@ -85,7 +85,7 @@ These are the different checks that can be performed on the data. These both des
 1. The reference state object is retrieved or assembled. The structured data may be from:
 
     - an API
-    - another python module/library
+    - another Python module/library
     - retrieved from a saved file
     - constructed 
 
