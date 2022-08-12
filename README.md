@@ -218,8 +218,9 @@ That  would give us...
 
 ### exact_match
 
-Check type `exact_match` is concerned about the value of the elements within the data structure. The key/values should match between the reference and comparison values. A diff is generated between the two data sets.
-As some outputs might be too verbose or include fields that constantly change (i.e. interface counter), it is possible to exclude a portion of data traversed by JMESPath by defining a list of keys that we want to exclude.
+Check type `exact_match` is concerned with the value of the elements within the data structure. The key-value pairs should match between the reference and comparison data. A diff is generated between the two data sets.
+
+As some outputs might be too verbose or include fields that constantly change (e.g. interface counter), it is possible to exclude a portion of data traversed by JMESPath by defining a keys exclusion list.
 
 | Przemek: `extract_data_from_json` is used without prior introduction. At this stage I'm not sure where this comes from, what it does, and what arguments does it accept.
 
