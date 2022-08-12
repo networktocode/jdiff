@@ -553,7 +553,7 @@ Let's run an example where we want to check the `burnedInAddress` key has a stri
 
 ### Operator
 
-`operator` is a check which includes several different options of evaluation logic. The `operator` check introduces more flexibility in creating checks and like the other checks, they are defined and evaluated one at a time. Here a summary of the available `operator` options:
+The `operator` check is a collection of more specific checks divided into categories. Only one of the specific checks can be selected and used for evaluation when defining `operator`. Here is a summary of the available `operator` categories and individual checks:
 
 | Przemek: The below is not very readable? Indented sections are rendered as code blocks. I would suggest naming these groups "categories" or "groups" and explaing that each of the names is the name of the check that needs to be passed as the argument.
 
