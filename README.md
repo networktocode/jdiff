@@ -60,7 +60,7 @@ For instance, the reference state can be collected from the network directly usi
 
 As shown in the example, the check evaluation both performs a diff and tests the objects. All of the concrete `CheckTypes` both perform the diff and their specified check.
 
-More on the 'check' part: the check provides a way to 'test' some keys or values in our collected data. The check portion is focused on providing a boolean result from the check. There are a few different ways to check our data. 
+More on the **check** part: the check provides a way to test some keys or values in our collected data. The check portion is focused on providing a boolean result of the test. There are a few different ways to check our data. 
 
 These are the different checks that can be performed on the data. These both describe the type of check and are also used as the argument to instantiate that type of check with the create method: `CheckType.create("check_type")`.
 
