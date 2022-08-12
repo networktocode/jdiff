@@ -87,7 +87,7 @@ These are the different checks that can be performed on the data. These both des
     - an API
     - another Python module/library
     - retrieved from a saved file
-    - constructed 
+    - constructed programmatically
 
 2. Some time passes where some change to the data may occurr.
 3. The comparison state is retrieved or assembled, often using a similar process used to get the reference state.
