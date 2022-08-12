@@ -133,7 +133,7 @@ bgp_comparison_state = "./post/bgp.json"
 bgp_comparison_value = check.extract_data_from_json(bgp_post_change, bgp_jmspath_exp)
 ```
 
-Each check type expects different types of arguments based on how and what they are checking. For example: check type `tolerance` needs a `tolerance` argument, Whereas `parameters` expects a dictionary.
+Each check type expects different types of arguments based on how and what they are checking. For example: check type `tolerance` needs a `tolerance` argument, whereas `parameter_match` expects a dictionary.
 
 Now that we have pre- and post-data, we use the `evaluate` method to compare them, which will return our evaluation result.
 
