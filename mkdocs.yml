@@ -17,8 +17,8 @@ markdown_extensions:
   - "admonition"
   - toc:
       permalink: true
-plugins:
-  - include-markdown
+# plugins:
+#   - include-markdown
 nav:
   - Introduction: "index.md"
   - Usage: "usage.md"

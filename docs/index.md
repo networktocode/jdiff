@@ -58,16 +58,14 @@ These are the different checks that can be performed on the data. These both des
 - `regex`: a reference regex pattern is provided which is used to find a match in the provided object
 - `operator`: similar to parameter match, but the reference includes several different possible operators: 'in', 'bool', 'string', and numerical comparison with 'int' and 'float' to check against
 
-`CheckTypes` are explained in more detail in the [CheckTypes Explained section](#check-types-explained).
+`CheckTypes` are explained in more detail in the [architecture](architecture.md).
 
 
 ## Workflow
 
-| ![jdiff workflow](./docs/images/workflow.png) |
+| ![jdiff workflow](./images/jdiff-workflow.png) |
 |:---:|
 | **`jdiff` workflow** |
-
-| Przemek: I think this diagram would work better if it were wide, rather than tall. Netcompare name should match the name we choose for this library (e.g. Netcompare instead of NETCOMPARE). The individual Netcompare components are difficult to read in the vertical orientation.
 
 
 1. The reference state object is retrieved or assembled. The structured data may be from:
@@ -77,6 +75,8 @@ These are the different checks that can be performed on the data. These both des
     - retrieved from a saved file
     - constructed programmatically
 
-2. Some time passes where some change to the data may occurr.
-3. The comparison state is retrieved or assembled, often using a similar process used to get the reference state.
-4. The reference state is then compared to the current state using the jdiff library.
+2. Some time passes where some change to the data may occur; then the comparison state is retrieved or assembled, often using a similar process used to get the reference state.
+3. The reference state is then compared to the current state using the jdiff library using one of the `CheckTypes`.
+4. The evaluate method is called on the `check` object and the result is returned.
+
+Please see [usage](usage.md) for commands and more information.

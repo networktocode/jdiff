@@ -11,11 +11,9 @@ It's worth pointing out that `jdiff` is focused on the comparison of the two obj
 
 ## exact_match
 
-Check type `exact_match` is concerned with the value of the elements within the data structure. The key-value pairs should match between the reference and comparison data. A diff is generated between the two data sets.
+Check type `exact_match` is concerned with the value of the elements within the data structure. The key-value pairs should match between the reference and comparison data. A diff is generated between the two data sets and tested to see if all the keys and values match.
 
 As some outputs might be too verbose or include fields that constantly change (e.g. interface counter), it is possible to exclude a portion of data traversed by JMESPath by defining a keys exclusion list.
-
-| Przemek: `extract_data_from_json` is used without prior introduction. At this stage I'm not sure where this comes from, what it does, and what arguments does it accept.
 
 
 Examples:
@@ -23,8 +21,7 @@ Examples:
 
 ```python
 >>> from jdiff import CheckType
->>> reference = {
-
+>>> reference_data = {
       "jsonrpc": "2.0",
       "id": "EapiExplorer-1",
       "result": [
@@ -50,7 +47,7 @@ Examples:
         }
       ]
     }
->>> comparison = {
+>>> comparison_data = {
       "jsonrpc": "2.0",
       "id": "EapiExplorer-1",
       "result": [
@@ -76,79 +73,68 @@ Examples:
         }
       ]
     }
->>> my_jmspath = "result[*]"
->>> exclude_fields = ["interfaceStatistics", "lastStatusChangeTimestamp"]
->>> # Create an instance of CheckType object with 'exact_match' as check-type argument.
+
+```
+Create an instance of CheckType object with 'exact_match' as check-type argument.
+
+```
 >>> my_check = CheckType.create(check_type="exact_match")
 >>> my_check
 >>> <jdiff.check_types.ExactMatchType object at 0x10ac00f10>
->>> # Extract the wanted value from pre_dat to later compare with post_data. As we want compare all the body (excluding "interfaceStatistics"), we do not need to define any reference key
->>> pre_value = extract_data_from_json(output=reference, path=my_jmspath, exclude=exclude_fields)
->>> pre_value
->>> [{'interfaces': {'Management1': {'lastStatusChangeTimestamp': 1626247820.0720868, 'lanes': 0, 'name': 'Management1', 'interfaceStatus': 'connected', 'autoNegotiate': 'success', 'burnedInAddress': '08:00:27:e6:b2:f8', 'loopbackMode': 'loopbackNone'}}}]
->>> post_value = extract_data_from_json(output=reference, path=my_jmspath, exclude=exclude_fields)
->>> post_value
->>> [{'interfaces': {'Management1': {'lastStatusChangeTimestamp': 1626247821.123456, 'lanes': 0, 'name': 'Management1', 'interfaceStatus': 'down', 'autoNegotiate': 'success', 'burnedInAddress': '08:00:27:e6:b2:f8', 'loopbackMode': 'loopbackNone'}}}]
->>> # The pre_value is our intended state for interface Management1, therefore we will use it as reference data. post_value will be our value_to_compare as we want compare the actual state of our interface Management1 (perhaps after a network maintenance) with the its status before the change.
->>> result = my_check.evaluate(reference, comparison)
->>> result
->>> ({'interfaces': {'Management1': {'interfaceStatus': {'new_value': 'down', 'old_value': 'connected'}}}}, False)
 ```
 
-| Przemek: Why is the argument to `extract_data_from_json` named `output` ? We are passing data structure to it, so perhaps `input` or `data`?
+Use the evaluate method to return the result.
 
+```
+>>> result = my_check.evaluate(reference_data, comparison_data)
+>>> result
+>>> ({'result': {'interfaces': {'Management1': {'lastStatusChangeTimestamp': {'new_value': 1626247821.123456,
+      'old_value': 1626247820.0720868},
+     'interfaceStatus': {'new_value': 'down', 'old_value': 'connected'},
+     'interfaceStatistics': {'inBitsRate': {'new_value': 3403.4362520883615,
+       'old_value': 3582.5323982177174},
+      'inPktsRate': {'new_value': 3.7424095978179257,
+       'old_value': 3.972702352461616},
+      'outBitsRate': {'new_value': 16249.69114419833,
+       'old_value': 17327.65267220522},
+      'outPktsRate': {'new_value': 2.1111866059750692,
+       'old_value': 2.216220664406746}}}}}},
+ False)
+```
 
 As we can see, we return a tuple containing a diff between the pre and post data as well as a boolean for the overall test result. In this case a difference has been found so the status of the test is `False`.
 
-Let's see a better way to run `exact_match` for this specific case. Since we are interested in `interfaceStatus` only we could write our JMESPath expression as:
+Let's see a better way to run `exact_match` for this specific case. Because there is a lot of extra key value pairs, some of which change all the time, we are only interested in `interfaceStatus`, so we can use a utility of jdiff: `extract_data_from_json`, which can extract the value from the keys we are interested in and discard the rest.
 
 ```python
 >>> my_jmspath = "result[*].interfaces.*.[$name$,interfaceStatus]"
->>> pre_value = extract_data_from_json(output=pre_data, path=my_jmspath)
->>> pre_value
-['connected']
->>> post_value = extract_data_from_json(output=post_data, path=my_jmspath)
->>> post_value
-['down']
->>> result = my_check.evaluate(value_to_compare=post_value, reference_data=pre_value)
->>> result
-({"Management1": {"interfaceStatus": {"new_value": "connected", "old_value": "down"}}}, False)
-```
-
-| Przemek: The above example doesn't seem to match the latest version of the library, see my test below:
-
-```
->>> my_check = CheckType.create(check_type="exact_match")
->>> my_jmspath = "result[*].interfaces.*.[$name$,interfaceStatus]"
->>> pre_value = extract_data_from_json(output=pre_data, path=my_jmspath)
->>> pre_value
+>>> reference_value = extract_data_from_json(output=reference_data, path=my_jmspath)
+>>> reference_value
 [{'Management1': {'interfaceStatus': 'connected'}}]
->>> post_value = extract_data_from_json(output=post_data, path=my_jmspath)
->>> post_value
+>>> comparison_value = extract_data_from_json(output=comparison_data, path=my_jmspath)
+>>> comparison_value
 [{'Management1': {'interfaceStatus': 'down'}}]
->>> result = my_check.evaluate(value_to_compare=post_value, reference_data=pre_value)
+>>> result = my_check.evaluate(reference_value, comparison_value)
 >>> result
-({'Management1': {'interfaceStatus': {'new_value': 'down', 'old_value': 'connected'}}}, False)
+({'Management1': {'interfaceStatus': {'new_value': 'down',
+    'old_value': 'connected'}}},
+ False)
 ```
 
-Targeting only the `interfaceStatus` key, we would need to define a reference key (in this case `$name$`), we would not define any exclusion list. 
+In this case, we only want to compare the value of a single key, the `interfaceStatus` key, so we define the jmespath logic to take the name and the interfaceStatus values from the all the interface objects in the data object. 
 
-The anchor logic for the reference key applies to all check-types available in `jdiff`
-
-| Przemek: What is "anchor logic"?
+This type of logic to extract keys and value from the object is called anchor logic and more [here](#extra_value_from_json).
 
 ### Tolerance
 
-The `tolerance` test defines a percentage deviation (of type `float`) of numeric value between reference and comparison data structures. The `tolerance` is defined as a percentage that can be different between the reference and comparison values.
+The `tolerance` test checks for the deviation between the value or count between the reference and comparison values. A `tolerance` is defined and passed to the check along with the comparison and reference values.
 
-| Przemek: This doesn't read very well. What does the `tolerance` check tests for? Looking at source code it seems we're checking if the deviation(variation) between the actual and expected value is within the percentage tolerance.
-
-The `tolerance` must be a `float > 0`. The calculation is percentage based, and the test of the values may be +/- the `tolerance` percentage.
+The `tolerance` argument must be a `float > 0`. The calculation is percentage based, and the test of the values may be +/- the `tolerance` percentage.
 
 Let's have a look at a couple of examples:
 
 ```python
->>> pre_data = {
+>>> reference_data = {
 ...     "global": {
 ...         "peers": {
 ...             "10.1.0.0": {
@@ -175,7 +161,7 @@ Let's have a look at a couple of examples:
 ...         }
 ...     }
 ... }
->>> post_data = {
+>>> comparison_data = {
 ...     "global": {
 ...         "peers": {
 ...             "10.1.0.0": {
@@ -202,35 +188,54 @@ Let's have a look at a couple of examples:
 ...         }
 ...     }
 ... }
->>> my_check = CheckType.create(check_type="tolerance")
+>>> my_check = CheckType.create("tolerance")
+```
+We will define a jmespath search for the values we want to test and extract from the reference and comparison objects.
+```python
 >>> my_jmspath = "global.$peers$.*.*.ipv4.[accepted_prefixes,received_prefixes,sent_prefixes]"
->>> # Tolerance define as 10% delta between pre and post values
->>> my_tolerance_arguments = {"tolerance": 10}
->>> pre_value = extract_data_from_json(pre_data, my_jmspath)
->>> post_value = extract_data_from_json(post_data, my_jmspath)
->>> actual_results = my_check.evaluate(post_value, pre_value, **my_tolerance_arguments)
->>> # jdiff returns the value that are not within the 10%
+>>> reference_value = extract_data_from_json(reference_data, my_jmspath)
+>>> comparison_value = extract_data_from_json(comparison_data, my_jmspath)
+```
+Define a tolerance to pass into the test.
+```python
+my_tolerance=10
+```
+Pass the extracted values and tolerance into the test and `evaluate`.
+```python
+>>> actual_results = my_check.evaluate(reference_value, comparison_value, tolerance=my_tolerance)
+```
+the `tolerance` check returns the values that are not within 10%
+```python
 >>> actual_results
-({'10.1.0.0': {'accepted_prefixes': {'new_value': 500, 'old_value': 900}, 'received_prefixes': {'new_value': 599, 'old_value': 999}, 'sent_prefixes': {'new_value': 511, 'old_value': 1011}}}, False)
->>> # Let's difine a higher tolerance 
->>> my_tolerance_arguments = {"tolerance": 80}
->>> # In this case, all the values are within the 80% so the check is passed.
->>> actual_results = my_check.evaluate(post_value, pre_value, **my_tolerance_arguments)
+({'10.1.0.0': {'accepted_prefixes': {'new_value': 500, 'old_value': 900},
+   'received_prefixes': {'new_value': 599, 'old_value': 999},
+   'sent_prefixes': {'new_value': 511, 'old_value': 1011}}},
+ False)
+```
+The last example fails, because none of the values are within 10% of the old_value.
+
+When we switch one of the values (`received_prefixes`) to a value within 10%, that value will not be shown, but the test fails because the others are still out of tolerance:
+
+```python
+({'10.1.0.0': {'accepted_prefixes': {'new_value': 500, 'old_value': 900},
+   'sent_prefixes': {'new_value': 511, 'old_value': 1011}}},
+ False)
+```
+
+Let's increase the tolerance:
+
+```python
+>>> my_tolerance=80
+>>> actual_results = my_check.evaluate(reference_value, comparison_value, **my_tolerance_arguments)
 >>> actual_results
 ({}, True)
 ```
 
-| Przemek: `**my_tolerance_arguments` is not very user friendly. I see `tolerance` is just a standard keyword argument. So we should present examples with `actual_results = my_check.evaluate(post_value, pre_value, tolerance=my_tolerance)`, where `my_tolerance=80` for example.
-
-This test can test the tolerance for changing quantities of certain things such as routes, or L2 or L3 neighbors. It could also test actual outputted values such as transmitted light levels for optics.
-
-| Przemek: "This check can test if the difference between two values is within a specified tolerance percentage. It could be useful in cases where values like route metrics or optical power levels fluctuate by a small amount. It might be desirable to treat these values as equal if the deviation is within a given range."
+This check can test if the difference between two values is within a specified tolerance percentage. It could be useful in cases where values like route metrics or optical power levels fluctuate by a small amount. It might be desirable to treat these values as equal if the deviation is within a given range. You can pass in the result of len() to count the number of objects returned within your data.
 
 ### Parameter match
 
-The `parameter_match` check provides a way to match keys and values in the output with known good values. 
-
-| Przemek: The `parameter_match` check provides a way to test key/value pairs against baseline values.
+The `parameter_match` check provides a way to test key/value pairs against baseline values.
 
 The check defines baseline key/value pairs in a Python dictionary. Additionally, mode is set to one of `match` or `no-match`, which specifies if the data should match the baseline, or not.
 
@@ -241,10 +246,12 @@ The test fails if:
  
  Any key/value pairs present in the data but not in the baseline are ignored by this check.
 
-Examples:
+In data, this could be a state or status key.
+
+For example, in network data:
 
 ```python
->>> post_data = {
+>>> comparison_data = {
 ...       "jsonrpc": "2.0",
 ...       "id": "EapiExplorer-1",
 ...       "result": [
@@ -269,26 +276,40 @@ Examples:
 ...           }
 ...         }
 ...       ]
->>> my_check = CheckType.create(check_type="parameter_match")
+...    }
+>>> my_check = CheckType.create("parameter_match")
 >>> my_jmspath = "result[*].interfaces.*.[$name$,interfaceStatus,autoNegotiate]"
->>> post_value = extract_data_from_json(output=post_data, path=my_jmspath)
->>> # mode: match - Match in the ouptut what is defined under 'params'
->>> my_parameter_match = {"mode": "match", "params": {"interfaceStatus": "connected", "autoNegotiate": "success"}}
->>> actual_results = my_check.evaluate(post_value, **my_parameter_match)
+>>> comparison_value = extract_data_from_json(comparison_data, path=my_jmspath)
+```
+
+This test requires a mode argument, match in this case matches the keys and values in the "params" to the keys and values in the data.
+```python
+>>> actual_results = my_check.evaluate(
+        post_value, 
+        "mode": "match", 
+        "params": {
+            "interfaceStatus": "connected", 
+            "autoNegotiate": "success"
+        }
+    )
 >>> actual_results
 ({'Management1': {'interfaceStatus': 'down'}}, False)
->>> # mode: no-match - Return what does nto match in the ouptut as defined under 'params'
->>> my_parameter_match = {"mode": "no-match", "params": {"interfaceStatus": "connected", "autoNegotiate": "success"}}
->>> actual_results = my_check.evaluate(post_value, **my_parameter_match)
+```
+
+mode: no-match - return the keys and values from the test object that do not match the keys and values provides in "params"
+```python
+>>> my_parameter_match = 
+>>> actual_results = my_check.evaluate(
+        post_value, 
+        "mode": "no-match", 
+        "params": {
+            "interfaceStatus": "connected", 
+            "autoNegotiate": "success"}
+        }
+    )
 >>> actual_results
 ({'Management1': {'autoNegotiate': 'success'}}, False
 ```
-
-| Przemek: Why use dict unpacking when passing arguments to `evaluate`?
-
-In network data, this could be a state of bgp neighbors being Established or the connectedness of certain interfaces being up.
-
-| Przemek: This sentence should be moved above the example.
 
 ### Regex
 
