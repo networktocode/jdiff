@@ -4,16 +4,16 @@
 
 The library heavily relies on [JMESPath](https://jmespath.org/) for traversing the JSON object and finding the values to be evaluated. More on that [here](#customized-jmespath).
 
-## Getting started
+## Getting Started
 
 
-First you import the CheckType class.
+First, you import the CheckType class.
 
 ```python
 from jdiff import CheckType
 ```
 
-Get (or fabricate) some data (this data may also be loaded from a file or from a string, more examples later).
+Get (or fabricate) some data. (This data may also be loaded from a file or from a string, more examples later.)
 
 ```python
 a = {"foo": "bar"}
@@ -33,29 +33,29 @@ match.evaluate(a, b)
 ```
 
 This results in a tuple:
-- The first value is the diff between the two data structures
-- The second value is a boolean with the result of the check
+- The first value is the diff between the two data structures.
+- The second value is a boolean with the result of the check.
 
-This diff can also show if any keys were added or deleted. 
+This diff can also show whether any keys were added or deleted. 
 The second value returned will be the boolean result of the check. In this case, the two data structures were not an exact match.
 
 | Stephen - we may want to remove these next two paragraphs
 For instance, the reference state can be collected from the network directly using any method that returns structured data: Ansible, NAPALM, Nornir to name a few. You could also choose to generate the reference state from an SoT, such as [Nautobot](https://github.com/nautobot/nautobot/), and have a true intended state.
 
-`jdiff` is perfectly suited to work with data gathered from network devices via show commands, Ansible playbooks, as well as in applications such as [Nautobot](https://github.com/nautobot/nautobot/), or [Netbox](https://github.com/netbox-community/netbox). `jdiff` is focused on being the 'plumbing' behind a full network automation validation solution.
+`jdiff` is perfectly suited to work with data gathered from network devices via show commands, Ansible playbooks, or in applications such as [Nautobot](https://github.com/nautobot/nautobot/) or [Netbox](https://github.com/netbox-community/netbox). `jdiff` is focused on being the 'plumbing' behind a full network automation validation solution.
 
-## Checking data structures
+## Checking Data Structures
 
 As shown in the example, the check evaluation both performs a diff and tests the objects. All of the concrete `CheckTypes` both perform the diff and their specified check.
 
-More on the **check** part: the check provides a way to test some keys or values in our collected data. The check portion is focused on providing a boolean result of the test. There are a few different ways to check our data. 
+More on the **check** part: The check provides a way to test some keys or values in our collected data. The check portion is focused on providing a boolean result of the test. There are a few different ways to check our data. 
 
 These are the different checks that can be performed on the data. These both describe the type of check and are also used as the argument to instantiate that type of check with the create method: `CheckType.create("check_type")`.
 
 - `exact_match`: the keys and values must match exactly between the two objects
 - `tolerance`: the keys must match and the values can differ according to the 'tolerance' value provided
 - `parameter_match`: a reference key and value is provided and its presence (or absence) is checked in the provided object
-- `regex`: a reference regex pattern is provided which is used to find a match in the provided object
+- `regex`: a reference regex pattern is provided and is used to find a match in the provided object
 - `operator`: similar to parameter match, but the reference includes several different possible operators: 'in', 'bool', 'string', and numerical comparison with 'int' and 'float' to check against
 
 `CheckTypes` are explained in more detail in the [architecture](architecture.md).
@@ -63,9 +63,9 @@ These are the different checks that can be performed on the data. These both des
 
 ## Workflow
 
-| ![jdiff workflow](./images/jdiff-workflow.png) |
+| ![jdiff Workflow](./images/jdiff-workflow.png) |
 |:---:|
-| **`jdiff` workflow** |
+| **`jdiff` Workflow** |
 
 
 1. The reference state object is retrieved or assembled. The structured data may be from:
@@ -76,7 +76,7 @@ These are the different checks that can be performed on the data. These both des
     - constructed programmatically
 
 2. Some time passes where some change to the data may occur; then the comparison state is retrieved or assembled, often using a similar process used to get the reference state.
-3. The reference state is then compared to the current state using the jdiff library using one of the `CheckTypes`.
-4. The evaluate method is called on the `check` object and the result is returned.
+3. The reference state is then compared to the current state via the jdiff library using one of the `CheckTypes`.
+4. The evaluate method is called on the `check` object, and the result is returned.
 
 Please see [usage](usage.md) for commands and more information.
