@@ -4,7 +4,7 @@
 
 The library heavily relies on [JMESPath](https://jmespath.org/) for traversing the JSON object and finding the values to be evaluated. More on that [here](#customized-jmespath).
 
-## Use cases
+## Use Cases
 
 `jdiff` has been developed around diffing and testing structured data returned from APIs and other Python modules and libraries (such as TextFSM). The primary use case is the examination of structured data returned from networking devices. However, we found the library fits other use cases where structured data needs to be operated on, and is especially useful when working or dealing with data returned from APIs.
 
@@ -20,17 +20,17 @@ A `jdiff` `CheckType` accepts two Python dictionaries as input: the reference ob
 
 It's worth pointing out that `jdiff` is focused on the comparison of the two objects and the testing of the values, not retrieving the data.
 
-### Getting started
+### Getting Started
 
 TODO: Write getting started guide in docs and link here.
 
-First you import the CheckType class.
+First, you import the CheckType class.
 
 ```python
 from jdiff import CheckType
 ```
 
-Get (or fabricate) some data (this data may also be loaded from a file or from a string, more examples later).
+Get (or fabricate) some data. (This data may also be loaded from a file or from a string, more examples later.)
 
 ```python
 a = {"foo": "bar"}
@@ -53,18 +53,18 @@ This results in a tuple:
 - The first value is the diff between the two data structures
 - The second value is a boolean with the result of the check
 
-This diff can also show if any keys were added or deleted. 
+This diff can also show whether any keys were added or deleted. 
 The second value returned will be the boolean result of the check. In this case, the two data structures were not an exact match.
 
 | Stephen - we may want to remove these next two paragraphs
 For instance, the reference state can be collected from the network directly using any method that returns structured data: Ansible, NAPALM, Nornir to name a few. You could also choose to generate the reference state from an SoT, such as [Nautobot](https://github.com/nautobot/nautobot/), and have a true intended state.
 
-`jdiff` is perfectly suited to work with data gathered from network devices via show commands, Ansible playbooks, as well as in applications such as [Nautobot](https://github.com/nautobot/nautobot/), or [Netbox](https://github.com/netbox-community/netbox). `jdiff` is focused on being the 'plumbing' behind a full network automation validation solution. 
-### Checking data structures
+`jdiff` is perfectly suited to work with data gathered from network devices via show commands, Ansible playbooks, or in applications such as [Nautobot](https://github.com/nautobot/nautobot/) or [Netbox](https://github.com/netbox-community/netbox). `jdiff` is focused on being the 'plumbing' behind a full network automation validation solution. 
+### Checking Data Structures
 
-As shown in the example, the check evaluation both performs a diff and tests the objects. All of the concrete `CheckTypes` both perform the diff and their specified check.
+As shown in the example, the check evaluation both performs a diff and tests the objects. All of the concrete `CheckTypes` perform both the diff and their specified check.
 
-More on the **check** part: the check provides a way to test some keys or values in our collected data. The check portion is focused on providing a boolean result of the test. There are a few different ways to check our data. 
+More on the **check** part: The check provides a way to test some keys or values in our collected data. The check portion is focused on providing a boolean result of the test. There are a few different ways to check our data. 
 
 These are the different checks that can be performed on the data. These both describe the type of check and are also used as the argument to instantiate that type of check with the create method: `CheckType.create("check_type")`.
 
@@ -79,7 +79,7 @@ These are the different checks that can be performed on the data. These both des
 
 ## Workflow
 
-| ![jdiff workflow](./docs/images/workflow.png) |
+| ![jdiff Workflow](./docs/images/workflow.png) |
 |:---:|
 | **`jdiff` workflow** |
 
@@ -120,7 +120,7 @@ CheckType.create("exact_match")
 
 | Stephen - This step may not be necessary at all? I would say this may come with more advanced use cases. Note: the extract data from json is specifically for getting keys and values from larger dictionaries to make it easier to compare and check specific parts/branches of the object. 
 
-Next, define a json object as reference data, as well as a JMESPATH expression to extract the value wanted and pass them to `extract_data_from_json` method. Be aware! `jdiff` works with a customized version of JMESPATH. More on that [below](#customized-jmespath).
+Next, define a JSON object as reference data, as well as a JMESPath expression to extract the value wanted and pass them to `extract_data_from_json` method. Be aware! `jdiff` works with a customized version of JMESPath. More on that [below](#customized-jmespath).
 
 ```python
 bgp_reference_state = "./pre/bgp.json"
@@ -130,7 +130,8 @@ bgp_reference_value = check.extract_data_from_json(bgp_reference_state, bgp_jmsp
 
 | Przemek: Does the JSON object have to be on the disk? Can it be an in-memory object? Does it have to a JSON object at all? Can it be a dictionary, or a dictionary-like object?
 
-Once the pre-change values are extracted, we would need to evaluate it against our post-change value. In case of check-type `exact_match` our post-value would be another json object:
+Once the 
+change values are extracted, we would need to evaluate them against our post-change value. In case of check-type `exact_match` our post-value would be another JSON object:
 
 ```python
 bgp_comparison_state = "./post/bgp.json"
@@ -139,7 +140,7 @@ bgp_comparison_value = check.extract_data_from_json(bgp_post_change, bgp_jmspath
 
 Each check type expects different types of arguments based on how and what they are checking. For example: check type `tolerance` needs a `tolerance` argument, whereas `parameter_match` expects a dictionary.
 
-Now that we have pre- and post-data, we use the `evaluate` method to compare them, which will return our evaluation result.
+Now that we have pre and post data, we use the `evaluate` method to compare them, which will return our evaluation result.
 
 ```python
 results = check.evaluate(post_value, pre_value, **evaluate_args)
@@ -147,7 +148,7 @@ results = check.evaluate(post_value, pre_value, **evaluate_args)
 
 ## Customized JMESPath
 
-Since `jdiff` works with JSON objects as data inputs, JMESPATH was the obvious choice for traversing the data and extracting the value(s) to compare. However, JMESPath has a limitation where it is not possible to remap a `value` to a different `key` which can result in a loss of context.
+Since `jdiff` works with JSON objects as data inputs, JMESPath was the obvious choice for traversing the data and extracting the value(s) to compare. However, JMESPath has a limitation where it is not possible to remap a `value` to a different `key`, which can result in a loss of context.
 
 | Przemek: `key` and `value` are confusing here. This implies parent-child relationship but the example shows two keys, and their values, at the same level of hierarchy. I think something along the lines of "define relationship between two keys and their values" would work better.
 
@@ -202,8 +203,8 @@ A JMESPath expression to extract `state` is shown below.
 ["Idle", "Connected"]
 ```
 
-How can we understand that `Idle` is relative to peer 7.7.7.7 and `Connected` to peer `10.1.0.0` ? 
-We could index the output but that would require some post-processing of the data. For that reason, `jdiff` use a customized version of JMESPATH where it is possible to define a reference key for the value(s) wanted. The reference key must be within `$` sign anchors and defined in a list, together with the value(s):
+How can we understand that `Idle` is relative to peer 7.7.7.7 and `Connected` to peer `10.1.0.0`? 
+We could index the output, but that would require some post-processing of the data. For that reason, `jdiff` uses a customized version of JMESPath where it is possible to define a reference key for the value(s) wanted. The reference key must be within `$` sign anchors and defined in a list, together with the value(s):
 
 ```python
 "result[0].vrfs.default.peerList[*].[$peerAddress$,state]
@@ -224,7 +225,7 @@ That  would give us...
 
 Check type `exact_match` is concerned with the value of the elements within the data structure. The key-value pairs should match between the reference and comparison data. A diff is generated between the two data sets.
 
-As some outputs might be too verbose or include fields that constantly change (e.g. interface counter), it is possible to exclude a portion of data traversed by JMESPath by defining a keys exclusion list.
+As some outputs might be too verbose or include fields that constantly change (e.g., interface counter), it is possible to exclude a portion of data traversed by JMESPath by defining a key's exclusion list.
 
 | Przemek: `extract_data_from_json` is used without prior introduction. At this stage I'm not sure where this comes from, what it does, and what arguments does it accept.
 
@@ -293,14 +294,17 @@ Examples:
 >>> my_check = CheckType.create(check_type="exact_match")
 >>> my_check
 >>> <jdiff.check_types.ExactMatchType object at 0x10ac00f10>
->>> # Extract the wanted value from pre_dat to later compare with post_data. As we want compare all the body (excluding "interfaceStatistics"), we do not need to define any reference key
+>>> # Extract the wanted value from pre_data to later compare with post_data. As we want to compare all the body (excluding "interfaceStatistics"), we do not need to define any reference key.
+
+|Dwight: Should pre_data and post_data (above) be pre_value and post_value?
+
 >>> pre_value = extract_data_from_json(output=reference, path=my_jmspath, exclude=exclude_fields)
 >>> pre_value
 >>> [{'interfaces': {'Management1': {'lastStatusChangeTimestamp': 1626247820.0720868, 'lanes': 0, 'name': 'Management1', 'interfaceStatus': 'connected', 'autoNegotiate': 'success', 'burnedInAddress': '08:00:27:e6:b2:f8', 'loopbackMode': 'loopbackNone'}}}]
 >>> post_value = extract_data_from_json(output=reference, path=my_jmspath, exclude=exclude_fields)
 >>> post_value
 >>> [{'interfaces': {'Management1': {'lastStatusChangeTimestamp': 1626247821.123456, 'lanes': 0, 'name': 'Management1', 'interfaceStatus': 'down', 'autoNegotiate': 'success', 'burnedInAddress': '08:00:27:e6:b2:f8', 'loopbackMode': 'loopbackNone'}}}]
->>> # The pre_value is our intended state for interface Management1, therefore we will use it as reference data. post_value will be our value_to_compare as we want compare the actual state of our interface Management1 (perhaps after a network maintenance) with the its status before the change.
+>>> # The pre_value is our intended state for interface Management1, therefore we will use it as reference data. post_value will be our value_to_compare, as we want to compare the actual state of our interface Management1 (perhaps after a network maintenance) with its status before the change.
 >>> result = my_check.evaluate(reference, comparison)
 >>> result
 >>> ({'interfaces': {'Management1': {'interfaceStatus': {'new_value': 'down', 'old_value': 'connected'}}}}, False)
@@ -309,9 +313,9 @@ Examples:
 | Przemek: Why is the argument to `extract_data_from_json` named `output` ? We are passing data structure to it, so perhaps `input` or `data`?
 
 
-As we can see, we return a tuple containing a diff between the pre and post data as well as a boolean for the overall test result. In this case a difference has been found so the status of the test is `False`.
+As we can see, we return a tuple containing a diff between the pre and post data as well as a boolean for the overall test result. In this case a difference has been found, so the status of the test is `False`.
 
-Let's see a better way to run `exact_match` for this specific case. Since we are interested in `interfaceStatus` only we could write our JMESPath expression as:
+Let's see a better way to run `exact_match` for this specific case. Since we are interested in `interfaceStatus` only, we could write our JMESPath expression as:
 
 ```python
 >>> my_jmspath = "result[*].interfaces.*.[$name$,interfaceStatus]"
@@ -342,7 +346,7 @@ Let's see a better way to run `exact_match` for this specific case. Since we are
 ({'Management1': {'interfaceStatus': {'new_value': 'down', 'old_value': 'connected'}}}, False)
 ```
 
-Targeting only the `interfaceStatus` key, we would need to define a reference key (in this case `$name$`), we would not define any exclusion list. 
+Targeting only the `interfaceStatus` key, we would need to define a reference key (in this case `$name$`); we would not define any exclusion list. 
 
 The anchor logic for the reference key applies to all check-types available in `jdiff`
 
@@ -415,17 +419,17 @@ Let's have a look at a couple of examples:
 ... }
 >>> my_check = CheckType.create(check_type="tolerance")
 >>> my_jmspath = "global.$peers$.*.*.ipv4.[accepted_prefixes,received_prefixes,sent_prefixes]"
->>> # Tolerance define as 10% delta between pre and post values
+>>> # Tolerance defined as 10% delta between pre and post values
 >>> my_tolerance_arguments = {"tolerance": 10}
 >>> pre_value = extract_data_from_json(pre_data, my_jmspath)
 >>> post_value = extract_data_from_json(post_data, my_jmspath)
 >>> actual_results = my_check.evaluate(post_value, pre_value, **my_tolerance_arguments)
->>> # jdiff returns the value that are not within the 10%
+>>> # jdiff returns the values that are not within the 10%
 >>> actual_results
 ({'10.1.0.0': {'accepted_prefixes': {'new_value': 500, 'old_value': 900}, 'received_prefixes': {'new_value': 599, 'old_value': 999}, 'sent_prefixes': {'new_value': 511, 'old_value': 1011}}}, False)
 >>> # Let's difine a higher tolerance 
 >>> my_tolerance_arguments = {"tolerance": 80}
->>> # In this case, all the values are within the 80% so the check is passed.
+>>> # In this case, all the values are within the 80%, so the check is passed.
 >>> actual_results = my_check.evaluate(post_value, pre_value, **my_tolerance_arguments)
 >>> actual_results
 ({}, True)
@@ -433,17 +437,17 @@ Let's have a look at a couple of examples:
 
 | Przemek: `**my_tolerance_arguments` is not very user friendly. I see `tolerance` is just a standard keyword argument. So we should present examples with `actual_results = my_check.evaluate(post_value, pre_value, tolerance=my_tolerance)`, where `my_tolerance=80` for example.
 
-This test can test the tolerance for changing quantities of certain things such as routes, or L2 or L3 neighbors. It could also test actual outputted values such as transmitted light levels for optics.
+This test can test the tolerance for changing quantities of certain things such as routes, or L2 or L3 neighbors. It could also test actual outputted values, such as transmitted light levels for optics.
 
 | Przemek: "This check can test if the difference between two values is within a specified tolerance percentage. It could be useful in cases where values like route metrics or optical power levels fluctuate by a small amount. It might be desirable to treat these values as equal if the deviation is within a given range."
 
-### Parameter match
+### Parameter Match
 
 The `parameter_match` check provides a way to match keys and values in the output with known good values. 
 
 | Przemek: The `parameter_match` check provides a way to test key/value pairs against baseline values.
 
-The check defines baseline key/value pairs in a Python dictionary. Additionally, mode is set to one of `match` or `no-match`, which specifies if the data should match the baseline, or not.
+The check defines baseline key/value pairs in a Python dictionary. Additionally, mode is set to one of `match` or `no-match`, which specifies whether the data should match the baseline or not.
 
 The test fails if:
 
@@ -488,7 +492,7 @@ Examples:
 >>> actual_results = my_check.evaluate(post_value, **my_parameter_match)
 >>> actual_results
 ({'Management1': {'interfaceStatus': 'down'}}, False)
->>> # mode: no-match - Return what does nto match in the ouptut as defined under 'params'
+>>> # mode: no-match - Return what does not match in the ouptut as defined under 'params'
 >>> my_parameter_match = {"mode": "no-match", "params": {"interfaceStatus": "connected", "autoNegotiate": "success"}}
 >>> actual_results = my_check.evaluate(post_value, **my_parameter_match)
 >>> actual_results
@@ -505,7 +509,7 @@ In network data, this could be a state of bgp neighbors being Established or the
 
 The `regex` check type evaluates data against a regular expression passed as an argument to the `evaluate` method. Similarly to `parameter_match` check, the `match` and `no-match` modes are supported.
 
-Let's run an example where we want to check the `burnedInAddress` key has a string representing a MAC Address as value
+Let's run an example where we want to check whether the `burnedInAddress` key has a string representing a MAC address as value.
 
 ```python
 >>> data = {
@@ -534,7 +538,7 @@ Let's run an example where we want to check the `burnedInAddress` key has a stri
 ...         }
 ...       ]
 ...     }
->>> # Python regex for matching MAC Address string
+>>> # Python regex for matching MAC address string
 >>> regex_args = {"regex": "(?:[0-9a-fA-F]:?){12}", "mode": "match"}
 >>> path = "result[*].interfaces.*.[$name$,burnedInAddress]"
 >>> check = CheckType.create(check_type="regex")
@@ -542,13 +546,13 @@ Let's run an example where we want to check the `burnedInAddress` key has a stri
 >>> value
 [{'Management1': {'burnedInAddress': '08:00:27:e6:b2:f8'}}]
 >>> result = check.evaluate(value, **regex_args)
->>> # The test is passed as the burnedInAddress value match our regex
+>>> # The test is passed, as the burnedInAddress value matches our regex
 >>> result
 ({}, True)
 >>> # What if we want "no-match"?
 >>> regex_args = {"regex": "(?:[0-9a-fA-F]:?){12}", "mode": "no-match"}
 >>> result = check.evaluate(value, **regex_args)
->>> # jdiff return the failing data as the regex match the value
+>>> # jdiff returns the failing data, as the regex matches the value
 >>> result
 ({'Management1': {'burnedInAddress': '08:00:27:e6:b2:f8'}}, False)
 ```
@@ -561,7 +565,7 @@ The `operator` check is a collection of more specific checks divided into catego
 
 | Przemek: The below is not very readable? Indented sections are rendered as code blocks. I would suggest naming these groups "categories" or "groups" and explaing that each of the names is the name of the check that needs to be passed as the argument.
 
-#### `in` operators
+#### `in` Operators
 
 
     1. is-in: Check if the specified element string value is included in a given list of strings.
@@ -572,39 +576,41 @@ The `operator` check is a collection of more specific checks divided into catego
            - not-in: ["down", "up"] 
              check if value is not in list (down, up) 
 
+|Dwight: Add a space in #3 between 20 and comma? [20 , 70]
+
     3. in-range: Check if the value of a specified element is in the given numeric range.
             - in-range: [20, 70]
               check if value is in range between 20 and 70 
 
     4. not-range: Check if the value of a specified element is outside of a given numeric range.
               - not-range: [5 , 40]
-                checks if value is not in range between 5 and 40
+                check if value is not in range between 5 and 40
 
-#### `bool` operators
+#### `bool` Operators
 
     1. all-same: Check if all content values for the specified element are the same. It can also be used to compare all content values against another specified element.
            - all-same: flap-count
-             checks if all values of node <flap-count> in given path is same or not.
+             checks if all values of node <flap-count> in given path are same or not.
 
-#### `str` operators
+#### `str` Operators
 
-    1. contains: determines if an element string value contains the provided test-string value.
+    1. contains: Determines if an element string value contains the provided test-string value.
            - contains: "underlay"
            checks if "underlay" is present in given data or not. 
 
-    2. not-contains: determines if an element string value does not contain the provided test-string value.
+    2. not-contains: Determines if an element string value does not contain the provided test-string value.
            - not-contains: "overlay"
            checks if "overlay" is present in given node or not.
 
-#### `int`, `float` operators
+#### `int`, `float` Operators
 
     1. is-gt: Check if the value of a specified element is greater than a given numeric value.
             - is-gt: 2
-              checks if value should be greater than 2  
+              checks if value is greater than 2  
 
-    2. is-lt: Check if the value of a specified element is lesser than a given numeric value.
+    2. is-lt: Check if the value of a specified element is less than a given numeric value.
             - is-lt: 55
-              checks if value is lower than 55 or not.  
+              checks if value is less than 55  
 
 
 Examples:
@@ -663,7 +669,7 @@ Examples:
 ...     ]
 ...   }
 >>> path = "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup,vrf,state]"
->>> # "operator" checks requires "mode" argument - which specify the operator logic to apply - 
+>>> # "operator" checks require "mode" argument - which specifies the operator logic to apply - 
 >>> # and "operator_data" required for the mode defined.
 >>> check_args = {"params": {"mode": "all-same", "operator_data": True}}
 >>> check = CheckType.create("operator")
@@ -671,7 +677,7 @@ Examples:
 >>> value
 [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE', 'vrf': 'default', 'state': 'Connected'}}, {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}]
 >>> result = check.evaluate(value, check_args)
->>> # We are looking for peers that have the same peerGroup,vrf and state. If not, return those are not. 
+>>> # We are looking for peers that have the same peerGroup, vrf, and state. If not, return those that do not. 
 >>> result
 ((False, [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE', 'vrf': 'default', 'state': 'Connected'}}, {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}]), False)
 ```
@@ -703,7 +709,7 @@ What about `str` operator?
 ((True, [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE'}}]), False)
 ```
 
-Can you guess what would ne the outcome for an `int`, `float` operator?
+Can you guess what would be the outcome for an `int`, `float` operator?
 
 ```python
 >>> path = "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]"
