@@ -3,7 +3,7 @@ dev_addr: "127.0.0.1:8001"
 edit_uri: "edit/docs"
 site_name: "jdiff Documentation"
 site_url: "https://jdiff.readthedocs.io/"
-site_dir: /docs
+site_dir: "jdiff/docs"
 repo_url: "https://github.com/networktocode-llc/jdiff"
 theme:
   name: "readthedocs"
@@ -17,11 +17,12 @@ markdown_extensions:
   - "admonition"
   - toc:
       permalink: true
-# plugins:
-#   - include-markdown
+plugins:
+  - include-markdown
 nav:
   - Introduction: "index.md"
   - Usage: "usage.md"
   - Architecture: "architecture.md"
-  - Examples: "example.md"
-  - Development Environment: "development.md"
+# Future docs
+#  - Examples: "example.md"
+#  - Development Environment: "development.md"
