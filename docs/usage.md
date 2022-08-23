@@ -420,14 +420,17 @@ The `operator` check is a collection of more specific checks divided into catego
 1. `is-in`: Check if the specified element string value is included in a given list of strings.
       - `is-in: ["down", "up"]`: check if value is in list (down, up)  
 
+
 2. `not-in`: Check if the specified element string value is NOT included in a given list of strings.
-        - `not-in: ["down", "up"]`: check if value is not in list (down, up) 
+      - `not-in: ["down", "up"]`: check if value is not in list (down, up) 
+
 
 3. `in-range`: Check if the value of a specified element is in the given numeric range.
-        - `in-range: [20, 70]`: check if value is in range between 20 and 70 
+      - `in-range: [20, 70]`: check if value is in range between 20 and 70 
+
 
 4. `not-range`: Check if the value of a specified element is outside of a given numeric range.
-          - `not-range: [5, 40]`: checks if value is not in range between 5 and 40
+        - `not-range: [5, 40]`: checks if value is not in range between 5 and 40
 
 #### `bool` Operators
 
@@ -507,15 +510,21 @@ Examples:
 ...     ]
 ...   }
 >>> path = "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup,vrf,state]"
->>> # "operator" checks require "mode" argument - which specifies the operator logic to apply - 
->>> # and "operator_data" required for the mode defined.
+```
+
+`operator` checks require a `mode` argument - which specifies the operator logic to apply and `operator_data` required for the mode defined.
+
+```python
 >>> check_args = {"params": {"mode": "all-same", "operator_data": True}}
 >>> check = CheckType.create("operator")
 >>> value = check.extract_data_from_json(data, path)
 >>> value
 [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE', 'vrf': 'default', 'state': 'Connected'}}, {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}]
 >>> result = check.evaluate(value, check_args)
->>> # We are looking for peers that have the same peerGroup, vrf, and state. If not, return those that do not. 
+```
+We are looking for peers that have the same peerGroup, vrf, and state. Return peer groups that aren't the same. 
+```python
+>>> 
 >>> result
 ((False, [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE', 'vrf': 'default', 'state': 'Connected'}}, {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}]), False)
 ```
@@ -528,7 +537,9 @@ Let's now look to an example for the `in` operator. Keeping the same `data` and 
 >>> value = check.extract_data_from_json(data, path)
 >>> value
 [{'7.7.7.7': {'prefixesReceived': 101}}, {'10.1.0.0': {'prefixesReceived': 50}}]
->>> # We are looking for prefixesReceived value in operator_data list.
+```
+We are looking for "prefixesReceived" value in the operator_data list.
+```python
 >>> result = check.evaluate(value, check_args)
 >>> result
 ((True, [{'10.1.0.0': {'prefixesReceived': 50}}]), False)
