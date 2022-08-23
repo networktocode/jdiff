@@ -6,6 +6,54 @@ A `jdiff` `CheckType` accepts two Python dictionaries as input: the reference ob
 
 It's worth pointing out that `jdiff` is focused on the comparison of the two objects and the testing of the values, not retrieving the data.
 
+## Utility
+
+Before we get started with the CheckTypes, we've also included a method of extracting portions of the data for comparison. In many cases in data comparison, we aren't interested in the whole piece of data. We've provided this utility to extract subsets of a larger data object. 
+
+## `extract_data_from_json`
+
+As an example, in this case of the object below, we are only interested in comparing the value of a single key-value pair from each item in the interfaces dictionary contained within the response. 
+
+```python
+>>> from jdiff import extract_data_from_json
+>>> reference_data = {
+      "jsonrpc": "2.0",
+      "id": "EapiExplorer-1",
+      "result": [
+        {
+          "interfaces": {
+            "Management1": {
+              "lastStatusChangeTimestamp": 1626247820.0720868,
+              "lanes": 0,
+              "name": "Management1",
+              "interfaceStatus": "connected",
+              "autoNegotiate": "success",
+              "burnedInAddress": "08:00:27:e6:b2:f8",
+              "loopbackMode": "loopbackNone",
+              "interfaceStatistics": {
+                "inBitsRate": 3582.5323982177174,
+                "inPktsRate": 3.972702352461616,
+                "outBitsRate": 17327.65267220522,
+                "updateInterval": 300,
+                "outPktsRate": 2.216220664406746
+              }
+            }
+          }
+        }
+      ]
+    }
+```
+After getting the data, we'll create a query (similar to JMESpath syntax) to extract the key-value pair that we'll use for comparison. Then, call `extract_data_from_json` with inputs of the query and the data object to extract the data from. 
+
+```python
+>>> my_jmspath = "result[*].interfaces.*.[$name$,interfaceStatus]"
+>>> reference_value = extract_data_from_json(reference_data, my_jmspath)
+>>> reference_value
+[{'Management1': {'interfaceStatus': 'connected'}}]
+```
+
+This type of logic to extract keys and value from the object is called anchor logic. Find more about anchor logic [here](#extract_data_from_json).
+
 
 # `CheckTypes` Explained
 
@@ -15,9 +63,7 @@ Check type `exact_match` is concerned with the value of the elements within the 
 
 As some outputs might be too verbose or include fields that constantly change (e.g., interface counter), it is possible to exclude a portion of data traversed by JMESPath by defining a key's exclusion list.
 
-
 Examples:
-
 
 ```python
 >>> from jdiff import CheckType
@@ -77,7 +123,7 @@ Examples:
 ```
 Create an instance of CheckType object with 'exact_match' as check-type argument.
 
-```
+```python
 >>> my_check = CheckType.create(check_type="exact_match")
 >>> my_check
 >>> <jdiff.check_types.ExactMatchType object at 0x10ac00f10>
@@ -85,7 +131,7 @@ Create an instance of CheckType object with 'exact_match' as check-type argument
 
 Use the evaluate method to return the result.
 
-```
+```python
 >>> result = my_check.evaluate(reference_data, comparison_data)
 >>> result
 >>> ({'result': {'interfaces': {'Management1': {'lastStatusChangeTimestamp': {'new_value': 1626247821.123456,
@@ -104,14 +150,14 @@ Use the evaluate method to return the result.
 
 As we can see, we return a tuple containing a diff between the pre and post data as well as a boolean for the overall test result. In this case a difference has been found, so the status of the test is `False`.
 
-Let's see a better way to run `exact_match` for this specific case. Because there are a lot of extra key value pairs, some of which change all the time, we are interested only in `interfaceStatus`. So we can use a utility of jdiff: `extract_data_from_json`, which can extract the value from the keys we are interested in and discard the rest.
+Let's see a better way to run `exact_match` for this specific case. Because there are a lot of extra key value pairs, some of which change all the time, we are interested only in `interfaceStatus`. In this case we can use the `extract_data_from_json` utility, to extract only the value from the keys we are interested in and discard the rest.
 
 ```python
 >>> my_jmspath = "result[*].interfaces.*.[$name$,interfaceStatus]"
->>> reference_value = extract_data_from_json(output=reference_data, path=my_jmspath)
+>>> reference_value = extract_data_from_json(reference_data, my_jmspath)
 >>> reference_value
 [{'Management1': {'interfaceStatus': 'connected'}}]
->>> comparison_value = extract_data_from_json(output=comparison_data, path=my_jmspath)
+>>> comparison_value = extract_data_from_json(comparison_data, my_jmspath)
 >>> comparison_value
 [{'Management1': {'interfaceStatus': 'down'}}]
 >>> result = my_check.evaluate(reference_value, comparison_value)
@@ -123,7 +169,6 @@ Let's see a better way to run `exact_match` for this specific case. Because ther
 
 In this case, we only want to compare the value of a single key, the `interfaceStatus` key. So we define the JMESPath logic to take the name and the interfaceStatus values from all the interface objects in the data object. 
 
-This type of logic to extract keys and value from the object is called anchor logic. Find more about anchor logic [here](#extra_value_from_json).
 
 ### Tolerance
 
@@ -279,7 +324,7 @@ For example, in network data:
 ...    }
 >>> my_check = CheckType.create("parameter_match")
 >>> my_jmspath = "result[*].interfaces.*.[$name$,interfaceStatus,autoNegotiate]"
->>> comparison_value = extract_data_from_json(comparison_data, path=my_jmspath)
+>>> comparison_value = extract_data_from_json(comparison_data, my_jmspath)
 ```
 
 This test requires a mode argument; match in this case matches the keys and values in the "params" to the keys and values in the data.
@@ -348,7 +393,7 @@ Let's run an example where we want to check the `burnedInAddress` key has a stri
 >>> regex_args = {"regex": "(?:[0-9a-fA-F]:?){12}", "mode": "match"}
 >>> path = "result[*].interfaces.*.[$name$,burnedInAddress]"
 >>> check = CheckType.create(check_type="regex")
->>> value = check.extract_data_from_json(output=data, path=path)
+>>> value = check.extract_data_from_json(data, path)
 >>> value
 [{'Management1': {'burnedInAddress': '08:00:27:e6:b2:f8'}}]
 >>> result = check.evaluate(value, **regex_args)
