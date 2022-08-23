@@ -6,7 +6,7 @@ A `jdiff` `CheckType` accepts two Python dictionaries as input: the reference ob
 
 It's worth pointing out that `jdiff` is focused on the comparison of the two objects and the testing of the values, not retrieving the data.
 
-## Utility
+## Extracting Data For Comparison
 
 Before we get started with the CheckTypes, we've also included a method of extracting portions of the data for comparison. In many cases in data comparison, we aren't interested in the whole piece of data. We've provided this utility to extract subsets of a larger data object. 
 
@@ -150,7 +150,7 @@ Use the evaluate method to return the result.
 
 As we can see, we return a tuple containing a diff between the pre and post data as well as a boolean for the overall test result. In this case a difference has been found, so the status of the test is `False`.
 
-Let's see a better way to run `exact_match` for this specific case. Because there are a lot of extra key value pairs, some of which change all the time, we are interested only in `interfaceStatus`. In this case we can use the `extract_data_from_json` utility, to extract only the value from the keys we are interested in and discard the rest.
+Let's see a better way to run `exact_match` for this specific case. Because there are a lot of extra key-value pairs, some of which change all the time, we are interested only in `interfaceStatus`. In this case we can use the `extract_data_from_json` utility, to extract only the value from the keys we are interested in and discard the rest.
 
 ```python
 >>> my_jmspath = "result[*].interfaces.*.[$name$,interfaceStatus]"
@@ -280,16 +280,16 @@ This check can test whether the difference between two values is within a specif
 
 ### Parameter Match
 
-The `parameter_match` check provides a way to test key/value pairs against baseline values.
+The `parameter_match` check provides a way to test key-value pairs against baseline values.
 
-The check defines baseline key/value pairs in a Python dictionary. Additionally, mode is set to one of `match` or `no-match`, which specifies whether the data should match the baseline, or not.
+The check defines baseline key-value pairs in a Python dictionary. Additionally, mode is set to one of `match` or `no-match`, which specifies whether the data should match the baseline, or not.
 
 The test fails if:
 
-  - Specified key/value pairs in the data do not match the baseline and mode is set to `match`.
-  - Specified key/value pairs in the data match the baseline and mode is set to `no-match`.
+  - Specified key-value pairs in the data do not match the baseline and mode is set to `match`.
+  - Specified key-value pairs in the data match the baseline and mode is set to `no-match`.
  
- Any key/value pairs present in the data but not in the baseline are ignored by this check.
+ Any key-value pairs present in the data but not in the baseline are ignored by this check.
 
 In data, this could be a state or status key.
 
@@ -418,41 +418,37 @@ The `operator` check is a collection of more specific checks divided into catego
 #### `in` Operators
 
 
-1. is-in: Check if the specified element string value is included in a given list of strings.
-      - is-in: ["down", "up"] 
-        check if value is in list (down, up)  
+1. `is-in`: Check if the specified element string value is included in a given list of strings.
+      - `is-in: ["down", "up"]`: check if value is in list (down, up)  
 
-2. not-in: Check if the specified element string value is NOT included in a given list of strings.
-        - not-in: ["down", "up"] 
-          check if value is not in list (down, up) 
+2. `not-in`: Check if the specified element string value is NOT included in a given list of strings.
+        - `not-in: ["down", "up"]`: check if value is not in list (down, up) 
 
-3. in-range: Check if the value of a specified element is in the given numeric range.
-        - in-range: [20, 70]
-          check if value is in range between 20 and 70 
+3. `in-range`: Check if the value of a specified element is in the given numeric range.
+        - `in-range: [20, 70]`: check if value is in range between 20 and 70 
 
-4. not-range: Check if the value of a specified element is outside of a given numeric range.
-          - not-range: [5 , 40]
-            checks if value is not in range between 5 and 40
+4. `not-range`: Check if the value of a specified element is outside of a given numeric range.
+          - `not-range: [5, 40]`: checks if value is not in range between 5 and 40
 
 #### `bool` Operators
 
-1. all-same: Check if all content values for the specified element are the same. It can also be used to compare all content values against another specified element.
+1. `all-same`: Check if all content values for the specified element are the same. It can also be used to compare all content values against another specified element.
     - `all-same: flap-count`: checks if all values of node <flap-count> in given path is same or not.
 
 #### `str` Operators
 
-1. contains: determines if an element string value contains the provided test-string value.
+1. `contains`: determines if an element string value contains the provided test-string value.
     - `contains: "underlay"`: checks if "underlay" is present in given data or not. 
 
-2. not-contains: determines if an element string value does not contain the provided test-string value.
+2. `not-contains`: determines if an element string value does not contain the provided test-string value.
     - `not-contains: "overlay"`: checks if "overlay" is present in given node or not.
 
 #### `int`, `float` Operators
 
-1. is-gt: Check if the value of a specified element is greater than a given numeric value.
+1. `is-gt`: Check if the value of a specified element is greater than a given numeric value.
     - `is-gt: 2`: checks if value should be greater than 2  
 
-2. is-lt: Check if the value of a specified element is lesser than a given numeric value.
+2. `is-lt`: Check if the value of a specified element is lesser than a given numeric value.
     - `is-lt: 55`: checks if value is lower than 55 or not.  
 
 

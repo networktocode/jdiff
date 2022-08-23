@@ -17,9 +17,6 @@ CheckType.create("exact_match")
 - `regex`
 - `operator`
 
-| Przemek: Perhaps create a table showing how each of the arguments maps to a concrete class?
-
-| Stephen - This step may not be necessary at all? I would say this may come with more advanced use cases. Note: the extract data from json is specifically for getting keys and values from larger dictionaries to make it easier to compare and check specific parts/branches of the object. 
 
 Next, define a JSON object as reference data, as well as a JMESPath expression to extract the values wanted and pass them to `extract_data_from_json` method. Be aware! `jdiff` works with a customized version of JMESPath. More on that [below](#customized-jmespath).
 
@@ -88,7 +85,7 @@ Below is the output of `show bgp`.
 A JMESPath expression to extract `state` is shown below.
 
 ```python
-"result[0].vrfs.default.peerList[*].state
+result[0].vrfs.default.peerList[*].state
 ```
 
 ...which will return
@@ -101,7 +98,7 @@ How can we understand that `Idle` is relative to peer 7.7.7.7 and `Connected` to
 We could index the output, but that would require some post-processing of the data. For that reason, `jdiff` uses a customized version of JMESPath where it is possible to define a reference key for the value(s) wanted. The reference key must be within `$` sign anchors and defined in a list, together with the value(s):
 
 ```python
-"result[0].vrfs.default.peerList[*].[$peerAddress$,state]
+result[0].vrfs.default.peerList[*].[$peerAddress$,state]
 ```
 
 That  would give us...
