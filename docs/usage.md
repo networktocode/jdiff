@@ -413,7 +413,6 @@ Let's run an example where we want to check the `burnedInAddress` key has a stri
 
 The `operator` check is a collection of more specific checks divided into categories. Only one of the specific checks can be selected and used for evaluation when defining `operator`. Here is a summary of the available `operator` categories and individual checks:
 
-| Przemek: The below is not very readable? Indented sections are rendered as code blocks. I would suggest naming these groups "categories" or "groups" and explaing that each of the names is the name of the check that needs to be passed as the argument.
 
 #### `in` Operators
 
