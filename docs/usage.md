@@ -363,7 +363,6 @@ Let's run an example where we want to check the `burnedInAddress` key has a stri
 ({'Management1': {'burnedInAddress': '08:00:27:e6:b2:f8'}}, False)
 ```
 
-| Przemek: Why use dict unpacking when passing arguments to `evaluate`?
 
 ### Operator
 
@@ -374,49 +373,42 @@ The `operator` check is a collection of more specific checks divided into catego
 #### `in` Operators
 
 
-    1. is-in: Check if the specified element string value is included in a given list of strings.
-          - is-in: ["down", "up"] 
-            check if value is in list (down, up)  
+1. is-in: Check if the specified element string value is included in a given list of strings.
+      - is-in: ["down", "up"] 
+        check if value is in list (down, up)  
 
-    2. not-in: Check if the specified element string value is NOT included in a given list of strings.
-           - not-in: ["down", "up"] 
-             check if value is not in list (down, up) 
+2. not-in: Check if the specified element string value is NOT included in a given list of strings.
+        - not-in: ["down", "up"] 
+          check if value is not in list (down, up) 
 
-    3. in-range: Check if the value of a specified element is in the given numeric range.
-            - in-range: [20, 70]
-              check if value is in range between 20 and 70 
+3. in-range: Check if the value of a specified element is in the given numeric range.
+        - in-range: [20, 70]
+          check if value is in range between 20 and 70 
 
-|Dwight: delete the space between 5 and comma in #4, below?
-
-    4. not-range: Check if the value of a specified element is outside of a given numeric range.
-              - not-range: [5 , 40]
-                checks if value is not in range between 5 and 40
+4. not-range: Check if the value of a specified element is outside of a given numeric range.
+          - not-range: [5 , 40]
+            checks if value is not in range between 5 and 40
 
 #### `bool` Operators
 
-    1. all-same: Check if all content values for the specified element are the same. It can also be used to compare all content values against another specified element.
-           - all-same: flap-count
-             checks if all values of node <flap-count> in given path are same or not.
+1. all-same: Check if all content values for the specified element are the same. It can also be used to compare all content values against another specified element.
+    - `all-same: flap-count`: checks if all values of node <flap-count> in given path is same or not.
 
 #### `str` Operators
 
-    1. contains: Determines if an element string value contains the provided test-string value.
-           - contains: "underlay"
-           checks if "underlay" is present in given data or not. 
+1. contains: determines if an element string value contains the provided test-string value.
+    - `contains: "underlay"`: checks if "underlay" is present in given data or not. 
 
-    2. not-contains: Determines if an element string value does not contain the provided test-string value.
-           - not-contains: "overlay"
-           checks if "overlay" is present in given node or not.
+2. not-contains: determines if an element string value does not contain the provided test-string value.
+    - `not-contains: "overlay"`: checks if "overlay" is present in given node or not.
 
 #### `int`, `float` Operators
 
-    1. is-gt: Check if the value of a specified element is greater than a given numeric value.
-            - is-gt: 2
-              checks if value is greater than 2  
+1. is-gt: Check if the value of a specified element is greater than a given numeric value.
+    - `is-gt: 2`: checks if value should be greater than 2  
 
-    2. is-lt: Check if the value of a specified element is lesser than a given numeric value.
-            - is-lt: 55
-              checks if value is less than 55  
+2. is-lt: Check if the value of a specified element is lesser than a given numeric value.
+    - `is-lt: 55`: checks if value is lower than 55 or not.  
 
 
 Examples:
