@@ -12,28 +12,28 @@ from .utils.jmespath_parsers import (
 )
 
 
-def extract_data_from_json(output: Union[Mapping, List], path: str = "*", exclude: List = None) -> Any:
-    """Return data from output depending on the check path. See unit test for complete example.
+def extract_data_from_json(data: Union[Mapping, List], path: str = "*", exclude: List = None) -> Any:
+    """Return wanted data from outpdevice data based on the check path. See unit test for complete example.
 
     Get the wanted values to be evaluated if JMESPath expression is defined,
-    otherwise use the entire output if jmespath is not defined in check. This covers the "raw" diff type.
+    otherwise use the entire data if jmespath is not defined in check. This covers the "raw" diff type.
     Exclude data not desired to compare.
 
     Notes:
         https://jmespath.org/ shows how JMESPath works.
 
     Args:
-        output: json data structure
+        data: json data structure
         path: JMESPath to extract specific values
         exclude: list of keys to exclude
     Returns:
         Evaluated data, may be anything depending on JMESPath used.
     """
-    if exclude and isinstance(output, Dict):
+    if exclude and isinstance(data, Dict):
         if not isinstance(exclude, list):
             raise ValueError(f"Exclude list must be defined as a list. You have {type(exclude)}")
         # exclude unwanted elements
-        exclude_filter(output, exclude)
+        exclude_filter(data, exclude)
 
     if not path:
         warnings.warn("JMSPath cannot be empty string or type 'None'. Path argument reverted to default value '*'")
@@ -41,9 +41,9 @@ def extract_data_from_json(output: Union[Mapping, List], path: str = "*", exclud
 
     if path == "*":
         # return if path is not specified
-        return output
+        return data
 
-    values = jmespath.search(jmespath_value_parser(path), output)
+    values = jmespath.search(jmespath_value_parser(path), data)
 
     if values is None:
         raise TypeError("JMSPath returned 'None'. Please, verify your JMSPath regex.")
@@ -67,10 +67,10 @@ def extract_data_from_json(output: Union[Mapping, List], path: str = "*", exclud
     paired_key_value = associate_key_of_my_value(jmespath_value_parser(path), values)
 
     # We need to get a list of reference keys - list of strings.
-    # Based on the expression or output type we might have different data types
+    # Based on the expression or data we might have different data types
     # therefore we need to normalize.
     if re.search(r"\$.*\$", path):
-        wanted_reference_keys = jmespath.search(jmespath_refkey_parser(path), output)
+        wanted_reference_keys = jmespath.search(jmespath_refkey_parser(path), data)
 
         if isinstance(wanted_reference_keys, dict):  # when wanted_reference_keys is dict() type
             list_of_reference_keys = list(wanted_reference_keys.keys())

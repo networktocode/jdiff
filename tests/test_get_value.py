@@ -11,6 +11,6 @@ def test_jmspath_return_none(data):
     """Handle exception when JMSPath retunr None."""
     my_jmspath = "global[*]"
     with pytest.raises(TypeError) as error:
-        extract_data_from_json(output=data, path=my_jmspath)()  # pylint: disable=E0110
+        extract_data_from_json(data=data, path=my_jmspath)()  # pylint: disable=E0110
 
     assert "JMSPath returned 'None'. Please, verify your JMSPath regex." in error.value.__str__()

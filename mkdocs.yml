@@ -18,11 +18,11 @@ markdown_extensions:
   - toc:
       permalink: true
 plugins:
-  - include-markdown
+  - "include-markdown"
 nav:
   - Introduction: "index.md"
   - Usage: "usage.md"
   - Architecture: "architecture.md"
 # Future docs
-#  - Examples: "example.md"
-#  - Development Environment: "development.md"
+# - Examples: "example.md"
+# - Development Environment: "development.md"
