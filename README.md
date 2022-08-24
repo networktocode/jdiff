@@ -16,4 +16,6 @@ pip install jdiff
 
 `jdiff` has been developed around diffing and testing structured data returned from APIs and other Python modules and libraries (such as TextFSM). Our primary use case is the examination of structured data returned from networking devices. However, we found the library fits other use cases where structured data needs to be operated on, and is especially useful when working or dealing with data returned from APIs.
 
-For more information please take a look at the [documentation](https://jdiff.readthedocs.io)
+## Documentation
+
+Documentation is hosted on Read the Docs at [jdiff Documentation](https://jdiff.readthedocs.io/).
