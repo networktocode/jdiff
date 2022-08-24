@@ -141,7 +141,7 @@ operator_in_range = (
 operator_not_in_range = (
     "pre.json",
     "operator",
-    {"params": {"mode": "not-range", "operator_data": (20, 40)}},
+    {"params": {"mode": "not-in-range", "operator_data": (20, 40)}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
     (
         [

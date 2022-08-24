@@ -174,7 +174,7 @@ class OperatorType(CheckType):
     @staticmethod
     def _validate(params) -> None:  # type: ignore[override]
         """Validate operator parameters."""
-        in_operators = ("is-in", "not-in", "in-range", "not-range")
+        in_operators = ("is-in", "not-in", "in-range", "not-in-range")
         bool_operators = ("all-same",)
         number_operators = ("is-gt", "is-lt")
         string_operators = ("contains", "not-contains")
@@ -205,25 +205,25 @@ class OperatorType(CheckType):
             )
 
         if params_key in in_operators:
-            # "is-in", "not-in", "in-range", "not-range" requires an iterable
+            # "is-in", "not-in", "in-range", "not-in-range" requires an iterable
             if not isinstance(params_value, (list, tuple)):
                 raise ValueError(
                     f"check options {in_operators} must have value of type list or tuple. i.e: dict(not-in=('Idle', 'Down'). You have: {params_value} of type {type(params_value)}."
                 )
 
-            # "in-range", "not-range" requires int or float where value at index 0 is lower than value at index 1
-            if params_key in ("in-range", "not-range"):
+            # "in-range", "not-in-range" requires int or float where value at index 0 is lower than value at index 1
+            if params_key in ("in-range", "not-in-range"):
                 if (
                     len(params_value) != 2
                     or not isinstance(params_value[0], (int, float))
                     or not isinstance(params_value[1], (float, int))
                 ):
                     raise ValueError(
-                        f"'range' check-option {params_key} must have value of type list or tuple with items of type float or int. i.e: dict(not-range=(70000000, 80000000). You have: {params_value}."
+                        f"'range' check-option {params_key} must have value of type list or tuple with items of type float or int. i.e: dict(not-in-range=(70000000, 80000000). You have: {params_value}."
                     )
                 if not params_value[0] < params_value[1]:
                     raise ValueError(
-                        f"'range' and 'not-range' must have value at index 0 lower than value at index 1. i.e: dict(not-range=(70000000, 80000000). You have: {params_value}."
+                        f"'range' and 'not-in-range' must have value at index 0 lower than value at index 1. i.e: dict(not-in-range=(70000000, 80000000). You have: {params_value}."
                     )
 
         # "is-gt","is-lt"  require either int() or float()
