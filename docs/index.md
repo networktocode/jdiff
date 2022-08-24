@@ -7,7 +7,7 @@ The library heavily relies on [JMESPath](https://jmespath.org/) for traversing t
 ## Getting Started
 
 
-First, you import the CheckType class.
+First, you import the `CheckType` class.
 
 ```python
 from jdiff import CheckType
@@ -39,10 +39,6 @@ This results in a tuple:
 This diff can also show whether any keys were added or deleted. 
 The second value returned will be the boolean result of the check. In this case, the two data structures were not an exact match.
 
-| Stephen - we may want to remove these next two paragraphs
-For instance, the reference state can be collected from the network directly using any method that returns structured data: Ansible, NAPALM, Nornir to name a few. You could also choose to generate the reference state from an SoT, such as [Nautobot](https://github.com/nautobot/nautobot/), and have a true intended state.
-
-`jdiff` is perfectly suited to work with data gathered from network devices via show commands, Ansible playbooks, or in applications such as [Nautobot](https://github.com/nautobot/nautobot/) or [Netbox](https://github.com/netbox-community/netbox). `jdiff` is focused on being the 'plumbing' behind a full network automation validation solution.
 
 ## Checking Data Structures
 
@@ -50,7 +46,7 @@ As shown in the example, the check evaluation both performs a diff and tests the
 
 More on the **check** part: The check provides a way to test some keys or values in our collected data. The check portion is focused on providing a boolean result of the test. There are a few different ways to check our data. 
 
-These are the different checks that can be performed on the data. These both describe the type of check and are also used as the argument to instantiate that type of check with the create method: `CheckType.create("check_type")`.
+Below are the names of checks provided by the library. These both describe the type of check performed against the data and are used as an argument to instantiate that type of check with the `create` method, e.g. `CheckType.create("check_type")`.
 
 - `exact_match`: the keys and values must match exactly between the two objects
 - `tolerance`: the keys must match and the values can differ according to the 'tolerance' value provided

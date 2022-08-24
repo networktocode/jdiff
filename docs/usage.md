@@ -4,7 +4,7 @@ Comparison and testing of the data structures in 'jdiff' is performed through on
 
 A `jdiff` `CheckType` accepts two Python dictionaries as input: the reference object and the comparison object. The reference object is used as the intended or accepted state and its keys and values are compared against the key-value pairs in the comparison object. 
 
-It's worth pointing out that `jdiff` is focused on the comparison of the two objects and the testing of the values, not retrieving the data.
+It's worth pointing out that `jdiff` is focused on the comparison of the two objects and the testing of the values, not retrieving the data from the external system.
 
 ## Extracting Data For Comparison
 
@@ -121,7 +121,7 @@ Examples:
     }
 
 ```
-Create an instance of CheckType object with 'exact_match' as check-type argument.
+Create an instance of `CheckType` object with 'exact_match' as check-type argument.
 
 ```python
 >>> my_check = CheckType.create(check_type="exact_match")
@@ -129,7 +129,7 @@ Create an instance of CheckType object with 'exact_match' as check-type argument
 >>> <jdiff.check_types.ExactMatchType object at 0x10ac00f10>
 ```
 
-Use the evaluate method to return the result.
+Use the `evaluate` method to return the result.
 
 ```python
 >>> result = my_check.evaluate(reference_data, comparison_data)
@@ -167,7 +167,7 @@ Let's see a better way to run `exact_match` for this specific case. Because ther
  False)
 ```
 
-In this case, we only want to compare the value of a single key, the `interfaceStatus` key. So we define the JMESPath logic to take the name and the interfaceStatus values from all the interface objects in the data object. 
+In this case, we only want to compare the value of a single key, the `interfaceStatus` key. So we define the JMESPath expression to take the name and the interfaceStatus values from all the interface objects in the data object. 
 
 
 ### Tolerance
@@ -175,6 +175,8 @@ In this case, we only want to compare the value of a single key, the `interfaceS
 The `tolerance` test checks for the deviation between the value or count of the reference and comparison values. A `tolerance` is defined and passed to the check along with the comparison and reference values.
 
 The `tolerance` argument must be a `float > 0`. The calculation is percentage based, and the test of the values may be +/- the `tolerance` percentage.
+
+This check can test whether the difference between two values is within a specified tolerance percentage. It could be useful in cases where values like route metrics or optical power levels fluctuate by a small amount. It might be desirable to treat these values as equal if the deviation is within a given range. You can pass in the result of `len()` to count the number of objects returned within your data.
 
 Let's have a look at a couple of examples:
 
@@ -235,21 +237,22 @@ Let's have a look at a couple of examples:
 ... }
 >>> my_check = CheckType.create("tolerance")
 ```
-We will define a JMESPath search for the values we want to test and extract from the reference and comparison objects.
+We will define a JMESPath expression for the values we want to test and extract from the reference and comparison objects.
 ```python
 >>> my_jmspath = "global.$peers$.*.*.ipv4.[accepted_prefixes,received_prefixes,sent_prefixes]"
 >>> reference_value = extract_data_from_json(reference_data, my_jmspath)
 >>> comparison_value = extract_data_from_json(comparison_data, my_jmspath)
 ```
-Define a tolerance to pass into the test.
+
+Define a tolerance percentage.
 ```python
 my_tolerance=10
 ```
-Pass the extracted values and tolerance into the test and `evaluate`.
+Pass the extracted values and tolerance as arguments to the `evaluate` method.
 ```python
 >>> actual_results = my_check.evaluate(reference_value, comparison_value, tolerance=my_tolerance)
 ```
-the `tolerance` check returns the values that are not within 10%
+The `tolerance` check returns the values that differ by more than 10%.
 ```python
 >>> actual_results
 ({'10.1.0.0': {'accepted_prefixes': {'new_value': 500, 'old_value': 900},
@@ -257,7 +260,7 @@ the `tolerance` check returns the values that are not within 10%
    'sent_prefixes': {'new_value': 511, 'old_value': 1011}}},
  False)
 ```
-The last example fails, because none of the values are within 10% of the old_value.
+The last example fails, because none of the values are within 10% of the `old_value`.
 
 When we switch one of the values (`received_prefixes`) to a value within 10%, that value will not be shown, but the test fails because the others are still out of tolerance:
 
@@ -275,8 +278,6 @@ Let's increase the tolerance:
 >>> actual_results
 ({}, True)
 ```
-
-This check can test whether the difference between two values is within a specified tolerance percentage. It could be useful in cases where values like route metrics or optical power levels fluctuate by a small amount. It might be desirable to treat these values as equal if the deviation is within a given range. You can pass in the result of len() to count the number of objects returned within your data.
 
 ### Parameter Match
 
@@ -327,7 +328,7 @@ For example, in network data:
 >>> comparison_value = extract_data_from_json(comparison_data, my_jmspath)
 ```
 
-This test requires a mode argument; match in this case matches the keys and values in the "params" to the keys and values in the data.
+This test requires a `mode` argument; `match` in this case matches the keys and values in the "params" to the keys and values in the data.
 ```python
 >>> actual_results = my_check.evaluate(
         post_value, 
@@ -341,7 +342,7 @@ This test requires a mode argument; match in this case matches the keys and valu
 ({'Management1': {'interfaceStatus': 'down'}}, False)
 ```
 
-mode: no-match - return the keys and values from the test object that do not match the keys and values provided in "params"
+mode: `no-match` - return the keys and values from the test object that do not match the keys and values provided in "params"
 ```python
 >>> my_parameter_match = 
 >>> actual_results = my_check.evaluate(
@@ -390,19 +391,19 @@ Let's run an example where we want to check the `burnedInAddress` key has a stri
 ...       ]
 ...     }
 >>> # Python regex for matching MAC address string
->>> regex_args = {"regex": "(?:[0-9a-fA-F]:?){12}", "mode": "match"}
+>>> mac_regex = "(?:[0-9a-fA-F]:?){12}"
 >>> path = "result[*].interfaces.*.[$name$,burnedInAddress]"
 >>> check = CheckType.create(check_type="regex")
 >>> value = check.extract_data_from_json(data, path)
 >>> value
 [{'Management1': {'burnedInAddress': '08:00:27:e6:b2:f8'}}]
->>> result = check.evaluate(value, **regex_args)
+>>> result = check.evaluate(value, regex=regex, mode="match")
 >>> # The test is passed as the burnedInAddress value matches our regex
 >>> result
 ({}, True)
 >>> # What if we want "no-match"?
->>> regex_args = {"regex": "(?:[0-9a-fA-F]:?){12}", "mode": "no-match"}
->>> result = check.evaluate(value, **regex_args)
+>>> mac_regex = "(?:[0-9a-fA-F]:?){12}"
+>>> result = check.evaluate(value, regex=mac_regex, mode="no-match")
 >>> # jdiff returns the failing data, as the regex matches the value
 >>> result
 ({'Management1': {'burnedInAddress': '08:00:27:e6:b2:f8'}}, False)
@@ -429,8 +430,8 @@ The `operator` check is a collection of more specific checks divided into catego
       - `in-range: [20, 70]`: check if value is in range between 20 and 70 
 
 
-4. `not-range`: Check if the value of a specified element is outside of a given numeric range.
-        - `not-range: [5, 40]`: checks if value is not in range between 5 and 40
+4. `not-in-range`: Check if the value of a specified element is outside of a given numeric range.
+      - `not-in-range: [5, 40]`: checks if value is not in range between 5 and 40
 
 #### `bool` Operators
 
