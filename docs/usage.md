@@ -43,7 +43,7 @@ As an example, in this case of the object below, we are only interested in compa
       ]
     }
 ```
-After getting the data, we'll create a query (similar to JMESpath syntax) to extract the key-value pair that we'll use for comparison. Then, call `extract_data_from_json` with inputs of the query and the data object to extract the data from. 
+After getting the response data from an external system, we'll create a query (similar to JMESpath syntax) to extract the key-value pair that we want to use for comparison. With the query and the data, call `extract_data_from_json` to get the subset of data we are interested in using. 
 
 ```python
 >>> my_jmspath = "result[*].interfaces.*.[$name$,interfaceStatus]"
@@ -52,7 +52,7 @@ After getting the data, we'll create a query (similar to JMESpath syntax) to ext
 [{'Management1': {'interfaceStatus': 'connected'}}]
 ```
 
-This type of logic to extract keys and value from the object is called anchor logic. Find more about anchor logic [here](#extract_data_from_json).
+This type of logic to extract keys and value from the object is called anchor logic.
 
 
 # `CheckTypes` Explained
@@ -241,7 +241,14 @@ We will define a JMESPath expression for the values we want to test and extract 
 ```python
 >>> my_jmspath = "global.$peers$.*.*.ipv4.[accepted_prefixes,received_prefixes,sent_prefixes]"
 >>> reference_value = extract_data_from_json(reference_data, my_jmspath)
+>>> reference_value
+[{'10.1.0.0': {'accepted_prefixes': 900,
+   'received_prefixes': 999,
+   'sent_prefixes': 1011}}]
 >>> comparison_value = extract_data_from_json(comparison_data, my_jmspath)
+[{'10.1.0.0': {'accepted_prefixes': 500,
+   'received_prefixes': 599,
+   'sent_prefixes': 511}}]
 ```
 
 Define a tolerance percentage.
@@ -262,10 +269,17 @@ The `tolerance` check returns the values that differ by more than 10%.
 ```
 The last example fails, because none of the values are within 10% of the `old_value`.
 
-When we switch one of the values (`received_prefixes`) to a value within 10%, that value will not be shown, but the test fails because the others are still out of tolerance:
+When we switch one of the values (`accepted_prefixes`) to a value within 10%, that value will not be shown, but the test fails because the others are still out of tolerance:
 
 ```python
-({'10.1.0.0': {'accepted_prefixes': {'new_value': 500, 'old_value': 900},
+>>> comparison_value[0]['10.1.0.0']['accepted_prefixes'] = 891
+>>> comparison_value
+[{'10.1.0.0': {'accepted_prefixes': 891,
+   'received_prefixes': 599,
+   'sent_prefixes': 511}}]
+>>> actual_results = my_check.evaluate(reference_value, comparison_value, tolerance=my_tolerance)
+>>> actual_results
+({'10.1.0.0': {'received_prefixes': {'new_value': 599, 'old_value': 999},
    'sent_prefixes': {'new_value': 511, 'old_value': 1011}}},
  False)
 ```
@@ -274,7 +288,7 @@ Let's increase the tolerance:
 
 ```python
 >>> my_tolerance=80
->>> actual_results = my_check.evaluate(reference_value, comparison_value, **my_tolerance_arguments)
+>>> actual_results = my_check.evaluate(reference_value, comparison_value, tolerance=my_tolerance)
 >>> actual_results
 ({}, True)
 ```
@@ -297,7 +311,7 @@ In data, this could be a state or status key.
 For example, in network data:
 
 ```python
->>> comparison_data = {
+>>> actual_data = {
 ...       "jsonrpc": "2.0",
 ...       "id": "EapiExplorer-1",
 ...       "result": [
@@ -325,18 +339,19 @@ For example, in network data:
 ...    }
 >>> my_check = CheckType.create("parameter_match")
 >>> my_jmspath = "result[*].interfaces.*.[$name$,interfaceStatus,autoNegotiate]"
->>> comparison_value = extract_data_from_json(comparison_data, my_jmspath)
+>>> actual_value = extract_data_from_json(actual_data, my_jmspath)
 ```
 
 This test requires a `mode` argument; `match` in this case matches the keys and values in the "params" to the keys and values in the data.
 ```python
->>> actual_results = my_check.evaluate(
-        post_value, 
-        "mode": "match", 
-        "params": {
+>>> intended_value = {
             "interfaceStatus": "connected", 
             "autoNegotiate": "success"
         }
+>>> actual_results = my_check.evaluate(
+        intended_value,
+        actual_value, 
+        mode = "match"
     )
 >>> actual_results
 ({'Management1': {'interfaceStatus': 'down'}}, False)
@@ -344,14 +359,10 @@ This test requires a `mode` argument; `match` in this case matches the keys and 
 
 mode: `no-match` - return the keys and values from the test object that do not match the keys and values provided in "params"
 ```python
->>> my_parameter_match = 
 >>> actual_results = my_check.evaluate(
-        post_value, 
-        "mode": "no-match", 
-        "params": {
-            "interfaceStatus": "connected", 
-            "autoNegotiate": "success"}
-        }
+        intended_value,
+        actual_value, 
+        mode = "no-match", 
     )
 >>> actual_results
 ({'Management1': {'autoNegotiate': 'success'}}, False
@@ -364,7 +375,7 @@ The `regex` check type evaluates data against a regular expression passed as an 
 Let's run an example where we want to check the `burnedInAddress` key has a string representing a MAC address as value.
 
 ```python
->>> data = {
+>>> actual_data = {
 ...       "jsonrpc": "2.0",
 ...       "id": "EapiExplorer-1",
 ...       "result": [
@@ -390,21 +401,22 @@ Let's run an example where we want to check the `burnedInAddress` key has a stri
 ...         }
 ...       ]
 ...     }
->>> # Python regex for matching MAC address string
+```
+We define the regex for matching a MAC address string. Then we define the path query to extract the data and create the check.
+```python
 >>> mac_regex = "(?:[0-9a-fA-F]:?){12}"
 >>> path = "result[*].interfaces.*.[$name$,burnedInAddress]"
 >>> check = CheckType.create(check_type="regex")
->>> value = check.extract_data_from_json(data, path)
->>> value
+>>> actual_value = extract_data_from_json(actual_data, path)
+>>> actual_value
 [{'Management1': {'burnedInAddress': '08:00:27:e6:b2:f8'}}]
->>> result = check.evaluate(value, regex=regex, mode="match")
->>> # The test is passed as the burnedInAddress value matches our regex
+>>> result = check.evaluate(mac_regex, actual_value, mode="match")
 >>> result
 ({}, True)
->>> # What if we want "no-match"?
->>> mac_regex = "(?:[0-9a-fA-F]:?){12}"
->>> result = check.evaluate(value, regex=mac_regex, mode="no-match")
->>> # jdiff returns the failing data, as the regex matches the value
+```
+And for the `no-match` mode:
+```python
+>>> result = check.evaluate(mac_regex, actual_value, mode="no-match")
 >>> result
 ({'Management1': {'burnedInAddress': '08:00:27:e6:b2:f8'}}, False)
 ```
@@ -510,24 +522,29 @@ Examples:
 ...       }
 ...     ]
 ...   }
->>> path = "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup,vrf,state]"
 ```
 
 `operator` checks require a `mode` argument - which specifies the operator logic to apply and `operator_data` required for the mode defined.
 
 ```python
+>>> path = "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup,vrf,state]"
 >>> check_args = {"params": {"mode": "all-same", "operator_data": True}}
 >>> check = CheckType.create("operator")
->>> value = check.extract_data_from_json(data, path)
+>>> value = extract_data_from_json(data, path)
 >>> value
 [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE', 'vrf': 'default', 'state': 'Connected'}}, {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}]
->>> result = check.evaluate(value, check_args)
+>>> result = check.evaluate(check_args, value)
 ```
 We are looking for peers that have the same peerGroup, vrf, and state. Return peer groups that aren't the same. 
 ```python
->>> 
 >>> result
-((False, [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE', 'vrf': 'default', 'state': 'Connected'}}, {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE', 'vrf': 'default', 'state': 'Idle'}}]), False)
+([{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE',
+    'vrf': 'default',
+    'state': 'Connected'}},
+  {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE',
+    'vrf': 'default',
+    'state': 'Idle'}}],
+ True)
 ```
 
 Let's now look to an example for the `in` operator. Keeping the same `data` and class object as above:
@@ -535,13 +552,14 @@ Let's now look to an example for the `in` operator. Keeping the same `data` and 
 ```python
 >>> check_args = {"params": {"mode": "is-in", "operator_data": [20, 40, 50]}}
 >>> path = "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]"
->>> value = check.extract_data_from_json(data, path)
+>>> value = extract_data_from_json(data, path)
 >>> value
-[{'7.7.7.7': {'prefixesReceived': 101}}, {'10.1.0.0': {'prefixesReceived': 50}}]
+[{'7.7.7.7': {'prefixesReceived': 101}},
+ {'10.1.0.0': {'prefixesReceived': 50}}]
 ```
 We are looking for "prefixesReceived" value in the operator_data list.
 ```python
->>> result = check.evaluate(value, check_args)
+>>> result = check.evaluate(check_args, value)
 >>> result
 ((True, [{'10.1.0.0': {'prefixesReceived': 50}}]), False)
 ```
@@ -551,10 +569,11 @@ What about `str` operator?
 ```python
 >>> path = "result[0].vrfs.default.peerList[*].[$peerAddress$,peerGroup]"
 >>> check_args = {"params": {"mode": "contains", "operator_data": "EVPN"}}
->>> value = check.extract_data_from_json(data, path)
+>>> value = extract_data_from_json(data, path)
 >>> value
-[{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE'}}, {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE'}}]
->>> result = check.evaluate(value, check_args)
+[{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE'}},
+ {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE'}}]
+>>> result = check.evaluate(check_args, value)
 >>> result
 ((True, [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE'}}]), False)
 ```
@@ -564,12 +583,15 @@ Can you guess what would be the outcome for an `int`, `float` operator?
 ```python
 >>> path = "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]"
 >>> check_args = {"params": {"mode": "is-gt", "operator_data": 20}}
->>> value = check.extract_data_from_json(data, path)
+>>> value = extract_data_from_json(data, path)
 >>> value
-[{'7.7.7.7': {'prefixesReceived': 101}}, {'10.1.0.0': {'prefixesReceived': 50}}]
->>> result = check.evaluate(value, check_args)
+[{'7.7.7.7': {'prefixesReceived': 101}},
+ {'10.1.0.0': {'prefixesReceived': 50}}]
+>>> result = check.evaluate(check_args, value)
 >>> result
-((True, [{'7.7.7.7': {'prefixesReceived': 101}}, {'10.1.0.0': {'prefixesReceived': 50}}]), False)
+([{'7.7.7.7': {'prefixesReceived': 101}},
+  {'10.1.0.0': {'prefixesReceived': 50}}],
+ False)
 ```
 
 See [test](./tests) folder for more examples.
