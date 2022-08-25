@@ -6,6 +6,18 @@ A `jdiff` `CheckType` accepts two Python dictionaries as input: the reference ob
 
 It's worth pointing out that `jdiff` is focused on the comparison of the two objects and the testing of the values, not retrieving the data from the external system.
 
+## Workflow
+
+In summary, the workflow is generally:
+
+1. Get the data from the external system 
+2. Define a jmespath expression to Extract the Data for Comparison
+3. Extract the key-value pairs with `extract_data_from_json` with the jmespath and data
+4. Instantiate the `CheckType`
+5. Define the parameters for the check (in the case of more complex `CheckTypes`)
+6. Input the parameters and `evaluate`
+
+
 ## Extracting Data For Comparison
 
 Before we get started with the CheckTypes, we've also included a method of extracting portions of the data for comparison. In many cases in data comparison, we aren't interested in the whole piece of data. We've provided this utility to extract subsets of a larger data object. 
