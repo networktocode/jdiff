@@ -587,7 +587,7 @@ What about `str` operator?
  {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE'}}]
 >>> result = check.evaluate(check_args, value)
 >>> result
-((True, [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE'}}]), False)
+([{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE'}}], False)
 ```
 
 Can you guess what would be the outcome for an `int`, `float` operator?
