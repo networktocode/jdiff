@@ -160,7 +160,7 @@ Use the `evaluate` method to return the result.
  False)
 ```
 
-As we can see, we return a tuple containing a diff between the pre and post data as well as a boolean for the overall test result. In this case a difference has been found, so the status of the test is `False`.
+As we can see, we return a tuple containing a diff between the pre and post data as well as a boolean for the overall test result. In this case a difference has been found, so the result of the test is `False`.
 
 Let's see a better way to run `exact_match` for this specific case. Because there are a lot of extra key-value pairs, some of which change all the time, we are interested only in `interfaceStatus`. In this case we can use the `extract_data_from_json` utility, to extract only the value from the keys we are interested in and discard the rest.
 
