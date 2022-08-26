@@ -53,7 +53,7 @@ Now that we have pre and post data, we use the `evaluate` method to compare them
 
 ## Arguments
 
-Generally, for all of the `CheckTypes`, the arguments will be in the order `intended state`, `actual state`, `options`. For instance, the time 1 state would be the first argument and time 2 state the second argument in the `exact_match` check type. 
+Generally, for all of the `CheckTypes`, the arguments will be in the order `intended state`, `actual state`, `options`. For instance, the reference state would be the first argument and comparison state the second argument in the `exact_match` check type. 
 
 For regex or parameter matching, your provided regex or dictionary would be the first argument and the collected data would be the second argument.
 
