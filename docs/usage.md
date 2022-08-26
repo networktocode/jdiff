@@ -606,4 +606,4 @@ Can you guess what would be the outcome for an `int`, `float` operator?
  False)
 ```
 
-See [test](./tests) folder for more examples.
+See `tests` folder in the repo for more examples.
