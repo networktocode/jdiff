@@ -573,7 +573,7 @@ We are looking for "prefixesReceived" value in the operator_data list.
 ```python
 >>> result = check.evaluate(check_args, value)
 >>> result
-((True, [{'10.1.0.0': {'prefixesReceived': 50}}]), False)
+([{'10.1.0.0': {'prefixesReceived': 50}}], False)
 ```
 
 What about `str` operator?
