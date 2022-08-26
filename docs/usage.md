@@ -1,6 +1,6 @@
 # Usage
 
-Comparison and testing of the data structures in 'jdiff' is performed through one of the built-in `CheckType` type objects, which are explained below in more detail.
+Comparison and testing of the data structures in `jdiff` is performed through one of the built-in `CheckType` type objects, which are explained below in more detail.
 
 A `jdiff` `CheckType` accepts two Python dictionaries as input: the reference object and the comparison object. The reference object is used as the intended or accepted state and its keys and values are compared against the key-value pairs in the comparison object. 
 
