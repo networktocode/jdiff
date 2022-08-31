@@ -1,6 +1,6 @@
 """Unit tests for validator CheckType method."""
 import pytest
-from jdiff.check_types import CheckType
+from jdiff import CheckType
 
 tolerance_wrong_argumet = (
     "tolerance",
@@ -65,22 +65,22 @@ operator_params_mode = (
 operator_params_wrong_operator = (
     "operator",
     {"params": {"mode": "random", "operator_data": [20, 40, 60]}},
-    "'params' value must be one of the following: ['is-in', 'not-in', 'in-range', 'not-range', 'all-same', 'is-gt', 'is-lt', 'contains', 'not-contains']. You have: random",
+    "'params' value must be one of the following: ['is-in', 'not-in', 'in-range', 'not-in-range', 'all-same', 'is-gt', 'is-lt', 'contains', 'not-contains']. You have: random",
 )
 operator_params_in = (
     "operator",
     {"params": {"mode": "in-range", "operator_data": "string"}},
-    "check options ('is-in', 'not-in', 'in-range', 'not-range') must have value of type list or tuple. i.e: dict(not-in=('Idle', 'Down'). You have: string of type <class 'str'>.",
+    "check options ('is-in', 'not-in', 'in-range', 'not-in-range') must have value of type list or tuple. i.e: dict(not-in=('Idle', 'Down'). You have: string of type <class 'str'>.",
 )
 operator_params_in_range = (
     "operator",
     {"params": {"mode": "in-range", "operator_data": (0, "1")}},
-    "'range' check-option in-range must have value of type list or tuple with items of type float or int. i.e: dict(not-range=(70000000, 80000000). You have: (0, '1').",
+    "'range' check-option in-range must have value of type list or tuple with items of type float or int. i.e: dict(not-in-range=(70000000, 80000000). You have: (0, '1').",
 )
 operator_params_in_range_lower_than = (
     "operator",
     {"params": {"mode": "in-range", "operator_data": (1, 0)}},
-    "'range' and 'not-range' must have value at index 0 lower than value at index 1. i.e: dict(not-range=(70000000, 80000000). You have: (1, 0).",
+    "'range' and 'not-in-range' must have value at index 0 lower than value at index 1. i.e: dict(not-in-range=(70000000, 80000000). You have: (1, 0).",
 )
 operator_params_number = (
     "operator",

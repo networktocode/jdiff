@@ -1,7 +1,7 @@
 """Tests for typical software upgrade device state check."""
 from copy import deepcopy
 import pytest
-from jdiff.check_types import CheckType
+from jdiff import CheckType, extract_data_from_json
 from .utility import load_json_file
 
 
@@ -22,8 +22,8 @@ def test_show_version(platform, command, jpath, expected_parameter, check_should
     command = load_json_file("sw_upgrade", filename)
 
     check = CheckType.create("parameter_match")
-    value = check.get_value(command, jpath)
-    eval_results, passed = check.evaluate(value, expected_parameter, "match")  # pylint: disable=E1121
+    value = extract_data_from_json(command, jpath)
+    eval_results, passed = check.evaluate(expected_parameter, value, "match")  # pylint: disable=E1121
     assert passed is check_should_pass, f"FAILED, eval_result: {eval_results}"
 
 
@@ -51,8 +51,8 @@ def test_show_interfaces_state(platform, command, jpath, check_should_pass):
             command_post[1]["protocol_status"] = "down"
 
     check = CheckType.create("exact_match")
-    pre_value = CheckType.get_value(command_pre, jpath)
-    post_value = CheckType.get_value(command_post, jpath)
+    pre_value = extract_data_from_json(command_pre, jpath)
+    post_value = extract_data_from_json(command_post, jpath)
     eval_results, passed = check.evaluate(post_value, pre_value)
     assert passed is check_should_pass, f"FAILED, eval_result: {eval_results}"
 
@@ -115,8 +115,8 @@ def test_bgp_neighbor_state(platform, command, jpath, check_should_pass):
         command_post[0][state_key] = "Idle"
 
     check = CheckType.create("exact_match")
-    pre_value = CheckType.get_value(command_pre, jpath)
-    post_value = CheckType.get_value(command_post, jpath)
+    pre_value = extract_data_from_json(command_pre, jpath)
+    post_value = extract_data_from_json(command_post, jpath)
     eval_results, passed = check.evaluate(post_value, pre_value)
     assert passed is check_should_pass, f"FAILED, eval_result: {eval_results}"
 
@@ -141,10 +141,10 @@ def test_bgp_prefix_tolerance(platform, command, prfx_post_value, tolerance, che
 
     check = CheckType.create("tolerance")
     jpath = "[*].[$bgp_neigh$,state_pfxrcd]"
-    pre_value = CheckType.get_value(command_pre, jpath)
-    post_value = CheckType.get_value(command_post, jpath)
+    pre_value = extract_data_from_json(command_pre, jpath)
+    post_value = extract_data_from_json(command_post, jpath)
 
-    eval_results, passed = check.evaluate(post_value, pre_value, tolerance)  # pylint: disable=E1121
+    eval_results, passed = check.evaluate(pre_value, post_value, tolerance)  # pylint: disable=E1121
     assert passed is check_should_pass, f"FAILED, eval_result: {eval_results}"
 
 
@@ -169,8 +169,8 @@ def test_ospf_neighbor_state(platform, command, jpath, check_should_pass):
         command_post = command_post[:1]
 
     check = CheckType.create("exact_match")
-    pre_value = CheckType.get_value(command_pre, jpath)
-    post_value = CheckType.get_value(command_post, jpath)
+    pre_value = extract_data_from_json(command_pre, jpath)
+    post_value = extract_data_from_json(command_post, jpath)
     eval_results, passed = check.evaluate(post_value, pre_value)
     assert passed is check_should_pass, f"FAILED, eval_result: {eval_results}"
 

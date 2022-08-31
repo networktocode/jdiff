@@ -39,6 +39,8 @@ invoke = "*"
 toml = "*"
 flake8 = "*"
 mypy = "*"
+mkdocs = "^1.3.1"
+mkdocs-include-markdown-plugin = "^3.6.1"
 
 [tool.black]
 line-length = 120
