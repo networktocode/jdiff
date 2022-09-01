@@ -1,6 +1,6 @@
 """Unit tests for operator check-type."""
 import pytest
-from jdiff.check_types import CheckType
+from jdiff import CheckType, extract_data_from_json
 from .utility import load_json_file, ASSERT_FAIL_MESSAGE
 
 operator_all_same = (
@@ -141,7 +141,7 @@ operator_in_range = (
 operator_not_in_range = (
     "pre.json",
     "operator",
-    {"params": {"mode": "not-range", "operator_data": (20, 40)}},
+    {"params": {"mode": "not-in-range", "operator_data": (20, 40)}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
     (
         [
@@ -173,8 +173,8 @@ def test_operator(filename, check_type_str, evaluate_args, path, expected_result
     check = CheckType.create(check_type_str)
     # There is not concept of "pre" and "post" in operator.
     data = load_json_file("api", filename)
-    value = check.get_value(data, path)
-    actual_results = check.evaluate(value, evaluate_args)
+    value = extract_data_from_json(data, path)
+    actual_results = check.evaluate(evaluate_args, value)
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
         output=actual_results, expected_output=expected_result
     )

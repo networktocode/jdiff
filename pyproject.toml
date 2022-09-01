@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "jdiff"
-version = "0.0.1-beta.1"
+version = "0.0.1"
 description = "A light-weight library to compare structured output from network devices show commands."
 authors = ["Network to Code, LLC <info@networktocode.com>"]
 license = "Apache-2.0"
-homepage = "https://github.com/networktocode-llc/jdiff"
-repository = "https://github.com/networktocode-llc/jdiff"
+homepage = "https://github.com/networktocode/jdiff"
+repository = "https://github.com/networktocode/jdiff"
 readme = "README.md"
 keywords = ["json", "diff", "network"]
 classifiers = [
@@ -39,6 +39,8 @@ invoke = "*"
 toml = "*"
 flake8 = "*"
 mypy = "*"
+mkdocs = "^1.3.1"
+mkdocs-include-markdown-plugin = "^3.6.1"
 
 [tool.black]
 line-length = 120

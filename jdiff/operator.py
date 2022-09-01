@@ -42,7 +42,7 @@ class Operator:
             elif call_ops == "in_range":
                 if self.reference_data[0] < evaluated_value < self.reference_data[1]:
                     result.append(item)
-            elif call_ops == "not_range":
+            elif call_ops == "not_in_range":
                 if not self.reference_data[0] < evaluated_value < self.reference_data[1]:
                     result.append(item)
             # "<", ">", "contains"
@@ -117,6 +117,6 @@ class Operator:
         """Is in range operator caller."""
         return self._loop_through_wrapper("in_range")
 
-    def not_range(self) -> Tuple[List, bool]:
+    def not_in_range(self) -> Tuple[List, bool]:
         """Is not in range operator caller."""
-        return self._loop_through_wrapper("not_range")
+        return self._loop_through_wrapper("not_in_range")
