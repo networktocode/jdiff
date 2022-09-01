@@ -5,6 +5,9 @@ site_name: "jdiff Documentation"
 site_url: "https://jdiff.readthedocs.io/"
 site_dir: "jdiff/docs"
 repo_url: "https://github.com/networktocode-llc/jdiff"
+python:
+  install:
+    - requirements: "docs/requirements.txt"
 theme:
   name: "readthedocs"
   navigation_depth: 4
@@ -17,8 +20,6 @@ markdown_extensions:
   - "admonition"
   - toc:
       permalink: true
-plugins:
-  - "include-markdown"
 nav:
   - Introduction: "index.md"
   - Usage: "usage.md"
