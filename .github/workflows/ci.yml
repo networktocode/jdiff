@@ -1,8 +1,13 @@
 ---
 name: "CI"
 on: # yamllint disable-line rule:truthy rule:comments
-  - "push"
-  - "pull_request"
+  push:
+    branches:
+      - "main"
+      - "develop"
+    tags:
+      - "v*"
+  pull_request: ~
 
 env:
   IMAGE_NAME: "jdiff"
@@ -41,8 +46,6 @@ jobs:
         uses: "networktocode/gh-action-setup-poetry-environment@v2"
       - name: "Linting: bandit"
         run: "poetry run invoke bandit"
-    needs:
-      - "black"
   pydocstyle:
     runs-on: "ubuntu-20.04"
     env:
@@ -54,8 +57,6 @@ jobs:
         uses: "networktocode/gh-action-setup-poetry-environment@v2"
       - name: "Linting: pydocstyle"
         run: "poetry run invoke pydocstyle"
-    needs:
-      - "black"
   flake8:
     runs-on: "ubuntu-20.04"
     env:
@@ -67,8 +68,6 @@ jobs:
         uses: "networktocode/gh-action-setup-poetry-environment@v2"
       - name: "Linting: flake8"
         run: "poetry run invoke flake8"
-    needs:
-      - "black"
   yamllint:
     runs-on: "ubuntu-20.04"
     env:
@@ -80,8 +79,6 @@ jobs:
         uses: "networktocode/gh-action-setup-poetry-environment@v2"
       - name: "Linting: yamllint"
         run: "poetry run invoke yamllint"
-    needs:
-      - "black"
   build:
     strategy:
       fail-fast: true
@@ -118,6 +115,13 @@ jobs:
       - "flake8"
       - "yamllint"
   pylint:
+    needs:
+      - "bandit"
+      - "pydocstyle"
+      - "flake8"
+      - "yamllint"
+      - "black"
+      - "mypy"
     runs-on: "ubuntu-20.04"
     strategy:
       fail-fast: true
@@ -153,9 +157,9 @@ jobs:
         run: "docker image ls"
       - name: "Linting: Pylint"
         run: "poetry run invoke pylint"
-    needs:
-      - "build"
   pytest:
+    needs:
+      - "pylint"
     strategy:
       fail-fast: true
       matrix:
@@ -191,9 +195,9 @@ jobs:
         run: "docker image ls"
       - name: "Run Tests"
         run: "poetry run invoke pytest"
-    needs:
-      - "pylint"
   publish_gh:
+    needs:
+      - "pytest"
     name: "Publish to GitHub"
     runs-on: "ubuntu-20.04"
     if: "startsWith(github.ref, 'refs/tags/v')"
@@ -220,9 +224,9 @@ jobs:
           tag: "${{ github.ref }}"
           overwrite: true
           file_glob: true
+  publish_pypi:
     needs:
       - "pytest"
-  publish_pypi:
     name: "Push Package to PyPI"
     runs-on: "ubuntu-20.04"
     if: "startsWith(github.ref, 'refs/tags/v')"
@@ -248,5 +252,39 @@ jobs:
           password: "${{ secrets.PYPI_API_TOKEN }}"
           # Using PyPi dev.
           repository_url: "https://test.pypi.org/legacy/"
+  slack-notify:
     needs:
-      - "pytest"
+      - "publish_gh"
+      - "publish_pypi"
+    name: "Send notification to the Slack"
+    runs-on: "ubuntu-20.04"
+    env:
+      SLACK_WEBHOOK_URL: "${{ secrets.SLACK_WEBHOOK_URL }}"
+      SLACK_MESSAGE: >-
+        *NOTIFICATION: NEW-RELEASE-PUBLISHED*\n
+        Repository: <${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>\n
+        Release: <${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ github.ref_name }}|${{ github.ref_name }}>\n
+        Published by: <${{ github.server_url }}/${{ github.actor }}|${{ github.actor }}>
+    steps:
+      - name: "Send a notification to Slack"
+        # ENVs cannot be used directly in job.if. This is a workaround to check
+        # if SLACK_WEBHOOK_URL is present.
+        if: "${{ env.SLACK_WEBHOOK_URL != '' }}"
+        uses: "slackapi/slack-github-action@v1.17.0"
+        with:
+          payload: |
+            {
+              "text": "${{ env.SLACK_MESSAGE }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${{ env.SLACK_MESSAGE }}"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: "${{ secrets.SLACK_WEBHOOK_URL }}"
+          SLACK_WEBHOOK_TYPE: "INCOMING_WEBHOOK"
