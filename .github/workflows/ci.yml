@@ -12,6 +12,7 @@ on: # yamllint disable-line rule:truthy rule:comments
 env:
   IMAGE_NAME: "jdiff"
 
+
 jobs:
   black:
     runs-on: "ubuntu-20.04"
