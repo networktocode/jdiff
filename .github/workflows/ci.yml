@@ -172,8 +172,6 @@ jobs:
         with:
           user: "__token__"
           password: "${{ secrets.PYPI_API_TOKEN }}"
-          # Using PyPi dev.
-          repository_url: "https://test.pypi.org/legacy/"
   slack-notify:
     needs:
       - "publish_gh"
