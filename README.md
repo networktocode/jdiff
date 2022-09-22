@@ -1,6 +1,6 @@
 # jdiff
 
-`jdiff` is a lightweight Python library allowing you to examine structured data. jdiff` provides an interface to intelligently compare--via key presense/absense and value comparison--JSON data objects
+`jdiff` is a lightweight Python library allowing you to examine structured data. `jdiff` provides an interface to intelligently compare--via key presense/absense and value comparison--JSON data objects
 
 Our primary use case is the examination of structured data returned from networking devices, such as:
 
