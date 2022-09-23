@@ -193,7 +193,7 @@ class OperatorType(CheckType):
         params_key = params.get("params", {}).get("mode")
         params_value = params.get("params", {}).get("operator_data")
 
-        if not params_key or not params_value:
+        if not params_key or params_value is None:
             raise ValueError(
                 f"'mode' and 'operator_data' arguments must be provided. You have: {list(params['params'].keys())}."
             )
@@ -258,4 +258,4 @@ class OperatorType(CheckType):
 
         This is required as Opertor return its own boolean within result.
         """
-        return evaluation_result[0], not evaluation_result[1]
+        return evaluation_result[0], evaluation_result[1]
