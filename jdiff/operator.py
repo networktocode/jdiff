@@ -31,22 +31,22 @@ class Operator:
             """Operator valuation logic wrapper."""
             # reverse operands: https://docs.python.org/3.8/library/operator.html#operator.contains
             if call_ops == "is_in":
-                if ops[call_ops](self.reference_data, evaluated_value):
-                    result.append(item)
-            elif call_ops == "not_contains":
-                if not ops[call_ops](evaluated_value, self.reference_data):
-                    result.append(item)
-            elif call_ops == "not_in":
                 if not ops[call_ops](self.reference_data, evaluated_value):
                     result.append(item)
-            elif call_ops == "in_range":
-                if self.reference_data[0] < evaluated_value < self.reference_data[1]:
+            elif call_ops == "not_contains":
+                if ops[call_ops](evaluated_value, self.reference_data):
                     result.append(item)
-            elif call_ops == "not_in_range":
+            elif call_ops == "not_in":
+                if ops[call_ops](self.reference_data, evaluated_value):
+                    result.append(item)
+            elif call_ops == "in_range":
                 if not self.reference_data[0] < evaluated_value < self.reference_data[1]:
                     result.append(item)
+            elif call_ops == "not_in_range":
+                if self.reference_data[0] < evaluated_value < self.reference_data[1]:
+                    result.append(item)
             # "<", ">", "contains"
-            elif ops[call_ops](evaluated_value, self.reference_data):
+            elif not ops[call_ops](evaluated_value, self.reference_data):
                 result.append(item)
 
         ops = {
@@ -64,14 +64,13 @@ class Operator:
                 for evaluated_value in value.values():
                     call_evaluation_logic()
         if result:
-            return (result, True)
-        return (result, False)
+            return (result, False)
+        return (result, True)
 
-    def all_same(self) -> Tuple[bool, Any]:
+    def all_same(self) -> Tuple[Any, bool]:
         """All same operator type implementation."""
         list_of_values = []
         result = []
-
         for item in self.value_to_compare:
             # Create a list for compare values.
             list_of_values.extend(iter(item.values()))
@@ -80,13 +79,12 @@ class Operator:
                 result.append(False)
             else:
                 result.append(True)
-
         if self.reference_data and not all(result):
             return (self.value_to_compare, False)
         if self.reference_data:
-            return (self.value_to_compare, True)
+            return ([], True)
         if not all(result):
-            return (self.value_to_compare, True)
+            return ([], True)
         return (self.value_to_compare, False)
 
     def contains(self) -> Tuple[List, bool]:

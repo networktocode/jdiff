@@ -416,7 +416,7 @@ Let's run an example where we want to check the `burnedInAddress` key has a stri
 ```
 We define the regex for matching a MAC address string. Then we define the path query to extract the data and create the check.
 ```python
->>> mac_regex = "(?:[0-9a-fA-F]:?){12}"
+>>> mac_regex = "^([0-9a-fA-F]{2}:){5}([0-9a-fA-F]{2})$"
 >>> path = "result[*].interfaces.*.[$name$,burnedInAddress]"
 >>> check = CheckType.create(check_type="regex")
 >>> actual_value = extract_data_from_json(actual_data, path)
@@ -556,7 +556,7 @@ We are looking for peers that have the same peerGroup, vrf, and state. Return pe
   {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE',
     'vrf': 'default',
     'state': 'Idle'}}],
- True)
+ False)
 ```
 
 Let's now look to an example for the `in` operator. Keeping the same `data` and class object as above:
@@ -573,7 +573,7 @@ We are looking for "prefixesReceived" value in the operator_data list.
 ```python
 >>> result = check.evaluate(check_args, value)
 >>> result
-([{'10.1.0.0': {'prefixesReceived': 50}}], False)
+([{'7.7.7.7': {'prefixesReceived': 101}}], False)
 ```
 
 What about `str` operator?
@@ -587,7 +587,7 @@ What about `str` operator?
  {'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE'}}]
 >>> result = check.evaluate(check_args, value)
 >>> result
-([{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE'}}], False)
+([{'10.1.0.0': {'peerGroup': 'IPv4-UNDERLAY-SPINE'}}], False)
 ```
 
 Can you guess what would be the outcome for an `int`, `float` operator?
@@ -601,9 +601,7 @@ Can you guess what would be the outcome for an `int`, `float` operator?
  {'10.1.0.0': {'prefixesReceived': 50}}]
 >>> result = check.evaluate(check_args, value)
 >>> result
-([{'7.7.7.7': {'prefixesReceived': 101}},
-  {'10.1.0.0': {'prefixesReceived': 50}}],
- False)
+([], True)
 ```
 
 See `tests` folder in the repo for more examples.
