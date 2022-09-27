@@ -65,7 +65,7 @@ operator_params_mode = (
 operator_params_wrong_operator = (
     "operator",
     {"params": {"mode": "random", "operator_data": [20, 40, 60]}},
-    "'params' value must be one of the following: ['is-in', 'not-in', 'in-range', 'not-in-range', 'all-same', 'is-gt', 'is-lt', 'contains', 'not-contains']. You have: random",
+    "'params' value must be one of the following: ['is-in', 'not-in', 'in-range', 'not-in-range', 'all-same', 'is-gt', 'is-lt', 'is-ge', 'is-le', 'contains', 'not-contains']. You have: random",
 )
 operator_params_in = (
     "operator",
@@ -85,7 +85,7 @@ operator_params_in_range_lower_than = (
 operator_params_number = (
     "operator",
     {"params": {"mode": "is-gt", "operator_data": "1"}},
-    "check options ('is-gt', 'is-lt') must have value of type float or int. You have: 1 of type <class 'str'>",
+    "check options ('is-gt', 'is-lt', 'is-ge', 'is-le') must have value of type float or int. You have: 1 of type <class 'str'>",
 )
 operator_params_contains = (
     "operator",

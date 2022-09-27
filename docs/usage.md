@@ -478,7 +478,12 @@ The `operator` check is a collection of more specific checks divided into catego
 2. `is-lt`: Check if the value of a specified element is lesser than a given numeric value.
     - `is-lt: 55`: checks if value is lower than 55 or not.  
 
+3. `is-ge`: Check if the value of a specified element is greater than or equal to a given numeric value.
+    - `is-ge: 2`: checks if value should be greater or equal than 2.
 
+4. `is-le`: Check if the value of a specified element is lesser than or equal a given numeric value.
+    - `is-le: 55`: checks if value is lower or equal than 55 or not.
+ 
 Examples:
 
 ```python

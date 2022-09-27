@@ -51,7 +51,9 @@ class Operator:
 
         ops = {
             ">": operator.gt,
+            ">=": operator.ge,
             "<": operator.lt,
+            "<=": operator.le,
             "is_in": operator.contains,
             "not_in": operator.contains,
             "contains": operator.contains,
@@ -99,9 +101,17 @@ class Operator:
         """Is greather than operator caller."""
         return self._loop_through_wrapper(">")
 
+    def is_ge(self) -> Tuple[List, bool]:
+        """Is greather or equal than operator caller."""
+        return self._loop_through_wrapper(">=")
+
     def is_lt(self) -> Tuple[List, bool]:
         """Is lower than operator caller."""
         return self._loop_through_wrapper("<")
+
+    def is_le(self) -> Tuple[List, bool]:
+        """Is lower or equal than operator caller."""
+        return self._loop_through_wrapper("<=")
 
     def is_in(self) -> Tuple[List, bool]:
         """Is in operator caller."""
