@@ -176,7 +176,7 @@ class OperatorType(CheckType):
         """Validate operator parameters."""
         in_operators = ("is-in", "not-in", "in-range", "not-in-range")
         bool_operators = ("all-same",)
-        number_operators = ("is-gt", "is-lt")
+        number_operators = ("is-gt", "is-lt", "is-ge", "is-le")
         string_operators = ("contains", "not-contains")
         valid_options = (
             in_operators,

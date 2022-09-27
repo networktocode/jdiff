@@ -75,10 +75,38 @@ operator_is_gt = (
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
     ([], True),
 )
+operator_is_ge_equal = (
+    "pre.json",
+    "operator",
+    {"params": {"mode": "is-ge", "operator_data": 50}},
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
+    ([], True),
+)
+operator_is_ge_greater = (
+    "pre.json",
+    "operator",
+    {"params": {"mode": "is-ge", "operator_data": 20}},
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
+    ([], True),
+)
 operator_is_lt = (
     "pre.json",
     "operator",
     {"params": {"mode": "is-lt", "operator_data": 60}},
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
+    ([], True),
+)
+operator_is_le_equal = (
+    "pre.json",
+    "operator",
+    {"params": {"mode": "is-le", "operator_data": 50}},
+    "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
+    ([], True),
+)
+operator_is_le_lower = (
+    "pre.json",
+    "operator",
+    {"params": {"mode": "is-le", "operator_data": 60}},
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
     ([], True),
 )
@@ -132,7 +160,11 @@ operator_all_tests = [
     operator_contains,
     operator_not_contains,
     operator_is_gt,
+    operator_is_ge_equal,
+    operator_is_ge_greater,
     operator_is_lt,
+    operator_is_le_equal,
+    operator_is_le_lower,
     operator_is_in,
     operator_not_in,
     operator_in_range,
