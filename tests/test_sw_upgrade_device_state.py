@@ -6,25 +6,23 @@ from .utility import load_json_file
 
 
 @pytest.mark.parametrize(
-    "platform, command, jpath, expected_parameter, check_should_pass",
+    "platform, command, expected_parameter, check_should_pass, fail_details",
     [
-        ("arista_eos", "show_version", "[*].[$image$,image]", {"image": "4.14.7M"}, True),
-        ("arista_eos", "show_version", "[*].[$image$,image]", {"image": "no-match"}, False),
-        ("cisco_ios", "show_version", "[*].[$version$,version]", {"version": "12.2(54)SG1"}, True),
-        ("cisco_ios", "show_version", "[*].[$version$,version]", {"version": "no-match"}, False),
-        ("cisco_nxos", "show_version", "[*].[$os$,os]", {"os": "6.1(2)I3(1)"}, True),
-        ("cisco_nxos", "show_version", "[*].[$os$,os]", {"os": "no-match"}, False),
+        ("arista_eos", "show_version", {"image": "4.14.7M"}, True, {}),
+        ("arista_eos", "show_version", {"image": "no-match"}, False, {0: {"image": "4.14.7M"}}),
+        ("cisco_ios", "show_version", {"version": "12.2(54)SG1"}, True, {}),
+        ("cisco_ios", "show_version", {"version": "no-match"}, False, {0: {"version": "12.2(54)SG1"}}),
+        ("cisco_nxos", "show_version", {"os": "6.1(2)I3(1)"}, True, {}),
+        ("cisco_nxos", "show_version", {"os": "no-match"}, False, {0: {"os": "6.1(2)I3(1)"}}),
     ],
 )
-def test_show_version(platform, command, jpath, expected_parameter, check_should_pass):
+def test_show_version(platform, command, expected_parameter, check_should_pass, fail_details):
     """Test expected version with parameter_match."""
     filename = f"{platform}_{command}.json"
     command = load_json_file("sw_upgrade", filename)
-
     check = CheckType.create("parameter_match")
-    value = extract_data_from_json(command, jpath)
-    eval_results, passed = check.evaluate(expected_parameter, value, "match")  # pylint: disable=E1121
-    assert passed is check_should_pass, f"FAILED, eval_result: {eval_results}"
+    eval_results, passed = check.evaluate(expected_parameter, command, "match")  # pylint: disable=E1121
+    assert passed is check_should_pass and eval_results == fail_details, f"FAILED, eval_result: {eval_results}"
 
 
 @pytest.mark.parametrize(
@@ -86,7 +84,6 @@ def test_show_ip_route_missing_and_additional_routes(platform, command):
     """Test missing or additional routes fail the test with exact_match."""
     command_pre = command_post = load_json_file("sw_upgrade", f"{platform}_{command}.json")
     check = CheckType.create("exact_match")
-    print(len(command_pre))
     eval_results_missing, passed_missing = check.evaluate(command_post[:30], command_pre)
     eval_results_additional, passed_additional = check.evaluate(command_post, command_pre[:30])
     assert (

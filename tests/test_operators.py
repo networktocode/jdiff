@@ -179,7 +179,6 @@ def test_operator(filename, check_type_str, evaluate_args, path, expected_result
     # There is not concept of "pre" and "post" in operator.
     data = load_json_file("api", filename)
     value = extract_data_from_json(data, path)
-    print(evaluate_args, value)
     actual_results = check.evaluate(evaluate_args, value)
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
         output=actual_results, expected_output=expected_result
