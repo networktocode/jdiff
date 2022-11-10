@@ -284,6 +284,13 @@ parameter_no_match_api = (
         False,
     ),
 )
+parameter_match_napalm_facts = (
+    "napalm_facts.json",
+    "parameter_match",
+    {"mode": "match", "params": {"version": "12.1X47-D20.7"}},
+    "*",
+    ({}, True),
+)
 
 
 @pytest.mark.parametrize(
