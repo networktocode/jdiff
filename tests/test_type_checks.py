@@ -304,7 +304,6 @@ def test_param_match(filename, check_type_str, evaluate_args, path, expected_res
     data = load_json_file("parameter_match", filename)
     value = extract_data_from_json(data, path)
     actual_results = check.evaluate(evaluate_args["params"], value, evaluate_args["mode"])
-    print(actual_results)
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
         output=actual_results, expected_output=expected_result
     )
