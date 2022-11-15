@@ -284,10 +284,18 @@ parameter_no_match_api = (
         False,
     ),
 )
+parameter_match_napalm_facts = (
+    "napalm_facts.json",
+    "parameter_match",
+    {"mode": "match", "params": {"os_version": "12.1X47-D20.7"}},
+    "*",
+    ({}, True),
+)
 
 
 @pytest.mark.parametrize(
-    "filename, check_type_str, evaluate_args, path, expected_result", [parameter_match_api, parameter_no_match_api]
+    "filename, check_type_str, evaluate_args, path, expected_result",
+    [parameter_match_api, parameter_no_match_api, parameter_match_napalm_facts],
 )
 def test_param_match(filename, check_type_str, evaluate_args, path, expected_result):
     """Validate parameter_match check type."""

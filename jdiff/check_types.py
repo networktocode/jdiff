@@ -1,5 +1,5 @@
 """CheckType Implementation."""
-from typing import Mapping, Tuple, Dict, Any, Union
+from typing import List, Tuple, Dict, Any, Union
 from abc import ABC, abstractmethod
 from .evaluators import diff_generator, parameter_evaluator, regex_evaluator, operator_evaluator
 
@@ -136,7 +136,7 @@ class ParameterMatchType(CheckType):
                 f"'mode' argument should be one of the following: {', '.join(mode_options)}. You have: {mode}"
             )
 
-    def evaluate(self, params: Dict, value_to_compare: Mapping, mode: str) -> Tuple[Dict, bool]:  # type: ignore[override]
+    def evaluate(self, params: Dict, value_to_compare: List[Dict], mode: str) -> Tuple[Dict, bool]:  # type: ignore[override]
         """Parameter Match evaluator implementation."""
         self._validate(params=params, mode=mode)
         # TODO: we don't use the mode?
@@ -161,7 +161,7 @@ class RegexType(CheckType):
         if mode not in mode_options:
             raise ValueError(f"'mode' argument should be {mode_options}. You have: {mode}")
 
-    def evaluate(self, regex: str, value_to_compare: Mapping, mode: str) -> Tuple[Dict, bool]:  # type: ignore[override]
+    def evaluate(self, regex: str, value_to_compare: List[Dict[Any, Dict]], mode: str) -> Tuple[Dict, bool]:  # type: ignore[override]
         """Regex Match evaluator implementation."""
         self._validate(regex=regex, mode=mode)
         evaluation_result = regex_evaluator(value_to_compare, regex, mode)
