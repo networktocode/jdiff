@@ -15,32 +15,3 @@ def test_jmspath_return_none(data):
 
     assert "JMSPath returned 'None'. Please, verify your JMSPath regex." in error.value.__str__()
 
-
-my_data = {
-    ".local.": {
-      "description": "",
-      "is_enabled": True,
-      "is_up": True,
-      "last_flapped": -1,
-      "mac_address": "Unspecified",
-      "mtu": 0,
-      "speed": -1
-    },
-    ".local..0": {
-      "description": "",
-      "is_enabled": True,
-      "is_up": True,
-      "last_flapped": -1,
-      "mac_address": "Unspecified",
-      "mtu": 0,
-      "speed": -1
-    }
-}
-
-@pytest.mark.parametrize("data", my_data)
-def test_jmspath_dict_of_dicts(data):
-    """Handle dict of dicts."""
-    my_jmspath = "$*$.[is_up, is_enabled]"
-    result = extract_data_from_json(data=data, path=my_jmspath)  # pylint: disable=E0110
-
-    assert result == {}

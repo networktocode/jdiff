@@ -1,0 +1,38 @@
+{
+    ".local.": {
+      "description": "",
+      "is_enabled": true,
+      "is_up": true,
+      "last_flapped": -1,
+      "mac_address": "Unspecified",
+      "mtu": 0,
+      "speed": -1
+    },
+    ".local..0": {
+      "description": "",
+      "is_enabled": true,
+      "is_up": true,
+      "last_flapped": -1,
+      "mac_address": "Unspecified",
+      "mtu": 0,
+      "speed": -1
+    },
+    ".local..1": {
+      "description": "",
+      "is_enabled": true,
+      "is_up": true,
+      "last_flapped": -1,
+      "mac_address": "Unspecified",
+      "mtu": 0,
+      "speed": -1
+    },
+    ".local..2": {
+      "description": "",
+      "is_enabled": true,
+      "is_up": true,
+      "last_flapped": -1,
+      "mac_address": "Unspecified",
+      "mtu": 0,
+      "speed": -1
+    }
+}
