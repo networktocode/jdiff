@@ -14,13 +14,13 @@ This is a quick reference guide if you're already familiar with the development 
 The [Invoke](http://www.pyinvoke.org/) library is used to provide some helper commands based on the environment. There are a few configuration parameters which can be passed to Invoke to override the default configuration:
 
 - `nautobot_ver`: the version of Nautobot to use as a base for any built docker containers (default: latest)
-- `project_name`: the default docker compose project name (default: `cu_allspice_lb_management`)
+- `project_name`: the default docker compose project name (default: `lb_models`)
 - `python_ver`: the version of Python to use as a base for any built docker containers (default: 3.8)
 - `local`: a boolean flag indicating if invoke tasks should be run on the host or inside the docker containers (default: False, commands will be run in docker containers)
 - `compose_dir`: the full path to a directory containing the project compose files
 - `compose_files`: a list of compose files applied in order (see [Multiple Compose files](https://docs.docker.com/compose/extends/#multiple-compose-files) for more information)
 
-Using **Invoke** these configuration options can be overridden using [several methods](https://docs.pyinvoke.org/en/stable/concepts/configuration.html). Perhaps the simplest is setting an environment variable `INVOKE_CU_ALLSPICE_LB_MANAGEMENT_VARIABLE_NAME` where `VARIABLE_NAME` is the variable you are trying to override. The only exception is `compose_files`, because it is a list it must be overridden in a YAML file. There is an example `invoke.yml` (`invoke.example.yml`) in this directory which can be used as a starting point.
+Using **Invoke** these configuration options can be overridden using [several methods](https://docs.pyinvoke.org/en/stable/concepts/configuration.html). Perhaps the simplest is setting an environment variable `INVOKE_lb_models_VARIABLE_NAME` where `VARIABLE_NAME` is the variable you are trying to override. The only exception is `compose_files`, because it is a list it must be overridden in a YAML file. There is an example `invoke.yml` (`invoke.example.yml`) in this directory which can be used as a starting point.
 
 ### Docker Development Environment
 
@@ -55,7 +55,7 @@ To either stop or destroy the development environment use the following options.
 
 ```yaml
 ---
-cu_allspice_lb_management:
+lb_models:
   local: true
   compose_files:
     - "docker-compose.requirements.yml"
@@ -185,7 +185,7 @@ The first thing you need to do is build the necessary Docker image for Nautobot 
 #14 exporting layers
 #14 exporting layers 1.2s done
 #14 writing image sha256:2d524bc1665327faa0d34001b0a9d2ccf450612bf8feeb969312e96a2d3e3503 done
-#14 naming to docker.io/cu-allspice-lb-management/nautobot:latest-py3.7 done
+#14 naming to docker.io/lb_models/nautobot:latest-py3.7 done
 ```
 
 ### Invoke - Starting the Development Environment
@@ -196,18 +196,18 @@ Next, you need to start up your Docker containers.
 ➜ invoke start
 Starting Nautobot in detached mode...
 Running docker-compose command "up --detach"
-Creating network "cu_allspice_lb_management_default" with the default driver
-Creating volume "cu_allspice_lb_management_postgres_data" with default driver
-Creating cu_allspice_lb_management_redis_1 ...
-Creating cu_allspice_lb_management_docs_1  ...
-Creating cu_allspice_lb_management_postgres_1 ...
-Creating cu_allspice_lb_management_postgres_1 ... done
-Creating cu_allspice_lb_management_redis_1    ... done
-Creating cu_allspice_lb_management_nautobot_1 ...
-Creating cu_allspice_lb_management_docs_1     ... done
-Creating cu_allspice_lb_management_nautobot_1 ... done
-Creating cu_allspice_lb_management_worker_1   ...
-Creating cu_allspice_lb_management_worker_1   ... done
+Creating network "lb_models_default" with the default driver
+Creating volume "lb_models_postgres_data" with default driver
+Creating lb_models_redis_1 ...
+Creating lb_models_docs_1  ...
+Creating lb_models_postgres_1 ...
+Creating lb_models_postgres_1 ... done
+Creating lb_models_redis_1    ... done
+Creating lb_models_nautobot_1 ...
+Creating lb_models_docs_1     ... done
+Creating lb_models_nautobot_1 ... done
+Creating lb_models_worker_1   ...
+Creating lb_models_worker_1   ... done
 Docker Compose is now in the Docker CLI, try `docker compose up`
 ```
 
@@ -216,11 +216,11 @@ This will start all of the Docker containers used for hosting Nautobot. You shou
 ```bash
 ➜ docker ps
 ****CONTAINER ID   IMAGE                            COMMAND                  CREATED          STATUS          PORTS                                       NAMES
-ee90fbfabd77   cu-allspice-lb-management/nautobot:latest-py3.7   "nautobot-server rqw…"   16 seconds ago   Up 13 seconds                                               cu_allspice_lb_management_worker_1
-b8adb781d013   cu-allspice-lb-management/nautobot:latest-py3.7   "/docker-entrypoint.…"   20 seconds ago   Up 15 seconds   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp   cu_allspice_lb_management_nautobot_1
-d64ebd60675d   cu-allspice-lb-management/nautobot:latest-py3.7   "mkdocs serve -v -a …"   25 seconds ago   Up 18 seconds   0.0.0.0:8001->8080/tcp, :::8001->8080/tcp   cu_allspice_lb_management_docs_1
-e72d63129b36   postgres:13-alpine               "docker-entrypoint.s…"   25 seconds ago   Up 19 seconds   0.0.0.0:5432->5432/tcp, :::5432->5432/tcp   cu_allspice_lb_management_postgres_1
-96c6ff66997c   redis:6-alpine                   "docker-entrypoint.s…"   25 seconds ago   Up 21 seconds   0.0.0.0:6379->6379/tcp, :::6379->6379/tcp   cu_allspice_lb_management_redis_1
+ee90fbfabd77   lb_models/nautobot:latest-py3.7   "nautobot-server rqw…"   16 seconds ago   Up 13 seconds                                               lb_models_worker_1
+b8adb781d013   lb_models/nautobot:latest-py3.7   "/docker-entrypoint.…"   20 seconds ago   Up 15 seconds   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp   lb_models_nautobot_1
+d64ebd60675d   lb_models/nautobot:latest-py3.7   "mkdocs serve -v -a …"   25 seconds ago   Up 18 seconds   0.0.0.0:8001->8080/tcp, :::8001->8080/tcp   lb_models_docs_1
+e72d63129b36   postgres:13-alpine               "docker-entrypoint.s…"   25 seconds ago   Up 19 seconds   0.0.0.0:5432->5432/tcp, :::5432->5432/tcp   lb_models_postgres_1
+96c6ff66997c   redis:6-alpine                   "docker-entrypoint.s…"   25 seconds ago   Up 21 seconds   0.0.0.0:6379->6379/tcp, :::6379->6379/tcp   lb_models_redis_1
 ```
 
 Once the containers are fully up, you should be able to open up a web browser, and view:
@@ -264,27 +264,27 @@ The last command to know for now is `invoke stop`.
 ➜ invoke stop
 Stopping Nautobot...
 Running docker-compose command "down"
-Stopping cu_allspice_lb_management_worker_1   ...
-Stopping cu_allspice_lb_management_nautobot_1 ...
-Stopping cu_allspice_lb_management_docs_1     ...
-Stopping cu_allspice_lb_management_redis_1    ...
-Stopping cu_allspice_lb_management_postgres_1 ...
-Stopping cu_allspice_lb_management_worker_1   ... done
-Stopping cu_allspice_lb_management_nautobot_1 ... done
-Stopping cu_allspice_lb_management_postgres_1 ... done
-Stopping cu_allspice_lb_management_redis_1    ... done
-Stopping cu_allspice_lb_management_docs_1     ... done
-Removing cu_allspice_lb_management_worker_1   ...
-Removing cu_allspice_lb_management_nautobot_1 ...
-Removing cu_allspice_lb_management_docs_1     ...
-Removing cu_allspice_lb_management_redis_1    ...
-Removing cu_allspice_lb_management_postgres_1 ...
-Removing cu_allspice_lb_management_postgres_1 ... done
-Removing cu_allspice_lb_management_docs_1     ... done
-Removing cu_allspice_lb_management_worker_1   ... done
-Removing cu_allspice_lb_management_redis_1    ... done
-Removing cu_allspice_lb_management_nautobot_1 ... done
-Removing network cu_allspice_lb_management_default
+Stopping lb_models_worker_1   ...
+Stopping lb_models_nautobot_1 ...
+Stopping lb_models_docs_1     ...
+Stopping lb_models_redis_1    ...
+Stopping lb_models_postgres_1 ...
+Stopping lb_models_worker_1   ... done
+Stopping lb_models_nautobot_1 ... done
+Stopping lb_models_postgres_1 ... done
+Stopping lb_models_redis_1    ... done
+Stopping lb_models_docs_1     ... done
+Removing lb_models_worker_1   ...
+Removing lb_models_nautobot_1 ...
+Removing lb_models_docs_1     ...
+Removing lb_models_redis_1    ...
+Removing lb_models_postgres_1 ...
+Removing lb_models_postgres_1 ... done
+Removing lb_models_docs_1     ... done
+Removing lb_models_worker_1   ... done
+Removing lb_models_redis_1    ... done
+Removing lb_models_nautobot_1 ... done
+Removing network lb_models_default
 ```
 
 This will safely shut down all of your running Docker containers for this project. When you are ready to spin containers back up, it is as simple as running `invoke start` again [as seen previously](#invoke-starting-the-development-environment).
@@ -319,7 +319,7 @@ When trying to debug an issue, one helpful thing you can look at are the logs wi
 !!! note
 	The `-f` tag will keep the logs open, and output them in realtime as they are generated.
 
-So for example, our plugin is named `cu-allspice-lb-management`, the command would most likely be `docker logs cu_allspice_lb_management_nautobot_1 -f`. You can find the name of all running containers via `docker ps`.
+So for example, our plugin is named `lb_models`, the command would most likely be `docker logs lb_models_nautobot_1 -f`. You can find the name of all running containers via `docker ps`.
 
 If you want to view the logs specific to the worker container, simply use the name of that container instead.
 
@@ -389,10 +389,10 @@ Once the containers are up and running, you should now see the new plugin instal
 To update the Python version, you can update it within `tasks.py`.
 
 ```python
-namespace = Collection("cu_allspice_lb_management")
+namespace = Collection("lb_models")
 namespace.configure(
     {
-        "cu_allspice_lb_management": {
+        "lb_models": {
             ...
             "python_ver": "3.7",
 	    ...
@@ -408,10 +408,10 @@ Or set the `INVOKE_NAUTOBOT_GOLDEN_CONFIG_PYTHON_VER` variable.
 To update the Nautobot version, you can update it within `tasks.py`.
 
 ```python
-namespace = Collection("cu_allspice_lb_management")
+namespace = Collection("lb_models")
 namespace.configure(
     {
-        "cu_allspice_lb_management": {
+        "lb_models": {
             ...
             "nautobot_ver": "1.0.2",
 	    ...
@@ -420,7 +420,7 @@ namespace.configure(
 )
 ```
 
-Or set the `INVOKE_CU_ALLSPICE_LB_MANAGEMENT_NAUTOBOT_VER` variable.
+Or set the `INVOKE_lb_models_NAUTOBOT_VER` variable.
 
 ## Other Miscellaneous Commands To Know
 

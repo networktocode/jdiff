@@ -1,6 +1,6 @@
 ---
-cu_allspice_lb_management:
-  project_name: "cu-allspice-lb-management"
+lb_models:
+  project_name: "lb_models"
   nautobot_ver: "latest"
   local: false
   python_ver: "3.7"

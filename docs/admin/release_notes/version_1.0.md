@@ -37,7 +37,7 @@ This document describes all new features and changes in the release `1.0`. The f
 
 ### Fixed
 
-- [#123](git@github.com:networktocode-llc/cu-allspice-lb-management.git/issues/123) Fixed Tag filtering not working in job launch form
+- [#123](git@github.com:networktocode-llc/lb_models.git/issues/123) Fixed Tag filtering not working in job launch form
 
 ## [v1.0.0] - 2021-08-03
 

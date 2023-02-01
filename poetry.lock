@@ -117,7 +117,7 @@ python-versions = "*"
 
 [[package]]
 name = "black"
-version = "22.12.0"
+version = "23.1.0"
 description = "The uncompromising code formatter."
 category = "dev"
 optional = false
@@ -126,9 +126,10 @@ python-versions = ">=3.7"
 [package.dependencies]
 click = ">=8.0.0"
 mypy-extensions = ">=0.4.3"
+packaging = ">=22.0"
 pathspec = ">=0.9.0"
 platformdirs = ">=2"
-tomli = {version = ">=1.1.0", markers = "python_full_version < \"3.11.0a7\""}
+tomli = {version = ">=1.1.0", markers = "python_version < \"3.11\""}
 typed-ast = {version = ">=1.4.2", markers = "python_version < \"3.8\" and implementation_name == \"cpython\""}
 typing-extensions = {version = ">=3.10.0.0", markers = "python_version < \"3.10\""}
 
@@ -672,6 +673,14 @@ python-versions = ">=3.6"
 tests = ["coverage"]
 
 [[package]]
+name = "django-versionfield"
+version = "1.0.3"
+description = "A DB Independent Custom Django Field for storing Version numbers for fast indexing"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "django-webserver"
 version = "1.2.0"
 description = "Django management commands for production webservers"
@@ -1019,16 +1028,16 @@ test = ["nose (>=0.10.1)", "requests", "testpath", "pygments", "nbformat", "ipyk
 
 [[package]]
 name = "isort"
-version = "5.11.4"
+version = "5.11.5"
 description = "A Python utility / library to sort Python imports."
 category = "dev"
 optional = false
 python-versions = ">=3.7.0"
 
 [package.extras]
+pipfile-deprecated-finder = ["pipreqs", "requirementslib", "pip-shims (>=0.5.2)"]
+requirements-deprecated-finder = ["pipreqs", "pip-api"]
 colors = ["colorama (>=0.4.3,<0.5.0)"]
-requirements-deprecated-finder = ["pip-api", "pipreqs"]
-pipfile-deprecated-finder = ["pipreqs", "requirementslib"]
 plugins = ["setuptools"]
 
 [[package]]
@@ -1992,7 +2001,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "traitlets"
-version = "5.8.1"
+version = "5.9.0"
 description = "Traitlets Python configuration system"
 category = "dev"
 optional = false
@@ -2104,7 +2113,7 @@ nautobot = ["nautobot"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "ce41208b1ace0d210cc9f2e9759a4c8b36124f2d9f2e5c896daa54729c68042a"
+content-hash = "d90a4f52486a0a0d8bbe170fffc1235e5a50238d3d47ea46381a31ee39614240"
 
 [metadata.files]
 amqp = [
@@ -2254,6 +2263,7 @@ django-timezone-field = [
     {file = "django_timezone_field-4.1.2-py3-none-any.whl", hash = "sha256:897c06e40b619cf5731a30d6c156886a7c64cba3a90364832148da7ef32ccf36"},
 ]
 django-tree-queries = []
+django-versionfield = []
 django-webserver = [
     {file = "django-webserver-1.2.0.tar.gz", hash = "sha256:c976979d15b5ff9a212f7904d3b779e22219aebb4857860fcaf20e4e40f1da40"},
     {file = "django_webserver-1.2.0-py2.py3-none-any.whl", hash = "sha256:09200631f266484b9e944e38e92681d6e9aa7d90d089a5c86d5fb08fddad84fe"},

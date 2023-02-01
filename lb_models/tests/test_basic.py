@@ -3,7 +3,7 @@ import unittest
 import os
 import toml
 
-from cu_allspice_lb_management import __version__ as project_version
+from lb_models import __version__ as project_version
 
 
 class TestVersion(unittest.TestCase):

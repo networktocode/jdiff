@@ -1,4 +1,4 @@
-"""Plugin declaration for cu_allspice_lb_management."""
+"""Plugin declaration for lb_models."""
 # Metadata is inherited from Nautobot. If not including Nautobot in the environment, this should be added
 try:
     from importlib import metadata
@@ -12,14 +12,14 @@ from nautobot.extras.plugins import PluginConfig
 
 
 class CuAllspiceLbManagementConfig(PluginConfig):
-    """Plugin configuration for the cu_allspice_lb_management plugin."""
+    """Plugin configuration for the lb_models plugin."""
 
-    name = "cu_allspice_lb_management"
-    verbose_name = "cu-allspice-lb-management"
+    name = "lb_models"
+    verbose_name = "lb_models"
     version = __version__
     author = "Network to Code, LLC"
-    description = "cu-allspice-lb-management."
-    base_url = "cu-allspice-lb-management"
+    description = "lb_models."
+    base_url = "lb_models"
     required_settings = []
     min_version = "1.4"
     max_version = "1.9999"

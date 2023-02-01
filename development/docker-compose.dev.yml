@@ -18,7 +18,7 @@ services:
       - "8001:8080"
     volumes:
       - "../:/source"
-    image: "cu-allspice-lb-management/nautobot:${NAUTOBOT_VER}-py${PYTHON_VER}"
+    image: "lb_models/nautobot:${NAUTOBOT_VER}-py${PYTHON_VER}"
     healthcheck:
       disable: true
     tty: true

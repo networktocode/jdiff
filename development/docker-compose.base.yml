@@ -7,7 +7,7 @@ x-nautobot-build: &nautobot-build
     context: "../"
     dockerfile: "development/Dockerfile"
 x-nautobot-base: &nautobot-base
-  image: "cu-allspice-lb-management/nautobot:${NAUTOBOT_VER}-py${PYTHON_VER}"
+  image: "lb_models/nautobot:${NAUTOBOT_VER}-py${PYTHON_VER}"
   env_file:
     - "development.env"
     - "creds.env"

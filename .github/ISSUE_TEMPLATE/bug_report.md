@@ -1,12 +1,12 @@
 ---
 name: 🐛 Bug Report
-about: Report a reproducible bug in the current release of cu-allspice-lb-management
+about: Report a reproducible bug in the current release of lb_models
 ---
 
 ### Environment
 * Python version:  <!-- Example: 3.7.7 -->
 * Nautobot version:  <!-- Example: 1.4 -->
-* cu-allspice-lb-management version:  <!-- Example: 0.1.0 -->
+* lb_models version:  <!-- Example: 0.1.0 -->
 
 <!-- What did you expect to happen? -->
 ### Expected Behavior

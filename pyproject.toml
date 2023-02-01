@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "cu-allspice-lb-management"
+name = "lb_models"
 version = "0.1.0"
-description = "cu-allspice-lb-management"
+description = "lb_models"
 authors = ["Network to Code, LLC <info@networktocode.com>"]
 license = "Apache-2.0"
 readme = "README.md"
@@ -13,7 +13,7 @@ include = [
     "README.md",
 ]
 packages = [
-    { include = "cu_allspice_lb_management" },
+    { include = "lb_models" },
 ]
 
 [tool.poetry.dependencies]
@@ -22,6 +22,7 @@ python = "^3.7"
 importlib-metadata = "4.13.0"
 # Used for local development
 nautobot = { version = "^1.4", optional = true }
+django-versionfield = "*"
 
 [tool.poetry.dev-dependencies]
 bandit = "*"

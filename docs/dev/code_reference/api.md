@@ -1,5 +1,5 @@
-# cu-allspice-lb-management API Package
+# lb_models API Package
 
-::: cu_allspice_lb_management.api
+::: lb_models.api
     options:
         show_submodules: True

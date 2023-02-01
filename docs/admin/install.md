@@ -21,31 +21,31 @@ Here you will find detailed instructions on how to **install** and **configure**
 ## Install Guide
 
 !!! note
-    Plugins can be installed manually or using Python's `pip`. See the [nautobot documentation](https://nautobot.readthedocs.io/en/latest/plugins/#install-the-package) for more details. The pip package name for this plugin is [`cu-allspice-lb-management`](https://pypi.org/project/cu-allspice-lb-management/).
+    Plugins can be installed manually or using Python's `pip`. See the [nautobot documentation](https://nautobot.readthedocs.io/en/latest/plugins/#install-the-package) for more details. The pip package name for this plugin is [`lb_models`](https://pypi.org/project/lb_models/).
 
 The plugin is available as a Python package via PyPI and can be installed with `pip`:
 
 ```shell
-pip install cu-allspice-lb-management
+pip install lb_models
 ```
 
-To ensure cu-allspice-lb-management is automatically re-installed during future upgrades, create a file named `local_requirements.txt` (if not already existing) in the Nautobot root directory (alongside `requirements.txt`) and list the `cu-allspice-lb-management` package:
+To ensure lb_models is automatically re-installed during future upgrades, create a file named `local_requirements.txt` (if not already existing) in the Nautobot root directory (alongside `requirements.txt`) and list the `lb_models` package:
 
 ```shell
-echo cu-allspice-lb-management >> local_requirements.txt
+echo lb_models >> local_requirements.txt
 ```
 
 Once installed, the plugin needs to be enabled in your Nautobot configuration. The following block of code below shows the additional configuration required to be added to your `nautobot_config.py` file:
 
-- Append `"cu_allspice_lb_management"` to the `PLUGINS` list.
-- Append the `"cu_allspice_lb_management"` dictionary to the `PLUGINS_CONFIG` dictionary and override any defaults.
+- Append `"lb_models"` to the `PLUGINS` list.
+- Append the `"lb_models"` dictionary to the `PLUGINS_CONFIG` dictionary and override any defaults.
 
 ```python
 # In your nautobot_config.py
-PLUGINS = ["cu_allspice_lb_management"]
+PLUGINS = ["lb_models"]
 
 # PLUGINS_CONFIG = {
-#   "cu_allspice_lb_management": {
+#   "lb_models": {
 #     ADD YOUR SETTINGS HERE
 #   }
 # }

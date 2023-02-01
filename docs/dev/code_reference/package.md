@@ -1,1 +1,1 @@
-::: cu_allspice_lb_management
+::: lb_models

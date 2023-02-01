@@ -51,8 +51,9 @@ DEBUG = True
 # Django Debug Toolbar
 DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": lambda _request: DEBUG and not TESTING}
 
-if DEBUG and "debug_toolbar" not in INSTALLED_APPS:  # noqa: F405
-    INSTALLED_APPS.append("debug_toolbar")  # noqa: F405
+EXTRA_INSTALLED_APPS = ["versionfield"]
+if DEBUG and "debug_toolbar" not in EXTRA_INSTALLED_APPS:  # noqa: F405
+    EXTRA_INSTALLED_APPS.append("debug_toolbar")  # noqa: F405
 if DEBUG and "debug_toolbar.middleware.DebugToolbarMiddleware" not in MIDDLEWARE:  # noqa: F405
     MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")  # noqa: F405
 
@@ -132,12 +133,12 @@ CACHEOPS_REDIS = parse_redis_connection(redis_database=1)
 #
 
 # Enable installed plugins. Add the name of each plugin to the list.
-PLUGINS = ["cu_allspice_lb_management"]
+PLUGINS = ["lb_models"]
 
 # Plugins configuration settings. These settings are used by various plugins that the user may have installed.
 # Each key in the dictionary is the name of an installed plugin and its value is a dictionary of settings.
 # PLUGINS_CONFIG = {
-#     'cu_allspice_lb_management': {
+#     'lb_models': {
 #         'foo': 'bar',
 #         'buzz': 'bazz'
 #     }

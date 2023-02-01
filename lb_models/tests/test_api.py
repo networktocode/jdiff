@@ -1,4 +1,4 @@
-"""Unit tests for cu_allspice_lb_management."""
+"""Unit tests for lb_models."""
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse

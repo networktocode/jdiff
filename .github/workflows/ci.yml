@@ -13,13 +13,13 @@ on: # yamllint disable-line rule:truthy rule:comments
   pull_request: ~
 
 env:
-  PLUGIN_NAME: "cu-allspice-lb-management"
+  PLUGIN_NAME: "lb_models"
 
 jobs:
   black:
     runs-on: "ubuntu-20.04"
     env:
-      INVOKE_CU_ALLSPICE_LB_MANAGEMENT_LOCAL: "True"
+      INVOKE_lb_models_LOCAL: "True"
     steps:
       - name: "Check out repository code"
         uses: "actions/checkout@v2"
@@ -30,7 +30,7 @@ jobs:
   bandit:
     runs-on: "ubuntu-20.04"
     env:
-      INVOKE_CU_ALLSPICE_LB_MANAGEMENT_LOCAL: "True"
+      INVOKE_lb_models_LOCAL: "True"
     steps:
       - name: "Check out repository code"
         uses: "actions/checkout@v2"
@@ -41,7 +41,7 @@ jobs:
   pydocstyle:
     runs-on: "ubuntu-20.04"
     env:
-      INVOKE_CU_ALLSPICE_LB_MANAGEMENT_LOCAL: "True"
+      INVOKE_lb_models_LOCAL: "True"
     steps:
       - name: "Check out repository code"
         uses: "actions/checkout@v2"
@@ -52,7 +52,7 @@ jobs:
   flake8:
     runs-on: "ubuntu-20.04"
     env:
-      INVOKE_CU_ALLSPICE_LB_MANAGEMENT_LOCAL: "True"
+      INVOKE_lb_models_LOCAL: "True"
     steps:
       - name: "Check out repository code"
         uses: "actions/checkout@v2"
@@ -63,7 +63,7 @@ jobs:
   yamllint:
     runs-on: "ubuntu-20.04"
     env:
-      INVOKE_CU_ALLSPICE_LB_MANAGEMENT_LOCAL: "True"
+      INVOKE_lb_models_LOCAL: "True"
     steps:
       - name: "Check out repository code"
         uses: "actions/checkout@v2"
@@ -85,8 +85,8 @@ jobs:
         python-version: ["3.8"]
         nautobot-version: ["1.4"]
     env:
-      INVOKE_CU_ALLSPICE_LB_MANAGEMENT_PYTHON_VER: "${{ matrix.python-version }}"
-      INVOKE_CU_ALLSPICE_LB_MANAGEMENT_NAUTOBOT_VER: "${{ matrix.nautobot-version }}"
+      INVOKE_lb_models_PYTHON_VER: "${{ matrix.python-version }}"
+      INVOKE_lb_models_NAUTOBOT_VER: "${{ matrix.nautobot-version }}"
     steps:
       - name: "Check out repository code"
         uses: "actions/checkout@v2"
@@ -134,8 +134,8 @@ jobs:
             nautobot-version: "stable"
     runs-on: "ubuntu-20.04"
     env:
-      INVOKE_CU_ALLSPICE_LB_MANAGEMENT_PYTHON_VER: "${{ matrix.python-version }}"
-      INVOKE_CU_ALLSPICE_LB_MANAGEMENT_NAUTOBOT_VER: "${{ matrix.nautobot-version }}"
+      INVOKE_lb_models_PYTHON_VER: "${{ matrix.python-version }}"
+      INVOKE_lb_models_NAUTOBOT_VER: "${{ matrix.nautobot-version }}"
     steps:
       - name: "Check out repository code"
         uses: "actions/checkout@v2"

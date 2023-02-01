@@ -33,13 +33,13 @@ def is_truthy(arg):
 
 
 # Use pyinvoke configuration for default values, see http://docs.pyinvoke.org/en/stable/concepts/configuration.html
-# Variables may be overwritten in invoke.yml or by the environment variables INVOKE_CU_ALLSPICE_LB_MANAGEMENT_xxx
-namespace = Collection("cu_allspice_lb_management")
+# Variables may be overwritten in invoke.yml or by the environment variables INVOKE_lb_models_xxx
+namespace = Collection("lb_models")
 namespace.configure(
     {
-        "cu_allspice_lb_management": {
+        "lb_models": {
             "nautobot_ver": "latest",
-            "project_name": "cu_allspice_lb_management",
+            "project_name": "lb_models",
             "python_ver": "3.7",
             "local": False,
             "compose_dir": os.path.join(os.path.dirname(__file__), "development"),
@@ -85,13 +85,13 @@ def docker_compose(context, command, **kwargs):
     build_env = {
         # Note: 'docker-compose logs' will stop following after 60 seconds by default,
         # so we are overriding that by setting this environment variable.
-        "COMPOSE_HTTP_TIMEOUT": context.cu_allspice_lb_management.compose_http_timeout,
-        "NAUTOBOT_VER": context.cu_allspice_lb_management.nautobot_ver,
-        "PYTHON_VER": context.cu_allspice_lb_management.python_ver,
+        "COMPOSE_HTTP_TIMEOUT": context.lb_models.compose_http_timeout,
+        "NAUTOBOT_VER": context.lb_models.nautobot_ver,
+        "PYTHON_VER": context.lb_models.python_ver,
     }
-    compose_command = f'docker-compose --project-name {context.cu_allspice_lb_management.project_name} --project-directory "{context.cu_allspice_lb_management.compose_dir}"'
-    for compose_file in context.cu_allspice_lb_management.compose_files:
-        compose_file_path = os.path.join(context.cu_allspice_lb_management.compose_dir, compose_file)
+    compose_command = f'docker-compose --project-name {context.lb_models.project_name} --project-directory "{context.lb_models.compose_dir}"'
+    for compose_file in context.lb_models.compose_files:
+        compose_file_path = os.path.join(context.lb_models.compose_dir, compose_file)
         compose_command += f' -f "{compose_file_path}"'
     compose_command += f" {command}"
     print(f'Running docker-compose command "{command}"')
@@ -100,7 +100,7 @@ def docker_compose(context, command, **kwargs):
 
 def run_command(context, command, **kwargs):
     """Wrapper to run a command locally or inside the nautobot container."""
-    if is_truthy(context.cu_allspice_lb_management.local):
+    if is_truthy(context.lb_models.local):
         context.run(command, **kwargs)
     else:
         # Check if nautobot is running, no need to start another nautobot container to run a command
@@ -132,7 +132,7 @@ def build(context, force_rm=False, cache=True):
     if force_rm:
         command += " --force-rm"
 
-    print(f"Building Nautobot with Python {context.cu_allspice_lb_management.python_ver}...")
+    print(f"Building Nautobot with Python {context.lb_models.python_ver}...")
     docker_compose(context, command)
 
 
@@ -251,7 +251,7 @@ def createsuperuser(context, user="admin"):
 )
 def makemigrations(context, name=""):
     """Perform makemigrations operation in Django."""
-    command = "nautobot-server makemigrations cu_allspice_lb_management"
+    command = "nautobot-server makemigrations lb_models"
 
     if name:
         command += f" --name {name}"
@@ -294,11 +294,11 @@ def docs(context):
     """Build and serve docs locally for development."""
     command = "mkdocs serve -v"
 
-    if is_truthy(context.cu_allspice_lb_management.local):
+    if is_truthy(context.lb_models.local):
         print("Serving Documentation...")
         run_command(context, command)
     else:
-        print("Only used when developing locally (i.e. context.cu_allspice_lb_management.local=True)!")
+        print("Only used when developing locally (i.e. context.lb_models.local=True)!")
 
 
 # ------------------------------------------------------------------------------
@@ -338,7 +338,7 @@ def hadolint(context):
 @task
 def pylint(context):
     """Run pylint code analysis."""
-    command = 'pylint --init-hook "import nautobot; nautobot.setup()" --rcfile pyproject.toml cu_allspice_lb_management'
+    command = 'pylint --init-hook "import nautobot; nautobot.setup()" --rcfile pyproject.toml lb_models'
     run_command(context, command)
 
 
@@ -384,7 +384,7 @@ def check_migrations(context):
         "buffer": "Discard output from passing tests",
     }
 )
-def unittest(context, keepdb=False, label="cu_allspice_lb_management", failfast=False, buffer=True):
+def unittest(context, keepdb=False, label="lb_models", failfast=False, buffer=True):
     """Run Nautobot unit tests."""
     command = f"coverage run --module nautobot.core.cli test {label}"
 
@@ -400,7 +400,7 @@ def unittest(context, keepdb=False, label="cu_allspice_lb_management", failfast=
 @task
 def unittest_coverage(context):
     """Report on code test coverage as measured by 'invoke unittest'."""
-    command = "coverage report --skip-covered --include 'cu_allspice_lb_management/*' --omit *migrations*"
+    command = "coverage report --skip-covered --include 'lb_models/*' --omit *migrations*"
 
     run_command(context, command)
 
@@ -413,7 +413,7 @@ def unittest_coverage(context):
 def tests(context, failfast=False):
     """Run all tests for this plugin."""
     # If we are not running locally, start the docker containers so we don't have to for each test
-    if not is_truthy(context.cu_allspice_lb_management.local):
+    if not is_truthy(context.lb_models.local):
         print("Starting Docker Containers...")
         start(context)
     # Sorted loosely from fastest to slowest
