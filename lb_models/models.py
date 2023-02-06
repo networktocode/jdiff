@@ -94,32 +94,16 @@ class VIPCertificate(BaseModel):
         return self.serial_number
 
 
-class VIPPoolResponse(BaseModel):
-    """VIP pool response model implementation."""
-
-    slug = AutoSlugField(populate_from="name")
-    name = models.CharField(max_length=50, unique=True)
-    description = models.CharField(max_length=100)
-    code = models.SmallIntegerField()
-    string = models.CharField(max_length=200)
-    send = models.CharField(max_length=50)
-
-    csv_headers = ["slug", "name", "description", "code", "string", "send"]
-    clone_fields = ["slug", "name", "code", "string", "send"]
-
-    def get_absolute_url(self):
-        """Return detail view for VIP pool response."""
-        return reverse("plugins:lb_models:vip_pool_response", args=[self.slug])
-
-    def to_csv(self):
-        """To CSV format."""
-        return (self.slug, self.name, self.description, self.code, self.string, self.send)
-
-    def __str__(self):
-        """Stringify instance."""
-        return self.name
-
-
+@extras_features(
+    "custom_fields",
+    "custom_links",
+    "custom_validators",
+    "export_templates",
+    "graphql",
+    "relationships",
+    "statuses",
+    "webhooks",
+)
 class VIPPoolMember(BaseModel):
     """VIP pool response model implementation."""
 
@@ -127,7 +111,7 @@ class VIPPoolMember(BaseModel):
     name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=100)
     protocol = models.CharField(max_length=20, choices=Protocols)
-    port = models.SmallIntegerField()
+    port = models.SmallIntegerField(blank=True, null=True)
     ipv4_address = models.ForeignKey(
         to="ipam.IPAddress",
         on_delete=models.PROTECT,
@@ -144,7 +128,7 @@ class VIPPoolMember(BaseModel):
         null=True,
         verbose_name="IPv6 Address",
     )
-    fqdn = models.CharField(max_length=50)
+    fqdn = models.URLField(max_length=200)
     monitor = models.ForeignKey(to="VIPHealthMonitor", on_delete=models.PROTECT)
     member_args = models.JSONField()
 
@@ -191,16 +175,28 @@ class VIPPoolMember(BaseModel):
         return self.name
 
 
+@extras_features(
+    "custom_fields",
+    "custom_links",
+    "custom_validators",
+    "export_templates",
+    "graphql",
+    "relationships",
+    "statuses",
+    "webhooks",
+)
 class VIPHealthMonitor(BaseModel):
     """VIP pool response model implementation."""
 
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50, unique=True)
-    description = models.CharField(max_length=100)
-    type = models.CharField(max_length=50)
-    url = models.CharField(max_length=50)
-    send = models.CharField(max_length=50)
-    receive = models.CharField(max_length=50)
+    description = models.CharField(max_length=100, blank=True, null=True)
+    type = models.CharField(max_length=50, blank=True, null=True)
+    url = models.CharField(max_length=50, blank=True, null=True)
+    send = models.CharField(max_length=50, blank=True, null=True)
+    string = models.CharField(max_length=100, blank=True, null=True)
+    code = models.SmallIntegerField(blank=True, null=True)
+    receive = models.CharField(max_length=50, blank=True, null=True)
 
     csv_headers = [
         "slug",
@@ -220,6 +216,178 @@ class VIPHealthMonitor(BaseModel):
     def to_csv(self):
         """To CSV format."""
         return (self.slug, self.name, self.description, self.type, self.url, self.send, self.receive)
+
+    def __str__(self):
+        """Stringify instance."""
+        return self.name
+
+
+@extras_features(
+    "custom_fields",
+    "custom_links",
+    "custom_validators",
+    "export_templates",
+    "graphql",
+    "relationships",
+    "statuses",
+    "webhooks",
+)
+class VIPPool(BaseModel):
+    """VIP pool model implementation."""
+
+    slug = AutoSlugField(populate_from="name")
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=50)
+    monitor = models.ForeignKey(to="VIPHealthMonitor", on_delete=models.PROTECT)
+    member = models.ForeignKey(to="VIPPoolMember", on_delete=models.PROTECT)
+
+    csv_headers = ["slug", "name", "description", "monitor", "member"]
+    clone_fields = ["slug", "name", "description", "monitor", "member"]
+
+    def get_absolute_url(self):
+        """Return detail view for VIP pool memeber."""
+        return reverse("plugins:lb_models:vip_pool", args=[self.slug])
+
+    def to_csv(self):
+        """To CSV format."""
+        return (self.slug, self.name, self.description, self.monitor, self.member)
+
+    def __str__(self):
+        """Stringify instance."""
+        return self.name
+
+
+@extras_features(
+    "custom_fields",
+    "custom_links",
+    "custom_validators",
+    "export_templates",
+    "graphql",
+    "relationships",
+    "statuses",
+    "webhooks",
+)
+class VIP(BaseModel):
+    """VIP implementation."""
+
+    slug = AutoSlugField(populate_from="name")
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=50)
+    device = models.ForeignKey(
+        to="dcim.Device",
+        on_delete=models.PROTECT,
+        related_name="+",
+        blank=True,
+        null=True,
+        verbose_name="Device",
+    )
+    interface = models.ForeignKey(
+        to="dcim.Interface",
+        on_delete=models.PROTECT,
+        related_name="+",
+        blank=True,
+        null=True,
+        verbose_name="Interface",
+    )
+    ipv4_address = models.ForeignKey(
+        to="ipam.IPAddress",
+        on_delete=models.PROTECT,
+        related_name="+",
+        blank=True,
+        null=True,
+        verbose_name="IPv4 Address",
+    )
+    ipv6_address = models.ForeignKey(
+        to="ipam.IPAddress",
+        on_delete=models.PROTECT,
+        related_name="+",
+        blank=True,
+        null=True,
+        verbose_name="IPv6 Address",
+    )
+    pool = models.ForeignKey(to="VIPPool", on_delete=models.PROTECT)
+    vlan = models.ForeignKey(
+        to="ipam.vlan",
+        on_delete=models.PROTECT,
+        related_name="+",
+        blank=True,
+        null=True,
+        verbose_name="VLAN",
+    )
+    vrf = models.ForeignKey(
+        to="ipam.vrf",
+        on_delete=models.PROTECT,
+        related_name="+",
+        blank=True,
+        null=True,
+        verbose_name="vrf",
+    )
+    fqdn = models.URLField(max_length=200)
+    protocol = models.CharField(max_length=20, choices=Protocols)
+    port = models.SmallIntegerField(blank=True, null=True)
+    method = models.CharField(max_length=50)
+    certificate = models.ForeignKey(to="VIPCertificate", on_delete=models.CASCADE)
+    owner = models.CharField(max_length=50)
+    vip_args = models.JSONField()
+
+    csv_headers = [
+        "slug",
+        "name",
+        "description",
+        "device",
+        "interface",
+        "ipv4_address",
+        "ipv6_address",
+        "pool",
+        "vlan",
+        "vrf",
+        "fqdn",
+        "protocol",
+        "port",
+        "method",
+        "certificate",
+        "owner",
+        "vip_args",
+    ]
+    clone_fields = [
+        "slug",
+        "name",
+        "description",
+        "device",
+        "pool",
+        "protocol",
+        "port",
+        "method",
+        "certificate",
+        "owner",
+        "vip_args",
+    ]
+
+    def get_absolute_url(self):
+        """Return detail view for VIP."""
+        return reverse("plugins:lb_models:vip", args=[self.slug])
+
+    def to_csv(self):
+        """To CSV format."""
+        return (
+            self.slug,
+            self.name,
+            self.description,
+            self.device,
+            self.interface,
+            self.ipv4_address,
+            self.ipv6_address,
+            self.pool,
+            self.vlan,
+            self.vrf,
+            self.fqdn,
+            self.protocol,
+            self.port,
+            self.method,
+            self.certificate,
+            self.owner,
+            self.vip_args,
+        )
 
     def __str__(self):
         """Stringify instance."""
