@@ -33,8 +33,8 @@ class VIPCertificate(BaseModel):
     signature = models.CharField(max_length=50, unique=True)
     signature_algorithm = models.CharField(max_length=20, choices=CertAlgorithmChoices)
     signature_algorithm_id = models.CharField(max_length=30, unique=True)
-    start_date = models.DateField
-    end_date = models.DateField
+    start_date = models.DateField()
+    end_date = models.DateField()
     subject_name = models.CharField(max_length=50)
     subject_pub_key = models.CharField(max_length=100)
     subject_pub_key_algorithm = models.CharField(max_length=20, choices=CertAlgorithmChoices)
@@ -70,7 +70,7 @@ class VIPCertificate(BaseModel):
 
     def get_absolute_url(self):
         """Return detail view for VIP certificate."""
-        return reverse("plugins:lb_models:vip_certificate", args=[self.slug])
+        return reverse("plugins:lb_models:vipcertificate", args=[self.slug])
 
     def to_csv(self):
         """To CSV format."""
@@ -81,7 +81,7 @@ class VIPCertificate(BaseModel):
             self.serial_number,
             self.signature,
             self.signature_algorithm,
-            self.signature_algorithm,
+            self.signature_algorithm_id,
             self.start_date,
             self.end_date,
             self.subject_name,

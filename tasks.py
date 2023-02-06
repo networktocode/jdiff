@@ -38,7 +38,7 @@ namespace = Collection("lb_models")
 namespace.configure(
     {
         "lb_models": {
-            "nautobot_ver": "latest",
+            "nautobot_ver": "1.4.2",
             "project_name": "lb_models",
             "python_ver": "3.7",
             "local": False,
