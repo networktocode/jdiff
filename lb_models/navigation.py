@@ -22,4 +22,22 @@ menu_items = (
             ),
         ),
     ),
+    PluginMenuItem(
+        link="plugins:lb_models:vippoolmember_list",
+        link_text="VIP Poll Member",
+        buttons=(
+            PluginMenuButton(
+                link="plugins:lb_models:vippoolmember_add",
+                title="Add",
+                icon_class="mdi mdi-plus-thick",
+                color=ButtonColorChoices.GREEN,
+            ),
+            PluginMenuButton(
+                link="plugins:lb_models:vippoolmember_import",
+                title="Import",
+                icon_class="mdi mdi-database-import-outline",
+                color=ButtonColorChoices.BLUE,
+            ),
+        ),
+    ),
 )
