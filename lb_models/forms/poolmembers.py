@@ -1,20 +1,22 @@
 """Forms for lb_models."""
 from django import forms
-from nautobot.utilities.forms import BootstrapMixin, BulkEditForm, DatePicker, CSVModelForm
+from nautobot.utilities.forms import BootstrapMixin, BulkEditForm, CSVModelForm, DynamicModelChoiceField
 from nautobot.core.fields import AutoSlugField
-from ..choices import CertAlgorithmChoices, Protocols
+from ..choices import Protocols
 from .utils import add_blank_choice
 from lb_models import models
+from nautobot.ipam.models import IPAddress
 
+class VIPPoolMemberForm(BootstrapMixin, forms.ModelForm):
+    """VIP Pool Member creation/edit form."""
 
-class VIPPoolMembersForm(BootstrapMixin, forms.ModelForm):
-    """VIP Pool Members creation/edit form."""
-
-    slug = AutoSlugField(populate_from=["serial_number"])
-    start_date = forms.DateField(widget=DatePicker())
-    end_date = forms.DateField(widget=DatePicker())
-    signature_algorithm = forms.ChoiceField(choices=add_blank_choice(CertAlgorithmChoices))
-    subject_pub_key = forms.ChoiceField(choices=add_blank_choice(CertAlgorithmChoices))
+    slug = AutoSlugField(populate_from=["name"])
+    description = forms.CharField(required=False)
+    protocol = forms.ChoiceField(choices=add_blank_choice(Protocols))
+    ipv4_address = DynamicModelChoiceField(queryset=IPAddress.objects.all())
+    ipv6_address = DynamicModelChoiceField(queryset=IPAddress.objects.all(), required=False)
+    monitor = forms.ModelMultipleChoiceField(queryset=models.VIPHealthMonitor.objects.all(), to_field_name="slug")
+    member_args = forms.JSONField(required=False)
 
     class Meta:
         """Meta attributes."""
@@ -22,17 +24,15 @@ class VIPPoolMembersForm(BootstrapMixin, forms.ModelForm):
         model = models.VIPPoolMember
         fields = [
             "slug",
-            "issuer",
-            "version_number",
-            "serial_number",
-            "signature",
-            "signature_algorithm",
-            "signature_algorithm_id",
-            "start_date",
-            "end_date",
-            "subject_name",
-            "subject_pub_key",
-            "subject_pub_key_algorithm",
+            "name",
+            "description",
+            "protocol",
+            "port",
+            "ipv4_address",
+            "ipv6_address",
+            "fqdn",
+            "monitor",
+            "member_args",
         ]
 
 
@@ -51,11 +51,10 @@ class VIPPoolMemberFilterForm(BootstrapMixin, forms.ModelForm):
         choices=add_blank_choice(Protocols), required=False, label="Protocol"
     )
     port = forms.IntegerField(required=False, label="Port")
-    ipv4_address = forms.GenericIPAddressField(required=False, label="IPv4/IPv6 address")
+    ipv4_address = DynamicModelChoiceField(queryset=IPAddress.objects.all(), required=False, label="IPv4 address")
+    ipv6_address = DynamicModelChoiceField(queryset=IPAddress.objects.all(), required=False, label="IPv6 address")
     fqnd = forms.URLField(required=False, label="FQDN")
     monitor = forms.ModelMultipleChoiceField(queryset=models.VIPHealthMonitor.objects.all(), required=False, to_field_name="slug")
-    member_args = forms.JSONField(required=False, label="Extra member arguments")
-
 
     class Meta:
         """Meta attributes."""
@@ -64,16 +63,14 @@ class VIPPoolMemberFilterForm(BootstrapMixin, forms.ModelForm):
         fields = [
             "q",
             "slug",
-            "issuer",
-            "serial_number",
-            "signature",
-            "signature_algorithm",
-            "signature_algorithm_id",
-            "start_date",
-            "end_date",
-            "subject_name",
-            "subject_pub_key",
-            "subject_pub_key_algorithm",
+            "name",
+            "description",
+            "protocol",
+            "port",
+            "ipv4_address",
+            "ipv6_address",
+            "fqdn",
+            "monitor",
         ]
 
 
@@ -88,7 +85,7 @@ class VIPPoolMemberBulkEditForm(BootstrapMixin, BulkEditForm):
 
         model = models.VIPPoolMember
         nullable_fields = [
-            "issuer",
+            "name",
         ]
 
 

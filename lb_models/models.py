@@ -114,7 +114,7 @@ class VIPPoolMember(BaseModel):
     port = models.SmallIntegerField(blank=True, null=True)
     ipv4_address = models.ForeignKey(
         to="ipam.IPAddress",
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name="+",
         blank=True,
         null=True,
@@ -122,7 +122,7 @@ class VIPPoolMember(BaseModel):
     )
     ipv6_address = models.ForeignKey(
         to="ipam.IPAddress",
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name="+",
         blank=True,
         null=True,
@@ -291,7 +291,7 @@ class VIP(BaseModel):
     )
     ipv4_address = models.ForeignKey(
         to="ipam.IPAddress",
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name="+",
         blank=True,
         null=True,
@@ -299,7 +299,7 @@ class VIP(BaseModel):
     )
     ipv6_address = models.ForeignKey(
         to="ipam.IPAddress",
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name="+",
         blank=True,
         null=True,

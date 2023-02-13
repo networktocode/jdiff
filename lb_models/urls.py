@@ -23,20 +23,20 @@ urlpatterns = [
         name="vipcertificate_changelog",
         kwargs={"model": models.VIPCertificate},
     ),
-    path("poolmember/", poolmembers.VIPPoolMemberListView.as_view(), name="poolmember_list"),
-    path("poolmember/add/", poolmembers.VIPPoolMemberCreateView.as_view(), name="poolmember_add"),
-    path("poolmember/import/", poolmembers.VIPPoolMemberBulkImportView.as_view(), name="poolmember_import"),
-    path("poolmember/delete/", poolmembers.VIPPoolMemberBulkDeleteView.as_view(), name="poolmember_bulk_delete"),
-    path("poolmember/edit/", poolmembers.VIPPoolMemberBulkEditView.as_view(), name="poolmember_bulk_edit"),
-    path("poolmember/<slug:slug>/", poolmembers.VIPPoolMemberView.as_view(), name="poolmember"),
+    path("poolmember/", poolmembers.VIPPoolMemberListView.as_view(), name="vippoolmember_list"),
+    path("poolmember/add/", poolmembers.VIPPoolMemberCreateView.as_view(), name="vippoolmember_add"),
+    path("poolmember/import/", poolmembers.VIPPoolMemberBulkImportView.as_view(), name="vippoolmember_import"),
+    path("poolmember/delete/", poolmembers.VIPPoolMemberBulkDeleteView.as_view(), name="vippoolmember_bulk_delete"),
+    path("poolmember/edit/", poolmembers.VIPPoolMemberBulkEditView.as_view(), name="vippoolmember_bulk_edit"),
+    path("poolmember/<slug:slug>/", poolmembers.VIPPoolMemberView.as_view(), name="vippoolmember"),
     path(
-        "poolmember/<slug:slug>/delete/", poolmembers.VIPPoolMemberDeleteView.as_view(), name="poolmember_delete"
+        "poolmember/<slug:slug>/delete/", poolmembers.VIPPoolMemberDeleteView.as_view(), name="vippoolmember_delete"
     ),
-    path("poolmember/<slug:slug>/edit/", poolmembers.VIPPoolMemberEditView.as_view(), name="poolmember_edit"),
+    path("poolmember/<slug:slug>/edit/", poolmembers.VIPPoolMemberEditView.as_view(), name="vippoolmember_edit"),
     path(
         "poolmember/<slug:slug>/changelog/",
         ObjectChangeLogView.as_view(),
-        name="poolmember_changelog",
+        name="vippoolmember_changelog",
         kwargs={"model": models.VIPPoolMember},
     ),
 ]

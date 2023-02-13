@@ -35,3 +35,32 @@ class VIPCertificateTable(BaseTable):
             "subject_pub_key",
             "subject_pub_key_algorithm",
         )
+
+
+class VIPPoolMemberTable(BaseTable):
+    # pylint: disable=R0903
+    """Table for list view."""
+
+    pk = ToggleColumn()
+    actions = ButtonsColumn(
+        models.VIPCertificate,
+        buttons=("changelog", "edit", "delete", "add"),
+        pk_field="slug",
+    )
+
+    class Meta(BaseTable.Meta):
+        """Meta attributes."""
+
+        model = models.VIPPoolMember
+        fields = (
+            "slug",
+            "name",
+            "description",
+            "protocol",
+            "port",
+            "ipv4_address",
+            "ipv6_address",
+            "fqdn",
+            "monitor",
+            "member_args"
+        )
