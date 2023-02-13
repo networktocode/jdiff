@@ -125,3 +125,30 @@ class VIPHealthMonitorFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             | Q(recevier__icontains=value)
         )
         return queryset.filter(qs_filter)
+
+
+class VIPPoolFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
+    """Filter for VIP Pool."""
+
+    q = django_filters.CharFilter(
+        method="search",
+        label="Search",
+    )
+
+    class Meta:
+        """Meta attributes for filter."""
+
+        model = models.VIPPool
+        fields = ["slug", "name", "description", "monitor", "member"]
+
+    def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
+        """Perform the filtered search."""
+        if not value.strip():
+            return queryset
+        qs_filter = (
+            Q(name__icontains=value)
+            | Q(description__icontains=value)
+            | Q(monitor__icontains=value)
+            | Q(member__icontains=value)
+        )
+        return queryset.filter(qs_filter)
