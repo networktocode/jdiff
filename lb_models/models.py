@@ -192,7 +192,7 @@ class VIPHealthMonitor(BaseModel):
     name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=100, blank=True, null=True)
     type = models.CharField(max_length=50, blank=True, null=True)
-    url = models.CharField(max_length=50, blank=True, null=True)
+    url = models.URLField(max_length=50, blank=True, null=True)
     send = models.CharField(max_length=50, blank=True, null=True)
     string = models.CharField(max_length=100, blank=True, null=True)
     code = models.SmallIntegerField(blank=True, null=True)
@@ -205,6 +205,7 @@ class VIPHealthMonitor(BaseModel):
         "type",
         "url",
         "send",
+        "code",
         "receive",
     ]
     clone_fields = ["slug", "name", "description", "type", "url", "send", "receive"]

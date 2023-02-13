@@ -40,4 +40,22 @@ menu_items = (
             ),
         ),
     ),
+    PluginMenuItem(
+        link="plugins:lb_models:viphealthmonitor_list",
+        link_text="VIP Health Monitor",
+        buttons=(
+            PluginMenuButton(
+                link="plugins:lb_models:viphealthmonitor_add",
+                title="Add",
+                icon_class="mdi mdi-plus-thick",
+                color=ButtonColorChoices.GREEN,
+            ),
+            PluginMenuButton(
+                link="plugins:lb_models:viphealthmonitor_import",
+                title="Import",
+                icon_class="mdi mdi-database-import-outline",
+                color=ButtonColorChoices.BLUE,
+            ),
+        ),
+    ),
 )

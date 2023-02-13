@@ -2,7 +2,7 @@
 from nautobot.core.views import generic
 
 from lb_models import filters, models, tables
-from lb_models.forms import poolmembers as forms
+from lb_models.forms import poolmember as forms
 
 
 class VIPPoolMemberView(generic.ObjectView):
