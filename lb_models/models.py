@@ -236,7 +236,7 @@ class VIPPool(BaseModel):
 
     def get_absolute_url(self):
         """Return detail view for VIP pool memeber."""
-        return reverse("plugins:lb_models:vip_pool", args=[self.slug])
+        return reverse("plugins:lb_models:vippool", args=[self.slug])
 
     def to_csv(self):
         """To CSV format."""

@@ -11,8 +11,8 @@ class VIPCertificateForm(BootstrapMixin, forms.ModelForm):
     """VIP Certificate creation/edit form."""
 
     slug = AutoSlugField(populate_from=["serial_number"])
-    start_date = forms.DateField(widget=forms.SelectDateWidget())
-    end_date = forms.DateField(widget=forms.SelectDateWidget())
+    start_date = forms.DateField(widget=DatePicker())
+    end_date = forms.DateField(widget=DatePicker())
     signature_algorithm = forms.ChoiceField(choices=add_blank_choice(CertAlgorithmChoices))
     subject_pub_key = forms.ChoiceField(choices=add_blank_choice(CertAlgorithmChoices))
 
