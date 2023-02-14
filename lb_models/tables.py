@@ -43,7 +43,7 @@ class VIPPoolMemberTable(BaseTable):
 
     pk = ToggleColumn()
     actions = ButtonsColumn(
-        models.VIPCertificate,
+        models.VIPPoolMember,
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
@@ -62,8 +62,9 @@ class VIPPoolMemberTable(BaseTable):
             "ipv6_address",
             "fqdn",
             "monitor",
-            "member_args"
+            "member_args",
         )
+
 
 class VIPHealthMonitorTable(BaseTable):
     # pylint: disable=R0903
@@ -71,7 +72,7 @@ class VIPHealthMonitorTable(BaseTable):
 
     pk = ToggleColumn()
     actions = ButtonsColumn(
-        models.VIPCertificate,
+        models.VIPHealthMonitor,
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
@@ -79,7 +80,7 @@ class VIPHealthMonitorTable(BaseTable):
     class Meta(BaseTable.Meta):
         """Meta attributes."""
 
-        model = models.VIPPoolMember
+        model = models.VIPHealthMonitor
         fields = (
             "slug",
             "name",
@@ -87,8 +88,10 @@ class VIPHealthMonitorTable(BaseTable):
             "type",
             "url",
             "send",
+            "code",
             "receive",
         )
+
 
 class VIPPoolTable(BaseTable):
     # pylint: disable=R0903
@@ -96,7 +99,7 @@ class VIPPoolTable(BaseTable):
 
     pk = ToggleColumn()
     actions = ButtonsColumn(
-        models.VIPCertificate,
+        models.VIPPool,
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
@@ -104,5 +107,41 @@ class VIPPoolTable(BaseTable):
     class Meta(BaseTable.Meta):
         """Meta attributes."""
 
-        model = models.VIPPoolMember
+        model = models.VIPPool
         fields = ("slug", "name", "description", "monitor", "member")
+
+
+class VIPTable(BaseTable):
+    # pylint: disable=R0903
+    """Table for list view."""
+
+    pk = ToggleColumn()
+    actions = ButtonsColumn(
+        models.VIP,
+        buttons=("changelog", "edit", "delete", "add"),
+        pk_field="slug",
+    )
+
+    class Meta(BaseTable.Meta):
+        """Meta attributes."""
+
+        model = models.VIP
+        fields = (
+            "slug",
+            "name",
+            "description",
+            "device",
+            "interface",
+            "ipv4_address",
+            "ipv6_address",
+            "pool",
+            "vlan",
+            "vrf",
+            "fqdn",
+            "protocol",
+            "port",
+            "method",
+            "certificate",
+            "owner",
+            "vip_args",
+        )

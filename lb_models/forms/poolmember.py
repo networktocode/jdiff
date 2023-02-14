@@ -7,6 +7,7 @@ from .utils import add_blank_choice
 from lb_models import models
 from nautobot.ipam.models import IPAddress
 
+
 class VIPPoolMemberForm(BootstrapMixin, forms.ModelForm):
     """VIP Pool Member creation/edit form."""
 
@@ -47,14 +48,14 @@ class VIPPoolMemberFilterForm(BootstrapMixin, forms.ModelForm):
     slug = forms.CharField(required=False, label="Slug")
     name = forms.CharField(required=False, label="Name")
     description = forms.CharField(required=False, label="Description")
-    protocol = forms.ChoiceField(
-        choices=add_blank_choice(Protocols), required=False, label="Protocol"
-    )
+    protocol = forms.ChoiceField(choices=add_blank_choice(Protocols), required=False, label="Protocol")
     port = forms.IntegerField(required=False, label="Port")
     ipv4_address = DynamicModelChoiceField(queryset=IPAddress.objects.all(), required=False, label="IPv4 address")
     ipv6_address = DynamicModelChoiceField(queryset=IPAddress.objects.all(), required=False, label="IPv6 address")
     fqnd = forms.URLField(required=False, label="FQDN")
-    monitor = forms.ModelMultipleChoiceField(queryset=models.VIPHealthMonitor.objects.all(), required=False, to_field_name="slug")
+    monitor = forms.ModelMultipleChoiceField(
+        queryset=models.VIPHealthMonitor.objects.all(), required=False, to_field_name="slug"
+    )
 
     class Meta:
         """Meta attributes."""

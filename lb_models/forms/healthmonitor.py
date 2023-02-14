@@ -5,6 +5,7 @@ from nautobot.core.fields import AutoSlugField
 from .utils import add_blank_choice
 from lb_models import models
 
+
 class VIPHealthMonitorForm(BootstrapMixin, forms.ModelForm):
     """VIP Health Monitor creation/edit form."""
 

@@ -6,14 +6,19 @@ from ..choices import Protocols
 from .utils import add_blank_choice
 from lb_models import models
 
+
 class VIPPoolForm(BootstrapMixin, forms.ModelForm):
     """VIP Pool Member creation/edit form."""
 
     slug = AutoSlugField(populate_from=["name"])
     name = forms.CharField(required=False)
     description = forms.CharField(required=False)
-    monitor = forms.ModelMultipleChoiceField(queryset=models.VIPHealthMonitor.objects.all(), required=False, to_field_name="slug")
-    member = forms.ModelMultipleChoiceField(queryset=models.VIPPoolMember.objects.all(), required=False, to_field_name="slug")
+    monitor = forms.ModelMultipleChoiceField(
+        queryset=models.VIPHealthMonitor.objects.all(), required=False, to_field_name="slug"
+    )
+    member = forms.ModelMultipleChoiceField(
+        queryset=models.VIPPoolMember.objects.all(), required=False, to_field_name="slug"
+    )
 
     class Meta:
         """Meta attributes."""
@@ -33,15 +38,18 @@ class VIPPoolFilterForm(BootstrapMixin, forms.ModelForm):
     slug = AutoSlugField(populate_from=["name"])
     name = forms.CharField(required=False)
     description = forms.CharField(required=False)
-    monitor = forms.ModelMultipleChoiceField(queryset=models.VIPHealthMonitor.objects.all(), required=False, to_field_name="slug")
-    member = forms.ModelMultipleChoiceField(queryset=models.VIPPoolMember.objects.all(), required=False, to_field_name="slug")
+    monitor = forms.ModelMultipleChoiceField(
+        queryset=models.VIPHealthMonitor.objects.all(), required=False, to_field_name="slug"
+    )
+    member = forms.ModelMultipleChoiceField(
+        queryset=models.VIPPoolMember.objects.all(), required=False, to_field_name="slug"
+    )
 
     class Meta:
         """Meta attributes."""
 
         model = models.VIPPool
         fields = ["slug", "name", "description", "monitor", "member"]
-
 
 
 class VIPPoolBulkEditForm(BootstrapMixin, BulkEditForm):

@@ -390,6 +390,11 @@ class VIP(BaseModel):
             self.vip_args,
         )
 
+    def clean(self):
+        """JSON Schema enforcement for vip_args"""
+        # TBD
+        pass
+
     def __str__(self):
         """Stringify instance."""
         return self.name

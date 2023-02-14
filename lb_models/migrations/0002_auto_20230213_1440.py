@@ -7,29 +7,53 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ipam', '0008_prefix_vlan_vlangroup_location'),
-        ('lb_models', '0001_initial'),
+        ("ipam", "0008_prefix_vlan_vlangroup_location"),
+        ("lb_models", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='vip',
-            name='ipv4_address',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='+', to='ipam.ipaddress'),
+            model_name="vip",
+            name="ipv4_address",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="+",
+                to="ipam.ipaddress",
+            ),
         ),
         migrations.AlterField(
-            model_name='vip',
-            name='ipv6_address',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='+', to='ipam.ipaddress'),
+            model_name="vip",
+            name="ipv6_address",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="+",
+                to="ipam.ipaddress",
+            ),
         ),
         migrations.AlterField(
-            model_name='vippoolmember',
-            name='ipv4_address',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='+', to='ipam.ipaddress'),
+            model_name="vippoolmember",
+            name="ipv4_address",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="+",
+                to="ipam.ipaddress",
+            ),
         ),
         migrations.AlterField(
-            model_name='vippoolmember',
-            name='ipv6_address',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='+', to='ipam.ipaddress'),
+            model_name="vippoolmember",
+            name="ipv6_address",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="+",
+                to="ipam.ipaddress",
+            ),
         ),
     ]

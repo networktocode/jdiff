@@ -58,7 +58,7 @@ menu_items = (
             ),
         ),
     ),
-PluginMenuItem(
+    PluginMenuItem(
         link="plugins:lb_models:vippool_list",
         link_text="VIP Pool",
         buttons=(
@@ -70,6 +70,24 @@ PluginMenuItem(
             ),
             PluginMenuButton(
                 link="plugins:lb_models:vippool_import",
+                title="Import",
+                icon_class="mdi mdi-database-import-outline",
+                color=ButtonColorChoices.BLUE,
+            ),
+        ),
+    ),
+    PluginMenuItem(
+        link="plugins:lb_models:vip_list",
+        link_text="VIP",
+        buttons=(
+            PluginMenuButton(
+                link="plugins:lb_models:vip_add",
+                title="Add",
+                icon_class="mdi mdi-plus-thick",
+                color=ButtonColorChoices.GREEN,
+            ),
+            PluginMenuButton(
+                link="plugins:lb_models:vip_import",
                 title="Import",
                 icon_class="mdi mdi-database-import-outline",
                 color=ButtonColorChoices.BLUE,
