@@ -1,6 +1,6 @@
 """Forms for lb_models."""
 from django import forms
-from nautobot.utilities.forms import BootstrapMixin, BulkEditForm, CSVModelForm, DynamicModelChoiceField
+from nautobot.utilities.forms import BootstrapMixin, BulkEditForm, CSVModelForm
 from nautobot.core.fields import AutoSlugField
 from ..choices import Protocols
 from .utils import add_blank_choice
@@ -14,9 +14,8 @@ class VIPPoolMemberForm(BootstrapMixin, forms.ModelForm):
     slug = AutoSlugField(populate_from=["name"])
     description = forms.CharField(required=False)
     protocol = forms.ChoiceField(choices=add_blank_choice(Protocols))
-    ipv4_address = DynamicModelChoiceField(queryset=IPAddress.objects.all())
-    ipv6_address = DynamicModelChoiceField(queryset=IPAddress.objects.all(), required=False)
-    monitor = forms.ModelMultipleChoiceField(queryset=models.VIPHealthMonitor.objects.all(), to_field_name="slug")
+    address = forms.ModelChoiceField(queryset=IPAddress.objects.all())
+    monitor = forms.ModelChoiceField(queryset=models.VIPHealthMonitor.objects.all(), to_field_name="slug")
     member_args = forms.JSONField(required=False)
 
     class Meta:
@@ -29,8 +28,7 @@ class VIPPoolMemberForm(BootstrapMixin, forms.ModelForm):
             "description",
             "protocol",
             "port",
-            "ipv4_address",
-            "ipv6_address",
+            "address",
             "fqdn",
             "monitor",
             "member_args",
@@ -50,9 +48,8 @@ class VIPPoolMemberFilterForm(BootstrapMixin, forms.ModelForm):
     description = forms.CharField(required=False, label="Description")
     protocol = forms.ChoiceField(choices=add_blank_choice(Protocols), required=False, label="Protocol")
     port = forms.IntegerField(required=False, label="Port")
-    ipv4_address = DynamicModelChoiceField(queryset=IPAddress.objects.all(), required=False, label="IPv4 address")
-    ipv6_address = DynamicModelChoiceField(queryset=IPAddress.objects.all(), required=False, label="IPv6 address")
-    fqnd = forms.URLField(required=False, label="FQDN")
+    address = forms.ModelChoiceField(queryset=IPAddress.objects.all(), label="IPv4 address")
+    fqnd = forms.CharField(required=False, label="FQDN")
     monitor = forms.ModelMultipleChoiceField(
         queryset=models.VIPHealthMonitor.objects.all(), required=False, to_field_name="slug"
     )
@@ -68,8 +65,7 @@ class VIPPoolMemberFilterForm(BootstrapMixin, forms.ModelForm):
             "description",
             "protocol",
             "port",
-            "ipv4_address",
-            "ipv6_address",
+            "address",
             "fqdn",
             "monitor",
         ]

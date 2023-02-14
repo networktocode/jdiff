@@ -17,6 +17,7 @@ class VIPCertificateTable(BaseTable):
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
+    serial_number = tables.Column(linkify=True)
 
     class Meta(BaseTable.Meta):
         """Meta attributes."""
@@ -47,6 +48,7 @@ class VIPPoolMemberTable(BaseTable):
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
+    name = tables.Column(linkify=True)
 
     class Meta(BaseTable.Meta):
         """Meta attributes."""
@@ -58,8 +60,7 @@ class VIPPoolMemberTable(BaseTable):
             "description",
             "protocol",
             "port",
-            "ipv4_address",
-            "ipv6_address",
+            "address",
             "fqdn",
             "monitor",
             "member_args",
@@ -76,6 +77,7 @@ class VIPHealthMonitorTable(BaseTable):
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
+    name = tables.Column(linkify=True)
 
     class Meta(BaseTable.Meta):
         """Meta attributes."""
@@ -85,6 +87,7 @@ class VIPHealthMonitorTable(BaseTable):
             "slug",
             "name",
             "description",
+            "address",
             "type",
             "url",
             "send",
@@ -103,6 +106,8 @@ class VIPPoolTable(BaseTable):
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
+
+    name = tables.Column(linkify=True)
 
     class Meta(BaseTable.Meta):
         """Meta attributes."""
@@ -132,8 +137,7 @@ class VIPTable(BaseTable):
             "description",
             "device",
             "interface",
-            "ipv4_address",
-            "ipv6_address",
+            "address",
             "pool",
             "vlan",
             "vrf",

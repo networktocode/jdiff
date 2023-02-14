@@ -1,6 +1,6 @@
 """Forms for lb_models."""
 from django import forms
-from nautobot.utilities.forms import BootstrapMixin, BulkEditForm, CSVModelForm, DynamicModelChoiceField
+from nautobot.utilities.forms import BootstrapMixin, BulkEditForm, CSVModelForm
 from nautobot.core.fields import AutoSlugField
 from ..choices import Protocols
 from .utils import add_blank_choice

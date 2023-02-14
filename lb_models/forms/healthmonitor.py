@@ -1,6 +1,6 @@
 """Forms for lb_models."""
 from django import forms
-from nautobot.utilities.forms import BootstrapMixin, BulkEditForm, CSVModelForm, DynamicModelChoiceField
+from nautobot.utilities.forms import BootstrapMixin, BulkEditForm, CSVModelForm
 from nautobot.core.fields import AutoSlugField
 from .utils import add_blank_choice
 from lb_models import models
@@ -10,7 +10,6 @@ class VIPHealthMonitorForm(BootstrapMixin, forms.ModelForm):
     """VIP Health Monitor creation/edit form."""
 
     slug = AutoSlugField(populate_from=["name"])
-    description = forms.CharField(required=False)
 
     class Meta:
         """Meta attributes."""

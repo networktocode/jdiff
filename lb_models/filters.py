@@ -6,6 +6,7 @@ from lb_models import models
 from nautobot.ipam.models import IPAddress, Interface, VLAN, VRF
 from nautobot.dcim.models import Device
 
+
 class VIPCertificateFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
     """Filter for VIPCertificate."""
 
@@ -56,18 +57,15 @@ class VIPPoolMemberFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         method="search",
         label="Search",
     )
-    ipv4_address = django_filters.ModelMultipleChoiceFilter(
+    address = django_filters.ModelMultipleChoiceFilter(
         queryset=IPAddress.objects.all(),
         label="IPv4 Address",
-    )
-    ipv6_address = django_filters.ModelMultipleChoiceFilter(
-        queryset=IPAddress.objects.all(),
-        label="IPv6 Address",
     )
     monitor = django_filters.ModelMultipleChoiceFilter(
         queryset=models.VIPHealthMonitor.objects.all(),
         label="Monitor",
     )
+
     class Meta:
         """Meta attributes for filter."""
 
@@ -79,8 +77,7 @@ class VIPPoolMemberFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             "description",
             "protocol",
             "port",
-            "ipv4_address",
-            "ipv6_address",
+            "address",
             "fqdn",
             "monitor",
         ]
@@ -94,8 +91,7 @@ class VIPPoolMemberFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             | Q(description__icontains=value)
             | Q(protocol__icontains=value)
             | Q(port__icontains=value)
-            | Q(ipv4_address__icontains=value)
-            | Q(ipv6_address__icontains=value)
+            | Q(address__icontains=value)
             | Q(fqdn__icontains=value)
             | Q(monitor__icontains=value)
         )
@@ -155,6 +151,7 @@ class VIPPoolFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         queryset=models.VIPPoolMember.objects.all(),
         label="Member",
     )
+
     class Meta:
         """Meta attributes for filter."""
 
@@ -189,13 +186,9 @@ class VIPFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         queryset=Interface.objects.all(),
         label="Interface",
     )
-    ipv4_address = django_filters.ModelMultipleChoiceFilter(
+    address = django_filters.ModelMultipleChoiceFilter(
         queryset=IPAddress.objects.all(),
         label="IPv4 Address",
-    )
-    ipv6_address = django_filters.ModelMultipleChoiceFilter(
-        queryset=IPAddress.objects.all(),
-        label="IPv6 Address",
     )
     pool = django_filters.ModelMultipleChoiceFilter(
         queryset=models.VIPPool.objects.all(),
@@ -213,6 +206,7 @@ class VIPFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         queryset=models.VIPCertificate.objects.all(),
         label="VIP Certificate",
     )
+
     class Meta:
         """Meta attributes for filter."""
 
@@ -223,8 +217,7 @@ class VIPFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             "description",
             "device",
             "interface",
-            "ipv4_address",
-            "ipv6_address",
+            "address",
             "pool",
             "vlan",
             "vrf",
@@ -246,8 +239,7 @@ class VIPFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             | Q(description__icontains=value)
             | Q(device__icontains=value)
             | Q(interface__icontains=value)
-            | Q(ipv4_address__icontains=value)
-            | Q(ipv6_address__icontains=value)
+            | Q(address__icontains=value)
             | Q(pool__icontains=value)
             | Q(vlan__icontains=value)
             | Q(vrf__icontains=value)
@@ -257,6 +249,5 @@ class VIPFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             | Q(method__icontains=value)
             | Q(certificate__icontains=value)
             | Q(owner__icontains=value)
-
         )
         return queryset.filter(qs_filter)

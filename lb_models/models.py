@@ -111,26 +111,17 @@ class VIPPoolMember(BaseModel):
     name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=100)
     protocol = models.CharField(max_length=20, choices=Protocols)
-    port = models.SmallIntegerField(blank=True, null=True)
-    ipv4_address = models.ForeignKey(
+    port = models.SmallIntegerField(null=True)
+    address = models.ForeignKey(
         to="ipam.IPAddress",
         on_delete=models.CASCADE,
-        related_name="+",
-        blank=True,
-        null=True,
         verbose_name="IPv4 Address",
-    )
-    ipv6_address = models.ForeignKey(
-        to="ipam.IPAddress",
-        on_delete=models.CASCADE,
-        related_name="+",
         blank=True,
         null=True,
-        verbose_name="IPv6 Address",
     )
-    fqdn = models.URLField(max_length=200)
+    fqdn = models.CharField(max_length=200)
     monitor = models.ForeignKey(to="VIPHealthMonitor", on_delete=models.PROTECT)
-    member_args = models.JSONField()
+    member_args = models.JSONField(blank=True, null=True)
 
     csv_headers = [
         "slug",
@@ -138,8 +129,7 @@ class VIPPoolMember(BaseModel):
         "description",
         "protocol",
         "port",
-        "ipv4_address",
-        "ipv6_address",
+        "address",
         "fqdn",
         "monitor",
         "member_args",
@@ -153,7 +143,7 @@ class VIPPoolMember(BaseModel):
 
     def get_absolute_url(self):
         """Return detail view for VIP pool memeber."""
-        return reverse("plugins:lb_models:vip_pool_member", args=[self.slug])
+        return reverse("plugins:lb_models:vippoolmember", args=[self.slug])
 
     def to_csv(self):
         """To CSV format."""
@@ -163,8 +153,7 @@ class VIPPoolMember(BaseModel):
             self.description,
             self.protocol,
             self.port,
-            self.ipv4_address,
-            self.ipv6_address,
+            self.address,
             self.fqdn,
             self.monitor,
             self.member_args,
@@ -191,12 +180,12 @@ class VIPHealthMonitor(BaseModel):
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=100, blank=True, null=True)
-    type = models.CharField(max_length=50, blank=True, null=True)
-    url = models.URLField(max_length=50, blank=True, null=True)
-    send = models.CharField(max_length=50, blank=True, null=True)
-    string = models.CharField(max_length=100, blank=True, null=True)
-    code = models.SmallIntegerField(blank=True, null=True)
-    receive = models.CharField(max_length=50, blank=True, null=True)
+    type = models.CharField(max_length=50, null=True)
+    url = models.URLField(max_length=50, null=True)
+    send = models.CharField(max_length=50, null=True)
+    string = models.CharField(max_length=100, null=True)
+    code = models.SmallIntegerField(null=True)
+    receive = models.CharField(max_length=50, null=True)
 
     csv_headers = [
         "slug",
@@ -212,7 +201,7 @@ class VIPHealthMonitor(BaseModel):
 
     def get_absolute_url(self):
         """Return detail view for VIP pool memeber."""
-        return reverse("plugins:lb_models:vip_healt_monitor", args=[self.slug])
+        return reverse("plugins:lb_models:viphealthmonitor", args=[self.slug])
 
     def to_csv(self):
         """To CSV format."""
@@ -278,7 +267,6 @@ class VIP(BaseModel):
         to="dcim.Device",
         on_delete=models.PROTECT,
         related_name="+",
-        blank=True,
         null=True,
         verbose_name="Device",
     )
@@ -286,32 +274,22 @@ class VIP(BaseModel):
         to="dcim.Interface",
         on_delete=models.PROTECT,
         related_name="+",
-        blank=True,
         null=True,
         verbose_name="Interface",
     )
-    ipv4_address = models.ForeignKey(
+    address = models.ForeignKey(
         to="ipam.IPAddress",
         on_delete=models.CASCADE,
-        related_name="+",
+        verbose_name="Member Address",
         blank=True,
         null=True,
-        verbose_name="IPv4 Address",
     )
-    ipv6_address = models.ForeignKey(
-        to="ipam.IPAddress",
-        on_delete=models.CASCADE,
-        related_name="+",
-        blank=True,
-        null=True,
-        verbose_name="IPv6 Address",
-    )
+
     pool = models.ForeignKey(to="VIPPool", on_delete=models.PROTECT)
     vlan = models.ForeignKey(
         to="ipam.vlan",
         on_delete=models.PROTECT,
         related_name="+",
-        blank=True,
         null=True,
         verbose_name="VLAN",
     )
@@ -319,13 +297,12 @@ class VIP(BaseModel):
         to="ipam.vrf",
         on_delete=models.PROTECT,
         related_name="+",
-        blank=True,
         null=True,
         verbose_name="vrf",
     )
-    fqdn = models.URLField(max_length=200)
+    fqdn = models.CharField(max_length=200)
     protocol = models.CharField(max_length=20, choices=Protocols)
-    port = models.SmallIntegerField(blank=True, null=True)
+    port = models.SmallIntegerField(null=True)
     method = models.CharField(max_length=50)
     certificate = models.ForeignKey(to="VIPCertificate", on_delete=models.CASCADE)
     owner = models.CharField(max_length=50)
@@ -337,8 +314,7 @@ class VIP(BaseModel):
         "description",
         "device",
         "interface",
-        "ipv4_address",
-        "ipv6_address",
+        "address",
         "pool",
         "vlan",
         "vrf",
@@ -376,8 +352,7 @@ class VIP(BaseModel):
             self.description,
             self.device,
             self.interface,
-            self.ipv4_address,
-            self.ipv6_address,
+            self.address,
             self.pool,
             self.vlan,
             self.vrf,

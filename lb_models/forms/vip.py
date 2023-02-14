@@ -1,6 +1,6 @@
 """Forms for lb_models."""
 from django import forms
-from nautobot.utilities.forms import BootstrapMixin, BulkEditForm, CSVModelForm, DynamicModelChoiceField
+from nautobot.utilities.forms import BootstrapMixin, BulkEditForm, CSVModelForm
 from nautobot.core.fields import AutoSlugField
 from lb_models import models
 from nautobot.ipam.models import IPAddress, Interface, VLAN, VRF
@@ -14,17 +14,16 @@ class VIPForm(BootstrapMixin, forms.ModelForm):
 
     slug = AutoSlugField(populate_from=["name"])
     description = forms.CharField(required=False)
-    device = DynamicModelChoiceField(queryset=Device.objects.all(), label="Device")
-    interface = DynamicModelChoiceField(queryset=Interface.objects.all(), label="Interface")
-    ipv4_address = DynamicModelChoiceField(queryset=IPAddress.objects.all(), label="IPv4 Address")
-    ipv6_address = DynamicModelChoiceField(queryset=IPAddress.objects.all(), label="IPv6 Address", required=False)
-    pool = DynamicModelChoiceField(queryset=models.VIPPool.objects.all(), label="VIP Pool")
-    vlan = DynamicModelChoiceField(queryset=VLAN.objects.all(), label="VLAN", required=False)
-    vrf = DynamicModelChoiceField(queryset=VRF.objects.all(), label="VRF", required=False)
-    fqdn = forms.URLField(required=False)
+    device = forms.ModelChoiceField(queryset=Device.objects.all(), label="Device")
+    interface = forms.ModelChoiceField(queryset=Interface.objects.all(), label="Interface")
+    address = forms.ModelChoiceField(queryset=IPAddress.objects.all(), label="IPv4 Address")
+    pool = forms.ModelChoiceField(queryset=models.VIPPool.objects.all(), label="VIP Pool")
+    vlan = forms.ModelChoiceField(queryset=VLAN.objects.all(), label="VLAN", required=False)
+    vrf = forms.ModelChoiceField(queryset=VRF.objects.all(), label="VRF", required=False)
+    fqdn = forms.CharField(required=False)
     protocol = forms.ChoiceField(choices=add_blank_choice(Protocols))
     method = forms.CharField(required=False)
-    certificate = DynamicModelChoiceField(queryset=models.VIPCertificate.objects.all(), label="VIP Pool")
+    certificate = forms.ModelChoiceField(queryset=models.VIPCertificate.objects.all(), label="VIP Pool")
     owner = forms.CharField(required=False)
     vip_args = forms.JSONField(required=False)
 
@@ -38,8 +37,7 @@ class VIPForm(BootstrapMixin, forms.ModelForm):
             "description",
             "device",
             "interface",
-            "ipv4_address",
-            "ipv6_address",
+            "address",
             "pool",
             "vlan",
             "vrf",
@@ -63,17 +61,16 @@ class VIPFilterForm(BootstrapMixin, forms.ModelForm):
     )
     slug = AutoSlugField(populate_from=["name"])
     description = forms.CharField(required=False)
-    device = DynamicModelChoiceField(queryset=Device.objects.all(), label="Device")
-    interface = DynamicModelChoiceField(queryset=Interface.objects.all(), label="Interface")
-    ipv4_address = DynamicModelChoiceField(queryset=IPAddress.objects.all(), label="IPv4 Address")
-    ipv6_address = DynamicModelChoiceField(queryset=IPAddress.objects.all(), label="IPv6 Address", required=False)
-    pool = DynamicModelChoiceField(queryset=models.VIPPool.objects.all(), label="VIP Pool")
-    vlan = DynamicModelChoiceField(queryset=VLAN.objects.all(), label="VLAN", required=False)
-    vrf = DynamicModelChoiceField(queryset=VRF.objects.all(), label="VRF", required=False)
-    fqdn = forms.URLField(required=False)
+    device = forms.ModelChoiceField(queryset=Device.objects.all(), label="Device")
+    interface = forms.ModelChoiceField(queryset=Interface.objects.all(), label="Interface")
+    address = forms.ModelChoiceField(queryset=IPAddress.objects.all(), label="IPv4 Address")
+    pool = forms.ModelChoiceField(queryset=models.VIPPool.objects.all(), label="VIP Pool")
+    vlan = forms.ModelChoiceField(queryset=VLAN.objects.all(), label="VLAN", required=False)
+    vrf = forms.ModelChoiceField(queryset=VRF.objects.all(), label="VRF", required=False)
+    fqdn = forms.CharField(required=False)
     protocol = forms.ChoiceField(choices=add_blank_choice(Protocols))
     method = forms.CharField(required=False)
-    certificate = DynamicModelChoiceField(queryset=models.VIPCertificate.objects.all(), label="VIP Pool")
+    certificate = forms.ModelChoiceField(queryset=models.VIPCertificate.objects.all(), label="VIP Pool")
     owner = forms.CharField(required=False)
     vip_args = forms.JSONField(required=False)
 
@@ -88,8 +85,7 @@ class VIPFilterForm(BootstrapMixin, forms.ModelForm):
             "description",
             "device",
             "interface",
-            "ipv4_address",
-            "ipv6_address",
+            "address",
             "pool",
             "vlan",
             "vrf",
@@ -101,6 +97,7 @@ class VIPFilterForm(BootstrapMixin, forms.ModelForm):
             "owner",
             "vip_args",
         ]
+
 
 class VIPBulkEditForm(BootstrapMixin, BulkEditForm):
     """VIP bulk edit form."""
