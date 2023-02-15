@@ -306,7 +306,7 @@ class VIP(BaseModel):
     method = models.CharField(max_length=50)
     certificate = models.ForeignKey(to="VIPCertificate", on_delete=models.CASCADE)
     owner = models.CharField(max_length=50)
-    vip_args = models.JSONField()
+    vip_args = models.JSONField(blank=True, null=True)
 
     csv_headers = [
         "slug",

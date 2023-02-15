@@ -51,7 +51,7 @@
 	</li>
 	{% if perms.extras.view_objectchange %}
 	<li role="presentation" {% if active_tab == 'changelog' %} class="active" {% endif %}>
-		<a href="{% url 'plugins:lb_models:vipp_changelog' slug=object.slug %}">Change Log</a>
+		<a href="{% url 'plugins:lb_models:vip_changelog' slug=object.slug %}">Change Log</a>
 	</li>
 	{% endif %}
 </ul>
