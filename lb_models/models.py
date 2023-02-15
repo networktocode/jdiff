@@ -3,11 +3,9 @@
 import struct
 from django.db import models
 from django.urls import reverse
-from django.core.exceptions import ValidationError
 from nautobot.core.models import BaseModel
 from versionfield import VersionField
-
-# from nautobot.core.models.generics import PrimaryModel
+from django.core.validators import MaxValueValidator, MinValueValidator
 from nautobot.extras.utils import extras_features
 from nautobot.core.fields import AutoSlugField
 from .choices import CertAlgorithmChoices, Protocols
@@ -111,7 +109,9 @@ class VIPPoolMember(BaseModel):
     name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=100)
     protocol = models.CharField(max_length=20, choices=Protocols)
-    port = models.SmallIntegerField(null=True)
+    port = models.PositiveIntegerField(
+        blank=True, null=True, validators=[MaxValueValidator(65535), MinValueValidator(1)]
+    )
     address = models.ForeignKey(
         to="ipam.IPAddress",
         on_delete=models.CASCADE,

@@ -2,7 +2,6 @@
 from django import forms
 from nautobot.utilities.forms import BootstrapMixin, BulkEditForm, CSVModelForm
 from nautobot.core.fields import AutoSlugField
-from .utils import add_blank_choice
 from lb_models import models
 
 
