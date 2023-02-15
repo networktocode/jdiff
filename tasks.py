@@ -15,6 +15,7 @@ limitations under the License.
 from distutils.util import strtobool
 from invoke import Collection, task as invoke_task
 import os
+from time import sleep
 
 
 def is_truthy(arg):
@@ -283,6 +284,35 @@ def post_upgrade(context):
     """
     command = "nautobot-server post_upgrade"
 
+    run_command(context, command)
+
+
+@task(
+    help={
+        "filepath": "Path to the file to create or overwrite",
+        "format": "Output serialization format for dumped data. (Choices: json, xml, yaml)",
+        "model": "Model to include, such as 'dcim.device', repeat as needed",
+    },
+    iterable=["model"],
+)
+def dumpdata(context, format="json", model=None, filepath=None):  # pylint: disable=redefined-builtin
+    """Dump data from database to db_output file."""
+    if not filepath:
+        filepath = f"db_output.{format}"
+    command_tokens = [
+        "nautobot-server dumpdata",
+        f"--indent 2 --format {format} --natural-foreign --natural-primary",
+        f"--output {filepath}",
+    ]
+    if model is not None:
+        command_tokens += [" ".join(model)]
+    run_command(context, " \\\n    ".join(command_tokens))
+
+
+@task(help={"filepath": "Name and path of file to load."})
+def loaddata(context, filepath="db_output.json"):
+    """Load data from file."""
+    command = f"nautobot-server loaddata {filepath}"
     run_command(context, command)
 
 

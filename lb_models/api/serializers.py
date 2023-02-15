@@ -5,8 +5,8 @@ from nautobot.core.api.serializers import ValidatedModelSerializer
 from lb_models import models
 
 from . import nested_serializers
-# from nautobot.dcim.api import nested_serializers as dcim_nested_serializers
-# from nautobot.ipam.api import nested_serializers as ipam_nested_serializers
+from nautobot.dcim.api import nested_serializers as dcim_nested_serializers
+from nautobot.ipam.api import nested_serializers as ipam_nested_serializers
 
 
 
@@ -70,7 +70,7 @@ class VIPPoolSerializer(ValidatedModelSerializer):
 class VIPPoolMemberSerializer(ValidatedModelSerializer):
     """VIP Pool Member Serializer."""
 
-    # address = ipam_nested_serializers.NestedIPAddressSerializer()
+    address = ipam_nested_serializers.NestedIPAddressSerializer()
     monitor = nested_serializers.VIPHealthMonitorNestedSerializer()
 
     class Meta:
@@ -93,12 +93,12 @@ class VIPPoolMemberSerializer(ValidatedModelSerializer):
 class VIPSerializer(ValidatedModelSerializer):
     """VIP Serializer."""
 
-    # device = dcim_nested_serializers.NestedDeviceSerializer()
-    # interface = dcim_nested_serializers.NestedInterfaceSerializer()
-    # address = ipam_nested_serializers.NestedIPAddressSerializer()
+    device = dcim_nested_serializers.NestedDeviceSerializer()
+    interface = dcim_nested_serializers.NestedInterfaceSerializer()
+    address = ipam_nested_serializers.NestedIPAddressSerializer()
     pool = nested_serializers.VIPPoolNestedSerializer()
-    # vlan = ipam_nested_serializers.NestedVLANSerializer()
-    # vrf = ipam_nested_serializers.NestedVRFSerializer()
+    vlan = ipam_nested_serializers.NestedVLANSerializer()
+    vrf = ipam_nested_serializers.NestedVRFSerializer()
     certificate = nested_serializers.VIPCertificateNestedSerializer()
 
     class Meta:
