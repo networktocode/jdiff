@@ -19,6 +19,7 @@ class VIPPoolForm(BootstrapMixin, forms.ModelForm):
     member = forms.ModelChoiceField(
         queryset=models.VIPPoolMember.objects.all(), required=False, to_field_name="slug"
     )
+    
 
     class Meta:
         """Meta attributes."""
