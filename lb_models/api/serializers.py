@@ -9,8 +9,6 @@ from nautobot.dcim.api import nested_serializers as dcim_nested_serializers
 from nautobot.ipam.api import nested_serializers as ipam_nested_serializers
 
 
-
-
 class VIPCertificateSerializer(ValidatedModelSerializer):
     """VIP Certificate Serializer."""
 
@@ -37,7 +35,6 @@ class VIPCertificateSerializer(ValidatedModelSerializer):
 class VIPHealthMonitorSerializer(ValidatedModelSerializer):
     """VIP Health Monitor Serializer."""
 
-
     class Meta:
         """Meta attributes."""
 
@@ -57,6 +54,7 @@ class VIPHealthMonitorSerializer(ValidatedModelSerializer):
 
 class VIPPoolSerializer(ValidatedModelSerializer):
     """VIP Pool Serializer."""
+
     monitor = nested_serializers.VIPHealthMonitorNestedSerializer()
     member = nested_serializers.VIPPoolMemberNestedSerializer()
 
@@ -90,6 +88,7 @@ class VIPPoolMemberSerializer(ValidatedModelSerializer):
             "member_args",
         ]
 
+
 class VIPSerializer(ValidatedModelSerializer):
     """VIP Serializer."""
 
@@ -106,7 +105,7 @@ class VIPSerializer(ValidatedModelSerializer):
 
         model = models.VIP
         fields = [
-            "id", 
+            "id",
             "slug",
             "name",
             "description",

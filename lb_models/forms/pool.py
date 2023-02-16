@@ -14,10 +14,7 @@ class VIPPoolForm(BootstrapMixin, forms.ModelForm):
     monitor = forms.ModelChoiceField(
         queryset=models.VIPHealthMonitor.objects.all(), required=False, to_field_name="slug"
     )
-    member = forms.ModelChoiceField(
-        queryset=models.VIPPoolMember.objects.all(), required=False, to_field_name="slug"
-    )
-
+    member = forms.ModelChoiceField(queryset=models.VIPPoolMember.objects.all(), required=False, to_field_name="slug")
 
     class Meta:
         """Meta attributes."""
@@ -40,9 +37,7 @@ class VIPPoolFilterForm(BootstrapMixin, forms.ModelForm):
     monitor = forms.ModelChoiceField(
         queryset=models.VIPHealthMonitor.objects.all(), required=False, to_field_name="slug"
     )
-    member = forms.ModelChoiceField(
-        queryset=models.VIPPoolMember.objects.all(), required=False, to_field_name="slug"
-    )
+    member = forms.ModelChoiceField(queryset=models.VIPPoolMember.objects.all(), required=False, to_field_name="slug")
 
     class Meta:
         """Meta attributes."""
