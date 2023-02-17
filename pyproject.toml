@@ -22,7 +22,6 @@ python = "^3.7"
 importlib-metadata = "4.13.0"
 # Used for local development
 nautobot = "1.4.10"
-python3-dev = "*"
 
 [tool.poetry.dev-dependencies]
 bandit = "*"
