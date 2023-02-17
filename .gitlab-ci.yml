@@ -8,7 +8,7 @@ stages:
 
 .common_before_script: &common_before_script
   # add required packages to the docker image
-  - apk add py3-pip python3 curl docker-compose bash
+  - apk add py3-pip python3 curl docker-compose bash build-base
   - alias python=python3
   - pip install invoke poetry=='1.1.12' --ignore-installed
   - export PATH=/root/.local/bin:$PATH
