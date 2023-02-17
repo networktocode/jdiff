@@ -675,14 +675,6 @@ python-versions = ">=3.6"
 tests = ["coverage"]
 
 [[package]]
-name = "django-versionfield"
-version = "1.0.3"
-description = "A DB Independent Custom Django Field for storing Version numbers for fast indexing"
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "django-webserver"
 version = "1.2.0"
 description = "Django management commands for production webservers"
@@ -1296,7 +1288,7 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "nautobot"
-version = "1.4.2"
+version = "1.4.10"
 description = "Source of truth and network automation platform."
 category = "main"
 optional = false
@@ -1326,7 +1318,7 @@ django-timezone-field = ">=4.1.2,<4.2.0"
 django-tree-queries = ">=0.11,<0.12"
 django-webserver = ">=1.2.0,<1.3.0"
 djangorestframework = ">=3.13.1,<3.14.0"
-drf-spectacular = {version = ">=0.22.1,<0.23.0", extras = ["sidecar"]}
+drf-spectacular = {version = ">=0.24.0,<0.25.0", extras = ["sidecar"]}
 drf-yasg = {version = ">=1.20.0,<2.0.0", extras = ["validation"]}
 GitPython = ">=3.1.27,<3.2.0"
 graphene-django = ">=2.15.0,<2.16.0"
@@ -1347,12 +1339,12 @@ social-auth-app-django = ">=5.0.0,<5.1.0"
 svgwrite = ">=1.4.2,<1.5.0"
 
 [package.extras]
-all = ["django-auth-ldap (>=4.1.0,<4.2.0)", "django-storages (>=1.12.3,<1.13.0)", "mysqlclient (>=2.1.0,<2.2.0)", "napalm (>=3.4.1,<3.5.0)", "social-auth-core[saml,openidconnect] (>=4.3.0,<4.4.0)"]
+all = ["django-auth-ldap (>=4.1.0,<4.2.0)", "django-storages (>=1.12.3,<1.13.0)", "mysqlclient (>=2.1.0,<2.2.0)", "napalm (>=3.4.1,<3.5.0)", "social-auth-core[openidconnect,saml] (>=4.3.0,<4.4.0)"]
 ldap = ["django-auth-ldap (>=4.1.0,<4.2.0)"]
 remote_storage = ["django-storages (>=1.12.3,<1.13.0)"]
 mysql = ["mysqlclient (>=2.1.0,<2.2.0)"]
 napalm = ["napalm (>=3.4.1,<3.5.0)"]
-sso = ["social-auth-core[saml,openidconnect] (>=4.3.0,<4.4.0)"]
+sso = ["social-auth-core[openidconnect,saml] (>=4.3.0,<4.4.0)"]
 
 [[package]]
 name = "netaddr"
@@ -2111,7 +2103,7 @@ nautobot = ["nautobot"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "0d7dc171e1e4180079fa34190d98a276c99e3b15c05da5db5b2d3acc99a94003"
+content-hash = "5748a26903b4c50b45972b0f48fa4a09a3810e7715de4d480ec7bc13fdeac39f"
 
 [metadata.files]
 amqp = []
@@ -2166,7 +2158,6 @@ django-tables2 = []
 django-taggit = []
 django-timezone-field = []
 django-tree-queries = []
-django-versionfield = []
 django-webserver = []
 djangorestframework = []
 drf-spectacular = []

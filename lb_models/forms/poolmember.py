@@ -48,10 +48,10 @@ class VIPPoolMemberFilterForm(BootstrapMixin, forms.ModelForm):
     description = forms.CharField(required=False, label="Description")
     protocol = forms.ChoiceField(choices=add_blank_choice(Protocols), required=False, label="Protocol")
     port = forms.IntegerField(required=False, label="Port")
-    address = forms.ModelChoiceField(queryset=IPAddress.objects.all(), label="IPv4 address")
+    address = forms.ModelChoiceField(queryset=IPAddress.objects.all(), label="IP address")
     fqnd = forms.CharField(required=False, label="FQDN")
-    monitor = forms.ModelMultipleChoiceField(
-        queryset=models.VIPHealthMonitor.objects.all(), required=False, to_field_name="slug"
+    monitor = forms.ModelChoiceField(
+        queryset=models.VIPHealthMonitor.objects.all(), required=False, label="Healt Monitor", to_field_name="slug"
     )
 
     class Meta:

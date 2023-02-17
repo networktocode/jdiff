@@ -1,4 +1,4 @@
-"""Tables for fcc_dispatching."""
+"""Tables for LB Models."""
 
 import django_tables2 as tables
 from nautobot.utilities.tables import BaseTable, ButtonsColumn, ToggleColumn
@@ -126,6 +126,7 @@ class VIPTable(BaseTable):
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
+    name = tables.Column(linkify=True)
 
     class Meta(BaseTable.Meta):
         """Meta attributes."""

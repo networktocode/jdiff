@@ -8,7 +8,7 @@
     "verbose_name": "lb_models",
     "plugin_slug": "lb_models",
     "project_slug": "lb_models",
-    "repo_url": "git@github.com:networktocode-llc/cu-allspice-lb-management.git",
+    "repo_url": "https://github.com/networktocode-llc/cu-allspice-lb-management.git",
     "base_url": "lb_models",
     "min_nautobot_version": "1.4",
     "max_nautobot_version": "1.9999",

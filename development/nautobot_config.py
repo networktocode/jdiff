@@ -10,7 +10,6 @@ from nautobot.core.settings_funcs import parse_redis_connection
 #
 # Misc. settings
 #
-
 ALLOWED_HOSTS = os.getenv("NAUTOBOT_ALLOWED_HOSTS", "").split(" ")
 SECRET_KEY = os.getenv("NAUTOBOT_SECRET_KEY", "")
 
