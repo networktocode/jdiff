@@ -53,7 +53,6 @@ class VIPPoolSerializer(ValidatedModelSerializer):
         model = "__all__"
 
 
-
 class VIPSerializer(ValidatedModelSerializer):
     """VIP Serializer."""
 

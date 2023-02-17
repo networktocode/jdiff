@@ -19,7 +19,6 @@ class VIPHealthMonitorNestedSerializer(WritableNestedSerializer):
         fields = ["monitor"]
 
 
-
 class VIPPoolMemberNestedSerializer(WritableNestedSerializer):
     """VIP Pool Member Nested Serializer."""
 
@@ -32,7 +31,6 @@ class VIPPoolMemberNestedSerializer(WritableNestedSerializer):
 
         model = models.VIPPoolMember
         fields = ["member", "monitor", "address"]
-
 
 
 class VIPPoolNestedSerializer(WritableNestedSerializer):
