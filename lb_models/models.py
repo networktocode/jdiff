@@ -4,7 +4,6 @@ import struct
 from django.db import models
 from django.urls import reverse
 from nautobot.core.models import BaseModel
-from versionfield import VersionField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from nautobot.extras.utils import extras_features
 from nautobot.core.fields import AutoSlugField
@@ -26,7 +25,7 @@ class VIPCertificate(BaseModel):
 
     slug = AutoSlugField(populate_from="serial_number")
     issuer = models.CharField(max_length=50)
-    version_number = VersionField()
+    version_number = models.CharField(max_length=50)
     serial_number = models.CharField(max_length=30, unique=True)
     signature = models.CharField(max_length=50, unique=True)
     signature_algorithm = models.CharField(max_length=20, choices=CertAlgorithmChoices)

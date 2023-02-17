@@ -16,21 +16,7 @@ class VIPCertificateSerializer(ValidatedModelSerializer):
         """Meta attributes."""
 
         model = models.VIPCertificate
-        fields = [
-            "id",
-            "slug",
-            "issuer",
-            "version_number",
-            "serial_number",
-            "signature",
-            "signature_algorithm",
-            "signature_algorithm_id",
-            "start_date",
-            "end_date",
-            "subject_name",
-            "subject_pub_key",
-            "subject_pub_key_algorithm",
-        ]
+        fields = "__all__"
 
 
 class VIPHealthMonitorSerializer(ValidatedModelSerializer):
@@ -40,30 +26,7 @@ class VIPHealthMonitorSerializer(ValidatedModelSerializer):
         """Meta attributes."""
 
         model = models.VIPHealthMonitor
-        fields = [
-            "id",
-            "slug",
-            "name",
-            "description",
-            "type",
-            "url",
-            "send",
-            "code",
-            "receive",
-        ]
-
-
-class VIPPoolSerializer(ValidatedModelSerializer):
-    """VIP Pool Serializer."""
-
-    monitor = nested_serializers.VIPHealthMonitorNestedSerializer()
-    member = nested_serializers.VIPPoolMemberNestedSerializer()
-
-    class Meta:
-        """Meta attributes."""
-
-        model = models.VIPPool
-        fields = ["id", "slug", "name", "description", "monitor", "member"]
+        fields = "__all__"
 
 
 class VIPPoolMemberSerializer(ValidatedModelSerializer):
@@ -75,19 +38,19 @@ class VIPPoolMemberSerializer(ValidatedModelSerializer):
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPPoolMember
-        fields = [
-            "id",
-            "slug",
-            "name",
-            "description",
-            "protocol",
-            "port",
-            "address",
-            "fqdn",
-            "monitor",
-            "member_args",
-        ]
+        model = "__all__"
+
+
+class VIPPoolSerializer(ValidatedModelSerializer):
+    """VIP Pool Serializer."""
+
+    member = nested_serializers.VIPPoolMemberNestedSerializer()
+    monitor = nested_serializers.VIPHealthMonitorNestedSerializer()
+
+    class Meta:
+        """Meta attributes."""
+
+        model = "__all__"
 
 
 class VIPSerializer(ValidatedModelSerializer):
@@ -105,22 +68,4 @@ class VIPSerializer(ValidatedModelSerializer):
         """Meta attributes."""
 
         model = models.VIP
-        fields = [
-            "id",
-            "slug",
-            "name",
-            "description",
-            "device",
-            "interface",
-            "address",
-            "pool",
-            "vlan",
-            "vrf",
-            "fqdn",
-            "protocol",
-            "port",
-            "method",
-            "certificate",
-            "owner",
-            "vip_args",
-        ]
+        fields = "__all__"
