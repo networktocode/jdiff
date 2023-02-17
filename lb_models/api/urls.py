@@ -9,7 +9,7 @@ router.register("vipcertificate", views.VIPCertificateViewSet)
 router.register("viphealtmonitor", views.VIPHealthMonitorViewSet)
 router.register("vippool", views.VIPPoolViewSet)
 router.register("vippoolmember", views.VIPPoolMemberViewSet)
-# router.register("vip", views.VIPViewSet)
+router.register("vip", views.VIPViewSet)
 
 
 app_name = "lb_models-api"

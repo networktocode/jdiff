@@ -45,11 +45,11 @@ class VIPPoolMemberViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
     http_method_names = ["get", "post", "put", "patch", "delete"]
 
 
-# class VIPViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
-#     """VIP viewset."""
+class VIPViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
+    """VIP viewset."""
 
-#     serializer_class = serializers.VIPSerializer
-#     # filterset_class = filters.VIPFilterSet
-#     queryset = models.VIP.objects.all()
+    serializer_class = serializers.VIPSerializer
+    filterset_class = filters.VIPFilterSet
+    queryset = models.VIP.objects.all()
 
-#     http_method_names = ["get", "post", "put", "patch", "delete"]
+    http_method_names = ["get", "post", "put", "patch", "delete"]

@@ -60,20 +60,19 @@ class VIPFilterForm(BootstrapMixin, forms.ModelForm):
         help_text="Search within issuer or Slug.",
     )
     slug = AutoSlugField(populate_from=["name"])
-    description = forms.CharField(required=False)
-    name = forms.CharField(required=False)
-    port = forms.IntegerField(required=False)
+    description = forms.CharField(required=False, label="Description")
+    name = forms.CharField(required=False, label="Name")
+    port = forms.IntegerField(required=False, label="Port")
     device = forms.ModelChoiceField(queryset=Device.objects.all(), label="Device", required=False)
-    interface = forms.ModelChoiceField(queryset=Interface.objects.all(), label="Interface", required=False)
     address = forms.ModelChoiceField(queryset=IPAddress.objects.all(), label="IP Address", required=False)
     pool = forms.ModelChoiceField(queryset=models.VIPPool.objects.all(), label="VIP Pool", required=False)
     vlan = forms.ModelChoiceField(queryset=VLAN.objects.all(), label="VLAN", required=False)
     vrf = forms.ModelChoiceField(queryset=VRF.objects.all(), label="VRF", required=False)
-    fqdn = forms.CharField(required=False)
-    protocol = forms.ChoiceField(choices=add_blank_choice(Protocols), required=False)
-    method = forms.CharField(required=False)
-    certificate = forms.ModelChoiceField(queryset=models.VIPCertificate.objects.all(), label="VIP Pool", required=False)
-    owner = forms.CharField(required=False)
+    fqdn = forms.CharField(required=False, label="FQDN")
+    protocol = forms.ChoiceField(choices=add_blank_choice(Protocols), required=False, label="Protocol")
+    method = forms.CharField(required=False, label="Method")
+    certificate = forms.ModelChoiceField(queryset=models.VIPCertificate.objects.all(), required=False, label="Certificate")
+    owner = forms.CharField(required=False, label="Owner")
 
     class Meta:
         """Meta attributes."""
@@ -85,7 +84,6 @@ class VIPFilterForm(BootstrapMixin, forms.ModelForm):
             "name",
             "description",
             "device",
-            "interface",
             "address",
             "pool",
             "vlan",

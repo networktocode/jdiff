@@ -183,7 +183,6 @@ class VIPFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             "name",
             "description",
             "device",
-            "interface",
             "address",
             "pool",
             "vlan",
