@@ -1,0 +1,67 @@
+---
+image: docker
+
+stages:
+  - build
+  - deploy
+  - release
+
+.common_before_script: &common_before_script
+  # add required packages to the docker image
+  - apk add py3-pip python3 curl docker-compose bash
+  - alias python=python3
+  - pip install invoke poetry=='1.1.12' --ignore-installed
+  - export PATH=/root/.local/bin:$PATH
+  - cp development/creds.example.env development/creds.env
+  - echo CI_REGISTRY_USER="$CI_REGISTRY_USER" >> development/creds.env
+  - export GIT_SSL_NO_VERIFY="1"
+  - export CURL_CA_BUNDLE=""
+  - export PYTHONWARNINGS=ignore
+  - pip install requests==2.27.1
+
+build:
+  stage: build
+  variables:
+    ADDITIONAL_CA_CERT_BUNDLE: $GITLAB_BUNDLE
+  services:
+    - name: docker:dind
+  before_script:
+    - *common_before_script
+    - mkdir -p $HOME/.docker/
+    - 'echo "{ \"proxies\": { \"default\": { \"httpProxy\": \"$HTTP_PROXY\", \"httpsProxy\": \"$HTTPS_PROXY\", \"noProxy\": \"$NO_PROXY\" } }, \"auths\": { \"https://index.docker.io/v1/\": { \"auth\": \"$DOCKER_AUTH\"  } } }" > $HOME/.docker/config.json'
+  script:
+    # Deploy images and run tests
+    - poetry config repositories.repo "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/pypi"
+    - invoke build --no-cache
+    # - invoke tests --failfast
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+
+deploy:
+  stage: deploy
+  variables:
+    ADDITIONAL_CA_CERT_BUNDLE: $GITLAB_BUNDLE
+  before_script:
+    - *common_before_script
+  script:
+    # publish plugin packages to the gitlab registry
+    - poetry config repositories.repo "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/pypi"
+    - poetry config http-basic.repo "$CI_REGISTRY_USER" "$CI_JOB_TOKEN"
+    - poetry config certificates.repo.cert "development/gitlab.pem"
+    - poetry publish --repository repo --build
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+
+
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  variables:
+    ADDITIONAL_CA_CERT_BUNDLE: $GITLAB_BUNDLE
+  script:
+    - TAG=$(cat pyproject.toml | grep version | head -1 | cut -d=  -f2 | tr -d \" | tr -d " ")
+    - echo 'Creating release $TAG'
+    - release-cli create --name "Release $TAG" --description "Created using the release-cli " --tag-name "$TAG" --ref "$CI_COMMIT_SHA"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
