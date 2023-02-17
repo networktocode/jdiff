@@ -3,7 +3,7 @@ name = "amqp"
 version = "5.1.1"
 description = "Low-level AMQP client for Python (fork of amqplib)."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
@@ -14,7 +14,7 @@ name = "aniso8601"
 version = "7.0.0"
 description = "A library for parsing ISO 8601 strings."
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [[package]]
@@ -58,7 +58,7 @@ name = "async-timeout"
 version = "4.0.2"
 description = "Timeout context manager for asyncio programs"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
@@ -112,7 +112,7 @@ name = "billiard"
 version = "3.6.4.0"
 description = "Python multiprocessing fork with improvements and bugfixes"
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [[package]]
@@ -152,7 +152,7 @@ name = "celery"
 version = "5.2.7"
 description = "Distributed Task Queue."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
@@ -204,7 +204,7 @@ name = "certifi"
 version = "2022.12.7"
 description = "Python package for providing Mozilla's CA Bundle."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [[package]]
@@ -212,7 +212,7 @@ name = "cffi"
 version = "1.15.1"
 description = "Foreign Function Interface for Python calling C code."
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [package.dependencies]
@@ -223,7 +223,7 @@ name = "charset-normalizer"
 version = "3.0.1"
 description = "The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet."
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [[package]]
@@ -243,7 +243,7 @@ name = "click-didyoumean"
 version = "0.3.0"
 description = "Enables git-like *did-you-mean* feature in click"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6.2,<4.0.0"
 
 [package.dependencies]
@@ -254,7 +254,7 @@ name = "click-plugins"
 version = "1.1.1"
 description = "An extension module for click to enable registering CLI commands via setuptools entry-points."
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [package.dependencies]
@@ -268,7 +268,7 @@ name = "click-repl"
 version = "0.2.0"
 description = "REPL plugin for Click"
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [package.dependencies]
@@ -289,7 +289,7 @@ name = "coreapi"
 version = "2.3.3"
 description = "Python client library for Core API."
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [package.dependencies]
@@ -303,7 +303,7 @@ name = "coreschema"
 version = "0.0.4"
 description = "Core Schema."
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [package.dependencies]
@@ -322,22 +322,24 @@ toml = ["tomli"]
 
 [[package]]
 name = "cryptography"
-version = "39.0.0"
+version = "39.0.1"
 description = "cryptography is a package which provides cryptographic recipes and primitives to Python developers."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
 cffi = ">=1.12"
 
 [package.extras]
-docs = ["sphinx (>=1.6.5,!=1.8.0,!=3.1.0,!=3.1.1,!=5.2.0,!=5.2.0.post0)", "sphinx-rtd-theme"]
+docs = ["sphinx (>=5.3.0)", "sphinx-rtd-theme (>=1.1.1)"]
 docstest = ["pyenchant (>=1.6.11)", "twine (>=1.12.0)", "sphinxcontrib-spelling (>=4.0.1)"]
-pep8test = ["black", "ruff"]
+pep8test = ["black", "ruff", "mypy", "types-pytz", "types-requests", "check-manifest"]
 sdist = ["setuptools-rust (>=0.11.4)"]
 ssh = ["bcrypt (>=3.1.5)"]
-test = ["pytest (>=6.2.0)", "pytest-benchmark", "pytest-cov", "pytest-subtests", "pytest-xdist", "pretend", "iso8601", "pytz", "hypothesis (>=1.11.4,!=3.79.2)"]
+test = ["pytest (>=6.2.0)", "pytest-shard (>=0.1.2)", "pytest-benchmark", "pytest-cov", "pytest-subtests", "pytest-xdist", "pretend", "iso8601", "pytz", "hypothesis (>=1.11.4,!=3.79.2)"]
+test-randomorder = ["pytest-randomly"]
+tox = ["tox"]
 
 [[package]]
 name = "decorator"
@@ -352,7 +354,7 @@ name = "defusedxml"
 version = "0.7.1"
 description = "XML bomb protection for Python stdlib modules"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
@@ -368,7 +370,7 @@ graph = ["objgraph (>=1.7.2)"]
 
 [[package]]
 name = "django"
-version = "3.2.17"
+version = "3.2.18"
 description = "A high-level Python Web framework that encourages rapid development and clean, pragmatic design."
 category = "main"
 optional = false
@@ -388,7 +390,7 @@ name = "django-ajax-tables"
 version = "1.1.1"
 description = "Django tag for ajax-enabled tables"
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [[package]]
@@ -396,7 +398,7 @@ name = "django-appconf"
 version = "1.0.5"
 description = "A helper class for handling configuration defaults of packaged apps gracefully."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
@@ -407,7 +409,7 @@ name = "django-cacheops"
 version = "6.0"
 description = "A slick ORM cache with automatic granular event-driven invalidation for Django."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.5"
 
 [package.dependencies]
@@ -421,7 +423,7 @@ name = "django-celery-beat"
 version = "2.2.1"
 description = "Database-backed Periodic Tasks."
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [package.dependencies]
@@ -432,10 +434,10 @@ python-crontab = ">=2.3.4"
 
 [[package]]
 name = "django-constance"
-version = "2.9.1"
+version = "2.8.0"
 description = "Django live settings with pluggable backends, including Redis."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
@@ -450,7 +452,7 @@ name = "django-cors-headers"
 version = "3.13.0"
 description = "django-cors-headers is a Django application for handling the server headers required for Cross-Origin Resource Sharing (CORS)."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
@@ -461,7 +463,7 @@ name = "django-cryptography"
 version = "1.0"
 description = "Easily encrypt data in Django"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.5"
 
 [package.dependencies]
@@ -473,7 +475,7 @@ name = "django-db-file-storage"
 version = "0.5.5"
 description = "Custom FILE_STORAGE for Django. Saves files in your database instead of your file system."
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [package.dependencies]
@@ -496,7 +498,7 @@ name = "django-extensions"
 version = "3.2.1"
 description = "Extensions for Django"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
@@ -507,7 +509,7 @@ name = "django-filter"
 version = "21.1"
 description = "Django-filter is a reusable Django application for allowing users to filter querysets dynamically."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
@@ -518,7 +520,7 @@ name = "django-health-check"
 version = "3.16.5"
 description = "Run checks on services like databases, queue servers, celery processes, etc."
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [package.dependencies]
@@ -529,7 +531,7 @@ name = "django-jinja"
 version = "2.10.2"
 description = "Jinja2 templating language integrated in Django."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
@@ -541,7 +543,7 @@ name = "django-js-asset"
 version = "2.0.0"
 description = "script tag with additional attributes for django.forms.Media"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
@@ -552,10 +554,10 @@ tests = ["coverage"]
 
 [[package]]
 name = "django-mptt"
-version = "0.14.0"
+version = "0.13.4"
 description = "Utilities for implementing Modified Preorder Tree Traversal with your Django Models and working with trees of Model instances."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
@@ -569,7 +571,7 @@ name = "django-picklefield"
 version = "3.1"
 description = "Pickled object field for Django"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3"
 
 [package.dependencies]
@@ -583,7 +585,7 @@ name = "django-prometheus"
 version = "2.2.0"
 description = "Django middlewares to monitor your application with Prometheus.io."
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [package.dependencies]
@@ -594,7 +596,7 @@ name = "django-redis"
 version = "5.2.0"
 description = "Full featured redis cache backend for Django."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
@@ -609,7 +611,7 @@ name = "django-rq"
 version = "2.5.1"
 description = "An app that provides django integration for RQ (Redis Queue)"
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [package.dependencies]
@@ -626,7 +628,7 @@ name = "django-tables2"
 version = "2.4.1"
 description = "Table/data-grid framework for Django"
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [package.dependencies]
@@ -637,21 +639,21 @@ tablib = ["tablib"]
 
 [[package]]
 name = "django-taggit"
-version = "3.0.0"
+version = "1.5.1"
 description = "django-taggit is a reusable Django application for simple tagging."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
-Django = ">=3.2"
+Django = ">=2.2"
 
 [[package]]
 name = "django-timezone-field"
 version = "4.1.2"
 description = "A Django app providing database and form fields for pytz timezone objects."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.5"
 
 [package.dependencies]
@@ -666,7 +668,7 @@ name = "django-tree-queries"
 version = "0.11.0"
 description = "Tree queries with explicit opt-in, without configurability"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.extras]
@@ -685,7 +687,7 @@ name = "django-webserver"
 version = "1.2.0"
 description = "Django management commands for production webservers"
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [package.dependencies]
@@ -700,22 +702,22 @@ waitress = ["waitress"]
 
 [[package]]
 name = "djangorestframework"
-version = "3.14.0"
+version = "3.13.1"
 description = "Web APIs for Django, made easy."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
-django = ">=3.0"
+django = ">=2.2"
 pytz = "*"
 
 [[package]]
 name = "drf-spectacular"
-version = "0.24.2"
+version = "0.22.1"
 description = "Sane and flexible OpenAPI 3 schema generation for Django REST framework"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
@@ -737,7 +739,7 @@ name = "drf-spectacular-sidecar"
 version = "2022.12.1"
 description = "Serve self-contained distribution builds of Swagger UI and Redoc with Django"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
@@ -745,10 +747,10 @@ Django = ">=2.2"
 
 [[package]]
 name = "drf-yasg"
-version = "1.21.4"
+version = "1.21.5"
 description = "Automated generation of real Swagger/OpenAPI 2.0 schemas from Django Rest Framework code."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
@@ -796,7 +798,7 @@ name = "funcy"
 version = "1.18"
 description = "A fancy and practical functional tools"
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [[package]]
@@ -826,8 +828,8 @@ smmap = ">=3.0.1,<6"
 
 [[package]]
 name = "gitpython"
-version = "3.1.30"
-description = "GitPython is a python library used to interact with Git repositories"
+version = "3.1.31"
+description = "GitPython is a Python library used to interact with Git repositories"
 category = "main"
 optional = false
 python-versions = ">=3.7"
@@ -841,7 +843,7 @@ name = "graphene"
 version = "2.1.9"
 description = "GraphQL Framework for Python"
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [package.dependencies]
@@ -860,7 +862,7 @@ name = "graphene-django"
 version = "2.15.0"
 description = "Graphene Django integration"
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [package.dependencies]
@@ -882,7 +884,7 @@ name = "graphene-django-optimizer"
 version = "0.8.0"
 description = "Optimize database access inside graphene queries."
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [[package]]
@@ -890,7 +892,7 @@ name = "graphql-core"
 version = "2.3.2"
 description = "GraphQL implementation for Python"
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [package.dependencies]
@@ -907,7 +909,7 @@ name = "graphql-relay"
 version = "2.0.1"
 description = "Relay implementation for Python"
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [package.dependencies]
@@ -917,7 +919,7 @@ six = ">=1.12"
 
 [[package]]
 name = "griffe"
-version = "0.25.4"
+version = "0.25.5"
 description = "Signatures for entire Python programs. Extract the structure, the frame, the skeleton of your project, to generate API documentation or find breaking changes in your API."
 category = "dev"
 optional = false
@@ -935,7 +937,7 @@ name = "idna"
 version = "3.4"
 description = "Internationalized Domain Names in Applications (IDNA)"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.5"
 
 [[package]]
@@ -960,7 +962,7 @@ name = "importlib-resources"
 version = "5.10.2"
 description = "Read resources from Python packages"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
@@ -975,7 +977,7 @@ name = "inflection"
 version = "0.5.1"
 description = "A port of Ruby on Rails inflector to Python"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.5"
 
 [[package]]
@@ -1045,7 +1047,7 @@ name = "itypes"
 version = "1.2.0"
 description = "Simple immutable types for python."
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [[package]]
@@ -1066,11 +1068,11 @@ testing = ["Django (<3.1)", "attrs", "colorama", "docopt", "pytest (<7.0.0)"]
 
 [[package]]
 name = "jinja2"
-version = "3.1.2"
+version = "3.0.3"
 description = "A very fast and expressive template engine."
 category = "main"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.6"
 
 [package.dependencies]
 MarkupSafe = ">=2.0"
@@ -1083,7 +1085,7 @@ name = "jsonschema"
 version = "4.7.2"
 description = "An implementation of JSON Schema validation for Python"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
@@ -1102,7 +1104,7 @@ name = "kombu"
 version = "5.2.4"
 description = "Messaging library for Python."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
@@ -1294,19 +1296,19 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "nautobot"
-version = "1.5.9"
+version = "1.4.2"
 description = "Source of truth and network automation platform."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.7,<4.0"
 
 [package.dependencies]
 celery = ">=5.2.7,<5.3.0"
-Django = ">=3.2.16,<3.3.0"
+Django = ">=3.2.15,<3.3.0"
 django-ajax-tables = ">=1.1.1,<1.2.0"
 django-cacheops = ">=6.0,<6.1"
 django-celery-beat = ">=2.2.1,<2.3.0"
-django-constance = {version = ">=2.9.0,<2.10.0", extras = ["database"]}
+django-constance = {version = ">=2.8.0,<2.9.0", extras = ["database"]}
 django-cors-headers = ">=3.13.0,<3.14.0"
 django-cryptography = ">=1.0,<1.1"
 django-db-file-storage = ">=0.5.5,<0.6.0"
@@ -1314,33 +1316,32 @@ django-extensions = ">=3.2.0,<3.3.0"
 django-filter = ">=21.1,<21.2"
 django-health-check = ">=3.16.5,<3.17.0"
 django-jinja = ">=2.10.2,<2.11.0"
-django-mptt = ">=0.14.0,<0.15.0"
+django-mptt = ">=0.13.4,<0.14.0"
 django-prometheus = ">=2.2.0,<2.3.0"
 django-redis = ">=5.2.0,<5.3.0"
 django-rq = ">=2.5.1,<2.6.0"
 django-tables2 = ">=2.4.1,<2.5.0"
-django-taggit = ">=3.0.0,<3.1.0"
+django-taggit = ">=1.5.1,<1.6.0"
 django-timezone-field = ">=4.1.2,<4.2.0"
 django-tree-queries = ">=0.11,<0.12"
 django-webserver = ">=1.2.0,<1.3.0"
-djangorestframework = ">=3.14.0,<3.15.0"
-drf-spectacular = {version = ">=0.24.2,<0.25.0", extras = ["sidecar"]}
+djangorestframework = ">=3.13.1,<3.14.0"
+drf-spectacular = {version = ">=0.22.1,<0.23.0", extras = ["sidecar"]}
 drf-yasg = {version = ">=1.20.0,<2.0.0", extras = ["validation"]}
-GitPython = ">=3.1.30,<3.2.0"
+GitPython = ">=3.1.27,<3.2.0"
 graphene-django = ">=2.15.0,<2.16.0"
 graphene-django-optimizer = ">=0.8.0,<0.9.0"
 importlib-metadata = {version = ">=4.4,<5.0", markers = "python_version < \"3.8\""}
-Jinja2 = ">=3.1.0,<3.2.0"
+Jinja2 = ">=3.0.3,<3.1.0"
 jsonschema = ">=4.7.0,<4.8.0"
 Markdown = ">=3.3.7,<3.4.0"
 MarkupSafe = ">=2.1.1,<2.2.0"
 netaddr = ">=0.8.0,<0.9.0"
-netutils = ">=1.4.0,<1.5.0"
-Pillow = ">=9.3.0,<9.4.0"
-prometheus-client = ">=0.14.1,<0.15.0"
-psycopg2-binary = ">=2.9.5,<2.10.0"
+netutils = ">=1.2.0,<1.3.0"
+Pillow = ">=9.2.0,<9.3.0"
+psycopg2-binary = ">=2.9.3,<2.10.0"
 pycryptodome = ">=3.13.0,<3.14.0"
-pyuwsgi = ">=2.0.21,<2.1.0"
+pyuwsgi = ">=2.0.20,<2.1.0"
 PyYAML = ">=6.0,<6.1"
 social-auth-app-django = ">=5.0.0,<5.1.0"
 svgwrite = ">=1.4.2,<1.5.0"
@@ -1348,7 +1349,7 @@ svgwrite = ">=1.4.2,<1.5.0"
 [package.extras]
 all = ["django-auth-ldap (>=4.1.0,<4.2.0)", "django-storages (>=1.12.3,<1.13.0)", "mysqlclient (>=2.1.0,<2.2.0)", "napalm (>=3.4.1,<3.5.0)", "social-auth-core[saml,openidconnect] (>=4.3.0,<4.4.0)"]
 ldap = ["django-auth-ldap (>=4.1.0,<4.2.0)"]
-remote-storage = ["django-storages (>=1.12.3,<1.13.0)"]
+remote_storage = ["django-storages (>=1.12.3,<1.13.0)"]
 mysql = ["mysqlclient (>=2.1.0,<2.2.0)"]
 napalm = ["napalm (>=3.4.1,<3.5.0)"]
 sso = ["social-auth-core[saml,openidconnect] (>=4.3.0,<4.4.0)"]
@@ -1358,26 +1359,23 @@ name = "netaddr"
 version = "0.8.0"
 description = "A network address manipulation library for Python"
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [[package]]
 name = "netutils"
-version = "1.4.0"
+version = "1.2.0"
 description = "Common helper functions useful in network automation."
 category = "main"
-optional = true
-python-versions = ">=3.7,<4.0"
-
-[package.extras]
-optionals = ["napalm (>=4.0.0,<5.0.0)"]
+optional = false
+python-versions = ">=3.6,<4.0"
 
 [[package]]
 name = "oauthlib"
 version = "3.2.2"
 description = "A generic, spec-compliant, thorough implementation of the OAuth request-signing logic"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.extras]
@@ -1442,10 +1440,10 @@ python-versions = "*"
 
 [[package]]
 name = "pillow"
-version = "9.3.0"
+version = "9.2.0"
 description = "Python Imaging Library (Fork)"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.7"
 
 [package.extras]
@@ -1454,7 +1452,7 @@ tests = ["check-manifest", "coverage", "defusedxml", "markdown2", "olefile", "pa
 
 [[package]]
 name = "platformdirs"
-version = "2.6.2"
+version = "3.0.0"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
 category = "dev"
 optional = false
@@ -1464,8 +1462,8 @@ python-versions = ">=3.7"
 typing-extensions = {version = ">=4.4", markers = "python_version < \"3.8\""}
 
 [package.extras]
-docs = ["furo (>=2022.12.7)", "proselint (>=0.13)", "sphinx-autodoc-typehints (>=1.19.5)", "sphinx (>=5.3)"]
-test = ["appdirs (==1.4.4)", "covdefaults (>=2.2.2)", "pytest-cov (>=4)", "pytest-mock (>=3.10)", "pytest (>=7.2)"]
+docs = ["furo (>=2022.12.7)", "proselint (>=0.13)", "sphinx-autodoc-typehints (>=1.22,!=1.23.4)", "sphinx (>=6.1.3)"]
+test = ["appdirs (==1.4.4)", "covdefaults (>=2.2.2)", "pytest-cov (>=4)", "pytest-mock (>=3.10)", "pytest (>=7.2.1)"]
 
 [[package]]
 name = "pluggy"
@@ -1484,10 +1482,10 @@ testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "prometheus-client"
-version = "0.14.1"
+version = "0.16.0"
 description = "Python client for the Prometheus monitoring system."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.extras]
@@ -1498,7 +1496,7 @@ name = "promise"
 version = "2.3"
 description = "Promises/A+ implementation for Python"
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [package.dependencies]
@@ -1523,7 +1521,7 @@ name = "psycopg2-binary"
 version = "2.9.5"
 description = "psycopg2 - Python-PostgreSQL Database Adapter"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [[package]]
@@ -1547,7 +1545,7 @@ name = "pycparser"
 version = "2.21"
 description = "C parser in Python"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
@@ -1555,7 +1553,7 @@ name = "pycryptodome"
 version = "3.13.0"
 description = "Cryptographic library for Python"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
@@ -1597,7 +1595,7 @@ name = "pyjwt"
 version = "2.6.0"
 description = "JSON Web Token implementation in Python"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.7"
 
 [package.extras]
@@ -1670,7 +1668,7 @@ name = "pyrsistent"
 version = "0.19.3"
 description = "Persistent/Functional/Immutable data structures"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.7"
 
 [[package]]
@@ -1699,7 +1697,7 @@ name = "python-crontab"
 version = "2.7.1"
 description = "Python Crontab API"
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [package.dependencies]
@@ -1725,7 +1723,7 @@ name = "python3-openid"
 version = "3.2.0"
 description = "OpenID support for modern servers and consumers."
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [package.dependencies]
@@ -1748,7 +1746,7 @@ name = "pyuwsgi"
 version = "2.0.21"
 description = "The uWSGI server"
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [[package]]
@@ -1772,10 +1770,10 @@ pyyaml = "*"
 
 [[package]]
 name = "redis"
-version = "4.4.2"
+version = "4.5.1"
 description = "Python client for Redis database and key-value store"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
@@ -1792,7 +1790,7 @@ name = "requests"
 version = "2.28.2"
 description = "Python HTTP for Humans."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.7, <4"
 
 [package.dependencies]
@@ -1810,7 +1808,7 @@ name = "requests-oauthlib"
 version = "1.3.1"
 description = "OAuthlib authentication support for Requests."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [package.dependencies]
@@ -1825,7 +1823,7 @@ name = "rq"
 version = "1.12.0"
 description = "RQ is a simple, lightweight, library for creating background jobs, and processing them."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.5"
 
 [package.dependencies]
@@ -1837,7 +1835,7 @@ name = "ruamel.yaml"
 version = "0.17.21"
 description = "ruamel.yaml is a YAML parser/emitter that supports roundtrip preservation of comments, seq/map flow style, and map key order"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3"
 
 [package.dependencies]
@@ -1852,7 +1850,7 @@ name = "ruamel.yaml.clib"
 version = "0.2.7"
 description = "C version of reader, parser and emitter for ruamel.yaml derived from libyaml"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.5"
 
 [[package]]
@@ -1860,7 +1858,7 @@ name = "rx"
 version = "1.6.3"
 description = "Reactive Extensions (Rx) for Python"
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [[package]]
@@ -1868,7 +1866,7 @@ name = "singledispatch"
 version = "4.0.0"
 description = "Backport functools.singledispatch to older Pythons."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.7"
 
 [package.extras]
@@ -1904,7 +1902,7 @@ name = "social-auth-app-django"
 version = "5.0.0"
 description = "Python Social Authentication, Django integration."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
@@ -1915,7 +1913,7 @@ name = "social-auth-core"
 version = "4.3.0"
 description = "Python social authentication made simple."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
@@ -1959,7 +1957,7 @@ name = "svgwrite"
 version = "1.4.3"
 description = "A Python library to create SVG drawings."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [[package]]
@@ -1967,7 +1965,7 @@ name = "swagger-spec-validator"
 version = "3.0.3"
 description = "Validation of Swagger specifications"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
@@ -1980,7 +1978,7 @@ name = "text-unidecode"
 version = "1.3"
 description = "The most basic Text::Unidecode port"
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [[package]]
@@ -2021,7 +2019,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "typing-extensions"
-version = "4.4.0"
+version = "4.5.0"
 description = "Backported and Experimental Type Hints for Python 3.7+"
 category = "main"
 optional = false
@@ -2032,7 +2030,7 @@ name = "uritemplate"
 version = "4.1.1"
 description = "Implementation of RFC 6570 URI Templates"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [[package]]
@@ -2040,7 +2038,7 @@ name = "urllib3"
 version = "1.26.14"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
 
 [package.extras]
@@ -2053,7 +2051,7 @@ name = "vine"
 version = "5.0.0"
 description = "Promises, promises, promises."
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 
 [[package]]
@@ -2097,7 +2095,7 @@ pyyaml = "*"
 
 [[package]]
 name = "zipp"
-version = "3.12.1"
+version = "3.13.0"
 description = "Backport of pathlib-compatible object wrapper for zip files"
 category = "main"
 optional = false
@@ -2113,7 +2111,7 @@ nautobot = ["nautobot"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "87f64c2669139332d70bd26bf3fa915b9f6f7242e289af6b784d0f71365cada5"
+content-hash = "0d7dc171e1e4180079fa34190d98a276c99e3b15c05da5db5b2d3acc99a94003"
 
 [metadata.files]
 amqp = [
@@ -2212,7 +2210,10 @@ django-celery-beat = [
     {file = "django-celery-beat-2.2.1.tar.gz", hash = "sha256:97ae5eb309541551bdb07bf60cc57cadacf42a74287560ced2d2c06298620234"},
     {file = "django_celery_beat-2.2.1-py2.py3-none-any.whl", hash = "sha256:ab43049634fd18dc037927d7c2c7d5f67f95283a20ebbda55f42f8606412e66c"},
 ]
-django-constance = []
+django-constance = [
+    {file = "django-constance-2.8.0.tar.gz", hash = "sha256:0a492454acc78799ce7b9f7a28a00c53427d513f34f8bf6fdc90a46d8864b2af"},
+    {file = "django_constance-2.8.0-py3-none-any.whl", hash = "sha256:60fec73e397d5f4f7440f611b18d3e7ce5342647f316fedc47b62e1411c849e7"},
+]
 django-cors-headers = []
 django-cryptography = [
     {file = "django-cryptography-1.0.tar.gz", hash = "sha256:13de5cf8f1250744c104b9e24774d03aa6d8488959dd40cdc016934043652445"},
@@ -2239,7 +2240,10 @@ django-js-asset = [
     {file = "django_js_asset-2.0.0-py3-none-any.whl", hash = "sha256:86f9f300d682537ddaf0487dc2ab356581b8f50c069bdba91d334a46e449f923"},
     {file = "django_js_asset-2.0.0.tar.gz", hash = "sha256:adc1ee1efa853fad42054b540c02205344bb406c9bddf87c9e5377a41b7db90f"},
 ]
-django-mptt = []
+django-mptt = [
+    {file = "django-mptt-0.13.4.tar.gz", hash = "sha256:80c9fb34df7796a4e5af0cb6b8ade3697555b1aa438bd07a01f32b3ab5202b63"},
+    {file = "django_mptt-0.13.4-py3-none-any.whl", hash = "sha256:75745b621ae31d97957ed924155a750dfa8cacd9543799ada2d713fd6bc3f5c7"},
+]
 django-picklefield = []
 django-prometheus = [
     {file = "django-prometheus-2.2.0.tar.gz", hash = "sha256:240378a1307c408bd5fc85614a3a57f1ce633d4a222c9e291e2bbf325173b801"},
@@ -2257,7 +2261,10 @@ django-tables2 = [
     {file = "django-tables2-2.4.1.tar.gz", hash = "sha256:6c72dd208358539e789e4c0efd7d151e43283a4aa4093a35f44c43489e7ddeaa"},
     {file = "django_tables2-2.4.1-py2.py3-none-any.whl", hash = "sha256:50762bf3d7c61a4eb70e763c3e278650d7266bb78d0497fc8fafcf4e507c9a64"},
 ]
-django-taggit = []
+django-taggit = [
+    {file = "django-taggit-1.5.1.tar.gz", hash = "sha256:e5bb62891f458d55332e36a32e19c08d20142c43f74bc5656c803f8af25c084a"},
+    {file = "django_taggit-1.5.1-py3-none-any.whl", hash = "sha256:dfe9e9c10b5929132041de0c00093ef0072c73c2a97d0f74a818ae50fa77149a"},
+]
 django-timezone-field = [
     {file = "django-timezone-field-4.1.2.tar.gz", hash = "sha256:cffac62452d060e365938aa9c9f7b72d70d8b26b9c60243bce227b35abd1b9df"},
     {file = "django_timezone_field-4.1.2-py3-none-any.whl", hash = "sha256:897c06e40b619cf5731a30d6c156886a7c64cba3a90364832148da7ef32ccf36"},
@@ -2268,8 +2275,14 @@ django-webserver = [
     {file = "django-webserver-1.2.0.tar.gz", hash = "sha256:c976979d15b5ff9a212f7904d3b779e22219aebb4857860fcaf20e4e40f1da40"},
     {file = "django_webserver-1.2.0-py2.py3-none-any.whl", hash = "sha256:09200631f266484b9e944e38e92681d6e9aa7d90d089a5c86d5fb08fddad84fe"},
 ]
-djangorestframework = []
-drf-spectacular = []
+djangorestframework = [
+    {file = "djangorestframework-3.13.1-py3-none-any.whl", hash = "sha256:24c4bf58ed7e85d1fe4ba250ab2da926d263cd57d64b03e8dcef0ac683f8b1aa"},
+    {file = "djangorestframework-3.13.1.tar.gz", hash = "sha256:0c33407ce23acc68eca2a6e46424b008c9c02eceb8cf18581921d0092bc1f2ee"},
+]
+drf-spectacular = [
+    {file = "drf-spectacular-0.22.1.tar.gz", hash = "sha256:866e16ddaae167a1234c76cd8c351161373551db994ce9665b347b32d5daf38b"},
+    {file = "drf_spectacular-0.22.1-py3-none-any.whl", hash = "sha256:17ac5e31e5d6150dd5fa10843b429202f4f38069202acc44394cc5a771de63d9"},
+]
 drf-spectacular-sidecar = []
 drf-yasg = []
 exceptiongroup = []
@@ -2324,8 +2337,8 @@ itypes = [
 ]
 jedi = []
 jinja2 = [
-    {file = "Jinja2-3.1.2-py3-none-any.whl", hash = "sha256:6088930bfe239f0e6710546ab9c19c9ef35e29792895fed6e6e31a023a182a61"},
-    {file = "Jinja2-3.1.2.tar.gz", hash = "sha256:31351a702a408a9e7595a8fc6150fc3f43bb6bf7e319770cbc0db9df9437e852"},
+    {file = "Jinja2-3.0.3-py3-none-any.whl", hash = "sha256:077ce6014f7b40d03b47d1f1ca4b0fc8328a692bd284016f806ed0eaca390ad8"},
+    {file = "Jinja2-3.0.3.tar.gz", hash = "sha256:611bb273cd68f3b993fabdc4064fc858c5b47a973cb5aa7999ec1ba405c87cd7"},
 ]
 jsonschema = []
 kombu = [
@@ -2383,10 +2396,7 @@ pluggy = [
     {file = "pluggy-1.0.0-py2.py3-none-any.whl", hash = "sha256:74134bbf457f031a36d68416e1509f34bd5ccc019f0bcc952c7b909d06b37bd3"},
     {file = "pluggy-1.0.0.tar.gz", hash = "sha256:4224373bacce55f955a878bf9cfa763c1e360858e330072059e10bad68531159"},
 ]
-prometheus-client = [
-    {file = "prometheus_client-0.14.1-py3-none-any.whl", hash = "sha256:522fded625282822a89e2773452f42df14b5a8e84a86433e3f8a189c1d54dc01"},
-    {file = "prometheus_client-0.14.1.tar.gz", hash = "sha256:5459c427624961076277fdc6dc50540e2bacb98eebde99886e59ec55ed92093a"},
-]
+prometheus-client = []
 promise = [
     {file = "promise-2.3.tar.gz", hash = "sha256:dfd18337c523ba4b6a58801c164c1904a9d4d1b1747c7d5dbf45b693a49d93d0"},
 ]

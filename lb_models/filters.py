@@ -3,9 +3,6 @@ import django_filters
 from nautobot.utilities.filters import BaseFilterSet, NameSlugSearchFilterSet
 from django.db.models import Q
 from lb_models import models
-from nautobot.ipam.models import IPAddress, Interface, VLAN, VRF
-from nautobot.dcim.models import Device
-
 
 class VIPCertificateFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
     """Filter for VIPCertificate."""
@@ -57,12 +54,8 @@ class VIPPoolMemberFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         method="search",
         label="Search",
     )
-    address = django_filters.ModelMultipleChoiceFilter(
-        queryset=IPAddress.objects.all(),
-        label="IPv4 Address",
-    )
     monitor = django_filters.ModelMultipleChoiceFilter(
-        queryset=models.VIPHealthMonitor.objects.all(),
+        queryset=models.VIPPoolMember.objects.all(),
         label="Monitor",
     )
 
@@ -119,6 +112,8 @@ class VIPHealthMonitorFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             "url",
             "send",
             "receive",
+            "code",
+            "string"
         ]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
@@ -178,34 +173,6 @@ class VIPFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         method="search",
         label="Search",
     )
-    device = django_filters.ModelMultipleChoiceFilter(
-        queryset=Device.objects.all(),
-        label="Device",
-    )
-    Interface = django_filters.ModelMultipleChoiceFilter(
-        queryset=Interface.objects.all(),
-        label="Interface",
-    )
-    address = django_filters.ModelMultipleChoiceFilter(
-        queryset=IPAddress.objects.all(),
-        label="IPv4 Address",
-    )
-    pool = django_filters.ModelMultipleChoiceFilter(
-        queryset=models.VIPPool.objects.all(),
-        label="VIP Pool",
-    )
-    vlan = django_filters.ModelMultipleChoiceFilter(
-        queryset=VLAN.objects.all(),
-        label="VLAN",
-    )
-    vrf = django_filters.ModelMultipleChoiceFilter(
-        queryset=VRF.objects.all(),
-        label="VRF",
-    )
-    certificate = django_filters.ModelMultipleChoiceFilter(
-        queryset=models.VIPCertificate.objects.all(),
-        label="VIP Certificate",
-    )
 
     class Meta:
         """Meta attributes for filter."""
@@ -227,7 +194,6 @@ class VIPFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             "method",
             "certificate",
             "owner",
-            "vip_args",
         ]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use

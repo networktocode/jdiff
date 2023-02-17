@@ -4,7 +4,7 @@ edit_uri: "edit/develop/docs"
 site_dir: "lb_models/static/lb_models/docs"
 site_name: "lb_models Documentation"
 site_url: "https://docs.nautobot.com/projects/lb_models/en/latest/"
-repo_url: "git@github.com:networktocode-llc/cu-allspice-lb-management.git"
+repo_url: "https://github.com/networktocode-llc/cu-allspice-lb-management.git"
 copyright: "Copyright &copy; The Authors"
 theme:
   name: "material"

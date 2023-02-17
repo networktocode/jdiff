@@ -42,6 +42,7 @@ class VIPHealthMonitorFilterForm(BootstrapMixin, forms.ModelForm):
     string = forms.CharField(required=False, label="String")
     code = forms.IntegerField(required=False, label="Code")
     receive = forms.CharField(required=False, label="Receive")
+    description = forms.CharField(required=False, label="Description")
 
     class Meta:
         """Meta attributes."""

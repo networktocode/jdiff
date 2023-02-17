@@ -126,6 +126,8 @@ class VIPTable(BaseTable):
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
+    name = tables.Column(linkify=True)
+
 
     class Meta(BaseTable.Meta):
         """Meta attributes."""
