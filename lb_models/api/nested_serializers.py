@@ -16,7 +16,7 @@ class VIPHealthMonitorNestedSerializer(WritableNestedSerializer):
         """Meta attributes."""
 
         model = models.VIPHealthMonitor
-        fields = "__all__"
+        fields = ["monitor"]
 
 
 class VIPPoolMemberNestedSerializer(WritableNestedSerializer):
@@ -30,7 +30,7 @@ class VIPPoolMemberNestedSerializer(WritableNestedSerializer):
         """Meta attributes."""
 
         model = models.VIPPoolMember
-        fields = "__all__"
+        fields = ["member", "monitor", "address"]
 
 
 class VIPPoolNestedSerializer(WritableNestedSerializer):
@@ -44,7 +44,7 @@ class VIPPoolNestedSerializer(WritableNestedSerializer):
         """Meta attributes."""
 
         model = models.VIPPool
-        fields = "__all__"
+        fields = ["pool", "member", "monitor"]
 
 
 class VIPCertificateNestedSerializer(WritableNestedSerializer):
@@ -56,4 +56,4 @@ class VIPCertificateNestedSerializer(WritableNestedSerializer):
         """Meta attributes."""
 
         model = models.VIPCertificate
-        fields = "__all__"
+        fields = ["certificate"]

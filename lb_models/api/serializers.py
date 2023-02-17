@@ -16,7 +16,21 @@ class VIPCertificateSerializer(ValidatedModelSerializer):
         """Meta attributes."""
 
         model = models.VIPCertificate
-        fields = "__all__"
+        fields = [
+            "id",
+            "slug",
+            "issuer",
+            "version_number",
+            "serial_number",
+            "signature",
+            "signature_algorithm",
+            "signature_algorithm_id",
+            "start_date",
+            "end_date",
+            "subject_name",
+            "subject_pub_key",
+            "subject_pub_key_algorithm",
+        ]
 
 
 class VIPHealthMonitorSerializer(ValidatedModelSerializer):
@@ -26,7 +40,17 @@ class VIPHealthMonitorSerializer(ValidatedModelSerializer):
         """Meta attributes."""
 
         model = models.VIPHealthMonitor
-        fields = "__all__"
+        fields = [
+            "id",
+            "slug",
+            "name",
+            "description",
+            "type",
+            "url",
+            "send",
+            "code",
+            "receive",
+        ]
 
 
 class VIPPoolSerializer(ValidatedModelSerializer):
@@ -39,7 +63,7 @@ class VIPPoolSerializer(ValidatedModelSerializer):
         """Meta attributes."""
 
         model = models.VIPPool
-        fields = "__all__"
+        fields = ["id", "slug", "name", "description", "monitor", "member"]
 
 
 class VIPPoolMemberSerializer(ValidatedModelSerializer):
@@ -52,7 +76,18 @@ class VIPPoolMemberSerializer(ValidatedModelSerializer):
         """Meta attributes."""
 
         model = models.VIPPoolMember
-        fields = "__all__"
+        fields = [
+            "id",
+            "slug",
+            "name",
+            "description",
+            "protocol",
+            "port",
+            "address",
+            "fqdn",
+            "monitor",
+            "member_args",
+        ]
 
 
 class VIPSerializer(ValidatedModelSerializer):
@@ -70,4 +105,22 @@ class VIPSerializer(ValidatedModelSerializer):
         """Meta attributes."""
 
         model = models.VIP
-        fields = "__all__"
+        fields = [
+            "id",
+            "slug",
+            "name",
+            "description",
+            "device",
+            "interface",
+            "address",
+            "pool",
+            "vlan",
+            "vrf",
+            "fqdn",
+            "protocol",
+            "port",
+            "method",
+            "certificate",
+            "owner",
+            "vip_args",
+        ]

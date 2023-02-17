@@ -52,7 +52,6 @@ class VIPCertificate(BaseModel):
         "subject_pub_key_algorithm",
     ]
     clone_fields = [
-        "slug",
         "issuer",
         "version_number",
         "serial_number",
