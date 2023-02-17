@@ -51,7 +51,7 @@ class VIPPoolMemberFilterForm(BootstrapMixin, forms.ModelForm):
     address = forms.ModelChoiceField(queryset=IPAddress.objects.all(), label="IP address")
     fqnd = forms.CharField(required=False, label="FQDN")
     monitor = forms.ModelChoiceField(
-        queryset=models.VIPHealthMonitor.objects.all(), required=False, label="Healt Monitor" ,to_field_name="slug"
+        queryset=models.VIPHealthMonitor.objects.all(), required=False, label="Healt Monitor", to_field_name="slug"
     )
 
     class Meta:

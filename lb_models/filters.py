@@ -4,6 +4,7 @@ from nautobot.utilities.filters import BaseFilterSet, NameSlugSearchFilterSet
 from django.db.models import Q
 from lb_models import models
 
+
 class VIPCertificateFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
     """Filter for VIPCertificate."""
 
@@ -103,18 +104,7 @@ class VIPHealthMonitorFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         """Meta attributes for filter."""
 
         model = models.VIPHealthMonitor
-        fields = [
-            "q",
-            "slug",
-            "name",
-            "description",
-            "type",
-            "url",
-            "send",
-            "receive",
-            "code",
-            "string"
-        ]
+        fields = ["q", "slug", "name", "description", "type", "url", "send", "receive", "code", "string"]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
         """Perform the filtered search."""

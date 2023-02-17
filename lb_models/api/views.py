@@ -1,4 +1,4 @@
-"""API views for fcc_dispatching."""
+"""API views for lb-models."""
 
 from nautobot.core.api.views import ModelViewSet
 from lb_models import filters, models

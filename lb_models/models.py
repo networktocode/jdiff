@@ -1,4 +1,4 @@
-"""Models for Fcc Dispatching."""
+"""Models for LB Models."""
 
 import struct
 from django.db import models
