@@ -38,7 +38,8 @@ class VIPPoolMemberSerializer(ValidatedModelSerializer):
     class Meta:
         """Meta attributes."""
 
-        model = "__all__"
+        model = models.VIPPoolMember
+        fields = "__all__"
 
 
 class VIPPoolSerializer(ValidatedModelSerializer):
@@ -50,7 +51,8 @@ class VIPPoolSerializer(ValidatedModelSerializer):
     class Meta:
         """Meta attributes."""
 
-        model = "__all__"
+        model = models.VIPPool
+        fields = "__all__"
 
 
 class VIPSerializer(ValidatedModelSerializer):

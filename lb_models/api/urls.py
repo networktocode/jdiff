@@ -7,8 +7,8 @@ from lb_models.api import views
 router = OrderedDefaultRouter()
 router.register("vipcertificate", views.VIPCertificateViewSet)
 router.register("viphealthmonitor", views.VIPHealthMonitorViewSet)
-router.register("vippool", views.VIPPoolViewSet)
 router.register("vippoolmember", views.VIPPoolMemberViewSet)
+router.register("vippool", views.VIPPoolViewSet)
 router.register("vip", views.VIPViewSet)
 
 

@@ -1,7 +1,7 @@
 ---
 lb_models:
   project_name: "lb_models"
-  nautobot_ver: "1.4.10"
+  nautobot_ver: "1.4.3"
   local: false
   python_ver: "3.7"
   compose_dir: "development"

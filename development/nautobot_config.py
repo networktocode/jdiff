@@ -50,7 +50,8 @@ DEBUG = True
 # Django Debug Toolbar
 DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": lambda _request: DEBUG and not TESTING}
 
-EXTRA_INSTALLED_APPS = ["versionfield"]
+EXTRA_INSTALLED_APPS = []
+
 if DEBUG and "debug_toolbar" not in EXTRA_INSTALLED_APPS:  # noqa: F405
     EXTRA_INSTALLED_APPS.append("debug_toolbar")  # noqa: F405
 if DEBUG and "debug_toolbar.middleware.DebugToolbarMiddleware" not in MIDDLEWARE:  # noqa: F405
