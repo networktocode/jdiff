@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "lb_models"
-version = "0.0.5"
+version = "0.1.0"
 description = "lb_models"
 authors = ["Network to Code, LLC <info@networktocode.com>"]
 license = "Apache-2.0"
@@ -21,7 +21,7 @@ python = "^3.7"
 # Required for Python 3.7 for now. See: https://stackoverflow.com/a/73932581/194311
 importlib-metadata = "4.13.0"
 # Used for local development
-nautobot = "1.4.2"
+nautobot = "1.4.3"
 
 [tool.poetry.dev-dependencies]
 bandit = "*"
