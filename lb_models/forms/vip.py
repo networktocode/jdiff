@@ -24,7 +24,7 @@ class VIPForm(BootstrapMixin, forms.ModelForm):
     protocol = forms.ChoiceField(choices=add_blank_choice(Protocols))
     method = forms.CharField(required=False)
     certificate = forms.ModelChoiceField(
-        queryset=models.Certificate.objects.all(), label="VIP Certificate", required=False
+        queryset=models.Certificate.objects.all(), label="Certificate", required=False
     )
     owner = forms.CharField(required=False)
     vip_args = forms.JSONField(required=False)

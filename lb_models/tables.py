@@ -17,19 +17,23 @@ class CertificateTable(BaseTable):
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
-    serial_number = tables.Column(linkify=True)
+    certificate = tables.Column(linkify=True)
 
     class Meta(BaseTable.Meta):
         """Meta attributes."""
 
         model = models.Certificate
         fields = (
+            "slug",
             "issuer",
             "version_number",
             "serial_number",
             "signature",
             "signature_algorithm",
             "signature_algorithm_id",
+            "certificate",
+            "certificate_key",
+            "certificate_password",
             "start_date",
             "end_date",
             "subject_name",

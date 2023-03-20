@@ -8,14 +8,14 @@ from lb_models import models
 
 
 class CertificateForm(BootstrapMixin, forms.ModelForm):
-    """VIP Certificate creation/edit form."""
+    """Certificate creation/edit form."""
 
     slug = AutoSlugField(populate_from=["serial_number"])
     start_date = forms.DateField(widget=DatePicker())
     end_date = forms.DateField(widget=DatePicker())
     signature_algorithm = forms.ChoiceField(choices=add_blank_choice(CertAlgorithmChoices))
     subject_pub_key = forms.ChoiceField(choices=add_blank_choice(CertAlgorithmChoices))
-
+    certificate_password = forms.CharField(widget=forms.PasswordInput)
     class Meta:
         """Meta attributes."""
 
@@ -28,6 +28,9 @@ class CertificateForm(BootstrapMixin, forms.ModelForm):
             "signature",
             "signature_algorithm",
             "signature_algorithm_id",
+            "certificate",
+            "certificate_key",
+            "certificate_password",
             "start_date",
             "end_date",
             "subject_name",
@@ -52,6 +55,8 @@ class CertificateFilterForm(BootstrapMixin, forms.ModelForm):
         choices=add_blank_choice(CertAlgorithmChoices), required=False, label="Signature algorithm"
     )
     signature_algorithm_id = forms.CharField(required=False, label="Signature algorithm ID")
+    certificate = forms.CharField(required=False, label="Certificate Name")
+    certificate_key = forms.CharField(required=False, label="Certificate Key")
     start_date = forms.DateField(required=False, widget=DatePicker(), label="Start certificate date")
     end_date = forms.DateField(required=False, widget=DatePicker(), label="Expire certificate date")
     subject_name = forms.CharField(required=False, label="Subject name")
@@ -68,10 +73,14 @@ class CertificateFilterForm(BootstrapMixin, forms.ModelForm):
             "q",
             "slug",
             "issuer",
+            "version_number",
             "serial_number",
             "signature",
             "signature_algorithm",
             "signature_algorithm_id",
+            "certificate",
+            "certificate_key",
+            "certificate_password",
             "start_date",
             "end_date",
             "subject_name",
@@ -81,17 +90,17 @@ class CertificateFilterForm(BootstrapMixin, forms.ModelForm):
 
 
 class CertificateBulkEditForm(BootstrapMixin, BulkEditForm):
-    """VIP Certificate bulk edit form."""
+    """Certificate bulk edit form."""
 
     pk = forms.ModelChoiceField(queryset=models.Certificate.objects.all(), widget=forms.MultipleHiddenInput)
-    issuer = forms.CharField(required=False)
+    certifcare = forms.CharField(required=False)
 
     class Meta:
         """Meta attributes."""
 
         model = models.Certificate
         nullable_fields = [
-            "issuer",
+            "certifcare",
         ]
 
 

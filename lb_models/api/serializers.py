@@ -10,7 +10,7 @@ from nautobot.ipam.api import nested_serializers as ipam_nested_serializers
 
 
 class CertificateSerializer(ValidatedModelSerializer):
-    """VIP Certificate Serializer."""
+    """Certificate Serializer."""
 
     class Meta:
         """Meta attributes."""

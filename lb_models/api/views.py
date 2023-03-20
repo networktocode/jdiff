@@ -6,7 +6,7 @@ from lb_models.api import serializers
 
 
 class CertificateViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
-    """VIP Certificate serializer viewset."""
+    """Certificate serializer viewset."""
 
     serializer_class = serializers.CertificateSerializer
     filterset_class = filters.CertificateFilterSet

@@ -48,7 +48,7 @@ class VIPPoolNestedSerializer(WritableNestedSerializer):
 
 
 class CertificateNestedSerializer(WritableNestedSerializer):
-    """VIP Certificate Nested Serializer."""
+    """Certificate Nested Serializer."""
 
     certificate = serializers.CharField(source="serial_number")
 

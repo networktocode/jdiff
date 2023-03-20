@@ -6,7 +6,7 @@ from nautobot.utilities.choices import ButtonColorChoices
 menu_items = (
     PluginMenuItem(
         link="plugins:lb_models:certificate_list",
-        link_text="VIP Certificate",
+        link_text="Certificate",
         buttons=(
             PluginMenuButton(
                 link="plugins:lb_models:certificate_add",

@@ -21,20 +21,23 @@ from .choices import CertAlgorithmChoices, Protocols
     "webhooks",
 )
 class Certificate(BaseModel):
-    """VIP Certificate model implementation."""
+    """Certificate model implementation."""
 
     slug = AutoSlugField(populate_from="serial_number")
-    issuer = models.CharField(max_length=50)
-    version_number = models.CharField(max_length=50)
-    serial_number = models.CharField(max_length=30, unique=True)
-    signature = models.CharField(max_length=50, unique=True)
-    signature_algorithm = models.CharField(max_length=20, choices=CertAlgorithmChoices)
-    signature_algorithm_id = models.CharField(max_length=30, unique=True)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    subject_name = models.CharField(max_length=50)
-    subject_pub_key = models.CharField(max_length=100)
-    subject_pub_key_algorithm = models.CharField(max_length=20, choices=CertAlgorithmChoices)
+    issuer = models.CharField(max_length=50, blank=True, null=True)
+    version_number = models.CharField(max_length=50, blank=True, null=True)
+    serial_number = models.CharField(max_length=30, blank=True, null=True)
+    signature = models.CharField(max_length=50, blank=True, null=True)
+    certificate = models.CharField(max_length=50)
+    certificate_key = models.CharField(max_length=50)
+    certificate_password = models.CharField(max_length=50)
+    signature_algorithm = models.CharField(max_length=20, choices=CertAlgorithmChoices, blank=True, null=True)
+    signature_algorithm_id = models.CharField(max_length=30, blank=True, null=True)
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
+    subject_name = models.CharField(max_length=50, blank=True, null=True)
+    subject_pub_key = models.CharField(max_length=100, blank=True, null=True)
+    subject_pub_key_algorithm = models.CharField(max_length=20, choices=CertAlgorithmChoices, blank=True, null=True)
 
     csv_headers = [
         "slug",
@@ -44,6 +47,9 @@ class Certificate(BaseModel):
         "signature",
         "signature_algorithm",
         "signature_algorithm_id",
+        "certificate",
+        "certificate_key",
+        "certificate_password",
         "start_date",
         "end_date",
         "subject_name",
@@ -51,12 +57,16 @@ class Certificate(BaseModel):
         "subject_pub_key_algorithm",
     ]
     clone_fields = [
+        "slug",
         "issuer",
         "version_number",
         "serial_number",
         "signature",
         "signature_algorithm",
         "signature_algorithm_id",
+        "certificate",
+        "certificate_key",
+        "certificate_password",
         "start_date",
         "end_date",
         "subject_name",
@@ -65,7 +75,7 @@ class Certificate(BaseModel):
     ]
 
     def get_absolute_url(self):
-        """Return detail view for VIP certificate."""
+        """Return detail view for Certificate."""
         return reverse("plugins:lb_models:certificate", args=[self.slug])
 
     def to_csv(self):
@@ -78,6 +88,9 @@ class Certificate(BaseModel):
             self.signature,
             self.signature_algorithm,
             self.signature_algorithm_id,
+            self.certificate,
+            self.certificate_key,
+            self.certificate_password,
             self.start_date,
             self.end_date,
             self.subject_name,
@@ -87,7 +100,7 @@ class Certificate(BaseModel):
 
     def __str__(self):
         """Stringify instance."""
-        return self.serial_number
+        return self.certificate
 
 
 @extras_features(

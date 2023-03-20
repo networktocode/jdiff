@@ -72,7 +72,7 @@ class VIPPoolMemberFilterForm(BootstrapMixin, forms.ModelForm):
 
 
 class VIPPoolMemberBulkEditForm(BootstrapMixin, BulkEditForm):
-    """VIP Certificate bulk edit form."""
+    """Certificate bulk edit form."""
 
     pk = forms.ModelChoiceField(queryset=models.VIPPoolMember.objects.all(), widget=forms.MultipleHiddenInput)
     issuer = forms.CharField(required=False)
