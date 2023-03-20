@@ -12,108 +12,202 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('dcim', '0014_location_status_data_migration'),
-        ('ipam', '0008_prefix_vlan_vlangroup_location'),
+        ("dcim", "0014_location_status_data_migration"),
+        ("ipam", "0008_prefix_vlan_vlangroup_location"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Certificate',
+            name="Certificate",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('slug', nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from='serial_number', unique=True)),
-                ('issuer', models.CharField(blank=True, max_length=50, null=True)),
-                ('version_number', models.CharField(blank=True, max_length=50, null=True)),
-                ('serial_number', models.CharField(blank=True, max_length=30, null=True)),
-                ('signature', models.CharField(blank=True, max_length=50, null=True)),
-                ('certificate', models.CharField(max_length=50)),
-                ('certificate_key', models.CharField(max_length=50)),
-                ('certificate_password', models.CharField(max_length=50)),
-                ('signature_algorithm', models.CharField(blank=True, max_length=20, null=True)),
-                ('signature_algorithm_id', models.CharField(blank=True, max_length=30, null=True)),
-                ('start_date', models.DateField(blank=True, null=True)),
-                ('end_date', models.DateField(blank=True, null=True)),
-                ('subject_name', models.CharField(blank=True, max_length=50, null=True)),
-                ('subject_pub_key', models.CharField(blank=True, max_length=100, null=True)),
-                ('subject_pub_key_algorithm', models.CharField(blank=True, max_length=20, null=True)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True
+                    ),
+                ),
+                (
+                    "slug",
+                    nautobot.core.fields.AutoSlugField(
+                        blank=True, max_length=100, populate_from="serial_number", unique=True
+                    ),
+                ),
+                ("issuer", models.CharField(blank=True, max_length=50, null=True)),
+                ("version_number", models.CharField(blank=True, max_length=50, null=True)),
+                ("serial_number", models.CharField(blank=True, max_length=30, null=True)),
+                ("signature", models.CharField(blank=True, max_length=50, null=True)),
+                ("certificate", models.CharField(max_length=50)),
+                ("certificate_key", models.CharField(max_length=50)),
+                ("certificate_password", models.CharField(max_length=50)),
+                ("signature_algorithm", models.CharField(blank=True, max_length=20, null=True)),
+                ("signature_algorithm_id", models.CharField(blank=True, max_length=30, null=True)),
+                ("start_date", models.DateField(blank=True, null=True)),
+                ("end_date", models.DateField(blank=True, null=True)),
+                ("subject_name", models.CharField(blank=True, max_length=50, null=True)),
+                ("subject_pub_key", models.CharField(blank=True, max_length=100, null=True)),
+                ("subject_pub_key_algorithm", models.CharField(blank=True, max_length=20, null=True)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='VIPHealthMonitor',
+            name="HealthMonitor",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('slug', nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from='name', unique=True)),
-                ('name', models.CharField(max_length=50, unique=True)),
-                ('description', models.CharField(blank=True, max_length=100, null=True)),
-                ('type', models.CharField(max_length=50, null=True)),
-                ('url', models.URLField(max_length=50, null=True)),
-                ('send', models.CharField(max_length=50, null=True)),
-                ('string', models.CharField(max_length=100, null=True)),
-                ('code', models.SmallIntegerField(null=True)),
-                ('receive', models.CharField(max_length=50, null=True)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True
+                    ),
+                ),
+                (
+                    "slug",
+                    nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from="name", unique=True),
+                ),
+                ("name", models.CharField(max_length=50, unique=True)),
+                ("description", models.CharField(blank=True, max_length=100, null=True)),
+                ("type", models.CharField(max_length=50, null=True)),
+                ("url", models.URLField(max_length=50, null=True)),
+                ("send", models.CharField(max_length=50, null=True)),
+                ("string", models.CharField(max_length=100, null=True)),
+                ("code", models.SmallIntegerField(null=True)),
+                ("receive", models.CharField(max_length=50, null=True)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='VIPPoolMember',
+            name="VIPPoolMember",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('slug', nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from='name', unique=True)),
-                ('name', models.CharField(max_length=50, unique=True)),
-                ('description', models.CharField(max_length=100)),
-                ('protocol', models.CharField(max_length=20)),
-                ('port', models.PositiveIntegerField(blank=True, null=True, validators=[django.core.validators.MaxValueValidator(65535), django.core.validators.MinValueValidator(1)])),
-                ('fqdn', models.CharField(max_length=200)),
-                ('member_args', models.JSONField(blank=True, null=True)),
-                ('address', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='ipam.ipaddress')),
-                ('monitor', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='lb_models.viphealthmonitor')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True
+                    ),
+                ),
+                (
+                    "slug",
+                    nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from="name", unique=True),
+                ),
+                ("name", models.CharField(max_length=50, unique=True)),
+                ("description", models.CharField(max_length=100)),
+                ("protocol", models.CharField(max_length=20)),
+                (
+                    "port",
+                    models.PositiveIntegerField(
+                        blank=True,
+                        null=True,
+                        validators=[
+                            django.core.validators.MaxValueValidator(65535),
+                            django.core.validators.MinValueValidator(1),
+                        ],
+                    ),
+                ),
+                ("fqdn", models.CharField(max_length=200)),
+                ("member_args", models.JSONField(blank=True, null=True)),
+                (
+                    "address",
+                    models.ForeignKey(
+                        blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to="ipam.ipaddress"
+                    ),
+                ),
+                (
+                    "monitor",
+                    models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to="lb_models.healthmonitor"),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='VIPPool',
+            name="VIPPool",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('slug', nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from='name', unique=True)),
-                ('name', models.CharField(max_length=50)),
-                ('description', models.CharField(max_length=50)),
-                ('member', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='lb_models.vippoolmember')),
-                ('monitor', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='lb_models.viphealthmonitor')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True
+                    ),
+                ),
+                (
+                    "slug",
+                    nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from="name", unique=True),
+                ),
+                ("name", models.CharField(max_length=50)),
+                ("description", models.CharField(max_length=50)),
+                (
+                    "member",
+                    models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to="lb_models.vippoolmember"),
+                ),
+                (
+                    "monitor",
+                    models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to="lb_models.healthmonitor"),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='VIP',
+            name="VIP",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('slug', nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from='name', unique=True)),
-                ('name', models.CharField(max_length=50)),
-                ('description', models.CharField(max_length=50)),
-                ('fqdn', models.CharField(max_length=200)),
-                ('protocol', models.CharField(max_length=20)),
-                ('port', models.SmallIntegerField(null=True)),
-                ('method', models.CharField(max_length=50)),
-                ('owner', models.CharField(max_length=50)),
-                ('vip_args', models.JSONField(blank=True, null=True)),
-                ('address', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='ipam.ipaddress')),
-                ('certificate', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lb_models.certificate')),
-                ('device', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='+', to='dcim.device')),
-                ('interface', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='+', to='dcim.interface')),
-                ('pool', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='lb_models.vippool')),
-                ('vlan', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='+', to='ipam.vlan')),
-                ('vrf', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='+', to='ipam.vrf')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True
+                    ),
+                ),
+                (
+                    "slug",
+                    nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from="name", unique=True),
+                ),
+                ("name", models.CharField(max_length=50)),
+                ("description", models.CharField(max_length=50)),
+                ("fqdn", models.CharField(max_length=200)),
+                ("protocol", models.CharField(max_length=20)),
+                ("port", models.SmallIntegerField(null=True)),
+                ("method", models.CharField(max_length=50)),
+                ("owner", models.CharField(max_length=50)),
+                ("vip_args", models.JSONField(blank=True, null=True)),
+                (
+                    "address",
+                    models.ForeignKey(
+                        blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to="ipam.ipaddress"
+                    ),
+                ),
+                (
+                    "certificate",
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="lb_models.certificate"),
+                ),
+                (
+                    "device",
+                    models.ForeignKey(
+                        null=True, on_delete=django.db.models.deletion.PROTECT, related_name="+", to="dcim.device"
+                    ),
+                ),
+                (
+                    "interface",
+                    models.ForeignKey(
+                        null=True, on_delete=django.db.models.deletion.PROTECT, related_name="+", to="dcim.interface"
+                    ),
+                ),
+                ("pool", models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to="lb_models.vippool")),
+                (
+                    "vlan",
+                    models.ForeignKey(
+                        null=True, on_delete=django.db.models.deletion.PROTECT, related_name="+", to="ipam.vlan"
+                    ),
+                ),
+                (
+                    "vrf",
+                    models.ForeignKey(
+                        null=True, on_delete=django.db.models.deletion.PROTECT, related_name="+", to="ipam.vrf"
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]

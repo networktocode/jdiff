@@ -11,11 +11,12 @@ class CertificateForm(BootstrapMixin, forms.ModelForm):
     """Certificate creation/edit form."""
 
     slug = AutoSlugField(populate_from=["serial_number"])
-    start_date = forms.DateField(widget=DatePicker())
-    end_date = forms.DateField(widget=DatePicker())
-    signature_algorithm = forms.ChoiceField(choices=add_blank_choice(CertAlgorithmChoices))
-    subject_pub_key = forms.ChoiceField(choices=add_blank_choice(CertAlgorithmChoices))
-    certificate_password = forms.CharField(widget=forms.PasswordInput)
+    start_date = forms.DateField(widget=DatePicker(), required=False)
+    end_date = forms.DateField(widget=DatePicker(), required=False)
+    signature_algorithm = forms.ChoiceField(choices=add_blank_choice(CertAlgorithmChoices), required=False)
+    subject_pub_key = forms.ChoiceField(choices=add_blank_choice(CertAlgorithmChoices), required=False)
+    certificate_password = forms.CharField(widget=forms.PasswordInput, required=False)
+
     class Meta:
         """Meta attributes."""
 
@@ -80,7 +81,6 @@ class CertificateFilterForm(BootstrapMixin, forms.ModelForm):
             "signature_algorithm_id",
             "certificate",
             "certificate_key",
-            "certificate_password",
             "start_date",
             "end_date",
             "subject_name",

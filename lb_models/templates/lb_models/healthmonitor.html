@@ -11,12 +11,12 @@
 <div class="row noprint">
 	<div class="col-sm-8 col-md-9">
 		<ol class="breadcrumb">
-			<li><a href="{% url 'plugins:lb_models:viphealthmonitor_list' %}">Health Monitor</a></li>
+			<li><a href="{% url 'plugins:lb_models:healthmonitor_list' %}">Health Monitor</a></li>
 			<li>{{ object }}</li>
 		</ol>
 	</div>
 	<div class="col-sm-4 col-md-3">
-		<form action="{% url 'plugins:lb_models:viphealthmonitor_list' %}"
+		<form action="{% url 'plugins:lb_models:healthmonitor_list' %}"
 			method="get">
 			<div class="input-group">
 				<input type="text" name="q" class="form-control" />
@@ -51,7 +51,7 @@
 	</li>
 	{% if perms.extras.view_objectchange %}
 	<li role="presentation" {% if active_tab == 'changelog' %} class="active" {% endif %}>
-		<a href="{% url 'plugins:lb_models:viphealthmonitor_changelog' slug=object.slug %}">Change Log</a>
+		<a href="{% url 'plugins:lb_models:healthmonitor_changelog' slug=object.slug %}">Change Log</a>
 	</li>
 	{% endif %}
 </ul>
@@ -90,6 +90,18 @@
 					</td>
 				</tr>
 				<tr>
+					<td>LRTM</td>
+					<td>
+						{{ object.lrtm }}
+					</td>
+				</tr>
+				<tr>
+					<td>Secure</td>
+					<td>
+						{{ object.secure }}
+					</td>
+				</tr>
+				<tr>
 					<td>URL</td>
 					<td>
 						{{ object.url }}
@@ -112,7 +124,13 @@
 					<td>
 						{{ object.receive }}
 					</td>
-				</tr>  
+				</tr>
+				<tr>
+					<td>HTTP Request</td>
+					<td>
+						{{ object.httprequest }}
+					</td>
+				</tr>
 			</table>
 		</div>
 		{% include 'inc/custom_fields_panel.html' %}

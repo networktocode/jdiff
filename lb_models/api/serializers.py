@@ -19,13 +19,13 @@ class CertificateSerializer(ValidatedModelSerializer):
         fields = "__all__"
 
 
-class VIPHealthMonitorSerializer(ValidatedModelSerializer):
-    """VIP Health Monitor Serializer."""
+class HealthMonitorSerializer(ValidatedModelSerializer):
+    """Health Monitor Serializer."""
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPHealthMonitor
+        model = models.HealthMonitor
         fields = "__all__"
 
 
@@ -33,7 +33,7 @@ class VIPPoolMemberSerializer(ValidatedModelSerializer):
     """VIP Pool Member Serializer."""
 
     address = ipam_nested_serializers.NestedIPAddressSerializer()
-    monitor = nested_serializers.VIPHealthMonitorNestedSerializer()
+    monitor = nested_serializers.HealthMonitorNestedSerializer()
 
     class Meta:
         """Meta attributes."""
@@ -46,7 +46,7 @@ class VIPPoolSerializer(ValidatedModelSerializer):
     """VIP Pool Serializer."""
 
     member = nested_serializers.VIPPoolMemberNestedSerializer()
-    monitor = nested_serializers.VIPHealthMonitorNestedSerializer()
+    monitor = nested_serializers.HealthMonitorNestedSerializer()
 
     class Meta:
         """Meta attributes."""

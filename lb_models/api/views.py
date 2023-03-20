@@ -13,12 +13,12 @@ class CertificateViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
     queryset = models.Certificate.objects.all()
 
 
-class VIPHealthMonitorViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
-    """VIP Health Monitor serializer viewset."""
+class HealthMonitorViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
+    """Health Monitor serializer viewset."""
 
-    serializer_class = serializers.VIPHealthMonitorSerializer
-    filterset_class = filters.VIPHealthMonitorFilterSet
-    queryset = models.VIPHealthMonitor.objects.all()
+    serializer_class = serializers.HealthMonitorSerializer
+    filterset_class = filters.HealthMonitorFilterSet
+    queryset = models.HealthMonitor.objects.all()
 
 
 class VIPPoolMemberViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors

@@ -7,7 +7,7 @@ from nautobot.core.models import BaseModel
 from django.core.validators import MaxValueValidator, MinValueValidator
 from nautobot.extras.utils import extras_features
 from nautobot.core.fields import AutoSlugField
-from .choices import CertAlgorithmChoices, Protocols
+from .choices import CertAlgorithmChoices, Protocols, HealthMonitorTypes
 
 
 @extras_features(
@@ -131,7 +131,7 @@ class VIPPoolMember(BaseModel):
         null=True,
     )
     fqdn = models.CharField(max_length=200)
-    monitor = models.ForeignKey(to="VIPHealthMonitor", on_delete=models.PROTECT)
+    monitor = models.ForeignKey(to="HealthMonitor", on_delete=models.PROTECT)
     member_args = models.JSONField(blank=True, null=True)
 
     csv_headers = [
@@ -185,38 +185,67 @@ class VIPPoolMember(BaseModel):
     "statuses",
     "webhooks",
 )
-class VIPHealthMonitor(BaseModel):
+class HealthMonitor(BaseModel):
     """VIP pool response model implementation."""
 
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=100, blank=True, null=True)
-    type = models.CharField(max_length=50, null=True)
-    url = models.URLField(max_length=50, null=True)
-    send = models.CharField(max_length=50, null=True)
-    string = models.CharField(max_length=100, null=True)
-    code = models.SmallIntegerField(null=True)
-    receive = models.CharField(max_length=50, null=True)
+    type = models.CharField(max_length=20, choices=HealthMonitorTypes)
+    lrtm = models.BooleanField(blank=True, null=True)
+    secure = models.BooleanField(blank=True, null=True)
+    url = models.URLField(max_length=50, blank=True, null=True)
+    send = models.CharField(max_length=50, blank=True, null=True)
+    string = models.CharField(max_length=100, blank=True, null=True)
+    code = models.CharField(max_length=50)
+    httprequest = models.CharField(max_length=50)
+    receive = models.CharField(max_length=50, blank=True, null=True)
 
     csv_headers = [
         "slug",
         "name",
         "description",
         "type",
+        "lrtm",
+        "secure",
         "url",
         "send",
         "code",
         "receive",
+        "httprequest",
     ]
-    clone_fields = ["slug", "name", "description", "type", "url", "send", "receive"]
+    clone_fields = [
+        "slug",
+        "name",
+        "description",
+        "type",
+        "lrtm",
+        "secure",
+        "url",
+        "send",
+        "code",
+        "receive",
+        "httprequest",
+    ]
 
     def get_absolute_url(self):
-        """Return detail view for VIP pool memeber."""
-        return reverse("plugins:lb_models:viphealthmonitor", args=[self.slug])
+        """Return detail view for Health Monitor."""
+        return reverse("plugins:lb_models:healthmonitor", args=[self.slug])
 
     def to_csv(self):
         """To CSV format."""
-        return (self.slug, self.name, self.description, self.type, self.url, self.send, self.receive)
+        return (
+            self.slug,
+            self.name,
+            self.description,
+            self.type,
+            self.lrtm,
+            self.secure,
+            self.url,
+            self.send,
+            self.receive,
+            self.httprequest,
+        )
 
     def __str__(self):
         """Stringify instance."""
@@ -239,7 +268,7 @@ class VIPPool(BaseModel):
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=50)
-    monitor = models.ForeignKey(to="VIPHealthMonitor", on_delete=models.PROTECT)
+    monitor = models.ForeignKey(to="HealthMonitor", on_delete=models.PROTECT)
     member = models.ForeignKey(to="VIPPoolMember", on_delete=models.PROTECT)
 
     csv_headers = ["slug", "name", "description", "monitor", "member"]

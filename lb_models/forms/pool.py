@@ -11,9 +11,7 @@ class VIPPoolForm(BootstrapMixin, forms.ModelForm):
     slug = AutoSlugField(populate_from=["name"])
     name = forms.CharField(required=False)
     description = forms.CharField(required=False)
-    monitor = forms.ModelChoiceField(
-        queryset=models.VIPHealthMonitor.objects.all(), required=False, to_field_name="slug"
-    )
+    monitor = forms.ModelChoiceField(queryset=models.HealthMonitor.objects.all(), required=False, to_field_name="slug")
     member = forms.ModelChoiceField(queryset=models.VIPPoolMember.objects.all(), required=False, to_field_name="slug")
 
     class Meta:
@@ -21,9 +19,7 @@ class VIPPoolForm(BootstrapMixin, forms.ModelForm):
 
         model = models.VIPPool
         fields = ["slug", "name", "description", "monitor", "member"]
-        labels = {
-            "name": "ServiceGroup Name"
-        }
+        labels = {"name": "ServiceGroup Name"}
 
 
 class VIPPoolFilterForm(BootstrapMixin, forms.ModelForm):
@@ -37,9 +33,7 @@ class VIPPoolFilterForm(BootstrapMixin, forms.ModelForm):
     slug = AutoSlugField(populate_from=["name"])
     name = forms.CharField(required=False)
     description = forms.CharField(required=False)
-    monitor = forms.ModelChoiceField(
-        queryset=models.VIPHealthMonitor.objects.all(), required=False, to_field_name="slug"
-    )
+    monitor = forms.ModelChoiceField(queryset=models.HealthMonitor.objects.all(), required=False, to_field_name="slug")
     member = forms.ModelChoiceField(queryset=models.VIPPoolMember.objects.all(), required=False, to_field_name="slug")
 
     class Meta:

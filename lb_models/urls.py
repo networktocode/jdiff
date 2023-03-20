@@ -13,9 +13,7 @@ urlpatterns = [
     path("certificate/delete/", certificate.CertificateBulkDeleteView.as_view(), name="certificate_bulk_delete"),
     path("certificate/edit/", certificate.CertificateBulkEditView.as_view(), name="certificate_bulk_edit"),
     path("certificate/<slug:slug>/", certificate.CertificateView.as_view(), name="certificate"),
-    path(
-        "certificate/<slug:slug>/delete/", certificate.CertificateDeleteView.as_view(), name="certificate_delete"
-    ),
+    path("certificate/<slug:slug>/delete/", certificate.CertificateDeleteView.as_view(), name="certificate_delete"),
     path("certificate/<slug:slug>/edit/", certificate.CertificateEditView.as_view(), name="certificate_edit"),
     path(
         "certificate/<slug:slug>/changelog/",
@@ -37,35 +35,31 @@ urlpatterns = [
         name="vippoolmember_changelog",
         kwargs={"model": models.VIPPoolMember},
     ),
-    path("healthmonitor/", healthmonitor.VIPHealthMonitorListView.as_view(), name="viphealthmonitor_list"),
-    path("healthmonitor/add/", healthmonitor.VIPHealthMonitorCreateView.as_view(), name="viphealthmonitor_add"),
-    path(
-        "healthmonitor/import/", healthmonitor.VIPHealthMonitorBulkImportView.as_view(), name="viphealthmonitor_import"
-    ),
+    path("healthmonitor/", healthmonitor.HealthMonitorListView.as_view(), name="healthmonitor_list"),
+    path("healthmonitor/add/", healthmonitor.HealthMonitorCreateView.as_view(), name="healthmonitor_add"),
+    path("healthmonitor/import/", healthmonitor.HealthMonitorBulkImportView.as_view(), name="healthmonitor_import"),
     path(
         "healthmonitor/delete/",
-        healthmonitor.VIPHealthMonitorBulkDeleteView.as_view(),
-        name="viphealthmonitor_bulk_delete",
+        healthmonitor.HealthMonitorBulkDeleteView.as_view(),
+        name="healthmonitor_bulk_delete",
     ),
-    path(
-        "healthmonitor/edit/", healthmonitor.VIPHealthMonitorBulkEditView.as_view(), name="viphealthmonitor_bulk_edit"
-    ),
-    path("healthmonitor/<slug:slug>/", healthmonitor.VIPHealthMonitorView.as_view(), name="viphealthmonitor"),
+    path("healthmonitor/edit/", healthmonitor.HealthMonitorBulkEditView.as_view(), name="healthmonitor_bulk_edit"),
+    path("healthmonitor/<slug:slug>/", healthmonitor.HealthMonitorView.as_view(), name="healthmonitor"),
     path(
         "healthmonitor/<slug:slug>/delete/",
-        healthmonitor.VIPHealthMonitorDeleteView.as_view(),
-        name="viphealthmonitor_delete",
+        healthmonitor.HealthMonitorDeleteView.as_view(),
+        name="healthmonitor_delete",
     ),
     path(
         "healthmonitor/<slug:slug>/edit/",
-        healthmonitor.VIPHealthMonitorEditView.as_view(),
-        name="viphealthmonitor_edit",
+        healthmonitor.HealthMonitorEditView.as_view(),
+        name="healthmonitor_edit",
     ),
     path(
         "healthmonitor/<slug:slug>/changelog/",
         ObjectChangeLogView.as_view(),
-        name="viphealthmonitor_changelog",
-        kwargs={"model": models.VIPHealthMonitor},
+        name="healthmonitor_changelog",
+        kwargs={"model": models.HealthMonitor},
     ),
     path("pool/", pool.VIPPoolListView.as_view(), name="vippool_list"),
     path("pool/add/", pool.VIPPoolCreateView.as_view(), name="vippool_add"),

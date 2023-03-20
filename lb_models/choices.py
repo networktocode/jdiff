@@ -31,3 +31,25 @@ class Protocols(ChoiceSet):
     UDP = "udp"
 
     CHOICES = ((TCP, "tcp"), (UDP, "udp"))
+
+
+class HealthMonitorTypes(ChoiceSet):
+    """Valid choices for HealthMonitor."""
+
+    PING = "PING"
+    TCP = "TCP"
+    HTTP = "HTTP"
+    TCP_ECV = "TCP-ECV"
+    HTTP_ECV = "HTTP-ECV"
+    UDP_ECV = "UDP-ECV"
+    LDAP = "LDAP"
+
+    CHOICES = (
+        # (PING, "PING"),
+        # (TCP, "TCP"),
+        (HTTP, "HTTP"),
+        # (TCP_ECV, "TCP-ECV"),
+        # (HTTP_ECV, "HTTP-ECV"),
+        # (UDP_ECV, "UDP-ECV"),
+        # (LDAP, "LDAP"),
+    )

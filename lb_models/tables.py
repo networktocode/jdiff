@@ -71,13 +71,13 @@ class VIPPoolMemberTable(BaseTable):
         )
 
 
-class VIPHealthMonitorTable(BaseTable):
+class HealthMonitorTable(BaseTable):
     # pylint: disable=R0903
     """Table for list view."""
 
     pk = ToggleColumn()
     actions = ButtonsColumn(
-        models.VIPHealthMonitor,
+        models.HealthMonitor,
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
@@ -86,7 +86,7 @@ class VIPHealthMonitorTable(BaseTable):
     class Meta(BaseTable.Meta):
         """Meta attributes."""
 
-        model = models.VIPHealthMonitor
+        model = models.HealthMonitor
         fields = (
             "slug",
             "name",

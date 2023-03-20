@@ -15,7 +15,7 @@ class VIPPoolMemberForm(BootstrapMixin, forms.ModelForm):
     description = forms.CharField(required=False)
     protocol = forms.ChoiceField(choices=add_blank_choice(Protocols))
     address = forms.ModelChoiceField(queryset=IPAddress.objects.all())
-    monitor = forms.ModelChoiceField(queryset=models.VIPHealthMonitor.objects.all(), to_field_name="slug")
+    monitor = forms.ModelChoiceField(queryset=models.HealthMonitor.objects.all(), to_field_name="slug")
     member_args = forms.JSONField(required=False)
 
     class Meta:
@@ -51,7 +51,7 @@ class VIPPoolMemberFilterForm(BootstrapMixin, forms.ModelForm):
     address = forms.ModelChoiceField(queryset=IPAddress.objects.all(), label="IP address")
     fqnd = forms.CharField(required=False, label="FQDN")
     monitor = forms.ModelChoiceField(
-        queryset=models.VIPHealthMonitor.objects.all(), required=False, label="Healt Monitor", to_field_name="slug"
+        queryset=models.HealthMonitor.objects.all(), required=False, label="Healt Monitor", to_field_name="slug"
     )
 
     class Meta:

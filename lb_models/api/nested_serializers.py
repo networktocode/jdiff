@@ -7,7 +7,7 @@ from nautobot.ipam.api import nested_serializers as ipam_nested_serializers
 from lb_models import models
 
 
-class VIPHealthMonitorNestedSerializer(WritableNestedSerializer):
+class HealthMonitorNestedSerializer(WritableNestedSerializer):
     """Health Monitor Nested Serializer."""
 
     monitor = serializers.CharField(source="name")
@@ -15,7 +15,7 @@ class VIPHealthMonitorNestedSerializer(WritableNestedSerializer):
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPHealthMonitor
+        model = models.HealthMonitor
         fields = ["monitor"]
 
 
@@ -23,7 +23,7 @@ class VIPPoolMemberNestedSerializer(WritableNestedSerializer):
     """VIP Pool Member Nested Serializer."""
 
     member = serializers.CharField(source="name")
-    monitor = VIPHealthMonitorNestedSerializer()
+    monitor = HealthMonitorNestedSerializer()
     address = ipam_nested_serializers.NestedIPAddressSerializer()
 
     class Meta:
@@ -38,7 +38,7 @@ class VIPPoolNestedSerializer(WritableNestedSerializer):
 
     pool = serializers.CharField(source="name")
     member = VIPPoolMemberNestedSerializer()
-    monitor = VIPHealthMonitorNestedSerializer()
+    monitor = HealthMonitorNestedSerializer()
 
     class Meta:
         """Meta attributes."""

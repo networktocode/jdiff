@@ -52,7 +52,6 @@ class CertificateFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             | Q(subject_pub_key_algorithm__icontains=value)
             | Q(certificate__icontains=value)
             | Q(certificate_key__icontains=value)
-
         )
         return queryset.filter(qs_filter)
 
@@ -101,8 +100,8 @@ class VIPPoolMemberFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         return queryset.filter(qs_filter)
 
 
-class VIPHealthMonitorFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
-    """Filter for VIPHealthMonitor."""
+class HealthMonitorFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
+    """Filter for HealthMonitor."""
 
     q = django_filters.CharFilter(
         method="search",
@@ -112,8 +111,21 @@ class VIPHealthMonitorFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
     class Meta:
         """Meta attributes for filter."""
 
-        model = models.VIPHealthMonitor
-        fields = ["q", "slug", "name", "description", "type", "url", "send", "receive", "code", "string"]
+        model = models.HealthMonitor
+        fields = [
+            "q",
+            "slug",
+            "name",
+            "description",
+            "type",
+            "lrtm",
+            "secure",
+            "url",
+            "send",
+            "code",
+            "receive",
+            "httprequest",
+        ]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
         """Perform the filtered search."""
@@ -126,6 +138,7 @@ class VIPHealthMonitorFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             | Q(url__icontains=value)
             | Q(send__icontains=value)
             | Q(recevier__icontains=value)
+            | Q(httprequest__icontains=value)
         )
         return queryset.filter(qs_filter)
 
@@ -138,7 +151,7 @@ class VIPPoolFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         label="Search",
     )
     monitor = django_filters.ModelMultipleChoiceFilter(
-        queryset=models.VIPHealthMonitor.objects.all(),
+        queryset=models.HealthMonitor.objects.all(),
         label="Monitor",
     )
     member = django_filters.ModelMultipleChoiceFilter(

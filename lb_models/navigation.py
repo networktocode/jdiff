@@ -41,17 +41,17 @@ menu_items = (
         ),
     ),
     PluginMenuItem(
-        link="plugins:lb_models:viphealthmonitor_list",
-        link_text="VIP Health Monitor",
+        link="plugins:lb_models:healthmonitor_list",
+        link_text="Health Monitor",
         buttons=(
             PluginMenuButton(
-                link="plugins:lb_models:viphealthmonitor_add",
+                link="plugins:lb_models:healthmonitor_add",
                 title="Add",
                 icon_class="mdi mdi-plus-thick",
                 color=ButtonColorChoices.GREEN,
             ),
             PluginMenuButton(
-                link="plugins:lb_models:viphealthmonitor_import",
+                link="plugins:lb_models:healthmonitor_import",
                 title="Import",
                 icon_class="mdi mdi-database-import-outline",
                 color=ButtonColorChoices.BLUE,
