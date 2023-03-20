@@ -7,7 +7,7 @@ from .utils import add_blank_choice
 from lb_models import models
 
 
-class VIPCertificateForm(BootstrapMixin, forms.ModelForm):
+class CertificateForm(BootstrapMixin, forms.ModelForm):
     """VIP Certificate creation/edit form."""
 
     slug = AutoSlugField(populate_from=["serial_number"])
@@ -19,7 +19,7 @@ class VIPCertificateForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPCertificate
+        model = models.Certificate
         fields = [
             "slug",
             "issuer",
@@ -36,7 +36,7 @@ class VIPCertificateForm(BootstrapMixin, forms.ModelForm):
         ]
 
 
-class VIPCertificateFilterForm(BootstrapMixin, forms.ModelForm):
+class CertificateFilterForm(BootstrapMixin, forms.ModelForm):
     """Filter form to filter searches."""
 
     q = forms.CharField(
@@ -63,7 +63,7 @@ class VIPCertificateFilterForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPCertificate
+        model = models.Certificate
         fields = [
             "q",
             "slug",
@@ -80,26 +80,26 @@ class VIPCertificateFilterForm(BootstrapMixin, forms.ModelForm):
         ]
 
 
-class VIPCertificateBulkEditForm(BootstrapMixin, BulkEditForm):
+class CertificateBulkEditForm(BootstrapMixin, BulkEditForm):
     """VIP Certificate bulk edit form."""
 
-    pk = forms.ModelChoiceField(queryset=models.VIPCertificate.objects.all(), widget=forms.MultipleHiddenInput)
+    pk = forms.ModelChoiceField(queryset=models.Certificate.objects.all(), widget=forms.MultipleHiddenInput)
     issuer = forms.CharField(required=False)
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPCertificate
+        model = models.Certificate
         nullable_fields = [
             "issuer",
         ]
 
 
-class VIPCertificateCSVForm(CSVModelForm):
+class CertificateCSVForm(CSVModelForm):
     """Form for creating bulk Team."""
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPCertificate
-        fields = models.VIPCertificate.csv_headers
+        model = models.Certificate
+        fields = models.Certificate.csv_headers

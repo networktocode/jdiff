@@ -24,7 +24,7 @@ class VIPForm(BootstrapMixin, forms.ModelForm):
     protocol = forms.ChoiceField(choices=add_blank_choice(Protocols))
     method = forms.CharField(required=False)
     certificate = forms.ModelChoiceField(
-        queryset=models.VIPCertificate.objects.all(), label="VIP Certificate", required=False
+        queryset=models.Certificate.objects.all(), label="VIP Certificate", required=False
     )
     owner = forms.CharField(required=False)
     vip_args = forms.JSONField(required=False)
@@ -74,7 +74,7 @@ class VIPFilterForm(BootstrapMixin, forms.ModelForm):
     protocol = forms.ChoiceField(choices=add_blank_choice(Protocols), required=False, label="Protocol")
     method = forms.CharField(required=False, label="Method")
     certificate = forms.ModelChoiceField(
-        queryset=models.VIPCertificate.objects.all(), required=False, label="Certificate"
+        queryset=models.Certificate.objects.all(), required=False, label="Certificate"
     )
     owner = forms.CharField(required=False, label="Owner")
 

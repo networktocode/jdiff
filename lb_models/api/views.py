@@ -5,12 +5,12 @@ from lb_models import filters, models
 from lb_models.api import serializers
 
 
-class VIPCertificateViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
+class CertificateViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
     """VIP Certificate serializer viewset."""
 
-    serializer_class = serializers.VIPCertificateSerializer
-    filterset_class = filters.VIPCertificateFilterSet
-    queryset = models.VIPCertificate.objects.all()
+    serializer_class = serializers.CertificateSerializer
+    filterset_class = filters.CertificateFilterSet
+    queryset = models.Certificate.objects.all()
 
 
 class VIPHealthMonitorViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors

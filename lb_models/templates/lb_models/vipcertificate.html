@@ -11,12 +11,12 @@
 <div class="row noprint">
 	<div class="col-sm-8 col-md-9">
 		<ol class="breadcrumb">
-			<li><a href="{% url 'plugins:lb_models:vipcertificate_list' %}">Certificate</a></li>
+			<li><a href="{% url 'plugins:lb_models:certificate_list' %}">Certificate</a></li>
 			<li>{{ object }}</li>
 		</ol>
 	</div>
 	<div class="col-sm-4 col-md-3">
-		<form action="{% url 'plugins:lb_models:vipcertificate_list' %}"
+		<form action="{% url 'plugins:lb_models:certificate_list' %}"
 			method="get">
 			<div class="input-group">
 				<input type="text" name="q" class="form-control" />
@@ -51,7 +51,7 @@
 	</li>
 	{% if perms.extras.view_objectchange %}
 	<li role="presentation" {% if active_tab == 'changelog' %} class="active" {% endif %}>
-		<a href="{% url 'plugins:lb_models:vipcertificate_changelog' slug=object.slug %}">Change Log</a>
+		<a href="{% url 'plugins:lb_models:certificate_changelog' slug=object.slug %}">Change Log</a>
 	</li>
 	{% endif %}
 </ul>

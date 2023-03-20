@@ -20,7 +20,7 @@ from .choices import CertAlgorithmChoices, Protocols
     "statuses",
     "webhooks",
 )
-class VIPCertificate(BaseModel):
+class Certificate(BaseModel):
     """VIP Certificate model implementation."""
 
     slug = AutoSlugField(populate_from="serial_number")
@@ -66,7 +66,7 @@ class VIPCertificate(BaseModel):
 
     def get_absolute_url(self):
         """Return detail view for VIP certificate."""
-        return reverse("plugins:lb_models:vipcertificate", args=[self.slug])
+        return reverse("plugins:lb_models:certificate", args=[self.slug])
 
     def to_csv(self):
         """To CSV format."""
@@ -302,7 +302,7 @@ class VIP(BaseModel):
     protocol = models.CharField(max_length=20, choices=Protocols)
     port = models.SmallIntegerField(null=True)
     method = models.CharField(max_length=50)
-    certificate = models.ForeignKey(to="VIPCertificate", on_delete=models.CASCADE)
+    certificate = models.ForeignKey(to="Certificate", on_delete=models.CASCADE)
     owner = models.CharField(max_length=50)
     vip_args = models.JSONField(blank=True, null=True)
 

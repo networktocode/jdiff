@@ -5,17 +5,17 @@ from nautobot.utilities.choices import ButtonColorChoices
 
 menu_items = (
     PluginMenuItem(
-        link="plugins:lb_models:vipcertificate_list",
-        link_text="VIP Certificates",
+        link="plugins:lb_models:certificate_list",
+        link_text="VIP Certificate",
         buttons=(
             PluginMenuButton(
-                link="plugins:lb_models:vipcertificate_add",
+                link="plugins:lb_models:certificate_add",
                 title="Add",
                 icon_class="mdi mdi-plus-thick",
                 color=ButtonColorChoices.GREEN,
             ),
             PluginMenuButton(
-                link="plugins:lb_models:vipcertificate_import",
+                link="plugins:lb_models:certificate_import",
                 title="Import",
                 icon_class="mdi mdi-database-import-outline",
                 color=ButtonColorChoices.BLUE,
@@ -60,7 +60,7 @@ menu_items = (
     ),
     PluginMenuItem(
         link="plugins:lb_models:vippool_list",
-        link_text="VIP Pool",
+        link_text="VIP Pool ServiceGroup",
         buttons=(
             PluginMenuButton(
                 link="plugins:lb_models:vippool_add",

@@ -21,6 +21,9 @@ class VIPPoolForm(BootstrapMixin, forms.ModelForm):
 
         model = models.VIPPool
         fields = ["slug", "name", "description", "monitor", "member"]
+        labels = {
+            "name": "ServiceGroup Name"
+        }
 
 
 class VIPPoolFilterForm(BootstrapMixin, forms.ModelForm):

@@ -5,8 +5,8 @@ from django.db.models import Q
 from lb_models import models
 
 
-class VIPCertificateFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
-    """Filter for VIPCertificate."""
+class CertificateFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
+    """Filter for Certificate."""
 
     q = django_filters.CharFilter(
         method="search",
@@ -16,7 +16,7 @@ class VIPCertificateFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
     class Meta:
         """Meta attributes for filter."""
 
-        model = models.VIPCertificate
+        model = models.Certificate
         fields = [
             "q",
             "slug",

@@ -7,21 +7,21 @@ from lb_models.views import certificate, poolmember, healthmonitor, pool, vip
 
 # Order is important for these URLs to work (add/delete/edit) to be before any that require uuid/slug
 urlpatterns = [
-    path("certificate/", certificate.VIPCertificateListView.as_view(), name="vipcertificate_list"),
-    path("certificate/add/", certificate.VIPCertificateCreateView.as_view(), name="vipcertificate_add"),
-    path("certificate/import/", certificate.VIPCertificateBulkImportView.as_view(), name="vipcertificate_import"),
-    path("certificate/delete/", certificate.VIPCertificateBulkDeleteView.as_view(), name="vipcertificate_bulk_delete"),
-    path("certificate/edit/", certificate.VIPCertificateBulkEditView.as_view(), name="vipcertificate_bulk_edit"),
-    path("certificate/<slug:slug>/", certificate.VIPCertificateView.as_view(), name="vipcertificate"),
+    path("certificate/", certificate.CertificateListView.as_view(), name="certificate_list"),
+    path("certificate/add/", certificate.CertificateCreateView.as_view(), name="certificate_add"),
+    path("certificate/import/", certificate.CertificateBulkImportView.as_view(), name="certificate_import"),
+    path("certificate/delete/", certificate.CertificateBulkDeleteView.as_view(), name="certificate_bulk_delete"),
+    path("certificate/edit/", certificate.CertificateBulkEditView.as_view(), name="certificate_bulk_edit"),
+    path("certificate/<slug:slug>/", certificate.CertificateView.as_view(), name="certificate"),
     path(
-        "certificate/<slug:slug>/delete/", certificate.VIPCertificateDeleteView.as_view(), name="vipcertificate_delete"
+        "certificate/<slug:slug>/delete/", certificate.CertificateDeleteView.as_view(), name="certificate_delete"
     ),
-    path("certificate/<slug:slug>/edit/", certificate.VIPCertificateEditView.as_view(), name="vipcertificate_edit"),
+    path("certificate/<slug:slug>/edit/", certificate.CertificateEditView.as_view(), name="certificate_edit"),
     path(
         "certificate/<slug:slug>/changelog/",
         ObjectChangeLogView.as_view(),
-        name="vipcertificate_changelog",
-        kwargs={"model": models.VIPCertificate},
+        name="certificate_changelog",
+        kwargs={"model": models.Certificate},
     ),
     path("poolmember/", poolmember.VIPPoolMemberListView.as_view(), name="vippoolmember_list"),
     path("poolmember/add/", poolmember.VIPPoolMemberCreateView.as_view(), name="vippoolmember_add"),

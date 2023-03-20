@@ -47,7 +47,7 @@ class VIPPoolNestedSerializer(WritableNestedSerializer):
         fields = ["pool", "member", "monitor"]
 
 
-class VIPCertificateNestedSerializer(WritableNestedSerializer):
+class CertificateNestedSerializer(WritableNestedSerializer):
     """VIP Certificate Nested Serializer."""
 
     certificate = serializers.CharField(source="serial_number")
@@ -55,5 +55,5 @@ class VIPCertificateNestedSerializer(WritableNestedSerializer):
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPCertificate
+        model = models.Certificate
         fields = ["certificate"]

@@ -9,13 +9,13 @@ from nautobot.dcim.api import nested_serializers as dcim_nested_serializers
 from nautobot.ipam.api import nested_serializers as ipam_nested_serializers
 
 
-class VIPCertificateSerializer(ValidatedModelSerializer):
+class CertificateSerializer(ValidatedModelSerializer):
     """VIP Certificate Serializer."""
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPCertificate
+        model = models.Certificate
         fields = "__all__"
 
 
@@ -64,7 +64,7 @@ class VIPSerializer(ValidatedModelSerializer):
     pool = nested_serializers.VIPPoolNestedSerializer()
     vlan = ipam_nested_serializers.NestedVLANSerializer()
     vrf = ipam_nested_serializers.NestedVRFSerializer()
-    certificate = nested_serializers.VIPCertificateNestedSerializer()
+    certificate = nested_serializers.CertificateNestedSerializer()
 
     class Meta:
         """Meta attributes."""

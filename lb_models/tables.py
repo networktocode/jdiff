@@ -7,13 +7,13 @@ from nautobot.utilities.tables import BaseTable, ButtonsColumn, ToggleColumn
 from lb_models import models
 
 
-class VIPCertificateTable(BaseTable):
+class CertificateTable(BaseTable):
     # pylint: disable=R0903
     """Table for list view."""
 
     pk = ToggleColumn()
     actions = ButtonsColumn(
-        models.VIPCertificate,
+        models.Certificate,
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
@@ -22,7 +22,7 @@ class VIPCertificateTable(BaseTable):
     class Meta(BaseTable.Meta):
         """Meta attributes."""
 
-        model = models.VIPCertificate
+        model = models.Certificate
         fields = (
             "issuer",
             "version_number",
