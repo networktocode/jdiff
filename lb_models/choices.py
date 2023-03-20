@@ -53,3 +53,24 @@ class HealthMonitorTypes(ChoiceSet):
         # (UDP_ECV, "UDP-ECV"),
         # (LDAP, "LDAP"),
     )
+
+class ServiceGroupTypes(ChoiceSet):
+    """Valid choices for ServiceGroup."""
+
+    TCP = "TCP"
+    UDP = "UDP"
+    HTTP = "HTTP"
+    SSL = "SSL"
+    SSL_BRIDGE = "SSL-BRIDGE"
+    SSL_TCP = "SSL-TCP"
+    ANY = "ANY"
+
+    CHOICES = (
+        (TCP, "TCP"),
+        (UDP, "UDP"),
+        (HTTP, "HTTP"),
+        (SSL, "SSL"),
+        (SSL_BRIDGE, "SSL-BRIDGE"),
+        (SSL_TCP, "SSL_TCP"),
+        (ANY, "ANY"),
+    )

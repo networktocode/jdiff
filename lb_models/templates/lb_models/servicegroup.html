@@ -11,12 +11,12 @@
 <div class="row noprint">
 	<div class="col-sm-8 col-md-9">
 		<ol class="breadcrumb">
-			<li><a href="{% url 'plugins:lb_models:vippoolmember_list' %}">VIP Pool Member</a></li>
+			<li><a href="{% url 'plugins:lb_models:servicegroup_list' %}">Service Group ServiceGroup</a></li>
 			<li>{{ object }}</li>
 		</ol>
 	</div>
 	<div class="col-sm-4 col-md-3">
-		<form action="{% url 'plugins:lb_models:vippoolmember_list' %}"
+		<form action="{% url 'plugins:lb_models:servicegroup_list' %}"
 			method="get">
 			<div class="input-group">
 				<input type="text" name="q" class="form-control" />
@@ -47,11 +47,11 @@
 </div>
 <ul class="nav nav-tabs">
 	<li role="presentation" {% if not active_tab %} class="active" {% endif %}>
-		<a href="{{ object.get_absolute_url }}">VIP Pool Member</a>
+		<a href="{{ object.get_absolute_url }}">Service Group</a>
 	</li>
 	{% if perms.extras.view_objectchange %}
 	<li role="presentation" {% if active_tab == 'changelog' %} class="active" {% endif %}>
-		<a href="{% url 'plugins:lb_models:vippoolmember_changelog' slug=object.slug %}">Change Log</a>
+		<a href="{% url 'plugins:lb_models:servicegroup_changelog' slug=object.slug %}">Change Log</a>
 	</li>
 	{% endif %}
 </ul>
@@ -62,7 +62,7 @@
 	<div class="col-md-4">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<strong>VIP Pool Member</strong>
+				<strong>Service Group</strong>
 			</div>
 			<table class="table table-hover panel-body attr-table">
 				<tr>
@@ -72,7 +72,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td>Name</td>
+					<td>ServiceGroup Name</td>
 					<td>
 						{{ object.name }}
 					</td>
@@ -84,39 +84,33 @@
 					</td>
 				</tr>
 				<tr>
-					<td>Protocol</td>
-					<td>
-						{{ object.protocol }}
-					</td>
-				</tr>
-				<tr>
-					<td>Port</td>
-					<td>
-						{{ object.port }}
-					</td>
-				</tr>
-				<tr>
-					<td>Address</td>
-					<td>
-						{{ object.address }}
-					</td>
-				</tr>
-				<tr>
-					<td>FQDN</td>
-					<td>
-						{{ object.fqdn }}
-					</td>
-				</tr>
-				<tr>
 					<td>Monitor</td>
 					<td>
 						{{ object.monitor }}
 					</td>
 				</tr>
 				<tr>
-					<td>Member Arguments</td>
+					<td>Member</td>
 					<td>
-						{{ object.member_args }}
+						{{ object.member }}
+					</td>
+				</tr>
+				<tr>
+					<td>Type</td>
+					<td>
+						{{ object.type }}
+					</td>
+				</tr>
+				<tr>
+					<td>TD</td>
+					<td>
+						{{ object.td }}
+					</td>
+				</tr>
+				<tr>
+					<td>SSL Profile</td>
+					<td>
+						{{ object.sslprofile }}
 					</td>
 				</tr>
 			</table>

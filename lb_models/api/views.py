@@ -21,25 +21,25 @@ class HealthMonitorViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
     queryset = models.HealthMonitor.objects.all()
 
 
-class VIPPoolMemberViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
-    """VIP Pool Member viewset."""
+class ServiceGroupBindingViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
+    """Service Group Member viewset."""
 
-    serializer_class = serializers.VIPPoolMemberSerializer
-    filterset_class = filters.VIPPoolMemberFilterSet
-    queryset = models.VIPPoolMember.objects.all()
-
-
-class VIPPoolViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
-    """VIP Pool viewset."""
-
-    serializer_class = serializers.VIPPoolSerializer
-    filterset_class = filters.VIPPoolFilterSet
-    queryset = models.VIPPool.objects.all()
+    serializer_class = serializers.ServiceGroupBindingSerializer
+    filterset_class = filters.ServiceGroupBindingFilterSet
+    queryset = models.ServiceGroupBinding.objects.all()
 
 
-class VIPViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
-    """VIP viewset."""
+class ServiceGroupViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
+    """Service Group viewset."""
 
-    serializer_class = serializers.VIPSerializer
-    filterset_class = filters.VIPFilterSet
-    queryset = models.VIP.objects.all()
+    serializer_class = serializers.ServiceGroupSerializer
+    filterset_class = filters.ServiceGroupFilterSet
+    queryset = models.ServiceGroup.objects.all()
+
+
+class vserverViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
+    """vserver viewset."""
+
+    serializer_class = serializers.vserverSerializer
+    filterset_class = filters.vserverFilterSet
+    queryset = models.vserver.objects.all()

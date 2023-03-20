@@ -19,8 +19,8 @@ class HealthMonitorNestedSerializer(WritableNestedSerializer):
         fields = ["monitor"]
 
 
-class VIPPoolMemberNestedSerializer(WritableNestedSerializer):
-    """VIP Pool Member Nested Serializer."""
+class ServiceGroupBindingNestedSerializer(WritableNestedSerializer):
+    """Service Group Member Nested Serializer."""
 
     member = serializers.CharField(source="name")
     monitor = HealthMonitorNestedSerializer()
@@ -29,21 +29,21 @@ class VIPPoolMemberNestedSerializer(WritableNestedSerializer):
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPPoolMember
+        model = models.ServiceGroupBinding
         fields = ["member", "monitor", "address"]
 
 
-class VIPPoolNestedSerializer(WritableNestedSerializer):
-    """VIP Pool Nested Serializer."""
+class ServiceGroupNestedSerializer(WritableNestedSerializer):
+    """Service Group Nested Serializer."""
 
     pool = serializers.CharField(source="name")
-    member = VIPPoolMemberNestedSerializer()
+    member = ServiceGroupBindingNestedSerializer()
     monitor = HealthMonitorNestedSerializer()
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPPool
+        model = models.ServiceGroup
         fields = ["pool", "member", "monitor"]
 
 

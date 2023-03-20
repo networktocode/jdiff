@@ -56,22 +56,22 @@ class CertificateFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         return queryset.filter(qs_filter)
 
 
-class VIPPoolMemberFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
-    """Filter for VIPPoolMember."""
+class ServiceGroupBindingFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
+    """Filter for ServiceGroupBinding."""
 
     q = django_filters.CharFilter(
         method="search",
         label="Search",
     )
     monitor = django_filters.ModelMultipleChoiceFilter(
-        queryset=models.VIPPoolMember.objects.all(),
+        queryset=models.ServiceGroupBinding.objects.all(),
         label="Monitor",
     )
 
     class Meta:
         """Meta attributes for filter."""
 
-        model = models.VIPPoolMember
+        model = models.ServiceGroupBinding
         fields = [
             "q",
             "slug",
@@ -143,8 +143,8 @@ class HealthMonitorFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         return queryset.filter(qs_filter)
 
 
-class VIPPoolFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
-    """Filter for VIP Pool."""
+class ServiceGroupFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
+    """Filter for Service Group."""
 
     q = django_filters.CharFilter(
         method="search",
@@ -155,15 +155,15 @@ class VIPPoolFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         label="Monitor",
     )
     member = django_filters.ModelMultipleChoiceFilter(
-        queryset=models.VIPPoolMember.objects.all(),
+        queryset=models.ServiceGroupBinding.objects.all(),
         label="Member",
     )
 
     class Meta:
         """Meta attributes for filter."""
 
-        model = models.VIPPool
-        fields = ["q", "slug", "name", "description", "monitor", "member"]
+        model = models.ServiceGroup
+        fields = ["q", "slug", "name", "description", "monitor", "member", "type", "td", "sslprofile"]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
         """Perform the filtered search."""
@@ -174,12 +174,15 @@ class VIPPoolFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             | Q(description__icontains=value)
             | Q(monitor__icontains=value)
             | Q(member__icontains=value)
+            | Q(type__icontains=value)
+            | Q(td__icontains=value)
+            | Q(sslprofile__icontains=value)
         )
         return queryset.filter(qs_filter)
 
 
-class VIPFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
-    """Filter for VIP."""
+class vserverFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
+    """Filter for vserver."""
 
     q = django_filters.CharFilter(
         method="search",
@@ -189,7 +192,7 @@ class VIPFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
     class Meta:
         """Meta attributes for filter."""
 
-        model = models.VIP
+        model = models.vserver
         fields = [
             "slug",
             "name",

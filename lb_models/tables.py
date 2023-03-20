@@ -42,13 +42,13 @@ class CertificateTable(BaseTable):
         )
 
 
-class VIPPoolMemberTable(BaseTable):
+class ServiceGroupBindingTable(BaseTable):
     # pylint: disable=R0903
     """Table for list view."""
 
     pk = ToggleColumn()
     actions = ButtonsColumn(
-        models.VIPPoolMember,
+        models.ServiceGroupBinding,
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
@@ -57,7 +57,7 @@ class VIPPoolMemberTable(BaseTable):
     class Meta(BaseTable.Meta):
         """Meta attributes."""
 
-        model = models.VIPPoolMember
+        model = models.ServiceGroupBinding
         fields = (
             "slug",
             "name",
@@ -67,7 +67,6 @@ class VIPPoolMemberTable(BaseTable):
             "address",
             "fqdn",
             "monitor",
-            "member_args",
         )
 
 
@@ -91,22 +90,24 @@ class HealthMonitorTable(BaseTable):
             "slug",
             "name",
             "description",
-            "address",
             "type",
+            "lrtm",
+            "secure",
             "url",
             "send",
             "code",
             "receive",
-        )
+            "httprequest",
+            )
 
 
-class VIPPoolTable(BaseTable):
+class ServiceGroupTable(BaseTable):
     # pylint: disable=R0903
     """Table for list view."""
 
     pk = ToggleColumn()
     actions = ButtonsColumn(
-        models.VIPPool,
+        models.ServiceGroup,
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
@@ -116,17 +117,17 @@ class VIPPoolTable(BaseTable):
     class Meta(BaseTable.Meta):
         """Meta attributes."""
 
-        model = models.VIPPool
-        fields = ("slug", "name", "description", "monitor", "member")
+        model = models.ServiceGroup
+        fields = ("slug", "name", "description", "monitor", "member", "type", "td", "sslprofile")
 
 
-class VIPTable(BaseTable):
+class vserverTable(BaseTable):
     # pylint: disable=R0903
     """Table for list view."""
 
     pk = ToggleColumn()
     actions = ButtonsColumn(
-        models.VIP,
+        models.vserver,
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
@@ -135,7 +136,7 @@ class VIPTable(BaseTable):
     class Meta(BaseTable.Meta):
         """Meta attributes."""
 
-        model = models.VIP
+        model = models.vserver
         fields = (
             "slug",
             "name",
@@ -152,5 +153,5 @@ class VIPTable(BaseTable):
             "method",
             "certificate",
             "owner",
-            "vip_args",
+            "vserver_args",
         )

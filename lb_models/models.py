@@ -7,7 +7,7 @@ from nautobot.core.models import BaseModel
 from django.core.validators import MaxValueValidator, MinValueValidator
 from nautobot.extras.utils import extras_features
 from nautobot.core.fields import AutoSlugField
-from .choices import CertAlgorithmChoices, Protocols, HealthMonitorTypes
+from .choices import CertAlgorithmChoices, Protocols, HealthMonitorTypes, ServiceGroupTypes
 
 
 @extras_features(
@@ -23,14 +23,14 @@ from .choices import CertAlgorithmChoices, Protocols, HealthMonitorTypes
 class Certificate(BaseModel):
     """Certificate model implementation."""
 
-    slug = AutoSlugField(populate_from="serial_number")
+    slug = AutoSlugField(populate_from="certificate")
     issuer = models.CharField(max_length=50, blank=True, null=True)
     version_number = models.CharField(max_length=50, blank=True, null=True)
     serial_number = models.CharField(max_length=30, blank=True, null=True)
-    signature = models.CharField(max_length=50, blank=True, null=True)
     certificate = models.CharField(max_length=50)
     certificate_key = models.CharField(max_length=50)
     certificate_password = models.CharField(max_length=50)
+    signature = models.CharField(max_length=50, blank=True, null=True)
     signature_algorithm = models.CharField(max_length=20, choices=CertAlgorithmChoices, blank=True, null=True)
     signature_algorithm_id = models.CharField(max_length=30, blank=True, null=True)
     start_date = models.DateField(blank=True, null=True)
@@ -113,16 +113,14 @@ class Certificate(BaseModel):
     "statuses",
     "webhooks",
 )
-class VIPPoolMember(BaseModel):
-    """VIP pool response model implementation."""
+class ServiceGroupBinding(BaseModel):
+    """Service Group response model implementation."""
 
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=100)
     protocol = models.CharField(max_length=20, choices=Protocols)
-    port = models.PositiveIntegerField(
-        blank=True, null=True, validators=[MaxValueValidator(65535), MinValueValidator(1)]
-    )
+    port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(1)])
     address = models.ForeignKey(
         to="ipam.IPAddress",
         on_delete=models.CASCADE,
@@ -132,7 +130,6 @@ class VIPPoolMember(BaseModel):
     )
     fqdn = models.CharField(max_length=200)
     monitor = models.ForeignKey(to="HealthMonitor", on_delete=models.PROTECT)
-    member_args = models.JSONField(blank=True, null=True)
 
     csv_headers = [
         "slug",
@@ -143,18 +140,12 @@ class VIPPoolMember(BaseModel):
         "address",
         "fqdn",
         "monitor",
-        "member_args",
     ]
-    clone_fields = ["slug", "name", "protocol", "port", "monitor", "member_args"]
-
-    def clean(self):
-        """JSON Schema enforcement for member_args"""
-        # TBD
-        pass
+    clone_fields = ["slug", "name", "protocol", "port", "monitor"]
 
     def get_absolute_url(self):
-        """Return detail view for VIP pool memeber."""
-        return reverse("plugins:lb_models:vippoolmember", args=[self.slug])
+        """Return detail view for Service Group memeber."""
+        return reverse("plugins:lb_models:servicegroupbinding", args=[self.slug])
 
     def to_csv(self):
         """To CSV format."""
@@ -167,7 +158,6 @@ class VIPPoolMember(BaseModel):
             self.address,
             self.fqdn,
             self.monitor,
-            self.member_args,
         )
 
     def __str__(self):
@@ -186,7 +176,7 @@ class VIPPoolMember(BaseModel):
     "webhooks",
 )
 class HealthMonitor(BaseModel):
-    """VIP pool response model implementation."""
+    """Service Group response model implementation."""
 
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50, unique=True)
@@ -262,25 +252,28 @@ class HealthMonitor(BaseModel):
     "statuses",
     "webhooks",
 )
-class VIPPool(BaseModel):
-    """VIP pool model implementation."""
+class ServiceGroup(BaseModel):
+    """Service Group model implementation."""
 
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=50)
+    description = models.CharField(max_length=50, blank=True, null=True)
     monitor = models.ForeignKey(to="HealthMonitor", on_delete=models.PROTECT)
-    member = models.ForeignKey(to="VIPPoolMember", on_delete=models.PROTECT)
+    member = models.ForeignKey(to="ServiceGroupBinding", on_delete=models.PROTECT)
+    type = models.CharField(max_length=20, choices=ServiceGroupTypes)
+    td = models.SmallIntegerField()
+    sslprofile = models.CharField(max_length=50)
 
-    csv_headers = ["slug", "name", "description", "monitor", "member"]
-    clone_fields = ["slug", "name", "description", "monitor", "member"]
+    csv_headers = ["slug", "name", "description", "monitor", "member", "type", "td", "sslprofile"]
+    clone_fields = ["slug", "name", "description", "monitor", "member", "type", "td", "sslprofile"]
 
     def get_absolute_url(self):
-        """Return detail view for VIP pool memeber."""
-        return reverse("plugins:lb_models:vippool", args=[self.slug])
+        """Return detail view for Service Group memeber."""
+        return reverse("plugins:lb_models:servicegroup", args=[self.slug])
 
     def to_csv(self):
         """To CSV format."""
-        return (self.slug, self.name, self.description, self.monitor, self.member)
+        return (self.slug, self.name, self.description, self.monitor, self.member, self.type, self.td, self.sslprofile)
 
     def __str__(self):
         """Stringify instance."""
@@ -297,8 +290,8 @@ class VIPPool(BaseModel):
     "statuses",
     "webhooks",
 )
-class VIP(BaseModel):
-    """VIP implementation."""
+class vserver(BaseModel):
+    """vserver implementation."""
 
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50)
@@ -325,7 +318,7 @@ class VIP(BaseModel):
         null=True,
     )
 
-    pool = models.ForeignKey(to="VIPPool", on_delete=models.PROTECT)
+    pool = models.ForeignKey(to="ServiceGroup", on_delete=models.PROTECT)
     vlan = models.ForeignKey(
         to="ipam.vlan",
         on_delete=models.PROTECT,
@@ -342,11 +335,10 @@ class VIP(BaseModel):
     )
     fqdn = models.CharField(max_length=200)
     protocol = models.CharField(max_length=20, choices=Protocols)
-    port = models.SmallIntegerField(null=True)
+    port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(1)])
     method = models.CharField(max_length=50)
     certificate = models.ForeignKey(to="Certificate", on_delete=models.CASCADE)
     owner = models.CharField(max_length=50)
-    vip_args = models.JSONField(blank=True, null=True)
 
     csv_headers = [
         "slug",
@@ -364,7 +356,6 @@ class VIP(BaseModel):
         "method",
         "certificate",
         "owner",
-        "vip_args",
     ]
     clone_fields = [
         "slug",
@@ -377,12 +368,11 @@ class VIP(BaseModel):
         "method",
         "certificate",
         "owner",
-        "vip_args",
     ]
 
     def get_absolute_url(self):
-        """Return detail view for VIP."""
-        return reverse("plugins:lb_models:vip", args=[self.slug])
+        """Return detail view for vserver."""
+        return reverse("plugins:lb_models:vserver", args=[self.slug])
 
     def to_csv(self):
         """To CSV format."""
@@ -402,11 +392,11 @@ class VIP(BaseModel):
             self.method,
             self.certificate,
             self.owner,
-            self.vip_args,
+            self.vserver_args,
         )
 
     def clean(self):
-        """JSON Schema enforcement for vip_args"""
+        """JSON Schema enforcement for vserver_args"""
         # TBD
         pass
 

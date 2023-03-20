@@ -48,9 +48,9 @@ class HealthMonitorFilterForm(BootstrapMixin, forms.ModelForm):
     url = forms.URLField(required=False, label="URL")
     send = forms.CharField(required=False, label="Send")
     string = forms.CharField(required=False, label="String")
-    code = forms.IntegerField(required=False, label="Code")
+    code = forms.IntegerField(label="Code")
     receive = forms.CharField(required=False, label="Receive")
-    httprequest = forms.CharField(required=False, label="HTTP Request")
+    httprequest = forms.CharField(label="HTTP Request")
 
     class Meta:
         """Meta attributes."""

@@ -11,12 +11,12 @@
 <div class="row noprint">
 	<div class="col-sm-8 col-md-9">
 		<ol class="breadcrumb">
-			<li><a href="{% url 'plugins:lb_models:vip_list' %}">VIP</a></li>
+			<li><a href="{% url 'plugins:lb_models:vserver_list' %}">vserver</a></li>
 			<li>{{ object }}</li>
 		</ol>
 	</div>
 	<div class="col-sm-4 col-md-3">
-		<form action="{% url 'plugins:lb_models:vip_list' %}"
+		<form action="{% url 'plugins:lb_models:vserver_list' %}"
 			method="get">
 			<div class="input-group">
 				<input type="text" name="q" class="form-control" />
@@ -47,11 +47,11 @@
 </div>
 <ul class="nav nav-tabs">
 	<li role="presentation" {% if not active_tab %} class="active" {% endif %}>
-		<a href="{{ object.get_absolute_url }}">VIP</a>
+		<a href="{{ object.get_absolute_url }}">vserver</a>
 	</li>
 	{% if perms.extras.view_objectchange %}
 	<li role="presentation" {% if active_tab == 'changelog' %} class="active" {% endif %}>
-		<a href="{% url 'plugins:lb_models:vip_changelog' slug=object.slug %}">Change Log</a>
+		<a href="{% url 'plugins:lb_models:vserver_changelog' slug=object.slug %}">Change Log</a>
 	</li>
 	{% endif %}
 </ul>
@@ -62,7 +62,7 @@
 	<div class="col-md-4">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<strong>VIP</strong>
+				<strong>vserver</strong>
 			</div>
 			<table class="table table-hover panel-body attr-table">
 				<tr>
@@ -156,9 +156,9 @@
 					</td>
 				</tr>
 				<tr>
-					<td>VIP Arguments</td>
+					<td>vserver Arguments</td>
 					<td>
-						{{ object.vip_args }}
+						{{ object.vserver_args }}
 					</td>
 				</tr>
 			</table>

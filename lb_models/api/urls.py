@@ -7,9 +7,9 @@ from lb_models.api import views
 router = OrderedDefaultRouter()
 router.register("certificate", views.CertificateViewSet)
 router.register("healthmonitor", views.HealthMonitorViewSet)
-router.register("vippoolmember", views.VIPPoolMemberViewSet)
-router.register("vippool", views.VIPPoolViewSet)
-router.register("vip", views.VIPViewSet)
+router.register("servicegroupbinding", views.ServiceGroupBindingViewSet)
+router.register("servicegroup", views.ServiceGroupViewSet)
+router.register("vserver", views.vserverViewSet)
 
 
 app_name = "lb_models-api"

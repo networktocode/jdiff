@@ -9,15 +9,15 @@ from ..choices import Protocols
 from .utils import add_blank_choice
 
 
-class VIPForm(BootstrapMixin, forms.ModelForm):
-    """VIP creation/edit form."""
+class vserverForm(BootstrapMixin, forms.ModelForm):
+    """vserver creation/edit form."""
 
     slug = AutoSlugField(populate_from=["name"])
     description = forms.CharField(required=False)
     device = forms.ModelChoiceField(queryset=Device.objects.all(), label="Device")
     interface = forms.ModelChoiceField(queryset=Interface.objects.all(), label="Interface")
     address = forms.ModelChoiceField(queryset=IPAddress.objects.all(), label="IPv4 Address")
-    pool = forms.ModelChoiceField(queryset=models.VIPPool.objects.all(), label="VIP Pool")
+    pool = forms.ModelChoiceField(queryset=models.ServiceGroup.objects.all(), label="Service Group")
     vlan = forms.ModelChoiceField(queryset=VLAN.objects.all(), label="VLAN", required=False)
     vrf = forms.ModelChoiceField(queryset=VRF.objects.all(), label="VRF", required=False)
     fqdn = forms.CharField(required=False)
@@ -25,12 +25,12 @@ class VIPForm(BootstrapMixin, forms.ModelForm):
     method = forms.CharField(required=False)
     certificate = forms.ModelChoiceField(queryset=models.Certificate.objects.all(), label="Certificate", required=False)
     owner = forms.CharField(required=False)
-    vip_args = forms.JSONField(required=False)
+    vserver_args = forms.JSONField(required=False)
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIP
+        model = models.vserver
         fields = [
             "slug",
             "name",
@@ -47,11 +47,11 @@ class VIPForm(BootstrapMixin, forms.ModelForm):
             "method",
             "certificate",
             "owner",
-            "vip_args",
+            "vserver_args",
         ]
 
 
-class VIPFilterForm(BootstrapMixin, forms.ModelForm):
+class vserverFilterForm(BootstrapMixin, forms.ModelForm):
     """Filter form to filter searches."""
 
     q = forms.CharField(
@@ -65,7 +65,7 @@ class VIPFilterForm(BootstrapMixin, forms.ModelForm):
     port = forms.IntegerField(required=False, label="Port")
     device = forms.ModelChoiceField(queryset=Device.objects.all(), label="Device", required=False)
     address = forms.ModelChoiceField(queryset=IPAddress.objects.all(), label="IP Address", required=False)
-    pool = forms.ModelChoiceField(queryset=models.VIPPool.objects.all(), label="VIP Pool", required=False)
+    pool = forms.ModelChoiceField(queryset=models.ServiceGroup.objects.all(), label="Service Group", required=False)
     vlan = forms.ModelChoiceField(queryset=VLAN.objects.all(), label="VLAN", required=False)
     vrf = forms.ModelChoiceField(queryset=VRF.objects.all(), label="VRF", required=False)
     fqdn = forms.CharField(required=False, label="FQDN")
@@ -77,7 +77,7 @@ class VIPFilterForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         """Meta attributes."""
 
-        model = models.VIP
+        model = models.vserver
         fields = [
             "q",
             "slug",
@@ -97,26 +97,26 @@ class VIPFilterForm(BootstrapMixin, forms.ModelForm):
         ]
 
 
-class VIPBulkEditForm(BootstrapMixin, BulkEditForm):
-    """VIP bulk edit form."""
+class vserverBulkEditForm(BootstrapMixin, BulkEditForm):
+    """vserver bulk edit form."""
 
-    pk = forms.ModelChoiceField(queryset=models.VIP.objects.all(), widget=forms.MultipleHiddenInput)
+    pk = forms.ModelChoiceField(queryset=models.vserver.objects.all(), widget=forms.MultipleHiddenInput)
     name = forms.CharField(required=False)
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPPool
+        model = models.ServiceGroup
         nullable_fields = [
             "name",
         ]
 
 
-class VIPCSVForm(CSVModelForm):
+class vserverCSVForm(CSVModelForm):
     """Form for creating bulk Team."""
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIP
-        fields = models.VIP.csv_headers
+        model = models.vserver
+        fields = models.vserver.csv_headers

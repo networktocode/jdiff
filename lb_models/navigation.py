@@ -23,17 +23,17 @@ menu_items = (
         ),
     ),
     PluginMenuItem(
-        link="plugins:lb_models:vippoolmember_list",
-        link_text="VIP Poll Member",
+        link="plugins:lb_models:servicegroupbinding_list",
+        link_text="Service Group Binding",
         buttons=(
             PluginMenuButton(
-                link="plugins:lb_models:vippoolmember_add",
+                link="plugins:lb_models:servicegroupbinding_add",
                 title="Add",
                 icon_class="mdi mdi-plus-thick",
                 color=ButtonColorChoices.GREEN,
             ),
             PluginMenuButton(
-                link="plugins:lb_models:vippoolmember_import",
+                link="plugins:lb_models:servicegroupbinding_import",
                 title="Import",
                 icon_class="mdi mdi-database-import-outline",
                 color=ButtonColorChoices.BLUE,
@@ -59,17 +59,17 @@ menu_items = (
         ),
     ),
     PluginMenuItem(
-        link="plugins:lb_models:vippool_list",
-        link_text="VIP Pool ServiceGroup",
+        link="plugins:lb_models:servicegroup_list",
+        link_text="Service Group",
         buttons=(
             PluginMenuButton(
-                link="plugins:lb_models:vippool_add",
+                link="plugins:lb_models:servicegroup_add",
                 title="Add",
                 icon_class="mdi mdi-plus-thick",
                 color=ButtonColorChoices.GREEN,
             ),
             PluginMenuButton(
-                link="plugins:lb_models:vippool_import",
+                link="plugins:lb_models:servicegroup_import",
                 title="Import",
                 icon_class="mdi mdi-database-import-outline",
                 color=ButtonColorChoices.BLUE,
@@ -77,17 +77,17 @@ menu_items = (
         ),
     ),
     PluginMenuItem(
-        link="plugins:lb_models:vip_list",
-        link_text="VIP",
+        link="plugins:lb_models:vserver_list",
+        link_text="vserver",
         buttons=(
             PluginMenuButton(
-                link="plugins:lb_models:vip_add",
+                link="plugins:lb_models:vserver_add",
                 title="Add",
                 icon_class="mdi mdi-plus-thick",
                 color=ButtonColorChoices.GREEN,
             ),
             PluginMenuButton(
-                link="plugins:lb_models:vip_import",
+                link="plugins:lb_models:vserver_import",
                 title="Import",
                 icon_class="mdi mdi-database-import-outline",
                 color=ButtonColorChoices.BLUE,
