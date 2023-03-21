@@ -78,7 +78,7 @@ menu_items = (
     ),
     PluginMenuItem(
         link="plugins:lb_models:vserver_list",
-        link_text="vserver",
+        link_text="Vserver",
         buttons=(
             PluginMenuButton(
                 link="plugins:lb_models:vserver_add",
@@ -88,6 +88,24 @@ menu_items = (
             ),
             PluginMenuButton(
                 link="plugins:lb_models:vserver_import",
+                title="Import",
+                icon_class="mdi mdi-database-import-outline",
+                color=ButtonColorChoices.BLUE,
+            ),
+        ),
+    ),
+    PluginMenuItem(
+        link="plugins:lb_models:customer_list",
+        link_text="Customer",
+        buttons=(
+            PluginMenuButton(
+                link="plugins:lb_models:customer_add",
+                title="Add",
+                icon_class="mdi mdi-plus-thick",
+                color=ButtonColorChoices.GREEN,
+            ),
+            PluginMenuButton(
+                link="plugins:lb_models:customer_import",
                 title="Import",
                 icon_class="mdi mdi-database-import-outline",
                 color=ButtonColorChoices.BLUE,

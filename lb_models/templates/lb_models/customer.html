@@ -11,12 +11,12 @@
 <div class="row noprint">
 	<div class="col-sm-8 col-md-9">
 		<ol class="breadcrumb">
-			<li><a href="{% url 'plugins:lb_models:servicegroupbinding_list' %}">Service Group Member</a></li>
+			<li><a href="{% url 'plugins:lb_models:customer_list' %}">Customer</a></li>
 			<li>{{ object }}</li>
 		</ol>
 	</div>
 	<div class="col-sm-4 col-md-3">
-		<form action="{% url 'plugins:lb_models:servicegroupbinding_list' %}"
+		<form action="{% url 'plugins:lb_models:customer_list' %}"
 			method="get">
 			<div class="input-group">
 				<input type="text" name="q" class="form-control" />
@@ -47,11 +47,11 @@
 </div>
 <ul class="nav nav-tabs">
 	<li role="presentation" {% if not active_tab %} class="active" {% endif %}>
-		<a href="{{ object.get_absolute_url }}">Service Group Member</a>
+		<a href="{{ object.get_absolute_url }}">Customer</a>
 	</li>
 	{% if perms.extras.view_objectchange %}
 	<li role="presentation" {% if active_tab == 'changelog' %} class="active" {% endif %}>
-		<a href="{% url 'plugins:lb_models:servicegroupbinding_changelog' slug=object.slug %}">Change Log</a>
+		<a href="{% url 'plugins:lb_models:customer_changelog' slug=object.slug %}">Change Log</a>
 	</li>
 	{% endif %}
 </ul>
@@ -62,7 +62,7 @@
 	<div class="col-md-4">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<strong>Service Group Member</strong>
+				<strong>customer</strong>
 			</div>
 			<table class="table table-hover panel-body attr-table">
 				<tr>
@@ -72,33 +72,21 @@
 					</td>
 				</tr>
 				<tr>
+					<td>ID</td>
+					<td>
+						{{ object.id }}
+					</td>
+				</tr>
+				<tr>
+					<td>Site</td>
+					<td>
+						{{ object.site }}
+					</td>
+				</tr>
+				<tr>
 					<td>Name</td>
 					<td>
 						{{ object.name }}
-					</td>
-				</tr>
-				<tr>
-					<td>Description</td>
-					<td>
-						{{ object.description }}
-					</td>
-				</tr>
-				<tr>
-					<td>Protocol</td>
-					<td>
-						{{ object.protocol }}
-					</td>
-				</tr>
-				<tr>
-					<td>Port</td>
-					<td>
-						{{ object.port }}
-					</td>
-				</tr>
-				<tr>
-					<td>Address</td>
-					<td>
-						{{ object.address }}
 					</td>
 				</tr>
 				<tr>
@@ -108,9 +96,33 @@
 					</td>
 				</tr>
 				<tr>
-					<td>Monitor</td>
+					<td>OE</td>
 					<td>
-						{{ object.monitor }}
+						{{ object.oe }}
+					</td>
+				</tr>
+				<tr>
+					<td>Email</td>
+					<td>
+						{{ object.email }}
+					</td>
+				</tr>
+				<tr>
+					<td>Class Type</td>
+					<td>
+						{{ object.class_type }}
+					</td>
+				</tr>
+				<tr>
+					<td>Accessibility</td>
+					<td>
+						{{ object.accessibility }}
+					</td>
+				</tr>
+				<tr>
+					<td>Test URL</td>
+					<td>
+						{{ object.test_url }}
 					</td>
 				</tr>
 			</table>

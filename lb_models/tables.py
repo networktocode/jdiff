@@ -98,7 +98,7 @@ class HealthMonitorTable(BaseTable):
             "code",
             "receive",
             "httprequest",
-            )
+        )
 
 
 class ServiceGroupTable(BaseTable):
@@ -121,13 +121,13 @@ class ServiceGroupTable(BaseTable):
         fields = ("slug", "name", "description", "monitor", "member", "type", "td", "sslprofile")
 
 
-class vserverTable(BaseTable):
+class VserverTable(BaseTable):
     # pylint: disable=R0903
     """Table for list view."""
 
     pk = ToggleColumn()
     actions = ButtonsColumn(
-        models.vserver,
+        models.Vserver,
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
@@ -136,7 +136,7 @@ class vserverTable(BaseTable):
     class Meta(BaseTable.Meta):
         """Meta attributes."""
 
-        model = models.vserver
+        model = models.Vserver
         fields = (
             "slug",
             "name",
@@ -153,5 +153,23 @@ class vserverTable(BaseTable):
             "method",
             "certificate",
             "owner",
-            "vserver_args",
         )
+
+
+class CustomerTable(BaseTable):
+    # pylint: disable=R0903
+    """Table for list view."""
+
+    pk = ToggleColumn()
+    actions = ButtonsColumn(
+        models.Vserver,
+        buttons=("changelog", "edit", "delete", "add"),
+        pk_field="slug",
+    )
+    name = tables.Column(linkify=True)
+
+    class Meta(BaseTable.Meta):
+        """Meta attributes."""
+
+        model = models.Customer
+        fields = ("slug", "id", "site", "name", "fqdn", "oe", "email", "class_type", "accessibility", "test_url")

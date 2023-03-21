@@ -30,13 +30,13 @@
 	</div>
 </div>
 <div class="pull-right noprint">
-	{% if perms.lb_models.change_dispatching %}
+	{% if perms.lb_models.change_lb_models %}
 		{% clone_button object %}
 	{% endif %}
-	{% if perms.lb_models.change_dispatching %}
+	{% if perms.lb_models.change_lb_models %}
 		{% edit_button object use_pk=1 %}
 	{% endif %}
-	{% if perms.lb_models.delete_dispatching %}
+	{% if perms.lb_models.delete_lb_models %}
 		{% delete_button object use_pk=1 %}
 	{% endif %}
 </div>

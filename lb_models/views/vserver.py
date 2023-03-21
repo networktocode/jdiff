@@ -1,67 +1,67 @@
-"""Views for vserver Calendar."""
+"""Views for Vserver Calendar."""
 from nautobot.core.views import generic
 
 from lb_models import filters, models, tables
 from lb_models.forms import vserver as forms
 
 
-class vserverView(generic.ObjectView):
+class VserverView(generic.ObjectView):
     """Detail view."""
 
-    queryset = models.vserver.objects.all()
+    queryset = models.Vserver.objects.all()
 
 
-class vserverListView(generic.ObjectListView):
+class VserverListView(generic.ObjectListView):
     """List view."""
 
-    queryset = models.vserver.objects.all()
-    filterset = filters.vserverFilterSet
-    filterset_form = forms.vserverFilterForm
-    table = tables.vserverTable
+    queryset = models.Vserver.objects.all()
+    filterset = filters.VserverFilterSet
+    filterset_form = forms.VserverFilterForm
+    table = tables.VserverTable
     action_buttons = ("import", "export", "add")
 
 
-class vserverCreateView(generic.ObjectEditView):
+class VserverCreateView(generic.ObjectEditView):
     """Create view."""
 
-    model = models.vserver
-    queryset = models.vserver.objects.all()
-    model_form = forms.vserverForm
+    model = models.Vserver
+    queryset = models.Vserver.objects.all()
+    model_form = forms.VserverForm
 
 
-class vserverDeleteView(generic.ObjectDeleteView):
+class VserverDeleteView(generic.ObjectDeleteView):
     """Delete view."""
 
-    model = models.vserver
-    queryset = models.vserver.objects.all()
+    model = models.Vserver
+    queryset = models.Vserver.objects.all()
 
 
-class vserverEditView(generic.ObjectEditView):
+class VserverEditView(generic.ObjectEditView):
     """Edit view."""
 
-    model = models.vserver
-    queryset = models.vserver.objects.all()
-    model_form = forms.vserverForm
+    model = models.Vserver
+    queryset = models.Vserver.objects.all()
+    model_form = forms.VserverForm
 
 
-class vserverBulkDeleteView(generic.BulkDeleteView):
-    """View for deleting one or more vserver records."""
+class VserverBulkDeleteView(generic.BulkDeleteView):
+    """View for deleting one or more Vserver records."""
 
-    queryset = models.vserver.objects.all()
-    table = tables.vserverTable
-
-
-class vserverBulkImportView(generic.BulkImportView):
-    """View for importing one or more vserver records."""
-
-    queryset = models.vserver.objects.all()
-    model_form = forms.vserverCSVForm
-    table = tables.vserverTable
+    queryset = models.Vserver.objects.all()
+    table = tables.VserverTable
 
 
-class vserverBulkEditView(generic.BulkEditView):
-    """View for editing one or more vserver records."""
+class VserverBulkImportView(generic.BulkImportView):
+    """View for importing one or more Vserver records."""
 
-    queryset = models.vserver.objects.all()
-    table = tables.vserverTable
-    form = forms.vserverForm
+    queryset = models.Vserver.objects.all()
+    model_form = forms.VserverCSVForm
+    table = tables.VserverTable
+
+
+class VserverBulkEditView(generic.BulkEditView):
+    """View for editing one or more Vserver records."""
+
+    queryset = models.Vserver.objects.all()
+    table = tables.VserverTable
+    form = forms.VserverForm

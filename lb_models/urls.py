@@ -3,7 +3,7 @@ from django.urls import path
 from nautobot.extras.views import ObjectChangeLogView
 
 from lb_models import models
-from lb_models.views import certificate, servicegroupbinding, healthmonitor, servicegroup, vserver
+from lb_models.views import certificate, servicegroupbinding, healthmonitor, servicegroup, vserver, customer
 
 # Order is important for these URLs to work (add/delete/edit) to be before any that require uuid/slug
 urlpatterns = [
@@ -21,14 +21,46 @@ urlpatterns = [
         name="certificate_changelog",
         kwargs={"model": models.Certificate},
     ),
-    path("servicegroupbinding/", servicegroupbinding.ServiceGroupBindingListView.as_view(), name="servicegroupbinding_list"),
-    path("servicegroupbinding/add/", servicegroupbinding.ServiceGroupBindingCreateView.as_view(), name="servicegroupbinding_add"),
-    path("servicegroupbinding/import/", servicegroupbinding.ServiceGroupBindingBulkImportView.as_view(), name="servicegroupbinding_import"),
-    path("servicegroupbinding/delete/", servicegroupbinding.ServiceGroupBindingBulkDeleteView.as_view(), name="servicegroupbinding_bulk_delete"),
-    path("servicegroupbinding/edit/", servicegroupbinding.ServiceGroupBindingBulkEditView.as_view(), name="servicegroupbinding_bulk_edit"),
-    path("servicegroupbinding/<slug:slug>/", servicegroupbinding.ServiceGroupBindingView.as_view(), name="servicegroupbinding"),
-    path("servicegroupbinding/<slug:slug>/delete/", servicegroupbinding.ServiceGroupBindingDeleteView.as_view(), name="servicegroupbinding_delete"),
-    path("servicegroupbinding/<slug:slug>/edit/", servicegroupbinding.ServiceGroupBindingEditView.as_view(), name="servicegroupbinding_edit"),
+    path(
+        "servicegroupbinding/",
+        servicegroupbinding.ServiceGroupBindingListView.as_view(),
+        name="servicegroupbinding_list",
+    ),
+    path(
+        "servicegroupbinding/add/",
+        servicegroupbinding.ServiceGroupBindingCreateView.as_view(),
+        name="servicegroupbinding_add",
+    ),
+    path(
+        "servicegroupbinding/import/",
+        servicegroupbinding.ServiceGroupBindingBulkImportView.as_view(),
+        name="servicegroupbinding_import",
+    ),
+    path(
+        "servicegroupbinding/delete/",
+        servicegroupbinding.ServiceGroupBindingBulkDeleteView.as_view(),
+        name="servicegroupbinding_bulk_delete",
+    ),
+    path(
+        "servicegroupbinding/edit/",
+        servicegroupbinding.ServiceGroupBindingBulkEditView.as_view(),
+        name="servicegroupbinding_bulk_edit",
+    ),
+    path(
+        "servicegroupbinding/<slug:slug>/",
+        servicegroupbinding.ServiceGroupBindingView.as_view(),
+        name="servicegroupbinding",
+    ),
+    path(
+        "servicegroupbinding/<slug:slug>/delete/",
+        servicegroupbinding.ServiceGroupBindingDeleteView.as_view(),
+        name="servicegroupbinding_delete",
+    ),
+    path(
+        "servicegroupbinding/<slug:slug>/edit/",
+        servicegroupbinding.ServiceGroupBindingEditView.as_view(),
+        name="servicegroupbinding_edit",
+    ),
     path(
         "servicegroupbinding/<slug:slug>/changelog/",
         ObjectChangeLogView.as_view(),
@@ -87,6 +119,20 @@ urlpatterns = [
         "vserver/<slug:slug>/changelog/",
         ObjectChangeLogView.as_view(),
         name="vserver_changelog",
-        kwargs={"model": models.vserver},
+        kwargs={"model": models.Vserver},
+    ),
+    path("customer/", customer.customerListView.as_view(), name="customer_list"),
+    path("customer/add/", customer.customerCreateView.as_view(), name="customer_add"),
+    path("customer/import/", customer.customerBulkImportView.as_view(), name="customer_import"),
+    path("customer/delete/", customer.customerBulkDeleteView.as_view(), name="customer_bulk_delete"),
+    path("customer/edit/", customer.customerBulkEditView.as_view(), name="customer_bulk_edit"),
+    path("customer/<slug:slug>/", customer.customerView.as_view(), name="customer"),
+    path("customer/<slug:slug>/delete/", customer.customerDeleteView.as_view(), name="customer_delete"),
+    path("customer/<slug:slug>/edit/", customer.customerEditView.as_view(), name="customer_edit"),
+    path(
+        "customer/<slug:slug>/changelog/",
+        ObjectChangeLogView.as_view(),
+        name="customer_changelog",
+        kwargs={"model": models.customer},
     ),
 ]

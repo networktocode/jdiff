@@ -69,5 +69,5 @@ class vserverSerializer(ValidatedModelSerializer):
     class Meta:
         """Meta attributes."""
 
-        model = models.vserver
+        model = models.Vserver
         fields = "__all__"

@@ -7,7 +7,14 @@ from nautobot.core.models import BaseModel
 from django.core.validators import MaxValueValidator, MinValueValidator
 from nautobot.extras.utils import extras_features
 from nautobot.core.fields import AutoSlugField
-from .choices import CertAlgorithmChoices, Protocols, HealthMonitorTypes, ServiceGroupTypes
+from .choices import (
+    CertAlgorithmChoices,
+    Protocols,
+    HealthMonitorTypes,
+    ServiceGroupTypes,
+    ApplicationClassTypes,
+    ApplicationAccessibility,
+)
 
 
 @extras_features(
@@ -290,8 +297,8 @@ class ServiceGroup(BaseModel):
     "statuses",
     "webhooks",
 )
-class vserver(BaseModel):
-    """vserver implementation."""
+class Vserver(BaseModel):
+    """Vserver implementation."""
 
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50)
@@ -392,14 +399,65 @@ class vserver(BaseModel):
             self.method,
             self.certificate,
             self.owner,
-            self.vserver_args,
         )
-
-    def clean(self):
-        """JSON Schema enforcement for vserver_args"""
-        # TBD
-        pass
 
     def __str__(self):
         """Stringify instance."""
         return self.name
+
+
+@extras_features(
+    "custom_fields",
+    "custom_links",
+    "custom_validators",
+    "export_templates",
+    "graphql",
+    "relationships",
+    "statuses",
+    "webhooks",
+)
+class Customer(BaseModel):
+    """Customer model implementation."""
+
+    slug = AutoSlugField(populate_from="id")
+    id = models.CharField(max_length=50)
+    site = models.ForeignKey(
+        to="dcim.Site",
+        on_delete=models.PROTECT,
+        related_name="+",
+        null=True,
+        verbose_name="Site",
+    )
+    name = models.CharField(max_length=50)
+    fqdn = models.CharField(max_length=50)
+    oe = models.CharField(max_length=50)
+    email = models.EmailField()
+    class_type = models.CharField(max_length=20, choices=ApplicationClassTypes)
+    accessibility = models.CharField(max_length=20, choices=ApplicationAccessibility)
+    test_url = models.URLField()
+
+    csv_headers = ["slug", "id", "site", "name", "fqdn", "oe", "email", "class_type", "accessibility", "test_url"]
+    clone_fields = ["slug", "id", "site", "name", "fqdn", "oe", "email", "class_type", "accessibility", "test_url"]
+
+    def get_absolute_url(self):
+        """Return detail view for Customer memeber."""
+        return reverse("plugins:lb_models:customer", args=[self.slug])
+
+    def to_csv(self):
+        """To CSV format."""
+        return (
+            self.slug,
+            self.id,
+            self.site,
+            self.name,
+            self.fqdn,
+            self.oe,
+            self.email,
+            self.class_type,
+            self.accessibility,
+            self.test_url,
+        )
+
+    def __str__(self):
+        """Stringify instance."""
+        return self.id

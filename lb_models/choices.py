@@ -54,6 +54,7 @@ class HealthMonitorTypes(ChoiceSet):
         # (LDAP, "LDAP"),
     )
 
+
 class ServiceGroupTypes(ChoiceSet):
     """Valid choices for ServiceGroup."""
 
@@ -73,4 +74,34 @@ class ServiceGroupTypes(ChoiceSet):
         (SSL_BRIDGE, "SSL-BRIDGE"),
         (SSL_TCP, "SSL_TCP"),
         (ANY, "ANY"),
+    )
+
+
+class ApplicationClassTypes(ChoiceSet):
+    """Valid choices for ApplicationClassTypes."""
+
+    PRODUCTION = "Production"
+    DEVELOPMENT = "Development"
+    TEST = "Test"
+    UAT = "UAT"
+    NETLAB = "NetLab"
+
+    CHOICES = (
+        (PRODUCTION, "Production"),
+        (DEVELOPMENT, "Development"),
+        (TEST, "Test"),
+        (UAT, "UAT"),
+        (NETLAB, "NetLab"),
+    )
+
+
+class ApplicationAccessibility(ChoiceSet):
+    """Valid choices for ApplicationAccessibility."""
+
+    TR = "TR"
+    NTR = "NTR"
+
+    CHOICES = (
+        (TR, "TR"),
+        (NTR, "NTR"),
     )

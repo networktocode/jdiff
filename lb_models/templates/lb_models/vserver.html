@@ -11,7 +11,7 @@
 <div class="row noprint">
 	<div class="col-sm-8 col-md-9">
 		<ol class="breadcrumb">
-			<li><a href="{% url 'plugins:lb_models:vserver_list' %}">vserver</a></li>
+			<li><a href="{% url 'plugins:lb_models:vserver_list' %}">Vserver</a></li>
 			<li>{{ object }}</li>
 		</ol>
 	</div>
@@ -30,13 +30,13 @@
 	</div>
 </div>
 <div class="pull-right noprint">
-	{% if perms.lb_models.change_dispatching %}
+	{% if perms.lb_models.change_lb_models %}
 		{% clone_button object %}
 	{% endif %}
-	{% if perms.lb_models.change_dispatching %}
+	{% if perms.lb_models.change_lb_models %}
 		{% edit_button object use_pk=1 %}
 	{% endif %}
-	{% if perms.lb_models.delete_dispatching %}
+	{% if perms.lb_models.delete_lb_models %}
 		{% delete_button object use_pk=1 %}
 	{% endif %}
 </div>
@@ -47,7 +47,7 @@
 </div>
 <ul class="nav nav-tabs">
 	<li role="presentation" {% if not active_tab %} class="active" {% endif %}>
-		<a href="{{ object.get_absolute_url }}">vserver</a>
+		<a href="{{ object.get_absolute_url }}">Vserver</a>
 	</li>
 	{% if perms.extras.view_objectchange %}
 	<li role="presentation" {% if active_tab == 'changelog' %} class="active" {% endif %}>
@@ -153,12 +153,6 @@
 					<td>Owner</td>
 					<td>
 						{{ object.owner }}
-					</td>
-				</tr>
-				<tr>
-					<td>vserver Arguments</td>
-					<td>
-						{{ object.vserver_args }}
 					</td>
 				</tr>
 			</table>

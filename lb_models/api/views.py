@@ -42,4 +42,4 @@ class vserverViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
 
     serializer_class = serializers.vserverSerializer
     filterset_class = filters.vserverFilterSet
-    queryset = models.vserver.objects.all()
+    queryset = models.Vserver.objects.all()

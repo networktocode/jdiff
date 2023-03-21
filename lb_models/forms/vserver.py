@@ -9,8 +9,8 @@ from ..choices import Protocols
 from .utils import add_blank_choice
 
 
-class vserverForm(BootstrapMixin, forms.ModelForm):
-    """vserver creation/edit form."""
+class VserverForm(BootstrapMixin, forms.ModelForm):
+    """Vserver creation/edit form."""
 
     slug = AutoSlugField(populate_from=["name"])
     description = forms.CharField(required=False)
@@ -25,12 +25,11 @@ class vserverForm(BootstrapMixin, forms.ModelForm):
     method = forms.CharField(required=False)
     certificate = forms.ModelChoiceField(queryset=models.Certificate.objects.all(), label="Certificate", required=False)
     owner = forms.CharField(required=False)
-    vserver_args = forms.JSONField(required=False)
 
     class Meta:
         """Meta attributes."""
 
-        model = models.vserver
+        model = models.Vserver
         fields = [
             "slug",
             "name",
@@ -47,11 +46,10 @@ class vserverForm(BootstrapMixin, forms.ModelForm):
             "method",
             "certificate",
             "owner",
-            "vserver_args",
         ]
 
 
-class vserverFilterForm(BootstrapMixin, forms.ModelForm):
+class VserverFilterForm(BootstrapMixin, forms.ModelForm):
     """Filter form to filter searches."""
 
     q = forms.CharField(
@@ -77,7 +75,7 @@ class vserverFilterForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         """Meta attributes."""
 
-        model = models.vserver
+        model = models.Vserver
         fields = [
             "q",
             "slug",
@@ -97,10 +95,10 @@ class vserverFilterForm(BootstrapMixin, forms.ModelForm):
         ]
 
 
-class vserverBulkEditForm(BootstrapMixin, BulkEditForm):
-    """vserver bulk edit form."""
+class VserverBulkEditForm(BootstrapMixin, BulkEditForm):
+    """Vserver bulk edit form."""
 
-    pk = forms.ModelChoiceField(queryset=models.vserver.objects.all(), widget=forms.MultipleHiddenInput)
+    pk = forms.ModelChoiceField(queryset=models.Vserver.objects.all(), widget=forms.MultipleHiddenInput)
     name = forms.CharField(required=False)
 
     class Meta:
@@ -112,11 +110,11 @@ class vserverBulkEditForm(BootstrapMixin, BulkEditForm):
         ]
 
 
-class vserverCSVForm(CSVModelForm):
+class VserverCSVForm(CSVModelForm):
     """Form for creating bulk Team."""
 
     class Meta:
         """Meta attributes."""
 
-        model = models.vserver
-        fields = models.vserver.csv_headers
+        model = models.Vserver
+        fields = models.Vserver.csv_headers

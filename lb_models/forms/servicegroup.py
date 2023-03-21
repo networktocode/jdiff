@@ -6,6 +6,7 @@ from lb_models import models
 from ..choices import ServiceGroupTypes
 from .utils import add_blank_choice
 
+
 class ServiceGroupForm(BootstrapMixin, forms.ModelForm):
     """Service Group Member creation/edit form."""
 
@@ -34,7 +35,9 @@ class ServiceGroupFilterForm(BootstrapMixin, forms.ModelForm):
     name = forms.CharField(required=False)
     description = forms.CharField(required=False)
     monitor = forms.ModelChoiceField(queryset=models.HealthMonitor.objects.all(), required=False, to_field_name="slug")
-    member = forms.ModelChoiceField(queryset=models.ServiceGroupBinding.objects.all(), required=False, to_field_name="slug")
+    member = forms.ModelChoiceField(
+        queryset=models.ServiceGroupBinding.objects.all(), required=False, to_field_name="slug"
+    )
     type = forms.ChoiceField(choices=add_blank_choice(ServiceGroupTypes), required=False)
     td = forms.BooleanField(required=False)
     sslprofile = forms.CharField(required=False)
@@ -44,6 +47,7 @@ class ServiceGroupFilterForm(BootstrapMixin, forms.ModelForm):
 
         model = models.ServiceGroup
         fields = ["slug", "name", "description", "monitor", "member", "type", "td", "sslprofile"]
+
 
 class ServiceGroupBulkEditForm(BootstrapMixin, BulkEditForm):
     """Certificate bulk edit form."""
