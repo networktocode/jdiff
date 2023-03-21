@@ -420,7 +420,7 @@ class Customer(BaseModel):
     """Customer model implementation."""
 
     slug = AutoSlugField(populate_from="id")
-    id = models.CharField(max_length=50)
+    customer_id = models.CharField(max_length=50)
     site = models.ForeignKey(
         to="dcim.Site",
         on_delete=models.PROTECT,
@@ -436,8 +436,8 @@ class Customer(BaseModel):
     accessibility = models.CharField(max_length=20, choices=ApplicationAccessibility)
     test_url = models.URLField()
 
-    csv_headers = ["slug", "id", "site", "name", "fqdn", "oe", "email", "class_type", "accessibility", "test_url"]
-    clone_fields = ["slug", "id", "site", "name", "fqdn", "oe", "email", "class_type", "accessibility", "test_url"]
+    csv_headers = ["slug", "customer_id", "site", "name", "fqdn", "oe", "email", "class_type", "accessibility", "test_url"]
+    clone_fields = ["slug", "customer_id", "site", "name", "fqdn", "oe", "email", "class_type", "accessibility", "test_url"]
 
     def get_absolute_url(self):
         """Return detail view for Customer memeber."""
@@ -447,7 +447,7 @@ class Customer(BaseModel):
         """To CSV format."""
         return (
             self.slug,
-            self.id,
+            self.customer_id,
             self.site,
             self.name,
             self.fqdn,

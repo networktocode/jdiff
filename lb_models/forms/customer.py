@@ -12,12 +12,12 @@ class CustomerForm(BootstrapMixin, forms.ModelForm):
     """Customer creation/edit form."""
 
     slug = AutoSlugField(populate_from=["name"])
-    id = forms.CharField(label="ID")
+    customer_id = forms.CharField(label="ID")
     site = forms.ModelChoiceField(queryset=Site.objects.all(), label="Site")
     name = forms.CharField(label="Name")
     fqdn = forms.CharField(label="FQDN")
-    oe = forms.CharField(abel="OE")
-    email = forms.EmailField(abel="email")
+    oe = forms.CharField(label="OE")
+    email = forms.EmailField(label="email")
     class_type = forms.ChoiceField(choices=add_blank_choice(ApplicationClassTypes))
     accessibility = forms.ChoiceField(choices=add_blank_choice(ApplicationClassTypes))
     test_url = forms.URLField(label="URL")
@@ -26,7 +26,7 @@ class CustomerForm(BootstrapMixin, forms.ModelForm):
         """Meta attributes."""
 
         model = models.Customer
-        fields = ["slug", "id", "site", "name", "fqdn", "oe", "email", "class_type", "accessibility", "test_url"]
+        fields = ["slug", "customer_id", "site", "name", "fqdn", "oe", "email", "class_type", "accessibility", "test_url"]
 
 
 class CustomerFilterForm(BootstrapMixin, forms.ModelForm):
@@ -38,12 +38,12 @@ class CustomerFilterForm(BootstrapMixin, forms.ModelForm):
         help_text="Search within issuer or Slug.",
     )
     slug = AutoSlugField(populate_from=["name"])
-    id = forms.CharField(required=False, label="ID")
+    customer_id = forms.CharField(required=False, label="ID")
     site = forms.ModelChoiceField(queryset=Site.objects.all(), label="Site", required=False)
     name = forms.CharField(label="Name", required=False)
     fqdn = forms.CharField(label="FQDN", required=False)
-    oe = forms.CharField(abel="OE", required=False)
-    email = forms.EmailField(abel="email", required=False)
+    oe = forms.CharField(label="OE", required=False)
+    email = forms.EmailField(label="email", required=False)
     class_type = forms.ChoiceField(choices=add_blank_choice(ApplicationClassTypes), required=False)
     accessibility = forms.ChoiceField(choices=add_blank_choice(ApplicationClassTypes), required=False)
     test_url = forms.URLField(required=False, label="URL")
@@ -52,7 +52,7 @@ class CustomerFilterForm(BootstrapMixin, forms.ModelForm):
         """Meta attributes."""
 
         model = models.Customer
-        fields = ["q", "slug", "id", "site", "name", "fqdn", "oe", "email", "class_type", "accessibility", "test_url"]
+        fields = ["q", "slug", "customer_id", "site", "name", "fqdn", "oe", "email", "class_type", "accessibility", "test_url"]
 
 
 class CustomerBulkEditForm(BootstrapMixin, BulkEditForm):
