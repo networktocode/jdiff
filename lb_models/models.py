@@ -1,9 +1,8 @@
 """Models for LB Models."""
 
-import struct
 from django.db import models
 from django.urls import reverse
-from nautobot.core.models import BaseModel
+from nautobot.core.models.generics import PrimaryModel
 from django.core.validators import MaxValueValidator, MinValueValidator
 from nautobot.extras.utils import extras_features
 from nautobot.core.fields import AutoSlugField
@@ -27,7 +26,7 @@ from .choices import (
     "statuses",
     "webhooks",
 )
-class Certificate(BaseModel):
+class Certificate(PrimaryModel):
     """Certificate model implementation."""
 
     slug = AutoSlugField(populate_from="certificate")
@@ -120,7 +119,7 @@ class Certificate(BaseModel):
     "statuses",
     "webhooks",
 )
-class ServiceGroupBinding(BaseModel):
+class ServiceGroupBinding(PrimaryModel):
     """Service Group response model implementation."""
 
     slug = AutoSlugField(populate_from="name")
@@ -182,7 +181,7 @@ class ServiceGroupBinding(BaseModel):
     "statuses",
     "webhooks",
 )
-class HealthMonitor(BaseModel):
+class HealthMonitor(PrimaryModel):
     """Service Group response model implementation."""
 
     slug = AutoSlugField(populate_from="name")
@@ -259,7 +258,7 @@ class HealthMonitor(BaseModel):
     "statuses",
     "webhooks",
 )
-class ServiceGroup(BaseModel):
+class ServiceGroup(PrimaryModel):
     """Service Group model implementation."""
 
     slug = AutoSlugField(populate_from="name")
@@ -297,7 +296,7 @@ class ServiceGroup(BaseModel):
     "statuses",
     "webhooks",
 )
-class Vserver(BaseModel):
+class Vserver(PrimaryModel):
     """Vserver implementation."""
 
     slug = AutoSlugField(populate_from="name")
@@ -416,7 +415,7 @@ class Vserver(BaseModel):
     "statuses",
     "webhooks",
 )
-class Customer(BaseModel):
+class Customer(PrimaryModel):
     """Customer model implementation."""
 
     slug = AutoSlugField(populate_from="id")
