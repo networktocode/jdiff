@@ -50,7 +50,7 @@ class ServiceGroupNestedSerializer(WritableNestedSerializer):
 class CertificateNestedSerializer(WritableNestedSerializer):
     """Certificate Nested Serializer."""
 
-    certificate = serializers.CharField(source="serial_number")
+    certificate = serializers.CharField(source="name")
 
     class Meta:
         """Meta attributes."""

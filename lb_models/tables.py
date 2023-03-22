@@ -17,7 +17,7 @@ class CertificateTable(BaseTable):
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
-    certificate = tables.Column(linkify=True)
+    name = tables.Column(linkify=True)
 
     class Meta(BaseTable.Meta):
         """Meta attributes."""

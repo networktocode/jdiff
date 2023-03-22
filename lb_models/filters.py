@@ -23,17 +23,11 @@ class CertificateFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             "issuer",
             "version_number",
             "serial_number",
-            "signature",
-            "signature_algorithm",
-            "signature_algorithm_id",
-            "certificate",
+            "name",
             "certificate_key",
             "certificate_password",
             "start_date",
             "end_date",
-            "subject_name",
-            "subject_pub_key",
-            "subject_pub_key_algorithm",
         ]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
@@ -44,13 +38,7 @@ class CertificateFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             Q(issuer__icontains=value)
             | Q(serial_number__icontains=value)
             | Q(version_number__icontains=value)
-            | Q(signature_icontains=value)
-            | Q(signature_algorithm__icontains=value)
-            | Q(signature_algorithm_id__icontains=value)
-            | Q(subject_name__icontains=value)
-            | Q(subject_pub_key__icontains=value)
-            | Q(subject_pub_key_algorithm__icontains=value)
-            | Q(certificate__icontains=value)
+            | Q(name__icontains=value)
             | Q(certificate_key__icontains=value)
         )
         return queryset.filter(qs_filter)

@@ -7,7 +7,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from nautobot.extras.utils import extras_features
 from nautobot.core.fields import AutoSlugField
 from .choices import (
-    CertAlgorithmChoices,
     Protocols,
     HealthMonitorTypes,
     ServiceGroupTypes,
@@ -29,56 +28,29 @@ from .choices import (
 class Certificate(PrimaryModel):
     """Certificate model implementation."""
 
-    slug = AutoSlugField(populate_from="certificate")
+    slug = AutoSlugField(populate_from="name")
     issuer = models.CharField(max_length=50, blank=True, null=True)
     version_number = models.CharField(max_length=50, blank=True, null=True)
     serial_number = models.CharField(max_length=30, blank=True, null=True)
-    certificate = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
     certificate_key = models.CharField(max_length=50)
     certificate_password = models.CharField(max_length=50)
-    signature = models.CharField(max_length=50, blank=True, null=True)
-    signature_algorithm = models.CharField(max_length=20, choices=CertAlgorithmChoices, blank=True, null=True)
-    signature_algorithm_id = models.CharField(max_length=30, blank=True, null=True)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
-    subject_name = models.CharField(max_length=50, blank=True, null=True)
-    subject_pub_key = models.CharField(max_length=100, blank=True, null=True)
-    subject_pub_key_algorithm = models.CharField(max_length=20, choices=CertAlgorithmChoices, blank=True, null=True)
 
-    csv_headers = [
+    fields = [
         "slug",
         "issuer",
         "version_number",
         "serial_number",
-        "signature",
-        "signature_algorithm",
-        "signature_algorithm_id",
-        "certificate",
+        "name",
         "certificate_key",
         "certificate_password",
         "start_date",
         "end_date",
-        "subject_name",
-        "subject_pub_key",
-        "subject_pub_key_algorithm",
     ]
-    clone_fields = [
-        "slug",
-        "issuer",
-        "version_number",
-        "serial_number",
-        "signature",
-        "signature_algorithm",
-        "signature_algorithm_id",
-        "certificate",
-        "certificate_key",
-        "certificate_password",
-        "start_date",
-        "end_date",
-        "subject_name",
-        "subject_pub_key",
-        "subject_pub_key_algorithm",
-    ]
+    csv_headers = fields
+    clone_fields = fields
 
     def get_absolute_url(self):
         """Return detail view for Certificate."""
@@ -91,22 +63,15 @@ class Certificate(PrimaryModel):
             self.issuer,
             self.version_number,
             self.serial_number,
-            self.signature,
-            self.signature_algorithm,
-            self.signature_algorithm_id,
-            self.certificate,
             self.certificate_key,
             self.certificate_password,
             self.start_date,
             self.end_date,
-            self.subject_name,
-            self.subject_pub_key,
-            self.subject_pub_key_algorithm,
         )
 
     def __str__(self):
         """Stringify instance."""
-        return self.certificate
+        return self.name
 
 
 @extras_features(

@@ -90,28 +90,10 @@
 					</td>
 				</tr>
 				<tr>
-					<td>Signature</td>
-					<td>
-						{{ object.signature }}
-					</td>
-				</tr>
-				<tr>
-					<td>Signature Algorithm</td>
-					<td>
-						{{ object.signature_algorithm }}
-					</td>
-				</tr>
-				<tr>
-					<td>Signature Algorithm ID</td>
-					<td>
-						{{ object.signature_algorithm_id }}
-					</td>
-				</tr>
-				<tr>
 					<tr>
-						<td>Certificate</td>
+						<td>Name</td>
 						<td>
-							{{ object.certificate }}
+							{{ object.name }}
 						</td>
 					</tr>
 				</tr>
@@ -120,14 +102,6 @@
 						<td>Certificate Key</td>
 						<td>
 							{{ object.certificate_key }}
-						</td>
-					</tr>
-				</tr>
-				<tr>
-					<tr>
-						<td>Certificate Password</td>
-						<td>
-							{{ object.certificate_password }}
 						</td>
 					</tr>
 				</tr>
@@ -143,24 +117,6 @@
 						{{ object.end_date }}
 					</td>
 				</tr>
-				<tr>
-					<td>Subject Name</td>
-					<td>
-						{{ object.subject_name }}
-					</td>
-				</tr>
-				<tr>
-					<td>Subject Public Key</td>
-					<td>
-						{{ object.subject_pub_key }}
-					</td>
-				</tr>
-				<tr>
-					<td>Subject Public Key Algorithm</td>
-					<td>
-						{{ object.subject_pub_key_algorithm }}
-					</td>
-				</tr>      
 			</table>
 		</div>
 		{% include 'inc/custom_fields_panel.html' %}
