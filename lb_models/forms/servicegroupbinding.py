@@ -8,20 +8,19 @@ from lb_models import models
 from nautobot.ipam.models import IPAddress
 
 
-class VIPPoolMemberForm(BootstrapMixin, forms.ModelForm):
-    """VIP Pool Member creation/edit form."""
+class ServiceGroupBindingForm(BootstrapMixin, forms.ModelForm):
+    """Service Group Member creation/edit form."""
 
     slug = AutoSlugField(populate_from=["name"])
     description = forms.CharField(required=False)
     protocol = forms.ChoiceField(choices=add_blank_choice(Protocols))
     address = forms.ModelChoiceField(queryset=IPAddress.objects.all())
-    monitor = forms.ModelChoiceField(queryset=models.VIPHealthMonitor.objects.all(), to_field_name="slug")
-    member_args = forms.JSONField(required=False)
+    monitor = forms.ModelChoiceField(queryset=models.HealthMonitor.objects.all(), to_field_name="slug")
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPPoolMember
+        model = models.ServiceGroupBinding
         fields = [
             "slug",
             "name",
@@ -31,11 +30,10 @@ class VIPPoolMemberForm(BootstrapMixin, forms.ModelForm):
             "address",
             "fqdn",
             "monitor",
-            "member_args",
         ]
 
 
-class VIPPoolMemberFilterForm(BootstrapMixin, forms.ModelForm):
+class ServiceGroupBindingFilterForm(BootstrapMixin, forms.ModelForm):
     """Filter form to filter searches."""
 
     q = forms.CharField(
@@ -51,13 +49,13 @@ class VIPPoolMemberFilterForm(BootstrapMixin, forms.ModelForm):
     address = forms.ModelChoiceField(queryset=IPAddress.objects.all(), label="IP address")
     fqnd = forms.CharField(required=False, label="FQDN")
     monitor = forms.ModelChoiceField(
-        queryset=models.VIPHealthMonitor.objects.all(), required=False, label="Healt Monitor", to_field_name="slug"
+        queryset=models.HealthMonitor.objects.all(), required=False, label="Healt Monitor", to_field_name="slug"
     )
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPPoolMember
+        model = models.ServiceGroupBinding
         fields = [
             "q",
             "slug",
@@ -71,26 +69,26 @@ class VIPPoolMemberFilterForm(BootstrapMixin, forms.ModelForm):
         ]
 
 
-class VIPPoolMemberBulkEditForm(BootstrapMixin, BulkEditForm):
-    """VIP Certificate bulk edit form."""
+class ServiceGroupBindingBulkEditForm(BootstrapMixin, BulkEditForm):
+    """Certificate bulk edit form."""
 
-    pk = forms.ModelChoiceField(queryset=models.VIPPoolMember.objects.all(), widget=forms.MultipleHiddenInput)
+    pk = forms.ModelChoiceField(queryset=models.ServiceGroupBinding.objects.all(), widget=forms.MultipleHiddenInput)
     issuer = forms.CharField(required=False)
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPPoolMember
+        model = models.ServiceGroupBinding
         nullable_fields = [
             "name",
         ]
 
 
-class VIPPoolMemberCSVForm(CSVModelForm):
+class ServiceGroupBindingCSVForm(CSVModelForm):
     """Form for creating bulk Team."""
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPPoolMember
-        fields = models.VIPPoolMember.csv_headers
+        model = models.ServiceGroupBinding
+        fields = models.ServiceGroupBinding.csv_headers

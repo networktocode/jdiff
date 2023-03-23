@@ -1,67 +1,67 @@
-"""Views for VIPCertificate Calendar."""
+"""Views for Certificate Calendar."""
 from nautobot.core.views import generic
 
 from lb_models import filters, models, tables
 from lb_models.forms import certificate as forms
 
 
-class VIPCertificateView(generic.ObjectView):
+class CertificateView(generic.ObjectView):
     """Detail view."""
 
-    queryset = models.VIPCertificate.objects.all()
+    queryset = models.Certificate.objects.all()
 
 
-class VIPCertificateListView(generic.ObjectListView):
+class CertificateListView(generic.ObjectListView):
     """List view."""
 
-    queryset = models.VIPCertificate.objects.all()
-    filterset = filters.VIPCertificateFilterSet
-    filterset_form = forms.VIPCertificateFilterForm
-    table = tables.VIPCertificateTable
+    queryset = models.Certificate.objects.all()
+    filterset = filters.CertificateFilterSet
+    filterset_form = forms.CertificateFilterForm
+    table = tables.CertificateTable
     action_buttons = ("import", "export", "add")
 
 
-class VIPCertificateCreateView(generic.ObjectEditView):
+class CertificateCreateView(generic.ObjectEditView):
     """Create view."""
 
-    model = models.VIPCertificate
-    queryset = models.VIPCertificate.objects.all()
-    model_form = forms.VIPCertificateForm
+    model = models.Certificate
+    queryset = models.Certificate.objects.all()
+    model_form = forms.CertificateForm
 
 
-class VIPCertificateDeleteView(generic.ObjectDeleteView):
+class CertificateDeleteView(generic.ObjectDeleteView):
     """Delete view."""
 
-    model = models.VIPCertificate
-    queryset = models.VIPCertificate.objects.all()
+    model = models.Certificate
+    queryset = models.Certificate.objects.all()
 
 
-class VIPCertificateEditView(generic.ObjectEditView):
+class CertificateEditView(generic.ObjectEditView):
     """Edit view."""
 
-    model = models.VIPCertificate
-    queryset = models.VIPCertificate.objects.all()
-    model_form = forms.VIPCertificateForm
+    model = models.Certificate
+    queryset = models.Certificate.objects.all()
+    model_form = forms.CertificateForm
 
 
-class VIPCertificateBulkDeleteView(generic.BulkDeleteView):
-    """View for deleting one or more VIPCertificate records."""
+class CertificateBulkDeleteView(generic.BulkDeleteView):
+    """View for deleting one or more Certificate records."""
 
-    queryset = models.VIPCertificate.objects.all()
-    table = tables.VIPCertificateTable
-
-
-class VIPCertificateBulkImportView(generic.BulkImportView):
-    """View for importing one or more VIPCertificate records."""
-
-    queryset = models.VIPCertificate.objects.all()
-    model_form = forms.VIPCertificateCSVForm
-    table = tables.VIPCertificateTable
+    queryset = models.Certificate.objects.all()
+    table = tables.CertificateTable
 
 
-class VIPCertificateBulkEditView(generic.BulkEditView):
-    """View for editing one or more VIPCertificate records."""
+class CertificateBulkImportView(generic.BulkImportView):
+    """View for importing one or more Certificate records."""
 
-    queryset = models.VIPCertificate.objects.all()
-    table = tables.VIPCertificateTable
-    form = forms.VIPCertificateForm
+    queryset = models.Certificate.objects.all()
+    model_form = forms.CertificateCSVForm
+    table = tables.CertificateTable
+
+
+class CertificateBulkEditView(generic.BulkEditView):
+    """View for editing one or more Certificate records."""
+
+    queryset = models.Certificate.objects.all()
+    table = tables.CertificateTable
+    form = forms.CertificateForm

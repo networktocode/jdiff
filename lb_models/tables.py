@@ -7,44 +7,13 @@ from nautobot.utilities.tables import BaseTable, ButtonsColumn, ToggleColumn
 from lb_models import models
 
 
-class VIPCertificateTable(BaseTable):
+class CertificateTable(BaseTable):
     # pylint: disable=R0903
     """Table for list view."""
 
     pk = ToggleColumn()
     actions = ButtonsColumn(
-        models.VIPCertificate,
-        buttons=("changelog", "edit", "delete", "add"),
-        pk_field="slug",
-    )
-    serial_number = tables.Column(linkify=True)
-
-    class Meta(BaseTable.Meta):
-        """Meta attributes."""
-
-        model = models.VIPCertificate
-        fields = (
-            "issuer",
-            "version_number",
-            "serial_number",
-            "signature",
-            "signature_algorithm",
-            "signature_algorithm_id",
-            "start_date",
-            "end_date",
-            "subject_name",
-            "subject_pub_key",
-            "subject_pub_key_algorithm",
-        )
-
-
-class VIPPoolMemberTable(BaseTable):
-    # pylint: disable=R0903
-    """Table for list view."""
-
-    pk = ToggleColumn()
-    actions = ButtonsColumn(
-        models.VIPPoolMember,
+        models.Certificate,
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
@@ -53,8 +22,37 @@ class VIPPoolMemberTable(BaseTable):
     class Meta(BaseTable.Meta):
         """Meta attributes."""
 
-        model = models.VIPPoolMember
-        fields = (
+        model = models.Certificate
+        fields = [
+            "slug",
+            "issuer",
+            "version_number",
+            "serial_number",
+            "name",
+            "key",
+            "password",
+            "start_date",
+            "end_date",
+        ]
+
+
+class ServiceGroupBindingTable(BaseTable):
+    # pylint: disable=R0903
+    """Table for list view."""
+
+    pk = ToggleColumn()
+    actions = ButtonsColumn(
+        models.ServiceGroupBinding,
+        buttons=("changelog", "edit", "delete", "add"),
+        pk_field="slug",
+    )
+    name = tables.Column(linkify=True)
+
+    class Meta(BaseTable.Meta):
+        """Meta attributes."""
+
+        model = models.ServiceGroupBinding
+        fields = [
             "slug",
             "name",
             "description",
@@ -63,17 +61,16 @@ class VIPPoolMemberTable(BaseTable):
             "address",
             "fqdn",
             "monitor",
-            "member_args",
-        )
+        ]
 
 
-class VIPHealthMonitorTable(BaseTable):
+class HealthMonitorTable(BaseTable):
     # pylint: disable=R0903
     """Table for list view."""
 
     pk = ToggleColumn()
     actions = ButtonsColumn(
-        models.VIPHealthMonitor,
+        models.HealthMonitor,
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
@@ -82,27 +79,29 @@ class VIPHealthMonitorTable(BaseTable):
     class Meta(BaseTable.Meta):
         """Meta attributes."""
 
-        model = models.VIPHealthMonitor
-        fields = (
+        model = models.HealthMonitor
+        fields = [
             "slug",
             "name",
             "description",
-            "address",
             "type",
+            "lrtm",
+            "secure",
             "url",
             "send",
             "code",
             "receive",
-        )
+            "httprequest",
+        ]
 
 
-class VIPPoolTable(BaseTable):
+class ServiceGroupTable(BaseTable):
     # pylint: disable=R0903
     """Table for list view."""
 
     pk = ToggleColumn()
     actions = ButtonsColumn(
-        models.VIPPool,
+        models.ServiceGroup,
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
@@ -112,17 +111,17 @@ class VIPPoolTable(BaseTable):
     class Meta(BaseTable.Meta):
         """Meta attributes."""
 
-        model = models.VIPPool
-        fields = ("slug", "name", "description", "monitor", "member")
+        model = models.ServiceGroup
+        fields = ["slug", "name", "description", "monitor", "member", "type", "td", "sslprofile"]
 
 
-class VIPTable(BaseTable):
+class VserverTable(BaseTable):
     # pylint: disable=R0903
     """Table for list view."""
 
     pk = ToggleColumn()
     actions = ButtonsColumn(
-        models.VIP,
+        models.Vserver,
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
@@ -131,8 +130,8 @@ class VIPTable(BaseTable):
     class Meta(BaseTable.Meta):
         """Meta attributes."""
 
-        model = models.VIP
-        fields = (
+        model = models.Vserver
+        fields = [
             "slug",
             "name",
             "description",
@@ -148,5 +147,34 @@ class VIPTable(BaseTable):
             "method",
             "certificate",
             "owner",
-            "vip_args",
-        )
+        ]
+
+
+class CustomerTable(BaseTable):
+    # pylint: disable=R0903
+    """Table for list view."""
+
+    pk = ToggleColumn()
+    actions = ButtonsColumn(
+        models.Vserver,
+        buttons=("changelog", "edit", "delete", "add"),
+        pk_field="slug",
+    )
+    name = tables.Column(linkify=True)
+
+    class Meta(BaseTable.Meta):
+        """Meta attributes."""
+
+        model = models.Customer
+        fields = [
+            "slug",
+            "customer_id",
+            "site",
+            "name",
+            "fqdn",
+            "oe",
+            "email",
+            "class_type",
+            "accessibility",
+            "test_url",
+        ]

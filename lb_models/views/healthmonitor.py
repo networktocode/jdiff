@@ -1,67 +1,67 @@
-"""Views for VIPHealthMonitor Calendar."""
+"""Views for HealthMonitor Calendar."""
 from nautobot.core.views import generic
 
 from lb_models import filters, models, tables
 from lb_models.forms import healthmonitor as forms
 
 
-class VIPHealthMonitorView(generic.ObjectView):
+class HealthMonitorView(generic.ObjectView):
     """Detail view."""
 
-    queryset = models.VIPHealthMonitor.objects.all()
+    queryset = models.HealthMonitor.objects.all()
 
 
-class VIPHealthMonitorListView(generic.ObjectListView):
+class HealthMonitorListView(generic.ObjectListView):
     """List view."""
 
-    queryset = models.VIPHealthMonitor.objects.all()
-    filterset = filters.VIPHealthMonitorFilterSet
-    filterset_form = forms.VIPHealthMonitorFilterForm
-    table = tables.VIPHealthMonitorTable
+    queryset = models.HealthMonitor.objects.all()
+    filterset = filters.HealthMonitorFilterSet
+    filterset_form = forms.HealthMonitorFilterForm
+    table = tables.HealthMonitorTable
     action_buttons = ("import", "export", "add")
 
 
-class VIPHealthMonitorCreateView(generic.ObjectEditView):
+class HealthMonitorCreateView(generic.ObjectEditView):
     """Create view."""
 
-    model = models.VIPHealthMonitor
-    queryset = models.VIPHealthMonitor.objects.all()
-    model_form = forms.VIPHealthMonitorForm
+    model = models.HealthMonitor
+    queryset = models.HealthMonitor.objects.all()
+    model_form = forms.HealthMonitorForm
 
 
-class VIPHealthMonitorDeleteView(generic.ObjectDeleteView):
+class HealthMonitorDeleteView(generic.ObjectDeleteView):
     """Delete view."""
 
-    model = models.VIPHealthMonitor
-    queryset = models.VIPHealthMonitor.objects.all()
+    model = models.HealthMonitor
+    queryset = models.HealthMonitor.objects.all()
 
 
-class VIPHealthMonitorEditView(generic.ObjectEditView):
+class HealthMonitorEditView(generic.ObjectEditView):
     """Edit view."""
 
-    model = models.VIPHealthMonitor
-    queryset = models.VIPHealthMonitor.objects.all()
-    model_form = forms.VIPHealthMonitorForm
+    model = models.HealthMonitor
+    queryset = models.HealthMonitor.objects.all()
+    model_form = forms.HealthMonitorForm
 
 
-class VIPHealthMonitorBulkDeleteView(generic.BulkDeleteView):
-    """View for deleting one or more VIPHealthMonitor records."""
+class HealthMonitorBulkDeleteView(generic.BulkDeleteView):
+    """View for deleting one or more HealthMonitor records."""
 
-    queryset = models.VIPHealthMonitor.objects.all()
-    table = tables.VIPHealthMonitorTable
-
-
-class VIPHealthMonitorBulkImportView(generic.BulkImportView):
-    """View for importing one or more VIPHealthMonitor records."""
-
-    queryset = models.VIPHealthMonitor.objects.all()
-    model_form = forms.VIPHealthMonitorCSVForm
-    table = tables.VIPHealthMonitorTable
+    queryset = models.HealthMonitor.objects.all()
+    table = tables.HealthMonitorTable
 
 
-class VIPHealthMonitorBulkEditView(generic.BulkEditView):
-    """View for editing one or more VIPHealthMonitor records."""
+class HealthMonitorBulkImportView(generic.BulkImportView):
+    """View for importing one or more HealthMonitor records."""
 
-    queryset = models.VIPHealthMonitor.objects.all()
-    table = tables.VIPHealthMonitorTable
-    form = forms.VIPHealthMonitorForm
+    queryset = models.HealthMonitor.objects.all()
+    model_form = forms.HealthMonitorCSVForm
+    table = tables.HealthMonitorTable
+
+
+class HealthMonitorBulkEditView(generic.BulkEditView):
+    """View for editing one or more HealthMonitor records."""
+
+    queryset = models.HealthMonitor.objects.all()
+    table = tables.HealthMonitorTable
+    form = forms.HealthMonitorForm

@@ -7,7 +7,7 @@ from nautobot.ipam.api import nested_serializers as ipam_nested_serializers
 from lb_models import models
 
 
-class VIPHealthMonitorNestedSerializer(WritableNestedSerializer):
+class HealthMonitorNestedSerializer(WritableNestedSerializer):
     """Health Monitor Nested Serializer."""
 
     monitor = serializers.CharField(source="name")
@@ -15,45 +15,45 @@ class VIPHealthMonitorNestedSerializer(WritableNestedSerializer):
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPHealthMonitor
+        model = models.HealthMonitor
         fields = ["monitor"]
 
 
-class VIPPoolMemberNestedSerializer(WritableNestedSerializer):
-    """VIP Pool Member Nested Serializer."""
+class ServiceGroupBindingNestedSerializer(WritableNestedSerializer):
+    """Service Group Member Nested Serializer."""
 
     member = serializers.CharField(source="name")
-    monitor = VIPHealthMonitorNestedSerializer()
+    monitor = HealthMonitorNestedSerializer()
     address = ipam_nested_serializers.NestedIPAddressSerializer()
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPPoolMember
+        model = models.ServiceGroupBinding
         fields = ["member", "monitor", "address"]
 
 
-class VIPPoolNestedSerializer(WritableNestedSerializer):
-    """VIP Pool Nested Serializer."""
+class ServiceGroupNestedSerializer(WritableNestedSerializer):
+    """Service Group Nested Serializer."""
 
     pool = serializers.CharField(source="name")
-    member = VIPPoolMemberNestedSerializer()
-    monitor = VIPHealthMonitorNestedSerializer()
+    member = ServiceGroupBindingNestedSerializer()
+    monitor = HealthMonitorNestedSerializer()
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPPool
+        model = models.ServiceGroup
         fields = ["pool", "member", "monitor"]
 
 
-class VIPCertificateNestedSerializer(WritableNestedSerializer):
-    """VIP Certificate Nested Serializer."""
+class CertificateNestedSerializer(WritableNestedSerializer):
+    """Certificate Nested Serializer."""
 
-    certificate = serializers.CharField(source="serial_number")
+    certificate = serializers.CharField(source="name")
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPCertificate
+        model = models.Certificate
         fields = ["certificate"]
