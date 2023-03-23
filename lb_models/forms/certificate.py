@@ -2,41 +2,35 @@
 from django import forms
 from nautobot.utilities.forms import BootstrapMixin, BulkEditForm, DatePicker, CSVModelForm
 from nautobot.core.fields import AutoSlugField
-from ..choices import CertAlgorithmChoices
-from .utils import add_blank_choice
 from lb_models import models
 
 
-class VIPCertificateForm(BootstrapMixin, forms.ModelForm):
-    """VIP Certificate creation/edit form."""
+class CertificateForm(BootstrapMixin, forms.ModelForm):
+    """Certificate creation/edit form."""
 
     slug = AutoSlugField(populate_from=["serial_number"])
-    start_date = forms.DateField(widget=DatePicker())
-    end_date = forms.DateField(widget=DatePicker())
-    signature_algorithm = forms.ChoiceField(choices=add_blank_choice(CertAlgorithmChoices))
-    subject_pub_key = forms.ChoiceField(choices=add_blank_choice(CertAlgorithmChoices))
+    start_date = forms.DateField(widget=DatePicker(), required=False)
+    end_date = forms.DateField(widget=DatePicker(), required=False)
+    password = forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPCertificate
+        model = models.Certificate
         fields = [
             "slug",
             "issuer",
             "version_number",
             "serial_number",
-            "signature",
-            "signature_algorithm",
-            "signature_algorithm_id",
+            "name",
+            "key",
+            "password",
             "start_date",
             "end_date",
-            "subject_name",
-            "subject_pub_key",
-            "subject_pub_key_algorithm",
         ]
 
 
-class VIPCertificateFilterForm(BootstrapMixin, forms.ModelForm):
+class CertificateFilterForm(BootstrapMixin, forms.ModelForm):
     """Filter form to filter searches."""
 
     q = forms.CharField(
@@ -47,59 +41,48 @@ class VIPCertificateFilterForm(BootstrapMixin, forms.ModelForm):
     slug = forms.CharField(required=False, label="Slug")
     issuer = forms.CharField(required=False, label="Issuer")
     serial_number = forms.CharField(required=False, label="SN")
-    signature = forms.CharField(required=False, label="Signature")
-    signature_algorithm = forms.ChoiceField(
-        choices=add_blank_choice(CertAlgorithmChoices), required=False, label="Signature algorithm"
-    )
-    signature_algorithm_id = forms.CharField(required=False, label="Signature algorithm ID")
+    name = forms.CharField(required=False, label="Certificate Name")
+    key = forms.CharField(required=False, label="Certificate Key")
     start_date = forms.DateField(required=False, widget=DatePicker(), label="Start certificate date")
     end_date = forms.DateField(required=False, widget=DatePicker(), label="Expire certificate date")
-    subject_name = forms.CharField(required=False, label="Subject name")
-    subject_pub_key = forms.CharField(required=False, label="Subject pub key")
-    subject_pub_key_algorithm = forms.ChoiceField(
-        choices=add_blank_choice(CertAlgorithmChoices), required=False, label="Subject pub key algorithm"
-    )
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPCertificate
+        model = models.Certificate
         fields = [
             "q",
             "slug",
             "issuer",
+            "version_number",
             "serial_number",
-            "signature",
-            "signature_algorithm",
-            "signature_algorithm_id",
+            "name",
+            "key",
             "start_date",
             "end_date",
-            "subject_name",
-            "subject_pub_key",
-            "subject_pub_key_algorithm",
         ]
 
 
-class VIPCertificateBulkEditForm(BootstrapMixin, BulkEditForm):
-    """VIP Certificate bulk edit form."""
+class CertificateBulkEditForm(BootstrapMixin, BulkEditForm):
+    """Certificate bulk edit form."""
 
-    pk = forms.ModelChoiceField(queryset=models.VIPCertificate.objects.all(), widget=forms.MultipleHiddenInput)
-    issuer = forms.CharField(required=False)
+    pk = forms.ModelChoiceField(queryset=models.Certificate.objects.all(), widget=forms.MultipleHiddenInput)
+    certifcare = forms.CharField(required=False)
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPCertificate
+        model = models.Certificate
         nullable_fields = [
-            "issuer",
+            "name",
         ]
 
 
-class VIPCertificateCSVForm(CSVModelForm):
+class CertificateCSVForm(CSVModelForm):
     """Form for creating bulk Team."""
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPCertificate
-        fields = models.VIPCertificate.csv_headers
+        model = models.Certificate
+        fields = models.Certificate.csv_headers

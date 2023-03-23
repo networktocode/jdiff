@@ -3,30 +3,35 @@ from django import forms
 from nautobot.utilities.forms import BootstrapMixin, BulkEditForm, CSVModelForm
 from nautobot.core.fields import AutoSlugField
 from lb_models import models
+from ..choices import HealthMonitorTypes
+from .utils import add_blank_choice
 
 
-class VIPHealthMonitorForm(BootstrapMixin, forms.ModelForm):
-    """VIP Health Monitor creation/edit form."""
+class HealthMonitorForm(BootstrapMixin, forms.ModelForm):
+    """Health Monitor creation/edit form."""
 
     slug = AutoSlugField(populate_from=["name"])
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPHealthMonitor
+        model = models.HealthMonitor
         fields = [
             "slug",
             "name",
             "description",
             "type",
+            "lrtm",
+            "secure",
             "url",
             "send",
             "code",
             "receive",
+            "httprequest",
         ]
 
 
-class VIPHealthMonitorFilterForm(BootstrapMixin, forms.ModelForm):
+class HealthMonitorFilterForm(BootstrapMixin, forms.ModelForm):
     """Filter form to filter searches."""
 
     q = forms.CharField(
@@ -36,51 +41,57 @@ class VIPHealthMonitorFilterForm(BootstrapMixin, forms.ModelForm):
     )
     slug = forms.CharField(required=False, label="Slug")
     name = forms.CharField(required=False, label="Name")
-    type = forms.CharField(required=False, label="Type")
+    description = forms.CharField(required=False, label="Description")
+    type = forms.ChoiceField(choices=add_blank_choice(HealthMonitorTypes), required=False)
+    lrtm = forms.BooleanField(required=False, label="LRTM")
+    secure = forms.BooleanField(required=False, label="Secure")
     url = forms.URLField(required=False, label="URL")
     send = forms.CharField(required=False, label="Send")
     string = forms.CharField(required=False, label="String")
-    code = forms.IntegerField(required=False, label="Code")
+    code = forms.IntegerField(label="Code")
     receive = forms.CharField(required=False, label="Receive")
-    description = forms.CharField(required=False, label="Description")
+    httprequest = forms.CharField(label="HTTP Request")
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPHealthMonitor
+        model = models.HealthMonitor
         fields = [
             "q",
             "slug",
             "name",
             "description",
             "type",
+            "lrtm",
+            "secure",
             "url",
             "send",
             "code",
             "receive",
+            "httprequest",
         ]
 
 
-class VIPHealthMonitorBulkEditForm(BootstrapMixin, BulkEditForm):
-    """VIP Health Monitor bulk edit form."""
+class HealthMonitorBulkEditForm(BootstrapMixin, BulkEditForm):
+    """Health Monitor bulk edit form."""
 
-    pk = forms.ModelChoiceField(queryset=models.VIPHealthMonitor.objects.all(), widget=forms.MultipleHiddenInput)
+    pk = forms.ModelChoiceField(queryset=models.HealthMonitor.objects.all(), widget=forms.MultipleHiddenInput)
     issuer = forms.CharField(required=False)
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPHealthMonitor
+        model = models.HealthMonitor
         nullable_fields = [
             "name",
         ]
 
 
-class VIPHealthMonitorCSVForm(CSVModelForm):
+class HealthMonitorCSVForm(CSVModelForm):
     """Form for creating bulk Team."""
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPHealthMonitor
-        fields = models.VIPHealthMonitor.csv_headers
+        model = models.HealthMonitor
+        fields = models.HealthMonitor.csv_headers

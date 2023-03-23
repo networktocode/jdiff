@@ -9,30 +9,27 @@ from ..choices import Protocols
 from .utils import add_blank_choice
 
 
-class VIPForm(BootstrapMixin, forms.ModelForm):
-    """VIP creation/edit form."""
+class VserverForm(BootstrapMixin, forms.ModelForm):
+    """Vserver creation/edit form."""
 
     slug = AutoSlugField(populate_from=["name"])
     description = forms.CharField(required=False)
     device = forms.ModelChoiceField(queryset=Device.objects.all(), label="Device")
     interface = forms.ModelChoiceField(queryset=Interface.objects.all(), label="Interface")
     address = forms.ModelChoiceField(queryset=IPAddress.objects.all(), label="IPv4 Address")
-    pool = forms.ModelChoiceField(queryset=models.VIPPool.objects.all(), label="VIP Pool")
+    pool = forms.ModelChoiceField(queryset=models.ServiceGroup.objects.all(), label="Service Group")
     vlan = forms.ModelChoiceField(queryset=VLAN.objects.all(), label="VLAN", required=False)
     vrf = forms.ModelChoiceField(queryset=VRF.objects.all(), label="VRF", required=False)
     fqdn = forms.CharField(required=False)
     protocol = forms.ChoiceField(choices=add_blank_choice(Protocols))
     method = forms.CharField(required=False)
-    certificate = forms.ModelChoiceField(
-        queryset=models.VIPCertificate.objects.all(), label="VIP Certificate", required=False
-    )
+    certificate = forms.ModelChoiceField(queryset=models.Certificate.objects.all(), label="Certificate", required=False)
     owner = forms.CharField(required=False)
-    vip_args = forms.JSONField(required=False)
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIP
+        model = models.Vserver
         fields = [
             "slug",
             "name",
@@ -49,11 +46,10 @@ class VIPForm(BootstrapMixin, forms.ModelForm):
             "method",
             "certificate",
             "owner",
-            "vip_args",
         ]
 
 
-class VIPFilterForm(BootstrapMixin, forms.ModelForm):
+class VserverFilterForm(BootstrapMixin, forms.ModelForm):
     """Filter form to filter searches."""
 
     q = forms.CharField(
@@ -67,21 +63,19 @@ class VIPFilterForm(BootstrapMixin, forms.ModelForm):
     port = forms.IntegerField(required=False, label="Port")
     device = forms.ModelChoiceField(queryset=Device.objects.all(), label="Device", required=False)
     address = forms.ModelChoiceField(queryset=IPAddress.objects.all(), label="IP Address", required=False)
-    pool = forms.ModelChoiceField(queryset=models.VIPPool.objects.all(), label="VIP Pool", required=False)
+    pool = forms.ModelChoiceField(queryset=models.ServiceGroup.objects.all(), label="Service Group", required=False)
     vlan = forms.ModelChoiceField(queryset=VLAN.objects.all(), label="VLAN", required=False)
     vrf = forms.ModelChoiceField(queryset=VRF.objects.all(), label="VRF", required=False)
     fqdn = forms.CharField(required=False, label="FQDN")
     protocol = forms.ChoiceField(choices=add_blank_choice(Protocols), required=False, label="Protocol")
     method = forms.CharField(required=False, label="Method")
-    certificate = forms.ModelChoiceField(
-        queryset=models.VIPCertificate.objects.all(), required=False, label="Certificate"
-    )
+    certificate = forms.ModelChoiceField(queryset=models.Certificate.objects.all(), required=False, label="Certificate")
     owner = forms.CharField(required=False, label="Owner")
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIP
+        model = models.Vserver
         fields = [
             "q",
             "slug",
@@ -101,26 +95,26 @@ class VIPFilterForm(BootstrapMixin, forms.ModelForm):
         ]
 
 
-class VIPBulkEditForm(BootstrapMixin, BulkEditForm):
-    """VIP bulk edit form."""
+class VserverBulkEditForm(BootstrapMixin, BulkEditForm):
+    """Vserver bulk edit form."""
 
-    pk = forms.ModelChoiceField(queryset=models.VIP.objects.all(), widget=forms.MultipleHiddenInput)
+    pk = forms.ModelChoiceField(queryset=models.Vserver.objects.all(), widget=forms.MultipleHiddenInput)
     name = forms.CharField(required=False)
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIPPool
+        model = models.ServiceGroup
         nullable_fields = [
             "name",
         ]
 
 
-class VIPCSVForm(CSVModelForm):
+class VserverCSVForm(CSVModelForm):
     """Form for creating bulk Team."""
 
     class Meta:
         """Meta attributes."""
 
-        model = models.VIP
-        fields = models.VIP.csv_headers
+        model = models.Vserver
+        fields = models.Vserver.csv_headers
