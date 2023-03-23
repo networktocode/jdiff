@@ -23,7 +23,17 @@ class CertificateTable(BaseTable):
         """Meta attributes."""
 
         model = models.Certificate
-        fields = ["__all__"]
+        fields = [
+            "slug",
+            "issuer",
+            "version_number",
+            "serial_number",
+            "name",
+            "key",
+            "password",
+            "start_date",
+            "end_date",
+        ]
 
 
 class ServiceGroupBindingTable(BaseTable):
@@ -42,8 +52,16 @@ class ServiceGroupBindingTable(BaseTable):
         """Meta attributes."""
 
         model = models.ServiceGroupBinding
-        fields = ["__all__"]
-
+        fields = [
+            "slug",
+            "name",
+            "description",
+            "protocol",
+            "port",
+            "address",
+            "fqdn",
+            "monitor",
+        ]
 
 
 class HealthMonitorTable(BaseTable):
@@ -62,8 +80,19 @@ class HealthMonitorTable(BaseTable):
         """Meta attributes."""
 
         model = models.HealthMonitor
-        fields = ["__all__"]
-
+        fields = [
+            "slug",
+            "name",
+            "description",
+            "type",
+            "lrtm",
+            "secure",
+            "url",
+            "send",
+            "code",
+            "receive",
+            "httprequest",
+        ]
 
 
 class ServiceGroupTable(BaseTable):
@@ -83,7 +112,7 @@ class ServiceGroupTable(BaseTable):
         """Meta attributes."""
 
         model = models.ServiceGroup
-        fields = ["__all__"]
+        fields = ["slug", "name", "description", "monitor", "member", "type", "td", "sslprofile"]
 
 
 class VserverTable(BaseTable):
@@ -102,8 +131,23 @@ class VserverTable(BaseTable):
         """Meta attributes."""
 
         model = models.Vserver
-        fields = ["__all__"]
-
+        fields = [
+            "slug",
+            "name",
+            "description",
+            "device",
+            "interface",
+            "address",
+            "pool",
+            "vlan",
+            "vrf",
+            "fqdn",
+            "protocol",
+            "port",
+            "method",
+            "certificate",
+            "owner",
+        ]
 
 
 class CustomerTable(BaseTable):
@@ -122,4 +166,15 @@ class CustomerTable(BaseTable):
         """Meta attributes."""
 
         model = models.Customer
-        fields = ["__all__"]
+        fields = [
+            "slug",
+            "customer_id",
+            "site",
+            "name",
+            "fqdn",
+            "oe",
+            "email",
+            "class_type",
+            "accessibility",
+            "test_url",
+        ]

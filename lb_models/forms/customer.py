@@ -26,7 +26,18 @@ class CustomerForm(BootstrapMixin, forms.ModelForm):
         """Meta attributes."""
 
         model = models.Customer
-        fields = ["slug", "customer_id", "site", "name", "fqdn", "oe", "email", "class_type", "accessibility", "test_url"]
+        fields = [
+            "slug",
+            "customer_id",
+            "site",
+            "name",
+            "fqdn",
+            "oe",
+            "email",
+            "class_type",
+            "accessibility",
+            "test_url",
+        ]
 
 
 class CustomerFilterForm(BootstrapMixin, forms.ModelForm):
@@ -52,7 +63,19 @@ class CustomerFilterForm(BootstrapMixin, forms.ModelForm):
         """Meta attributes."""
 
         model = models.Customer
-        fields = ["q", "slug", "customer_id", "site", "name", "fqdn", "oe", "email", "class_type", "accessibility", "test_url"]
+        fields = [
+            "q",
+            "slug",
+            "customer_id",
+            "site",
+            "name",
+            "fqdn",
+            "oe",
+            "email",
+            "class_type",
+            "accessibility",
+            "test_url",
+        ]
 
 
 class CustomerBulkEditForm(BootstrapMixin, BulkEditForm):

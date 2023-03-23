@@ -1,6 +1,7 @@
 """Choices for LB models."""
 from nautobot.utilities.choices import ChoiceSet
 
+
 class Protocols(ChoiceSet):
     """Valid choices for protocols."""
 

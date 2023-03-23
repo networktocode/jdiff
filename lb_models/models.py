@@ -102,7 +102,7 @@ class ServiceGroupBinding(PrimaryModel):
     fqdn = models.CharField(max_length=200)
     monitor = models.ForeignKey(to="HealthMonitor", on_delete=models.PROTECT)
 
-    csv_headers = [
+    fields = [
         "slug",
         "name",
         "description",
@@ -112,7 +112,8 @@ class ServiceGroupBinding(PrimaryModel):
         "fqdn",
         "monitor",
     ]
-    clone_fields = ["slug", "name", "protocol", "port", "monitor"]
+    csv_headers = fields
+    clone_fields = fields
 
     def get_absolute_url(self):
         """Return detail view for Service Group memeber."""
@@ -162,7 +163,7 @@ class HealthMonitor(PrimaryModel):
     httprequest = models.CharField(max_length=50)
     receive = models.CharField(max_length=50, blank=True, null=True)
 
-    csv_headers = [
+    fields = [
         "slug",
         "name",
         "description",
@@ -175,19 +176,8 @@ class HealthMonitor(PrimaryModel):
         "receive",
         "httprequest",
     ]
-    clone_fields = [
-        "slug",
-        "name",
-        "description",
-        "type",
-        "lrtm",
-        "secure",
-        "url",
-        "send",
-        "code",
-        "receive",
-        "httprequest",
-    ]
+    csv_headers = fields
+    clone_fields = fields
 
     def get_absolute_url(self):
         """Return detail view for Health Monitor."""
@@ -235,8 +225,9 @@ class ServiceGroup(PrimaryModel):
     td = models.SmallIntegerField()
     sslprofile = models.CharField(max_length=50)
 
-    csv_headers = ["slug", "name", "description", "monitor", "member", "type", "td", "sslprofile"]
-    clone_fields = ["slug", "name", "description", "monitor", "member", "type", "td", "sslprofile"]
+    fields = ["slug", "name", "description", "monitor", "member", "type", "td", "sslprofile"]
+    csv_headers = fields
+    clone_fields = fields
 
     def get_absolute_url(self):
         """Return detail view for Service Group memeber."""
@@ -311,7 +302,7 @@ class Vserver(PrimaryModel):
     certificate = models.ForeignKey(to="Certificate", on_delete=models.CASCADE)
     owner = models.CharField(max_length=50)
 
-    csv_headers = [
+    fields = [
         "slug",
         "name",
         "description",
@@ -328,18 +319,8 @@ class Vserver(PrimaryModel):
         "certificate",
         "owner",
     ]
-    clone_fields = [
-        "slug",
-        "name",
-        "description",
-        "device",
-        "pool",
-        "protocol",
-        "port",
-        "method",
-        "certificate",
-        "owner",
-    ]
+    csv_headers = fields
+    clone_fields = fields
 
     def get_absolute_url(self):
         """Return detail view for vserver."""
@@ -383,7 +364,7 @@ class Vserver(PrimaryModel):
 class Customer(PrimaryModel):
     """Customer model implementation."""
 
-    slug = AutoSlugField(populate_from="id")
+    slug = AutoSlugField(populate_from="customer_id")
     customer_id = models.CharField(max_length=50)
     site = models.ForeignKey(
         to="dcim.Site",
@@ -400,8 +381,9 @@ class Customer(PrimaryModel):
     accessibility = models.CharField(max_length=20, choices=ApplicationAccessibility)
     test_url = models.URLField()
 
-    csv_headers = ["slug", "customer_id", "site", "name", "fqdn", "oe", "email", "class_type", "accessibility", "test_url"]
-    clone_fields = ["slug", "customer_id", "site", "name", "fqdn", "oe", "email", "class_type", "accessibility", "test_url"]
+    fields = ["slug", "customer_id", "site", "name", "fqdn", "oe", "email", "class_type", "accessibility", "test_url"]
+    csv_headers = fields
+    clone_fields = fields
 
     def get_absolute_url(self):
         """Return detail view for Customer memeber."""
@@ -424,4 +406,4 @@ class Customer(PrimaryModel):
 
     def __str__(self):
         """Stringify instance."""
-        return self.id
+        return self.customer_id

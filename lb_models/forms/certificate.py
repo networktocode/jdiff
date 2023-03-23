@@ -2,7 +2,6 @@
 from django import forms
 from nautobot.utilities.forms import BootstrapMixin, BulkEditForm, DatePicker, CSVModelForm
 from nautobot.core.fields import AutoSlugField
-from .utils import add_blank_choice
 from lb_models import models
 
 
@@ -12,7 +11,7 @@ class CertificateForm(BootstrapMixin, forms.ModelForm):
     slug = AutoSlugField(populate_from=["serial_number"])
     start_date = forms.DateField(widget=DatePicker(), required=False)
     end_date = forms.DateField(widget=DatePicker(), required=False)
-    password = forms.CharField(widget=forms.PasswordInput, required=False)
+    password = forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
         """Meta attributes."""
@@ -46,7 +45,6 @@ class CertificateFilterForm(BootstrapMixin, forms.ModelForm):
     key = forms.CharField(required=False, label="Certificate Key")
     start_date = forms.DateField(required=False, widget=DatePicker(), label="Start certificate date")
     end_date = forms.DateField(required=False, widget=DatePicker(), label="Expire certificate date")
-
 
     class Meta:
         """Meta attributes."""
