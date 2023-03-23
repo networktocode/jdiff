@@ -1,13 +1,18 @@
 """Models for LB Models."""
 
-import struct
 from django.db import models
 from django.urls import reverse
-from nautobot.core.models import BaseModel
+from nautobot.core.models.generics import PrimaryModel
 from django.core.validators import MaxValueValidator, MinValueValidator
 from nautobot.extras.utils import extras_features
 from nautobot.core.fields import AutoSlugField
-from .choices import CertAlgorithmChoices, Protocols
+from .choices import (
+    Protocols,
+    HealthMonitorTypes,
+    ServiceGroupTypes,
+    ApplicationClassTypes,
+    ApplicationAccessibility,
+)
 
 
 @extras_features(
@@ -20,53 +25,36 @@ from .choices import CertAlgorithmChoices, Protocols
     "statuses",
     "webhooks",
 )
-class VIPCertificate(BaseModel):
-    """VIP Certificate model implementation."""
+class Certificate(PrimaryModel):
+    """Certificate model implementation."""
 
-    slug = AutoSlugField(populate_from="serial_number")
-    issuer = models.CharField(max_length=50)
-    version_number = models.CharField(max_length=50)
-    serial_number = models.CharField(max_length=30, unique=True)
-    signature = models.CharField(max_length=50, unique=True)
-    signature_algorithm = models.CharField(max_length=20, choices=CertAlgorithmChoices)
-    signature_algorithm_id = models.CharField(max_length=30, unique=True)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    subject_name = models.CharField(max_length=50)
-    subject_pub_key = models.CharField(max_length=100)
-    subject_pub_key_algorithm = models.CharField(max_length=20, choices=CertAlgorithmChoices)
+    slug = AutoSlugField(populate_from="name")
+    issuer = models.CharField(max_length=50, blank=True, null=True)
+    version_number = models.CharField(max_length=50, blank=True, null=True)
+    serial_number = models.CharField(max_length=30, blank=True, null=True)
+    name = models.CharField(max_length=50)
+    key = models.CharField(max_length=50)
+    password = models.CharField(max_length=50)
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
 
-    csv_headers = [
+    fields = [
         "slug",
         "issuer",
         "version_number",
         "serial_number",
-        "signature",
-        "signature_algorithm",
-        "signature_algorithm_id",
+        "name",
+        "key",
+        "password",
         "start_date",
         "end_date",
-        "subject_name",
-        "subject_pub_key",
-        "subject_pub_key_algorithm",
     ]
-    clone_fields = [
-        "issuer",
-        "version_number",
-        "serial_number",
-        "signature",
-        "signature_algorithm",
-        "signature_algorithm_id",
-        "start_date",
-        "end_date",
-        "subject_name",
-        "subject_pub_key",
-        "subject_pub_key_algorithm",
-    ]
+    csv_headers = fields
+    clone_fields = fields
 
     def get_absolute_url(self):
-        """Return detail view for VIP certificate."""
-        return reverse("plugins:lb_models:vipcertificate", args=[self.slug])
+        """Return detail view for Certificate."""
+        return reverse("plugins:lb_models:certificate", args=[self.slug])
 
     def to_csv(self):
         """To CSV format."""
@@ -75,19 +63,15 @@ class VIPCertificate(BaseModel):
             self.issuer,
             self.version_number,
             self.serial_number,
-            self.signature,
-            self.signature_algorithm,
-            self.signature_algorithm_id,
+            self.key,
+            self.password,
             self.start_date,
             self.end_date,
-            self.subject_name,
-            self.subject_pub_key,
-            self.subject_pub_key_algorithm,
         )
 
     def __str__(self):
         """Stringify instance."""
-        return self.serial_number
+        return self.name
 
 
 @extras_features(
@@ -100,16 +84,14 @@ class VIPCertificate(BaseModel):
     "statuses",
     "webhooks",
 )
-class VIPPoolMember(BaseModel):
-    """VIP pool response model implementation."""
+class ServiceGroupBinding(PrimaryModel):
+    """Service Group response model implementation."""
 
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=100)
     protocol = models.CharField(max_length=20, choices=Protocols)
-    port = models.PositiveIntegerField(
-        blank=True, null=True, validators=[MaxValueValidator(65535), MinValueValidator(1)]
-    )
+    port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(1)])
     address = models.ForeignKey(
         to="ipam.IPAddress",
         on_delete=models.CASCADE,
@@ -118,10 +100,9 @@ class VIPPoolMember(BaseModel):
         null=True,
     )
     fqdn = models.CharField(max_length=200)
-    monitor = models.ForeignKey(to="VIPHealthMonitor", on_delete=models.PROTECT)
-    member_args = models.JSONField(blank=True, null=True)
+    monitor = models.ForeignKey(to="HealthMonitor", on_delete=models.PROTECT)
 
-    csv_headers = [
+    fields = [
         "slug",
         "name",
         "description",
@@ -130,18 +111,13 @@ class VIPPoolMember(BaseModel):
         "address",
         "fqdn",
         "monitor",
-        "member_args",
     ]
-    clone_fields = ["slug", "name", "protocol", "port", "monitor", "member_args"]
-
-    def clean(self):
-        """JSON Schema enforcement for member_args"""
-        # TBD
-        pass
+    csv_headers = fields
+    clone_fields = fields
 
     def get_absolute_url(self):
-        """Return detail view for VIP pool memeber."""
-        return reverse("plugins:lb_models:vippoolmember", args=[self.slug])
+        """Return detail view for Service Group memeber."""
+        return reverse("plugins:lb_models:servicegroupbinding", args=[self.slug])
 
     def to_csv(self):
         """To CSV format."""
@@ -154,7 +130,6 @@ class VIPPoolMember(BaseModel):
             self.address,
             self.fqdn,
             self.monitor,
-            self.member_args,
         )
 
     def __str__(self):
@@ -172,38 +147,56 @@ class VIPPoolMember(BaseModel):
     "statuses",
     "webhooks",
 )
-class VIPHealthMonitor(BaseModel):
-    """VIP pool response model implementation."""
+class HealthMonitor(PrimaryModel):
+    """Service Group response model implementation."""
 
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=100, blank=True, null=True)
-    type = models.CharField(max_length=50, null=True)
-    url = models.URLField(max_length=50, null=True)
-    send = models.CharField(max_length=50, null=True)
-    string = models.CharField(max_length=100, null=True)
-    code = models.SmallIntegerField(null=True)
-    receive = models.CharField(max_length=50, null=True)
+    type = models.CharField(max_length=20, choices=HealthMonitorTypes)
+    lrtm = models.BooleanField(blank=True, null=True)
+    secure = models.BooleanField(blank=True, null=True)
+    url = models.URLField(max_length=50, blank=True, null=True)
+    send = models.CharField(max_length=50, blank=True, null=True)
+    string = models.CharField(max_length=100, blank=True, null=True)
+    code = models.CharField(max_length=50)
+    httprequest = models.CharField(max_length=50)
+    receive = models.CharField(max_length=50, blank=True, null=True)
 
-    csv_headers = [
+    fields = [
         "slug",
         "name",
         "description",
         "type",
+        "lrtm",
+        "secure",
         "url",
         "send",
         "code",
         "receive",
+        "httprequest",
     ]
-    clone_fields = ["slug", "name", "description", "type", "url", "send", "receive"]
+    csv_headers = fields
+    clone_fields = fields
 
     def get_absolute_url(self):
-        """Return detail view for VIP pool memeber."""
-        return reverse("plugins:lb_models:viphealthmonitor", args=[self.slug])
+        """Return detail view for Health Monitor."""
+        return reverse("plugins:lb_models:healthmonitor", args=[self.slug])
 
     def to_csv(self):
         """To CSV format."""
-        return (self.slug, self.name, self.description, self.type, self.url, self.send, self.receive)
+        return (
+            self.slug,
+            self.name,
+            self.description,
+            self.type,
+            self.lrtm,
+            self.secure,
+            self.url,
+            self.send,
+            self.receive,
+            self.httprequest,
+        )
 
     def __str__(self):
         """Stringify instance."""
@@ -220,25 +213,29 @@ class VIPHealthMonitor(BaseModel):
     "statuses",
     "webhooks",
 )
-class VIPPool(BaseModel):
-    """VIP pool model implementation."""
+class ServiceGroup(PrimaryModel):
+    """Service Group model implementation."""
 
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=50)
-    monitor = models.ForeignKey(to="VIPHealthMonitor", on_delete=models.PROTECT)
-    member = models.ForeignKey(to="VIPPoolMember", on_delete=models.PROTECT)
+    description = models.CharField(max_length=50, blank=True, null=True)
+    monitor = models.ForeignKey(to="HealthMonitor", on_delete=models.PROTECT)
+    member = models.ForeignKey(to="ServiceGroupBinding", on_delete=models.PROTECT)
+    type = models.CharField(max_length=20, choices=ServiceGroupTypes)
+    td = models.SmallIntegerField()
+    sslprofile = models.CharField(max_length=50)
 
-    csv_headers = ["slug", "name", "description", "monitor", "member"]
-    clone_fields = ["slug", "name", "description", "monitor", "member"]
+    fields = ["slug", "name", "description", "monitor", "member", "type", "td", "sslprofile"]
+    csv_headers = fields
+    clone_fields = fields
 
     def get_absolute_url(self):
-        """Return detail view for VIP pool memeber."""
-        return reverse("plugins:lb_models:vippool", args=[self.slug])
+        """Return detail view for Service Group memeber."""
+        return reverse("plugins:lb_models:servicegroup", args=[self.slug])
 
     def to_csv(self):
         """To CSV format."""
-        return (self.slug, self.name, self.description, self.monitor, self.member)
+        return (self.slug, self.name, self.description, self.monitor, self.member, self.type, self.td, self.sslprofile)
 
     def __str__(self):
         """Stringify instance."""
@@ -255,8 +252,8 @@ class VIPPool(BaseModel):
     "statuses",
     "webhooks",
 )
-class VIP(BaseModel):
-    """VIP implementation."""
+class Vserver(PrimaryModel):
+    """Vserver implementation."""
 
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50)
@@ -283,7 +280,7 @@ class VIP(BaseModel):
         null=True,
     )
 
-    pool = models.ForeignKey(to="VIPPool", on_delete=models.PROTECT)
+    pool = models.ForeignKey(to="ServiceGroup", on_delete=models.PROTECT)
     vlan = models.ForeignKey(
         to="ipam.vlan",
         on_delete=models.PROTECT,
@@ -300,13 +297,12 @@ class VIP(BaseModel):
     )
     fqdn = models.CharField(max_length=200)
     protocol = models.CharField(max_length=20, choices=Protocols)
-    port = models.SmallIntegerField(null=True)
+    port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(1)])
     method = models.CharField(max_length=50)
-    certificate = models.ForeignKey(to="VIPCertificate", on_delete=models.CASCADE)
+    certificate = models.ForeignKey(to="Certificate", on_delete=models.CASCADE)
     owner = models.CharField(max_length=50)
-    vip_args = models.JSONField(blank=True, null=True)
 
-    csv_headers = [
+    fields = [
         "slug",
         "name",
         "description",
@@ -322,25 +318,13 @@ class VIP(BaseModel):
         "method",
         "certificate",
         "owner",
-        "vip_args",
     ]
-    clone_fields = [
-        "slug",
-        "name",
-        "description",
-        "device",
-        "pool",
-        "protocol",
-        "port",
-        "method",
-        "certificate",
-        "owner",
-        "vip_args",
-    ]
+    csv_headers = fields
+    clone_fields = fields
 
     def get_absolute_url(self):
-        """Return detail view for VIP."""
-        return reverse("plugins:lb_models:vip", args=[self.slug])
+        """Return detail view for vserver."""
+        return reverse("plugins:lb_models:vserver", args=[self.slug])
 
     def to_csv(self):
         """To CSV format."""
@@ -360,14 +344,66 @@ class VIP(BaseModel):
             self.method,
             self.certificate,
             self.owner,
-            self.vip_args,
         )
-
-    def clean(self):
-        """JSON Schema enforcement for vip_args"""
-        # TBD
-        pass
 
     def __str__(self):
         """Stringify instance."""
         return self.name
+
+
+@extras_features(
+    "custom_fields",
+    "custom_links",
+    "custom_validators",
+    "export_templates",
+    "graphql",
+    "relationships",
+    "statuses",
+    "webhooks",
+)
+class Customer(PrimaryModel):
+    """Customer model implementation."""
+
+    slug = AutoSlugField(populate_from="customer_id")
+    customer_id = models.CharField(max_length=50)
+    site = models.ForeignKey(
+        to="dcim.Site",
+        on_delete=models.PROTECT,
+        related_name="+",
+        null=True,
+        verbose_name="Site",
+    )
+    name = models.CharField(max_length=50)
+    fqdn = models.CharField(max_length=50)
+    oe = models.CharField(max_length=50)
+    email = models.EmailField()
+    class_type = models.CharField(max_length=20, choices=ApplicationClassTypes)
+    accessibility = models.CharField(max_length=20, choices=ApplicationAccessibility)
+    test_url = models.URLField()
+
+    fields = ["slug", "customer_id", "site", "name", "fqdn", "oe", "email", "class_type", "accessibility", "test_url"]
+    csv_headers = fields
+    clone_fields = fields
+
+    def get_absolute_url(self):
+        """Return detail view for Customer memeber."""
+        return reverse("plugins:lb_models:customer", args=[self.slug])
+
+    def to_csv(self):
+        """To CSV format."""
+        return (
+            self.slug,
+            self.customer_id,
+            self.site,
+            self.name,
+            self.fqdn,
+            self.oe,
+            self.email,
+            self.class_type,
+            self.accessibility,
+            self.test_url,
+        )
+
+    def __str__(self):
+        """Stringify instance."""
+        return self.customer_id
