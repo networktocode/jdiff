@@ -24,8 +24,8 @@ class CertificateFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             "version_number",
             "serial_number",
             "name",
-            "certificate_key",
-            "certificate_password",
+            "key",
+            "password",
             "start_date",
             "end_date",
         ]
@@ -39,7 +39,7 @@ class CertificateFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             | Q(serial_number__icontains=value)
             | Q(version_number__icontains=value)
             | Q(name__icontains=value)
-            | Q(certificate_key__icontains=value)
+            | Q(key__icontains=value)
         )
         return queryset.filter(qs_filter)
 

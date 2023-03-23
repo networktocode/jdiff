@@ -33,8 +33,8 @@ class Certificate(PrimaryModel):
     version_number = models.CharField(max_length=50, blank=True, null=True)
     serial_number = models.CharField(max_length=30, blank=True, null=True)
     name = models.CharField(max_length=50)
-    certificate_key = models.CharField(max_length=50)
-    certificate_password = models.CharField(max_length=50)
+    key = models.CharField(max_length=50)
+    password = models.CharField(max_length=50)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
 
@@ -44,8 +44,8 @@ class Certificate(PrimaryModel):
         "version_number",
         "serial_number",
         "name",
-        "certificate_key",
-        "certificate_password",
+        "key",
+        "password",
         "start_date",
         "end_date",
     ]
@@ -63,8 +63,8 @@ class Certificate(PrimaryModel):
             self.issuer,
             self.version_number,
             self.serial_number,
-            self.certificate_key,
-            self.certificate_password,
+            self.key,
+            self.password,
             self.start_date,
             self.end_date,
         )

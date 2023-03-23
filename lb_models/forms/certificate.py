@@ -12,7 +12,7 @@ class CertificateForm(BootstrapMixin, forms.ModelForm):
     slug = AutoSlugField(populate_from=["serial_number"])
     start_date = forms.DateField(widget=DatePicker(), required=False)
     end_date = forms.DateField(widget=DatePicker(), required=False)
-    certificate_password = forms.CharField(widget=forms.PasswordInput, required=False)
+    password = forms.CharField(widget=forms.PasswordInput, required=False)
 
     class Meta:
         """Meta attributes."""
@@ -24,8 +24,8 @@ class CertificateForm(BootstrapMixin, forms.ModelForm):
             "version_number",
             "serial_number",
             "name",
-            "certificate_key",
-            "certificate_password",
+            "key",
+            "password",
             "start_date",
             "end_date",
         ]
@@ -43,7 +43,7 @@ class CertificateFilterForm(BootstrapMixin, forms.ModelForm):
     issuer = forms.CharField(required=False, label="Issuer")
     serial_number = forms.CharField(required=False, label="SN")
     name = forms.CharField(required=False, label="Certificate Name")
-    certificate_key = forms.CharField(required=False, label="Certificate Key")
+    key = forms.CharField(required=False, label="Certificate Key")
     start_date = forms.DateField(required=False, widget=DatePicker(), label="Start certificate date")
     end_date = forms.DateField(required=False, widget=DatePicker(), label="Expire certificate date")
 
@@ -59,7 +59,7 @@ class CertificateFilterForm(BootstrapMixin, forms.ModelForm):
             "version_number",
             "serial_number",
             "name",
-            "certificate_key",
+            "key",
             "start_date",
             "end_date",
         ]
