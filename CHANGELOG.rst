@@ -1,6 +1,10 @@
+
+# Ver. 0.1.4
+- Release version.
+
 # Ver. 0.1.3
 - Update poetry lock.
-- Fixmigrations.
+- Fix migrations.
 
 # Ver. 0.1.2
 - Release version.
