@@ -2,7 +2,7 @@
 
 from django.db import models
 from django.urls import reverse
-from nautobot.core.models.generics import PrimaryModel
+from nautobot.core.models.generics import PrimaryModel, OrganizationalModel
 from django.core.validators import MaxValueValidator, MinValueValidator
 from nautobot.extras.utils import extras_features
 from nautobot.core.fields import AutoSlugField
@@ -147,7 +147,7 @@ class ServiceGroupBinding(PrimaryModel):
     "statuses",
     "webhooks",
 )
-class HealthMonitor(PrimaryModel):
+class HealthMonitor(OrganizationalModel):
     """Service Group response model implementation."""
 
     slug = AutoSlugField(populate_from="name")
@@ -213,7 +213,7 @@ class HealthMonitor(PrimaryModel):
     "statuses",
     "webhooks",
 )
-class ServiceGroup(PrimaryModel):
+class ServiceGroup(OrganizationalModel):
     """Service Group model implementation."""
 
     slug = AutoSlugField(populate_from="name")
@@ -361,7 +361,7 @@ class Vserver(PrimaryModel):
     "statuses",
     "webhooks",
 )
-class Customer(PrimaryModel):
+class Customer(OrganizationalModel):
     """Customer model implementation."""
 
     slug = AutoSlugField(populate_from="customer_id")
