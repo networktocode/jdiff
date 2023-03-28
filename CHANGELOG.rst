@@ -1,3 +1,10 @@
+# Ver. 0.1.3
+- Update poetry lock.
+- Fixmigrations.
+
+# Ver. 0.1.2
+- Release version.
+
 # Ver. 0.1.1
 - Include MVP data model agreed.
 
