@@ -1,7 +1,7 @@
 """Extract data from JSON. Based on custom JMSPath implementation."""
 import re
 import warnings
-from typing import Mapping, List, Dict, Any, Union
+from typing import Mapping, List, Dict, Any, Union, Optional
 import jmespath
 from .utils.data_normalization import exclude_filter, flatten_list
 from .utils.jmespath_parsers import (
@@ -12,7 +12,7 @@ from .utils.jmespath_parsers import (
 )
 
 
-def extract_data_from_json(data: Union[Mapping, List], path: str = "*", exclude: List = None) -> Any:
+def extract_data_from_json(data: Union[Mapping, List], path: str = "*", exclude: Optional[List] = None) -> Any:
     """Return wanted data from outpdevice data based on the check path. See unit test for complete example.
 
     Get the wanted values to be evaluated if JMESPath expression is defined,
