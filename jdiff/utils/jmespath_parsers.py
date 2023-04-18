@@ -31,15 +31,15 @@ def jmespath_value_parser(path: str):
     path_suffix = path.split(".")[-1]
 
     if regex_match_ref_key:
+        reference_key = regex_match_ref_key.group()
         if regex_ref_key.search(path_suffix):
             # [$peerAddress$,prefixesReceived] --> [prefixesReceived]
-            reference_key = regex_match_ref_key.group()
             return path.replace(reference_key, "")
 
         # result[0].$vrfs$.default... --> result[0].vrfs.default....
-        regex_normalized_value = re.search(r"\$.*\$", regex_match_ref_key.group())
+        regex_normalized_value = re.search(r"\$.*\$", reference_key)
         if regex_normalized_value:
-            normalized_value = regex_match_ref_key.group().split("$")[1]
+            normalized_value = reference_key.split("$")[1]
             return path.replace(regex_normalized_value.group(), normalized_value)
     return path
 

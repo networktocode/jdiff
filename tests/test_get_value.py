@@ -30,7 +30,7 @@ test_cases_extract_data_no_ref_key = [
 ]
 
 
-test_cases_extract_data__with_ref_key = [
+test_cases_extract_data_with_ref_key = [
     (
         "global.peers.$*$.*.ipv6.[accepted_prefixes]",
         [
@@ -48,7 +48,7 @@ test_cases_extract_data__with_ref_key = [
 
 
 @pytest.mark.parametrize(
-    "jmspath, expected_value", test_cases_extract_data_no_ref_key + test_cases_extract_data__with_ref_key
+    "jmspath, expected_value", test_cases_extract_data_no_ref_key + test_cases_extract_data_with_ref_key
 )
 def test_extract_data_from_json(jmspath, expected_value):
     """Test JMSPath return value."""
