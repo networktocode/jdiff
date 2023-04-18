@@ -1,7 +1,7 @@
 """Extract data from JSON. Based on custom JMSPath implementation."""
 import re
 import warnings
-from typing import Mapping, List, Dict, Any, Union
+from typing import Mapping, List, Dict, Any, Union, Optional
 import jmespath
 from .utils.data_normalization import exclude_filter, flatten_list
 from .utils.jmespath_parsers import (
@@ -12,7 +12,7 @@ from .utils.jmespath_parsers import (
 )
 
 
-def extract_data_from_json(data: Union[Mapping, List], path: str = "*", exclude: List = None) -> Any:
+def extract_data_from_json(data: Union[Mapping, List], path: str = "*", exclude: Optional[List] = None) -> Any:
     """Return wanted data from outpdevice data based on the check path. See unit test for complete example.
 
     Get the wanted values to be evaluated if JMESPath expression is defined,
@@ -48,28 +48,25 @@ def extract_data_from_json(data: Union[Mapping, List], path: str = "*", exclude:
     if values is None:
         raise TypeError("JMSPath returned 'None'. Please, verify your JMSPath regex.")
 
-    # check for multi-nested lists if not found return here
-    if not any(isinstance(i, list) for i in values):
-        return values
-
-    # process elements to check if lists should be flattened
-    for element in values:
-        for item in element:
-            # raise if there is a dict, path must be more specific to extract data
-            if isinstance(item, dict):
-                raise TypeError(
-                    f'Must be list of lists i.e. [["Idle", 75759616], ["Idle", 75759620]]. You have "{values}".'
-                )
-            if isinstance(item, list):
-                values = flatten_list(values)  # flatten list and rewrite values
-                break  # items are the same, need to check only first to see if this is a nested list
-
-    paired_key_value = associate_key_of_my_value(jmespath_value_parser(path), values)
+    # check for multi-nested lists
+    if any(isinstance(i, list) for i in values):
+        # process elements to check if lists should be flattened
+        for element in values:
+            for item in element:
+                # raise if there is a dict, path must be more specific to extract data
+                if isinstance(item, dict):
+                    raise TypeError(
+                        f'Must be list of lists i.e. [["Idle", 75759616], ["Idle", 75759620]]. You have "{values}".'
+                    )
+                if isinstance(item, list):
+                    values = flatten_list(values)  # flatten list and rewrite values
+                    break  # items are the same, need to check only first to see if this is a nested list
 
     # We need to get a list of reference keys - list of strings.
     # Based on the expression or data we might have different data types
     # therefore we need to normalize.
     if re.search(r"\$.*\$", path):
+        paired_key_value = associate_key_of_my_value(jmespath_value_parser(path), values)
         wanted_reference_keys = jmespath.search(jmespath_refkey_parser(path), data)
 
         if isinstance(wanted_reference_keys, dict):  # when wanted_reference_keys is dict() type
