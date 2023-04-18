@@ -251,7 +251,7 @@ Let's have a look at a couple of examples:
 ```
 We will define a JMESPath expression for the values we want to test and extract from the reference and comparison objects.
 ```python
->>> my_jmspath = "global.$peers$.*.*.ipv4.[accepted_prefixes,received_prefixes,sent_prefixes]"
+>>> my_jmspath = "global.peers.$*$.*.ipv4.[accepted_prefixes,received_prefixes,sent_prefixes]"
 >>> reference_value = extract_data_from_json(reference_data, my_jmspath)
 >>> reference_value
 [{'10.1.0.0': {'accepted_prefixes': 900,
