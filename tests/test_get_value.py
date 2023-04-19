@@ -1,7 +1,7 @@
 """Test extract_data_from_json."""
 import pytest
 from jdiff import extract_data_from_json
-from .utility import load_json_file
+from .utility import load_json_file, ASSERT_FAIL_MESSAGE
 
 
 test_cases_extract_data_none = [
@@ -44,6 +44,33 @@ test_cases_extract_data_with_ref_key = [
         "vpn.peers.$*$.*.ipv6.[accepted_prefixes]",
         [{"10.1.0.0": {"accepted_prefixes": 1000}}, {"10.2.0.0": {"accepted_prefixes": 1000}}],
     ),
+    (
+        "$*$.peers.$*$.*.ipv4.[accepted_prefixes,received_prefixes,sent_prefixes]",
+        [
+            {"global.10.1.0.0": {"accepted_prefixes": 1000, "received_prefixes": 1000, "sent_prefixes": 1000}},
+            {"global.10.2.0.0": {"accepted_prefixes": 1000, "received_prefixes": 1000, "sent_prefixes": 1000}},
+            {"global.10.64.207.255": {"accepted_prefixes": 1000, "received_prefixes": 1000, "sent_prefixes": 1000}},
+            {"global.7.7.7.7": {"accepted_prefixes": 1000, "received_prefixes": 1000, "sent_prefixes": 1000}},
+            {"vpn.10.1.0.0": {"accepted_prefixes": 1000, "received_prefixes": 1000, "sent_prefixes": 1000}},
+            {"vpn.10.2.0.0": {"accepted_prefixes": 1000, "received_prefixes": 1000, "sent_prefixes": 1000}},
+        ],
+    ),
+    (
+        "$*$.peers.$*$.*.ipv6.[received_prefixes,sent_prefixes]",
+        [
+            {"global.10.1.0.0": {"received_prefixes": 1000, "sent_prefixes": 1000}},
+            {"global.10.2.0.0": {"received_prefixes": 1000, "sent_prefixes": 1000}},
+            {"global.10.64.207.255": {"received_prefixes": 1000, "sent_prefixes": 1000}},
+            {"global.7.7.7.7": {"received_prefixes": 1000, "sent_prefixes": 1000}},
+            {"vpn.10.1.0.0": {"received_prefixes": 1000, "sent_prefixes": 1000}},
+            {"vpn.10.2.0.0": {"received_prefixes": 1000, "sent_prefixes": 1000}},
+        ],
+    ),
+    pytest.param(
+        "$*$.peers.$*$.address_family.$*$.[accepted_prefixes]",
+        "",
+        marks=pytest.mark.xfail(reason="Jmespath issue - path returns empty list."),
+    ),
 ]
 
 
@@ -55,4 +82,4 @@ def test_extract_data_from_json(jmspath, expected_value):
     data = load_json_file("napalm_get_bgp_neighbors", "multi_vrf.json")
     value = extract_data_from_json(data=data, path=jmspath)
 
-    assert value == expected_value
+    assert value == expected_value, ASSERT_FAIL_MESSAGE.format(output=value, expected_output=expected_value)

@@ -5,8 +5,9 @@ from jdiff.utils.jmespath_parsers import (
     jmespath_refkey_parser,
     keys_values_zipper,
     associate_key_of_my_value,
+    multi_reference_keys,
 )
-from .utility import ASSERT_FAIL_MESSAGE
+from .utility import load_json_file, ASSERT_FAIL_MESSAGE
 
 
 value_parser_case_1 = (
@@ -111,4 +112,42 @@ keys_association_test = [
 @pytest.mark.parametrize("path, wanted_values, expected_output", keys_association_test)
 def test_keys_association(path, wanted_values, expected_output):
     output = associate_key_of_my_value(path, wanted_values)
+    assert expected_output == output, ASSERT_FAIL_MESSAGE.format(output=output, expected_output=expected_output)
+
+
+multi_ref_key_case_1 = (
+    "$*$.peers.$*$.*.ipv4.[accepted_prefixes]",
+    ["global.10.1.0.0", "global.10.2.0.0", "global.10.64.207.255", "global.7.7.7.7", "vpn.10.1.0.0", "vpn.10.2.0.0"],
+)
+
+
+multi_ref_key_case_2 = (
+    "$*$.peers.$*$.address_family.$*$.[accepted_prefixes]",
+    [
+        "global.10.1.0.0.ipv4",
+        "global.10.1.0.0.ipv6",
+        "global.10.2.0.0.ipv4",
+        "global.10.2.0.0.ipv6",
+        "global.10.64.207.255.ipv4",
+        "global.10.64.207.255.ipv6",
+        "global.7.7.7.7.ipv4",
+        "global.7.7.7.7.ipv6",
+        "vpn.10.1.0.0.ipv4",
+        "vpn.10.1.0.0.ipv6",
+        "vpn.10.2.0.0.ipv4",
+        "vpn.10.2.0.0.ipv6",
+    ],
+)
+
+
+multi_ref_key_test_cases = [
+    multi_ref_key_case_1,
+    multi_ref_key_case_2,
+]
+
+
+@pytest.mark.parametrize("path, expected_output", multi_ref_key_test_cases)
+def test_multi_ref_key(path, expected_output):
+    data = load_json_file("napalm_get_bgp_neighbors", "multi_vrf.json")
+    output = multi_reference_keys(path, data)
     assert expected_output == output, ASSERT_FAIL_MESSAGE.format(output=output, expected_output=expected_output)
