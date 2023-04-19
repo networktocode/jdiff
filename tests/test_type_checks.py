@@ -145,7 +145,7 @@ napalm_bgp_neighbor_status = (
     "napalm_get_bgp_neighbors",
     "exact_match",
     {},
-    "global.$peers$.*.[is_enabled,is_up]",
+    "global.peers.$*$.[is_enabled,is_up]",
     (
         {
             "7.7.7.7": {
@@ -160,14 +160,14 @@ napalm_bgp_neighbor_prefixes_ipv4 = (
     "napalm_get_bgp_neighbors",
     "tolerance",
     {"tolerance": 10},
-    "global.$peers$.*.*.ipv4.[accepted_prefixes,received_prefixes,sent_prefixes]",
+    "global.peers.$*$.*.ipv4.[accepted_prefixes,received_prefixes,sent_prefixes]",
     ({"10.1.0.0": {"accepted_prefixes": {"new_value": 900, "old_value": 1000}}}, False),
 )
 napalm_bgp_neighbor_prefixes_ipv6 = (
     "napalm_get_bgp_neighbors",
     "tolerance",
     {"tolerance": 10},
-    "global.$peers$.*.*.ipv6.[accepted_prefixes,received_prefixes,sent_prefixes]",
+    "global.peers.$*$.*.ipv6.[accepted_prefixes,received_prefixes,sent_prefixes]",
     ({"10.64.207.255": {"received_prefixes": {"new_value": 1100, "old_value": 1000}}}, False),
 )
 napalm_get_lldp_neighbors_exact_raw = (

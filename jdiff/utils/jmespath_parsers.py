@@ -65,7 +65,7 @@ def jmespath_refkey_parser(path: str):
             splitted_jmespath[number] = regex_match_anchor.group().replace("$", "")
 
         if regex_match_anchor and not element.startswith("[") and not element.endswith("]"):
-            splitted_jmespath = splitted_jmespath[: number + 1]
+            splitted_jmespath = splitted_jmespath[:number]
 
     return ".".join(splitted_jmespath)
 
