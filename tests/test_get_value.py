@@ -102,3 +102,38 @@ def test_extract_data_from_json(jmspath, expected_value):
     value = extract_data_from_json(data=data, path=jmspath)
 
     assert value == expected_value, ASSERT_FAIL_MESSAGE.format(output=value, expected_output=expected_value)
+
+
+test_cases_top_key_anchor = [
+    ("$*$.is_enabled", [{".local.": {"is_enabled": True}}, {".local..0": {"is_enabled": True}}]),
+    ("$*$.is_up", [{".local.": {"is_up": True}}, {".local..0": {"is_up": True}}]),
+]
+
+
+@pytest.mark.parametrize("jmspath, expected_value", test_cases_top_key_anchor)
+def test_top_key_anchor(jmspath, expected_value):
+    """Test JMSPath return value for anchoring the top key."""
+    data = {
+        ".local.": {
+            "description": "",
+            "is_enabled": True,
+            "is_up": True,
+            "last_flapped": -1,
+            "mac_address": "Unspecified",
+            "mtu": 0,
+            "speed": -1,
+        },
+        ".local..0": {
+            "description": "",
+            "is_enabled": True,
+            "is_up": True,
+            "last_flapped": -1,
+            "mac_address": "Unspecified",
+            "mtu": 0,
+            "speed": -1,
+        },
+    }
+
+    value = extract_data_from_json(data=data, path=jmspath)
+
+    assert value == expected_value, ASSERT_FAIL_MESSAGE.format(output=value, expected_output=expected_value)

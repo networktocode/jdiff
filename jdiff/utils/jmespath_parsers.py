@@ -69,7 +69,7 @@ def jmespath_refkey_parser(path: str):
         if regex_match_anchor and not element.startswith("[") and not element.endswith("]"):
             splitted_jmespath = splitted_jmespath[:number]
 
-    return ".".join(splitted_jmespath)
+    return ".".join(splitted_jmespath) or "@"
 
 
 def associate_key_of_my_value(paths: str, wanted_value: List) -> List:
