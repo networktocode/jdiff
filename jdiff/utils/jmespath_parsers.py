@@ -8,6 +8,8 @@ evaluated bit of it, the second will target the reference key relative to the va
 import re
 from typing import Mapping, List, Union
 
+import jmespath
+
 
 def jmespath_value_parser(path: str):
     """
@@ -31,15 +33,15 @@ def jmespath_value_parser(path: str):
     path_suffix = path.split(".")[-1]
 
     if regex_match_ref_key:
+        reference_key = regex_match_ref_key.group()
         if regex_ref_key.search(path_suffix):
             # [$peerAddress$,prefixesReceived] --> [prefixesReceived]
-            reference_key = regex_match_ref_key.group()
             return path.replace(reference_key, "")
 
         # result[0].$vrfs$.default... --> result[0].vrfs.default....
-        regex_normalized_value = re.search(r"\$.*\$", regex_match_ref_key.group())
+        regex_normalized_value = re.search(r"\$.*\$", reference_key)
         if regex_normalized_value:
-            normalized_value = regex_match_ref_key.group().split("$")[1]
+            normalized_value = reference_key.split("$")[1]
             return path.replace(regex_normalized_value.group(), normalized_value)
     return path
 
@@ -120,3 +122,40 @@ def keys_values_zipper(list_of_reference_keys: List, wanted_value_with_key: List
         final_result.append({my_key: wanted_value_with_key[my_index]})
 
     return final_result
+
+
+def multi_reference_keys(jmspath, data):
+    """Build a list of concatenated reference keys.
+
+    Args:
+        jmspath: "$*$.peers.$*$.*.ipv4.[accepted_prefixes]"
+        data: tests/mock/napalm_get_bgp_neighbors/multi_vrf.json
+
+    Returns:
+        ["global.10.1.0.0", "global.10.2.0.0", "global.10.64.207.255", "global.7.7.7.7", "vpn.10.1.0.0", "vpn.10.2.0.0"]
+    """
+    ref_key_regex = re.compile(r"\$.*?\$")
+    mapping = []
+    split_path = jmspath.split(".")
+
+    ref_key_index = -1  # -1 as the starting value, so it will match split path list indexes
+    for index, element in enumerate(split_path):
+        if ref_key_regex.search(element):
+            ref_key_index += 1
+            key_path = (
+                ".".join(split_path[:index]).replace("$", "") or "@"
+            )  # @ is for top keys, as they are stripped with "*"
+            flat_path = f"{key_path}{' | []' * key_path.count('*')}"  # | [] to flatten the data, nesting level is eq to "*" count
+            sub_data = jmespath.search(flat_path, data)  # extract sub-data with up to the ref key
+            if isinstance(sub_data, dict):
+                keys = list(sub_data.keys())
+            elif isinstance(sub_data, list):
+                keys = []
+                for parent, children in zip(
+                    mapping[ref_key_index - 1], sub_data
+                ):  # refer to previous keys as they are already present in mapping
+                    keys.extend(f"{parent}.{child}" for child in children.keys())  # concatenate keys
+            else:
+                raise ValueError("Ref key anchor must return either a dict or a list.")
+            mapping.append(keys)
+    return mapping[-1]  # return last element as it has all previous ref_keys concatenated.
