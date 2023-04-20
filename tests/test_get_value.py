@@ -71,6 +71,25 @@ test_cases_extract_data_with_ref_key = [
         "",
         marks=pytest.mark.xfail(reason="Jmespath issue - path returns empty list."),
     ),
+    ("global.peers.*.is_enabled", [True, True, False, True]),
+    (
+        "global.peers.$*$.is_enabled",
+        [
+            {"10.1.0.0": {"is_enabled": True}},
+            {"10.2.0.0": {"is_enabled": True}},
+            {"10.64.207.255": {"is_enabled": False}},
+            {"7.7.7.7": {"is_enabled": True}},
+        ],
+    ),
+    (
+        "global.peers.$*$.[is_enabled]",
+        [
+            {"10.1.0.0": {"is_enabled": True}},
+            {"10.2.0.0": {"is_enabled": True}},
+            {"10.64.207.255": {"is_enabled": False}},
+            {"7.7.7.7": {"is_enabled": True}},
+        ],
+    ),
 ]
 
 
@@ -81,5 +100,5 @@ def test_extract_data_from_json(jmspath, expected_value):
     """Test JMSPath return value."""
     data = load_json_file("napalm_get_bgp_neighbors", "multi_vrf.json")
     value = extract_data_from_json(data=data, path=jmspath)
-
+    print(value)
     assert value == expected_value, ASSERT_FAIL_MESSAGE.format(output=value, expected_output=expected_value)
