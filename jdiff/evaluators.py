@@ -1,6 +1,6 @@
 """Evaluators."""
 import re
-from typing import Any, Mapping, Dict, Tuple
+from typing import Any, Mapping, Dict, Tuple, List
 from deepdiff import DeepDiff
 from .utils.diff_helpers import get_diff_iterables_items, fix_deepdiff_key_names
 from .operator import Operator
@@ -36,7 +36,7 @@ def diff_generator(pre_result: Any, post_result: Any) -> Dict:
     return fix_deepdiff_key_names(result)
 
 
-def parameter_evaluator(values: Mapping, parameters: Mapping, mode: str) -> Dict:
+def parameter_evaluator(values: List[Dict], parameters: Mapping, mode: str) -> Dict:
     """Parameter Match evaluator engine.
 
     Args:
@@ -51,30 +51,30 @@ def parameter_evaluator(values: Mapping, parameters: Mapping, mode: str) -> Dict
         Dictionary with all the items that have some value not matching the expectations from parameters
     """
     if not isinstance(values, list):
-        raise TypeError("Something went wrong during jmespath parsing. 'values' must be of type List.")
+        raise TypeError("'values' must be of type List.")
 
     result = {}
-    for value in values:
+    for index, value in enumerate(values):
         # value: {'7.7.7.7': {'peerAddress': '7.7.7.7', 'localAsn': '65130.1101', 'linkType': 'externals
         if not isinstance(value, dict):
-            raise TypeError(
-                "Something went wrong during jmespath parsing. ",
-                f"'value' ({value}) must be of type Dict, and it's {type(value)}",
-            )
+            raise TypeError(f"'value' ({value}) must be of type Dict, and it's {type(value)}")
 
         result_item = {}
 
-        # TODO: Why the 'value' dict has always ONE single element? we have to explain
-        # inner_key: '7.7.7.7'
-        inner_key = list(value.keys())[0]
-        # inner_value: [{'peerAddress': '7.7.7.7', 'localAsn': '65130.1101', 'linkType': 'externals'}]
-        inner_value = list(value.values())[0]
+        # When data has been normalized with $key$, get inner key and value
+        if len(value) == 1:
+            # inner_key: '7.7.7.7'
+            inner_key = list(value.keys())[0]
+            # inner_value: [{'peerAddress': '7.7.7.7', 'localAsn': '65130.1101', 'linkType': 'externals'}]
+            value = list(value.values())[0]
+        else:
+            inner_key = index
 
         for parameter_key, parameter_value in parameters.items():
-            if mode == "match" and inner_value[parameter_key] != parameter_value:
-                result_item[parameter_key] = inner_value[parameter_key]
-            elif mode == "no-match" and inner_value[parameter_key] == parameter_value:
-                result_item[parameter_key] = inner_value[parameter_key]
+            if mode == "match" and value[parameter_key] != parameter_value:
+                result_item[parameter_key] = value[parameter_key]
+            elif mode == "no-match" and value[parameter_key] == parameter_value:
+                result_item[parameter_key] = value[parameter_key]
 
         if result_item:
             result[inner_key] = result_item
@@ -82,10 +82,10 @@ def parameter_evaluator(values: Mapping, parameters: Mapping, mode: str) -> Dict
     return result
 
 
-def regex_evaluator(values: Mapping, regex_expression: str, mode: str) -> Dict:
+def regex_evaluator(values: List[Dict[Any, Dict]], regex_expression: str, mode: str) -> Dict:
     """Regex Match evaluator engine."""
     # values: [{'7.7.7.7': {'peerGroup': 'EVPN-OVERLAY-SPINE'}}]
-    # parameter: {'regex': '.*UNDERLAY.*', 'mode': 'include'}
+    # parameter: {'regex': '.*UNDERLAY.*', 'mode': 'match'}
     result = {}
     if not isinstance(values, list):
         raise TypeError("Something went wrong during JMSPath parsing. 'values' must be of type List.")
@@ -94,10 +94,10 @@ def regex_evaluator(values: Mapping, regex_expression: str, mode: str) -> Dict:
         for founded_value in item.values():
             for value in founded_value.values():
                 match_result = re.search(regex_expression, value)
-                # Fail if there is not regex match
+                # Fail if there is no regex match for "match" mode
                 if mode == "match" and not match_result:
                     result.update(item)
-                # Fail if there is regex match
+                # Fail if there is regex match for "no-match" mode.
                 elif mode == "no-match" and match_result:
                     result.update(item)
 

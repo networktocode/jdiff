@@ -8,7 +8,7 @@ from .utility import load_mocks, ASSERT_FAIL_MESSAGE
 # Diff test case 1.
 global_peers = (
     "napalm_getter_peer_state_change",
-    "global.$peers$.*.[is_enabled,is_up]",
+    "global.peers.$*$.[is_enabled,is_up]",
     [],
     {
         "10.1.0.0": {
@@ -134,7 +134,7 @@ changed_item = (
 # Diff test case 9. Value in multiple nested lists.
 multi_nested_list = (
     "exact_match_nested",
-    "global.$peers$.*.*.ipv4.[accepted_prefixes,received_prefixes]",
+    "global.peers.$*$.*.ipv4.[accepted_prefixes,received_prefixes]",
     [],
     {
         "10.1.0.0": {"accepted_prefixes": {"new_value": -1, "old_value": -9}},
