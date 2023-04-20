@@ -5,6 +5,8 @@
 - Fix operator checks to follow other check_type logic #85
 - Add support for multiple ref key #92
 - Update gt and lt logic in operator check #64
+- Fix ref key in dict of dicts data type #91 
+- Support single value in expression #94 
 - Minor fixes
 
 ## v0.0.2
