@@ -69,7 +69,7 @@ def jmespath_refkey_parser(path: str):
         if regex_match_anchor and not element.startswith("[") and not element.endswith("]"):
             splitted_jmespath = splitted_jmespath[:number]
 
-    return ".".join(splitted_jmespath)
+    return ".".join(splitted_jmespath) or "@"
 
 
 def associate_key_of_my_value(paths: str, wanted_value: List) -> List:
@@ -87,13 +87,19 @@ def associate_key_of_my_value(paths: str, wanted_value: List) -> List:
 
     final_list = []
 
-    for items in wanted_value:
-        if len(items) != len(my_key_value_list):
-            raise ValueError("Key's value len != from value len")
+    if not all(isinstance(item, list) for item in wanted_value) and len(my_key_value_list) == 1:
+        for item in wanted_value:
+            temp_dict = {my_key_value_list[0]: item}
+            final_list.append(temp_dict)
 
-        temp_dict = {my_key_value_list[my_index]: my_value for my_index, my_value in enumerate(items)}
+    else:
+        for items in wanted_value:
+            if len(items) != len(my_key_value_list):
+                raise ValueError("Key's value len != from value len")
 
-        final_list.append(temp_dict)
+            temp_dict = {my_key_value_list[my_index]: my_value for my_index, my_value in enumerate(items)}
+
+            final_list.append(temp_dict)
 
     return final_list
 
