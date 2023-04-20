@@ -100,5 +100,5 @@ def test_extract_data_from_json(jmspath, expected_value):
     """Test JMSPath return value."""
     data = load_json_file("napalm_get_bgp_neighbors", "multi_vrf.json")
     value = extract_data_from_json(data=data, path=jmspath)
-    print(value)
+
     assert value == expected_value, ASSERT_FAIL_MESSAGE.format(output=value, expected_output=expected_value)
