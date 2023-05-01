@@ -3,19 +3,19 @@ from django import forms
 from nautobot.utilities.forms import BootstrapMixin, BulkEditForm, CSVModelForm
 from nautobot.core.fields import AutoSlugField
 from lb_models import models
-from ..choices import HealthMonitorTypes
+from ..choices import MonitorTypes
 from .utils import add_blank_choice
 
 
-class HealthMonitorForm(BootstrapMixin, forms.ModelForm):
-    """Health Monitor creation/edit form."""
+class MonitorForm(BootstrapMixin, forms.ModelForm):
+    """Monitor creation/edit form."""
 
     slug = AutoSlugField(populate_from=["name"])
 
     class Meta:
         """Meta attributes."""
 
-        model = models.HealthMonitor
+        model = models.Monitor
         fields = [
             "slug",
             "name",
@@ -31,7 +31,7 @@ class HealthMonitorForm(BootstrapMixin, forms.ModelForm):
         ]
 
 
-class HealthMonitorFilterForm(BootstrapMixin, forms.ModelForm):
+class MonitorFilterForm(BootstrapMixin, forms.ModelForm):
     """Filter form to filter searches."""
 
     q = forms.CharField(
@@ -42,7 +42,7 @@ class HealthMonitorFilterForm(BootstrapMixin, forms.ModelForm):
     slug = forms.CharField(required=False, label="Slug")
     name = forms.CharField(required=False, label="Name")
     description = forms.CharField(required=False, label="Description")
-    type = forms.ChoiceField(choices=add_blank_choice(HealthMonitorTypes), required=False)
+    type = forms.ChoiceField(choices=add_blank_choice(MonitorTypes), required=False)
     lrtm = forms.BooleanField(required=False, label="LRTM")
     secure = forms.BooleanField(required=False, label="Secure")
     url = forms.URLField(required=False, label="URL")
@@ -55,7 +55,7 @@ class HealthMonitorFilterForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         """Meta attributes."""
 
-        model = models.HealthMonitor
+        model = models.Monitor
         fields = [
             "q",
             "slug",
@@ -72,26 +72,26 @@ class HealthMonitorFilterForm(BootstrapMixin, forms.ModelForm):
         ]
 
 
-class HealthMonitorBulkEditForm(BootstrapMixin, BulkEditForm):
-    """Health Monitor bulk edit form."""
+class MonitorBulkEditForm(BootstrapMixin, BulkEditForm):
+    """Monitor bulk edit form."""
 
-    pk = forms.ModelChoiceField(queryset=models.HealthMonitor.objects.all(), widget=forms.MultipleHiddenInput)
+    pk = forms.ModelChoiceField(queryset=models.Monitor.objects.all(), widget=forms.MultipleHiddenInput)
     issuer = forms.CharField(required=False)
 
     class Meta:
         """Meta attributes."""
 
-        model = models.HealthMonitor
+        model = models.Monitor
         nullable_fields = [
             "name",
         ]
 
 
-class HealthMonitorCSVForm(CSVModelForm):
+class MonitorCSVForm(CSVModelForm):
     """Form for creating bulk Team."""
 
     class Meta:
         """Meta attributes."""
 
-        model = models.HealthMonitor
-        fields = models.HealthMonitor.csv_headers
+        model = models.Monitor
+        fields = models.Monitor.csv_headers

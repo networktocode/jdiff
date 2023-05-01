@@ -11,8 +11,8 @@ class Protocols(ChoiceSet):
     CHOICES = ((TCP, "tcp"), (UDP, "udp"))
 
 
-class HealthMonitorTypes(ChoiceSet):
-    """Valid choices for HealthMonitor."""
+class MonitorTypes(ChoiceSet):
+    """Valid choices for Monitor."""
 
     PING = "PING"
     TCP = "TCP"

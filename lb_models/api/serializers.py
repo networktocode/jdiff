@@ -19,13 +19,13 @@ class CertificateSerializer(ValidatedModelSerializer):
         fields = "__all__"
 
 
-class HealthMonitorSerializer(ValidatedModelSerializer):
-    """Health Monitor Serializer."""
+class MonitorSerializer(ValidatedModelSerializer):
+    """Monitor Serializer."""
 
     class Meta:
         """Meta attributes."""
 
-        model = models.HealthMonitor
+        model = models.Monitor
         fields = "__all__"
 
 
@@ -33,7 +33,7 @@ class ServiceGroupBindingSerializer(ValidatedModelSerializer):
     """Service Group Member Serializer."""
 
     address = ipam_nested_serializers.NestedIPAddressSerializer()
-    monitor = nested_serializers.HealthMonitorNestedSerializer()
+    monitor = nested_serializers.MonitorNestedSerializer()
 
     class Meta:
         """Meta attributes."""
@@ -46,7 +46,7 @@ class ServiceGroupSerializer(ValidatedModelSerializer):
     """Service Group Serializer."""
 
     member = nested_serializers.ServiceGroupBindingNestedSerializer()
-    monitor = nested_serializers.HealthMonitorNestedSerializer()
+    monitor = nested_serializers.MonitorNestedSerializer()
 
     class Meta:
         """Meta attributes."""

@@ -64,13 +64,13 @@ class ServiceGroupBindingTable(BaseTable):
         ]
 
 
-class HealthMonitorTable(BaseTable):
+class MonitorTable(BaseTable):
     # pylint: disable=R0903
     """Table for list view."""
 
     pk = ToggleColumn()
     actions = ButtonsColumn(
-        models.HealthMonitor,
+        models.Monitor,
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
@@ -79,7 +79,7 @@ class HealthMonitorTable(BaseTable):
     class Meta(BaseTable.Meta):
         """Meta attributes."""
 
-        model = models.HealthMonitor
+        model = models.Monitor
         fields = [
             "slug",
             "name",

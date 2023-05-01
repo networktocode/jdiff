@@ -6,7 +6,7 @@ from lb_models.api import views
 
 router = OrderedDefaultRouter()
 router.register("certificate", views.CertificateViewSet)
-router.register("healthmonitor", views.HealthMonitorViewSet)
+router.register("monitor", views.MonitorViewSet)
 router.register("servicegroupbinding", views.ServiceGroupBindingViewSet)
 router.register("servicegroup", views.ServiceGroupViewSet)
 router.register("vserver", views.vserverViewSet)

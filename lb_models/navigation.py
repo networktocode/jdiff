@@ -41,17 +41,17 @@ menu_items = (
         ),
     ),
     PluginMenuItem(
-        link="plugins:lb_models:healthmonitor_list",
-        link_text="Health Monitor",
+        link="plugins:lb_models:monitor_list",
+        link_text="Monitor",
         buttons=(
             PluginMenuButton(
-                link="plugins:lb_models:healthmonitor_add",
+                link="plugins:lb_models:monitor_add",
                 title="Add",
                 icon_class="mdi mdi-plus-thick",
                 color=ButtonColorChoices.GREEN,
             ),
             PluginMenuButton(
-                link="plugins:lb_models:healthmonitor_import",
+                link="plugins:lb_models:monitor_import",
                 title="Import",
                 icon_class="mdi mdi-database-import-outline",
                 color=ButtonColorChoices.BLUE,

@@ -3,7 +3,7 @@ from django.urls import path
 from nautobot.extras.views import ObjectChangeLogView
 
 from lb_models import models
-from lb_models.views import certificate, servicegroupbinding, healthmonitor, servicegroup, vserver, customer
+from lb_models.views import certificate, monitor, servicegroupbinding, servicegroup, vserver, customer
 
 # Order is important for these URLs to work (add/delete/edit) to be before any that require uuid/slug
 urlpatterns = [
@@ -67,31 +67,31 @@ urlpatterns = [
         name="servicegroupbinding_changelog",
         kwargs={"model": models.ServiceGroupBinding},
     ),
-    path("healthmonitor/", healthmonitor.HealthMonitorListView.as_view(), name="healthmonitor_list"),
-    path("healthmonitor/add/", healthmonitor.HealthMonitorCreateView.as_view(), name="healthmonitor_add"),
-    path("healthmonitor/import/", healthmonitor.HealthMonitorBulkImportView.as_view(), name="healthmonitor_import"),
+    path("monitor/", monitor.MonitorListView.as_view(), name="monitor_list"),
+    path("monitor/add/", monitor.MonitorCreateView.as_view(), name="monitor_add"),
+    path("monitor/import/", monitor.MonitorBulkImportView.as_view(), name="monitor_import"),
     path(
-        "healthmonitor/delete/",
-        healthmonitor.HealthMonitorBulkDeleteView.as_view(),
-        name="healthmonitor_bulk_delete",
+        "monitor/delete/",
+        monitor.MonitorBulkDeleteView.as_view(),
+        name="monitor_bulk_delete",
     ),
-    path("healthmonitor/edit/", healthmonitor.HealthMonitorBulkEditView.as_view(), name="healthmonitor_bulk_edit"),
-    path("healthmonitor/<slug:slug>/", healthmonitor.HealthMonitorView.as_view(), name="healthmonitor"),
+    path("monitor/edit/", monitor.MonitorBulkEditView.as_view(), name="monitor_bulk_edit"),
+    path("monitor/<slug:slug>/", monitor.MonitorView.as_view(), name="monitor"),
     path(
-        "healthmonitor/<slug:slug>/delete/",
-        healthmonitor.HealthMonitorDeleteView.as_view(),
-        name="healthmonitor_delete",
-    ),
-    path(
-        "healthmonitor/<slug:slug>/edit/",
-        healthmonitor.HealthMonitorEditView.as_view(),
-        name="healthmonitor_edit",
+        "monitor/<slug:slug>/delete/",
+        monitor.MonitorDeleteView.as_view(),
+        name="monitor_delete",
     ),
     path(
-        "healthmonitor/<slug:slug>/changelog/",
+        "monitor/<slug:slug>/edit/",
+        monitor.MonitorEditView.as_view(),
+        name="monitor_edit",
+    ),
+    path(
+        "monitor/<slug:slug>/changelog/",
         ObjectChangeLogView.as_view(),
-        name="healthmonitor_changelog",
-        kwargs={"model": models.HealthMonitor},
+        name="monitor_changelog",
+        kwargs={"model": models.Monitor},
     ),
     path("servicegroup/", servicegroup.ServiceGroupListView.as_view(), name="servicegroup_list"),
     path("servicegroup/add/", servicegroup.ServiceGroupCreateView.as_view(), name="servicegroup_add"),

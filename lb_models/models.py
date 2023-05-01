@@ -8,7 +8,7 @@ from nautobot.extras.utils import extras_features
 from nautobot.core.fields import AutoSlugField
 from .choices import (
     Protocols,
-    HealthMonitorTypes,
+    MonitorTypes,
     ServiceGroupTypes,
     ApplicationClassTypes,
     ApplicationAccessibility,
@@ -100,7 +100,7 @@ class ServiceGroupBinding(PrimaryModel):
         null=True,
     )
     fqdn = models.CharField(max_length=200)
-    monitor = models.ForeignKey(to="HealthMonitor", on_delete=models.PROTECT)
+    monitor = models.ForeignKey(to="Monitor", on_delete=models.PROTECT)
 
     fields = [
         "slug",
@@ -147,13 +147,13 @@ class ServiceGroupBinding(PrimaryModel):
     "statuses",
     "webhooks",
 )
-class HealthMonitor(OrganizationalModel):
+class Monitor(OrganizationalModel):
     """Service Group response model implementation."""
 
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=100, blank=True, null=True)
-    type = models.CharField(max_length=20, choices=HealthMonitorTypes)
+    type = models.CharField(max_length=20, choices=MonitorTypes)
     lrtm = models.BooleanField(blank=True, null=True)
     secure = models.BooleanField(blank=True, null=True)
     url = models.URLField(max_length=50, blank=True, null=True)
@@ -180,8 +180,8 @@ class HealthMonitor(OrganizationalModel):
     clone_fields = fields
 
     def get_absolute_url(self):
-        """Return detail view for Health Monitor."""
-        return reverse("plugins:lb_models:healthmonitor", args=[self.slug])
+        """Return detail view for Monitor."""
+        return reverse("plugins:lb_models:monitor", args=[self.slug])
 
     def to_csv(self):
         """To CSV format."""
@@ -219,7 +219,7 @@ class ServiceGroup(OrganizationalModel):
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=50, blank=True, null=True)
-    monitor = models.ForeignKey(to="HealthMonitor", on_delete=models.PROTECT)
+    monitor = models.ForeignKey(to="Monitor", on_delete=models.PROTECT)
     member = models.ForeignKey(to="ServiceGroupBinding", on_delete=models.PROTECT)
     type = models.CharField(max_length=20, choices=ServiceGroupTypes)
     td = models.SmallIntegerField()

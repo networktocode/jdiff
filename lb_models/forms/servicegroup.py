@@ -13,7 +13,7 @@ class ServiceGroupForm(BootstrapMixin, forms.ModelForm):
     slug = AutoSlugField(populate_from=["name"])
     name = forms.CharField(required=False)
     description = forms.CharField(required=False)
-    monitor = forms.ModelChoiceField(queryset=models.HealthMonitor.objects.all(), to_field_name="slug")
+    monitor = forms.ModelChoiceField(queryset=models.Monitor.objects.all(), to_field_name="slug")
     member = forms.ModelChoiceField(queryset=models.ServiceGroupBinding.objects.all(), to_field_name="slug")
 
     class Meta:
@@ -34,7 +34,7 @@ class ServiceGroupFilterForm(BootstrapMixin, forms.ModelForm):
     slug = AutoSlugField(populate_from=["name"])
     name = forms.CharField(required=False)
     description = forms.CharField(required=False)
-    monitor = forms.ModelChoiceField(queryset=models.HealthMonitor.objects.all(), required=False, to_field_name="slug")
+    monitor = forms.ModelChoiceField(queryset=models.Monitor.objects.all(), required=False, to_field_name="slug")
     member = forms.ModelChoiceField(
         queryset=models.ServiceGroupBinding.objects.all(), required=False, to_field_name="slug"
     )

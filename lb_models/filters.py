@@ -88,8 +88,8 @@ class ServiceGroupBindingFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         return queryset.filter(qs_filter)
 
 
-class HealthMonitorFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
-    """Filter for HealthMonitor."""
+class MonitorFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
+    """Filter for Monitor."""
 
     q = django_filters.CharFilter(
         method="search",
@@ -99,7 +99,7 @@ class HealthMonitorFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
     class Meta:
         """Meta attributes for filter."""
 
-        model = models.HealthMonitor
+        model = models.Monitor
         fields = [
             "q",
             "slug",
@@ -139,7 +139,7 @@ class ServiceGroupFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         label="Search",
     )
     monitor = django_filters.ModelMultipleChoiceFilter(
-        queryset=models.HealthMonitor.objects.all(),
+        queryset=models.Monitor.objects.all(),
         label="Monitor",
     )
     member = django_filters.ModelMultipleChoiceFilter(
