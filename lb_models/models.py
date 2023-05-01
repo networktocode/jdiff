@@ -152,29 +152,20 @@ class Monitor(OrganizationalModel):
 
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50, unique=True)
-    description = models.CharField(max_length=100, blank=True, null=True)
+    comment = models.CharField(max_length=100, blank=True, null=True)
     type = models.CharField(max_length=20, choices=MonitorTypes)
-    lrtm = models.BooleanField(blank=True, null=True)
-    secure = models.BooleanField(blank=True, null=True)
-    url = models.URLField(max_length=50, blank=True, null=True)
-    send = models.CharField(max_length=50, blank=True, null=True)
-    string = models.CharField(max_length=100, blank=True, null=True)
-    code = models.CharField(max_length=50)
-    httprequest = models.CharField(max_length=50)
-    receive = models.CharField(max_length=50, blank=True, null=True)
+    lrtm = models.BooleanField(blank=True, null=True, default=False)
+    args = models.JSONField(blank=True, null=True)
+    snow_id = models.CharField(max_length=100, blank=True, null=True)
 
     fields = [
         "slug",
         "name",
-        "description",
+        "comment",
         "type",
         "lrtm",
-        "secure",
-        "url",
-        "send",
-        "code",
-        "receive",
-        "httprequest",
+        "args",
+        "snow_id"
     ]
     csv_headers = fields
     clone_fields = fields
@@ -188,14 +179,11 @@ class Monitor(OrganizationalModel):
         return (
             self.slug,
             self.name,
-            self.description,
+            self.comment,
             self.type,
             self.lrtm,
-            self.secure,
-            self.url,
-            self.send,
-            self.receive,
-            self.httprequest,
+            self.args,
+            self.snow_id
         )
 
     def __str__(self):

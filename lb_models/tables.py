@@ -83,15 +83,11 @@ class MonitorTable(BaseTable):
         fields = [
             "slug",
             "name",
-            "description",
+            "comment",
             "type",
             "lrtm",
-            "secure",
-            "url",
-            "send",
-            "code",
-            "receive",
-            "httprequest",
+            "args",
+            "snow_id"
         ]
 
 

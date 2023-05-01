@@ -21,15 +21,17 @@ class MonitorTypes(ChoiceSet):
     HTTP_ECV = "HTTP-ECV"
     UDP_ECV = "UDP-ECV"
     LDAP = "LDAP"
+    SNMP = "SNMP"
 
     CHOICES = (
-        # (PING, "PING"),
-        # (TCP, "TCP"),
+        (PING, "PING"),
+        (TCP, "TCP"),
         (HTTP, "HTTP"),
-        # (TCP_ECV, "TCP-ECV"),
-        # (HTTP_ECV, "HTTP-ECV"),
-        # (UDP_ECV, "UDP-ECV"),
-        # (LDAP, "LDAP"),
+        (TCP_ECV, "TCP-ECV"),
+        (HTTP_ECV, "HTTP-ECV"),
+        (UDP_ECV, "UDP-ECV"),
+        (LDAP, "LDAP"),
+        (SNMP, "SNMP"),
     )
 
 

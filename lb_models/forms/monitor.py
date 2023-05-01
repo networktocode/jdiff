@@ -1,6 +1,6 @@
 """Forms for lb_models."""
 from django import forms
-from nautobot.utilities.forms import BootstrapMixin, BulkEditForm, CSVModelForm
+from nautobot.utilities.forms import BootstrapMixin, BulkEditForm, CSVModelForm, StaticSelect2
 from nautobot.core.fields import AutoSlugField
 from lb_models import models
 from ..choices import MonitorTypes
@@ -19,15 +19,10 @@ class MonitorForm(BootstrapMixin, forms.ModelForm):
         fields = [
             "slug",
             "name",
-            "description",
+            "comment",
             "type",
             "lrtm",
-            "secure",
-            "url",
-            "send",
-            "code",
-            "receive",
-            "httprequest",
+            "args"
         ]
 
 
@@ -41,16 +36,13 @@ class MonitorFilterForm(BootstrapMixin, forms.ModelForm):
     )
     slug = forms.CharField(required=False, label="Slug")
     name = forms.CharField(required=False, label="Name")
-    description = forms.CharField(required=False, label="Description")
+    comment = forms.CharField(required=False, label="Comment")
     type = forms.ChoiceField(choices=add_blank_choice(MonitorTypes), required=False)
-    lrtm = forms.BooleanField(required=False, label="LRTM")
-    secure = forms.BooleanField(required=False, label="Secure")
-    url = forms.URLField(required=False, label="URL")
-    send = forms.CharField(required=False, label="Send")
-    string = forms.CharField(required=False, label="String")
-    code = forms.IntegerField(label="Code")
-    receive = forms.CharField(required=False, label="Receive")
-    httprequest = forms.CharField(label="HTTP Request")
+    lrtm = forms.NullBooleanField(
+        required=False, widget=StaticSelect2(choices=add_blank_choice((("ENABLED", "yes"), ("DISABLED", "no"))))
+    )
+    args = forms.JSONField(required=False, label="Optional Arguments")
+    snow_id = forms.CharField(required=False, label="SNOW ID")
 
     class Meta:
         """Meta attributes."""
@@ -60,15 +52,11 @@ class MonitorFilterForm(BootstrapMixin, forms.ModelForm):
             "q",
             "slug",
             "name",
-            "description",
+            "comment",
             "type",
             "lrtm",
-            "secure",
-            "url",
-            "send",
-            "code",
-            "receive",
-            "httprequest",
+            "args",
+            "snow_id"
         ]
 
 

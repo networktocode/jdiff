@@ -104,15 +104,17 @@ class MonitorFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             "q",
             "slug",
             "name",
-            "description",
+            "comment",
             "type",
             "lrtm",
-            "secure",
-            "url",
-            "send",
-            "code",
-            "receive",
-            "httprequest",
+            # "secure",
+            # "url",
+            # "send",
+            # "code",
+            # "receive",
+            # "httprequest",
+            "args",
+            "snow_id"
         ]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
@@ -121,12 +123,9 @@ class MonitorFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             return queryset
         qs_filter = (
             Q(name__icontains=value)
-            | Q(description__icontains=value)
+            | Q(comment__icontains=value)
             | Q(type__icontains=value)
-            | Q(url__icontains=value)
-            | Q(send__icontains=value)
-            | Q(recevier__icontains=value)
-            | Q(httprequest__icontains=value)
+            | Q(snow_id__icontains=value)
         )
         return queryset.filter(qs_filter)
 
