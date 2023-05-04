@@ -48,7 +48,14 @@ class SSLServerBindingFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         method="search",
         label="Search",
     )
-
+    ssl_certkey = django_filters.ModelMultipleChoiceFilter(
+        queryset=models.SSLCertKey.objects.all(),
+        label="SSL Certkey",
+    )
+    vserver = django_filters.ModelMultipleChoiceFilter(
+        queryset=models.Vserver.objects.all(),
+        label="VServer",
+    )
     class Meta:
         """Meta attributes for filter."""
 
@@ -81,6 +88,52 @@ class ServiceGroupMemberBindingFilterSet(BaseFilterSet, NameSlugSearchFilterSet)
         label="Monitor",
     )
 
+    class Meta:
+        """Meta attributes for filter."""
+
+        model = models.ServiceGroupMemberBinding
+        fields = [
+            "q",
+            "slug",
+            "name",
+            "port",
+            "address",
+            "fqdn",
+            "monitor",
+        ]
+
+    def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
+        """Perform the filtered search."""
+        if not value.strip():
+            return queryset
+        qs_filter = (
+            Q(name__icontains=value)
+            | Q(description__icontains=value)
+            | Q(protocol__icontains=value)
+            | Q(port__icontains=value)
+            | Q(address__icontains=value)
+            | Q(fqdn__icontains=value)
+            | Q(monitor__icontains=value)
+        )
+        return queryset.filter(qs_filter)
+
+
+
+class ServiceGroupMonitorBindingFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
+    """Filter for ServiceGroupMonitorBinding."""
+
+    q = django_filters.CharFilter(
+        method="search",
+        label="Search",
+    )
+    monitor = django_filters.ModelMultipleChoiceFilter(
+        queryset=models.ServiceGroupMonitorBinding.objects.all(),
+        label="Monitor",
+    )
+    service_group = django_filters.ModelMultipleChoiceFilter(
+        queryset=models.ServiceGroup.objects.all(),
+        label="Service Group",
+    )
     class Meta:
         """Meta attributes for filter."""
 

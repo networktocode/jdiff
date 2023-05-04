@@ -178,12 +178,12 @@ class Monitor(OrganizationalModel):
     """Service Group response model implementation."""
 
     slug = AutoSlugField(populate_from="name")
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50)
     comment = models.CharField(max_length=100, blank=True, null=True)
     type = models.CharField(max_length=20, choices=MonitorTypes)
-    lrtm = models.BooleanField(blank=True, null=True, default=False)
+    lrtm = models.BooleanField(default=False)
     args = models.JSONField(blank=True, null=True)
-    snow_id = models.CharField(max_length=100, blank=True, null=True)
+    snow_id = models.CharField(max_length=20)
 
     fields = ["slug", "name", "comment", "type", "lrtm", "args", "snow_id"]
     csv_headers = fields
@@ -201,6 +201,50 @@ class Monitor(OrganizationalModel):
         """Stringify instance."""
         return self.name
 
+
+@extras_features(
+    "custom_fields",
+    "custom_links",
+    "custom_validators",
+    "export_templates",
+    "graphql",
+    "relationships",
+    "statuses",
+    "webhooks",
+)
+class ServiceGroupMonitorBinding(PrimaryModel):
+    """ServiceGroupMonitorBinding model implementation."""
+
+    slug = AutoSlugField(populate_from="name")
+    name = models.CharField(max_length=50)
+    monitor = models.ForeignKey(to=models.Monitor, on_delete=models.CASCADE)
+    service_group = models.ForeignKey(to=models.ServiceGroup, on_delete=models.CASCADE)
+
+    fields = [
+        "slug",
+        "name",
+        "monitor",
+        "service_group",
+    ]
+    csv_headers = fields
+    clone_fields = fields
+
+    def get_absolute_url(self):
+        """Return detail view for ServiceGroupMonitorBinding."""
+        return reverse("plugins:lb_models:servicegroupmonitorbinding", args=[self.slug])
+
+    def to_csv(self):
+        """To CSV format."""
+        return (
+            self.slug,
+            self.name,
+            self.monitor,
+            self.service_group,
+        )
+
+    def __str__(self):
+        """Stringify instance."""
+        return self.name
 
 @extras_features(
     "custom_fields",

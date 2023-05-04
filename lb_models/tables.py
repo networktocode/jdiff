@@ -83,6 +83,29 @@ class ServiceGroupMemberBindingTable(BaseTable):
         ]
 
 
+class ServiceGroupMonitorBindingTable(BaseTable):
+    # pylint: disable=R0903
+    """Table for list view."""
+
+    pk = ToggleColumn()
+    actions = ButtonsColumn(
+        models.ServiceGroupMonitorBinding,
+        buttons=("changelog", "edit", "delete", "add"),
+        pk_field="slug",
+    )
+    name = tables.Column(linkify=True)
+
+    class Meta(BaseTable.Meta):
+        """Meta attributes."""
+
+        model = models.ServiceGroupMonitorBinding
+        fields = [
+            "slug",
+            "name",
+            "monitor",
+            "service_group",
+            ]
+
 class MonitorTable(BaseTable):
     # pylint: disable=R0903
     """Table for list view."""

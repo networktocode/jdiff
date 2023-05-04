@@ -24,7 +24,7 @@ menu_items = (
     ),
     PluginMenuItem(
         link="plugins:lb_models:servicegroupmemberbinding_list",
-        link_text="Service Group Binding",
+        link_text="Service Group Member Binding",
         buttons=(
             PluginMenuButton(
                 link="plugins:lb_models:servicegroupmemberbinding_add",
@@ -34,6 +34,24 @@ menu_items = (
             ),
             PluginMenuButton(
                 link="plugins:lb_models:servicegroupmemberbinding_import",
+                title="Import",
+                icon_class="mdi mdi-database-import-outline",
+                color=ButtonColorChoices.BLUE,
+            ),
+        ),
+    ),
+    PluginMenuItem(
+        link="plugins:lb_models:servicegroupmonitorbinding_list",
+        link_text="Service Group Monitor Binding",
+        buttons=(
+            PluginMenuButton(
+                link="plugins:lb_models:servicegroupmonitorbinding_add",
+                title="Add",
+                icon_class="mdi mdi-plus-thick",
+                color=ButtonColorChoices.GREEN,
+            ),
+            PluginMenuButton(
+                link="plugins:lb_models:servicegroupmonitorbinding_import",
                 title="Import",
                 icon_class="mdi mdi-database-import-outline",
                 color=ButtonColorChoices.BLUE,

@@ -16,7 +16,7 @@ class MonitorForm(BootstrapMixin, forms.ModelForm):
         """Meta attributes."""
 
         model = models.Monitor
-        fields = ["slug", "name", "comment", "type", "lrtm", "args"]
+        fields = ["slug", "name", "comment", "type", "lrtm", "args", "snow_id"]
 
 
 class MonitorFilterForm(BootstrapMixin, forms.ModelForm):
