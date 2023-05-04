@@ -7,13 +7,13 @@ from nautobot.utilities.tables import BaseTable, ButtonsColumn, ToggleColumn
 from lb_models import models
 
 
-class CertificateTable(BaseTable):
+class SSLCertKeyTable(BaseTable):
     # pylint: disable=R0903
     """Table for list view."""
 
     pk = ToggleColumn()
     actions = ButtonsColumn(
-        models.Certificate,
+        models.SSLCertKey,
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
@@ -22,27 +22,24 @@ class CertificateTable(BaseTable):
     class Meta(BaseTable.Meta):
         """Meta attributes."""
 
-        model = models.Certificate
+        model = models.SSLCertKey
         fields = [
             "slug",
-            "issuer",
-            "version_number",
-            "serial_number",
             "name",
-            "key",
+            "private_key_filename",
+            "private_crt_filename",
             "password",
-            "start_date",
-            "end_date",
+            "snow_id",
         ]
 
 
-class ServiceGroupBindingTable(BaseTable):
+class SSLServerBindingTable(BaseTable):
     # pylint: disable=R0903
     """Table for list view."""
 
     pk = ToggleColumn()
     actions = ButtonsColumn(
-        models.ServiceGroupBinding,
+        models.SSLServerBinding,
         buttons=("changelog", "edit", "delete", "add"),
         pk_field="slug",
     )
@@ -51,12 +48,34 @@ class ServiceGroupBindingTable(BaseTable):
     class Meta(BaseTable.Meta):
         """Meta attributes."""
 
-        model = models.ServiceGroupBinding
+        model = models.SSLServerBinding
         fields = [
             "slug",
             "name",
-            "description",
-            "protocol",
+            "ssl_certkey",
+            "vserver",
+        ]
+
+
+class ServiceGroupMemberBindingTable(BaseTable):
+    # pylint: disable=R0903
+    """Table for list view."""
+
+    pk = ToggleColumn()
+    actions = ButtonsColumn(
+        models.ServiceGroupMemberBinding,
+        buttons=("changelog", "edit", "delete", "add"),
+        pk_field="slug",
+    )
+    name = tables.Column(linkify=True)
+
+    class Meta(BaseTable.Meta):
+        """Meta attributes."""
+
+        model = models.ServiceGroupMemberBinding
+        fields = [
+            "slug",
+            "name",
             "port",
             "address",
             "fqdn",
@@ -80,15 +99,7 @@ class MonitorTable(BaseTable):
         """Meta attributes."""
 
         model = models.Monitor
-        fields = [
-            "slug",
-            "name",
-            "comment",
-            "type",
-            "lrtm",
-            "args",
-            "snow_id"
-        ]
+        fields = ["slug", "name", "comment", "type", "lrtm", "args", "snow_id"]
 
 
 class ServiceGroupTable(BaseTable):
@@ -108,7 +119,7 @@ class ServiceGroupTable(BaseTable):
         """Meta attributes."""
 
         model = models.ServiceGroup
-        fields = ["slug", "name", "description", "monitor", "member", "type", "td", "sslprofile"]
+        fields = ["slug", "name", "description", "member", "type", "td", "ssl_profile", "snow_id"]
 
 
 class VserverTable(BaseTable):
@@ -141,12 +152,12 @@ class VserverTable(BaseTable):
             "protocol",
             "port",
             "method",
-            "certificate",
+            "sslcertkey",
             "owner",
         ]
 
 
-class CustomerTable(BaseTable):
+class CustomerAppProfileTable(BaseTable):
     # pylint: disable=R0903
     """Table for list view."""
 
@@ -161,15 +172,15 @@ class CustomerTable(BaseTable):
     class Meta(BaseTable.Meta):
         """Meta attributes."""
 
-        model = models.Customer
+        model = models.CustomerAppProfile
         fields = [
             "slug",
-            "customer_id",
+            "profile_name",
+            "application_name",
             "site",
-            "name",
             "fqdn",
-            "oe",
-            "email",
+            "oe_bu",
+            "owner_contact",
             "class_type",
             "accessibility",
             "test_url",

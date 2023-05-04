@@ -5,9 +5,9 @@ from nautobot.core.api import OrderedDefaultRouter
 from lb_models.api import views
 
 router = OrderedDefaultRouter()
-router.register("certificate", views.CertificateViewSet)
+router.register("sslcertkey", views.SSLCertKeyViewSet)
 router.register("monitor", views.MonitorViewSet)
-router.register("servicegroupbinding", views.ServiceGroupBindingViewSet)
+router.register("servicegroupmemberbinding", views.ServiceGroupMemberBindingViewSet)
 router.register("servicegroup", views.ServiceGroupViewSet)
 router.register("vserver", views.vserverViewSet)
 

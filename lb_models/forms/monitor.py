@@ -16,14 +16,7 @@ class MonitorForm(BootstrapMixin, forms.ModelForm):
         """Meta attributes."""
 
         model = models.Monitor
-        fields = [
-            "slug",
-            "name",
-            "comment",
-            "type",
-            "lrtm",
-            "args"
-        ]
+        fields = ["slug", "name", "comment", "type", "lrtm", "args"]
 
 
 class MonitorFilterForm(BootstrapMixin, forms.ModelForm):
@@ -48,16 +41,7 @@ class MonitorFilterForm(BootstrapMixin, forms.ModelForm):
         """Meta attributes."""
 
         model = models.Monitor
-        fields = [
-            "q",
-            "slug",
-            "name",
-            "comment",
-            "type",
-            "lrtm",
-            "args",
-            "snow_id"
-        ]
+        fields = ["q", "slug", "name", "comment", "type", "lrtm", "args", "snow_id"]
 
 
 class MonitorBulkEditForm(BootstrapMixin, BulkEditForm):

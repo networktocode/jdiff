@@ -8,16 +8,16 @@ from ..choices import ApplicationClassTypes, ApplicationAccessibility
 from .utils import add_blank_choice
 
 
-class CustomerForm(BootstrapMixin, forms.ModelForm):
-    """Customer creation/edit form."""
+class CustomerAppProfileForm(BootstrapMixin, forms.ModelForm):
+    """CustomerAppProfile creation/edit form."""
 
-    slug = AutoSlugField(populate_from=["name"])
-    customer_id = forms.CharField(label="ID")
+    slug = AutoSlugField(populate_from=["profile_name"])
+    profile_name = forms.CharField(label="Profile Name")
+    application_name = forms.CharField(label="Application Name")
     site = forms.ModelChoiceField(queryset=Site.objects.all(), label="Site")
-    name = forms.CharField(label="Name")
     fqdn = forms.CharField(label="FQDN")
-    oe = forms.CharField(label="OE")
-    email = forms.EmailField(label="email")
+    oe_bu = forms.CharField(label="OE BU")
+    owner_contact = forms.EmailField(label="Owner Contact")
     class_type = forms.ChoiceField(choices=add_blank_choice(ApplicationClassTypes))
     accessibility = forms.ChoiceField(choices=add_blank_choice(ApplicationClassTypes))
     test_url = forms.URLField(label="URL")
@@ -25,22 +25,22 @@ class CustomerForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         """Meta attributes."""
 
-        model = models.Customer
+        model = models.CustomerAppProfile
         fields = [
             "slug",
-            "customer_id",
+            "profile_name",
+            "application_name",
             "site",
-            "name",
             "fqdn",
-            "oe",
-            "email",
+            "oe_bu",
+            "owner_contact",
             "class_type",
             "accessibility",
             "test_url",
         ]
 
 
-class CustomerFilterForm(BootstrapMixin, forms.ModelForm):
+class CustomerAppProfileFilterForm(BootstrapMixin, forms.ModelForm):
     """Filter form to filter searches."""
 
     q = forms.CharField(
@@ -48,13 +48,13 @@ class CustomerFilterForm(BootstrapMixin, forms.ModelForm):
         label="Search",
         help_text="Search within issuer or Slug.",
     )
-    slug = AutoSlugField(populate_from=["name"])
-    customer_id = forms.CharField(required=False, label="ID")
+    slug = AutoSlugField(populate_from=["profile_name"])
+    profile_name = forms.CharField(required=False, label="Profile Name")
+    application_name = forms.CharField(required=False, label="Application Name")
     site = forms.ModelChoiceField(queryset=Site.objects.all(), label="Site", required=False)
-    name = forms.CharField(label="Name", required=False)
     fqdn = forms.CharField(label="FQDN", required=False)
-    oe = forms.CharField(label="OE", required=False)
-    email = forms.EmailField(label="email", required=False)
+    oe_bu = forms.CharField(label="OE BU", required=False)
+    owner_contact = forms.EmailField(label="email", required=False)
     class_type = forms.ChoiceField(choices=add_blank_choice(ApplicationClassTypes), required=False)
     accessibility = forms.ChoiceField(choices=add_blank_choice(ApplicationClassTypes), required=False)
     test_url = forms.URLField(required=False, label="URL")
@@ -62,26 +62,26 @@ class CustomerFilterForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         """Meta attributes."""
 
-        model = models.Customer
+        model = models.CustomerAppProfile
         fields = [
             "q",
             "slug",
-            "customer_id",
+            "profile_name",
+            "application_name",
             "site",
-            "name",
             "fqdn",
-            "oe",
-            "email",
+            "oe_bu",
+            "owner_contact",
             "class_type",
             "accessibility",
             "test_url",
         ]
 
 
-class CustomerBulkEditForm(BootstrapMixin, BulkEditForm):
-    """Customer bulk edit form."""
+class CustomerAppProfileBulkEditForm(BootstrapMixin, BulkEditForm):
+    """CustomerAppProfile bulk edit form."""
 
-    pk = forms.ModelChoiceField(queryset=models.Customer.objects.all(), widget=forms.MultipleHiddenInput)
+    pk = forms.ModelChoiceField(queryset=models.CustomerAppProfile.objects.all(), widget=forms.MultipleHiddenInput)
     name = forms.CharField(required=False)
 
     class Meta:
@@ -93,11 +93,11 @@ class CustomerBulkEditForm(BootstrapMixin, BulkEditForm):
         ]
 
 
-class CustomerCSVForm(CSVModelForm):
+class CustomerAppProfileCSVForm(CSVModelForm):
     """Form for creating bulk Team."""
 
     class Meta:
         """Meta attributes."""
 
-        model = models.Customer
-        fields = models.Customer.csv_headers
+        model = models.CustomerAppProfile
+        fields = models.CustomerAppProfile.csv_headers

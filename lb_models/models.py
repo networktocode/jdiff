@@ -25,48 +25,40 @@ from .choices import (
     "statuses",
     "webhooks",
 )
-class Certificate(PrimaryModel):
-    """Certificate model implementation."""
+class SSLCertKey(PrimaryModel):
+    """SSLCertKey model implementation."""
 
     slug = AutoSlugField(populate_from="name")
-    issuer = models.CharField(max_length=50, blank=True, null=True)
-    version_number = models.CharField(max_length=50, blank=True, null=True)
-    serial_number = models.CharField(max_length=30, blank=True, null=True)
     name = models.CharField(max_length=50)
-    key = models.CharField(max_length=50)
-    password = models.CharField(max_length=50)
-    start_date = models.DateField(blank=True, null=True)
-    end_date = models.DateField(blank=True, null=True)
+    private_key_filename = models.CharField(max_length=100)
+    private_crt_filename = models.CharField(max_length=100)
+    password = models.CharField(max_length=50, blank=True, null=True)
+    snow_id = models.CharField(max_length=20)
 
     fields = [
         "slug",
-        "issuer",
-        "version_number",
-        "serial_number",
         "name",
-        "key",
+        "private_key_filename",
+        "private_crt_filename",
         "password",
-        "start_date",
-        "end_date",
+        "snow_id",
     ]
     csv_headers = fields
     clone_fields = fields
 
     def get_absolute_url(self):
-        """Return detail view for Certificate."""
-        return reverse("plugins:lb_models:certificate", args=[self.slug])
+        """Return detail view for SSLCertKey."""
+        return reverse("plugins:lb_models:sslcertkey", args=[self.slug])
 
     def to_csv(self):
         """To CSV format."""
         return (
             self.slug,
-            self.issuer,
-            self.version_number,
-            self.serial_number,
-            self.key,
+            self.name,
+            self.private_key_filename,
+            self.private_crt_filename,
             self.password,
-            self.start_date,
-            self.end_date,
+            self.snow_id,
         )
 
     def __str__(self):
@@ -84,13 +76,56 @@ class Certificate(PrimaryModel):
     "statuses",
     "webhooks",
 )
-class ServiceGroupBinding(PrimaryModel):
+class SSLServerBinding(PrimaryModel):
+    """SSLServerBinding model implementation."""
+
+    slug = AutoSlugField(populate_from="name")
+    name = models.CharField(max_length=50)
+    ssl_certkey = models.OneToOneField(SSLCertKey, on_delete=models.CASCADE)
+    vserver = models.ForeignKey(to=models.Vserver, on_delete=models.CASCADE)
+
+    fields = [
+        "slug",
+        "name",
+        "ssl_certkey",
+        "vserver",
+    ]
+    csv_headers = fields
+    clone_fields = fields
+
+    def get_absolute_url(self):
+        """Return detail view for SSLServerBinding."""
+        return reverse("plugins:lb_models:sslserverbinding", args=[self.slug])
+
+    def to_csv(self):
+        """To CSV format."""
+        return (
+            self.slug,
+            self.name,
+            self.ssl_certkey,
+            self.vserver,
+        )
+
+    def __str__(self):
+        """Stringify instance."""
+        return self.name
+
+
+@extras_features(
+    "custom_fields",
+    "custom_links",
+    "custom_validators",
+    "export_templates",
+    "graphql",
+    "relationships",
+    "statuses",
+    "webhooks",
+)
+class ServiceGroupMemberBinding(PrimaryModel):
     """Service Group response model implementation."""
 
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50, unique=True)
-    description = models.CharField(max_length=100)
-    protocol = models.CharField(max_length=20, choices=Protocols)
     port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(1)])
     address = models.ForeignKey(
         to="ipam.IPAddress",
@@ -105,31 +140,23 @@ class ServiceGroupBinding(PrimaryModel):
     fields = [
         "slug",
         "name",
-        "description",
-        "protocol",
         "port",
         "address",
-        "fqdn",
-        "monitor",
     ]
     csv_headers = fields
     clone_fields = fields
 
     def get_absolute_url(self):
         """Return detail view for Service Group memeber."""
-        return reverse("plugins:lb_models:servicegroupbinding", args=[self.slug])
+        return reverse("plugins:lb_models:servicegroupmemberbinding", args=[self.slug])
 
     def to_csv(self):
         """To CSV format."""
         return (
             self.slug,
             self.name,
-            self.description,
-            self.protocol,
             self.port,
             self.address,
-            self.fqdn,
-            self.monitor,
         )
 
     def __str__(self):
@@ -158,15 +185,7 @@ class Monitor(OrganizationalModel):
     args = models.JSONField(blank=True, null=True)
     snow_id = models.CharField(max_length=100, blank=True, null=True)
 
-    fields = [
-        "slug",
-        "name",
-        "comment",
-        "type",
-        "lrtm",
-        "args",
-        "snow_id"
-    ]
+    fields = ["slug", "name", "comment", "type", "lrtm", "args", "snow_id"]
     csv_headers = fields
     clone_fields = fields
 
@@ -176,15 +195,7 @@ class Monitor(OrganizationalModel):
 
     def to_csv(self):
         """To CSV format."""
-        return (
-            self.slug,
-            self.name,
-            self.comment,
-            self.type,
-            self.lrtm,
-            self.args,
-            self.snow_id
-        )
+        return (self.slug, self.name, self.comment, self.type, self.lrtm, self.args, self.snow_id)
 
     def __str__(self):
         """Stringify instance."""
@@ -206,14 +217,14 @@ class ServiceGroup(OrganizationalModel):
 
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=50, blank=True, null=True)
-    monitor = models.ForeignKey(to="Monitor", on_delete=models.PROTECT)
-    member = models.ForeignKey(to="ServiceGroupBinding", on_delete=models.PROTECT)
-    type = models.CharField(max_length=20, choices=ServiceGroupTypes)
+    comment = models.CharField(max_length=50, blank=True, null=True)
+    member = models.ForeignKey(to="ServiceGroupMemberBinding", on_delete=models.PROTECT)
+    service_type = models.CharField(max_length=20, choices=ServiceGroupTypes)
     td = models.SmallIntegerField()
-    sslprofile = models.CharField(max_length=50)
+    ssl_profile = models.CharField(max_length=50)
+    snow_id = models.CharField(max_length=20, blank=True, null=True)
 
-    fields = ["slug", "name", "description", "monitor", "member", "type", "td", "sslprofile"]
+    fields = ["slug", "name", "comment", "member", "service_type", "td", "ssl_profile", "snow_id"]
     csv_headers = fields
     clone_fields = fields
 
@@ -223,7 +234,16 @@ class ServiceGroup(OrganizationalModel):
 
     def to_csv(self):
         """To CSV format."""
-        return (self.slug, self.name, self.description, self.monitor, self.member, self.type, self.td, self.sslprofile)
+        return (
+            self.slug,
+            self.name,
+            self.comment,
+            self.member,
+            self.service_type,
+            self.td,
+            self.ssl_profile,
+            self.snow_id,
+        )
 
     def __str__(self):
         """Stringify instance."""
@@ -287,7 +307,7 @@ class Vserver(PrimaryModel):
     protocol = models.CharField(max_length=20, choices=Protocols)
     port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(1)])
     method = models.CharField(max_length=50)
-    certificate = models.ForeignKey(to="Certificate", on_delete=models.CASCADE)
+    sslcertkey = models.ForeignKey(to="SSLCertKey", on_delete=models.CASCADE)
     owner = models.CharField(max_length=50)
 
     fields = [
@@ -304,7 +324,7 @@ class Vserver(PrimaryModel):
         "protocol",
         "port",
         "method",
-        "certificate",
+        "sslcertkey",
         "owner",
     ]
     csv_headers = fields
@@ -330,7 +350,7 @@ class Vserver(PrimaryModel):
             self.protocol,
             self.port,
             self.method,
-            self.certificate,
+            self.sslcertkey,
             self.owner,
         )
 
@@ -349,11 +369,12 @@ class Vserver(PrimaryModel):
     "statuses",
     "webhooks",
 )
-class Customer(OrganizationalModel):
-    """Customer model implementation."""
+class CustomerAppProfile(OrganizationalModel):
+    """CustomerAppProfile model implementation."""
 
-    slug = AutoSlugField(populate_from="customer_id")
-    customer_id = models.CharField(max_length=50)
+    slug = AutoSlugField(populate_from="profile_name")
+    profile_name = models.CharField(max_length=50)
+    application_name = models.CharField(max_length=50)
     site = models.ForeignKey(
         to="dcim.Site",
         on_delete=models.PROTECT,
@@ -361,32 +382,42 @@ class Customer(OrganizationalModel):
         null=True,
         verbose_name="Site",
     )
-    name = models.CharField(max_length=50)
     fqdn = models.CharField(max_length=50)
-    oe = models.CharField(max_length=50)
-    email = models.EmailField()
+    oe_bu = models.CharField(max_length=50)
+    owner_contact = models.EmailField()
     class_type = models.CharField(max_length=20, choices=ApplicationClassTypes)
     accessibility = models.CharField(max_length=20, choices=ApplicationAccessibility)
     test_url = models.URLField()
 
-    fields = ["slug", "customer_id", "site", "name", "fqdn", "oe", "email", "class_type", "accessibility", "test_url"]
+    fields = [
+        "slug",
+        "profile_name",
+        "application_name",
+        "site",
+        "fqdn",
+        "oe_bu",
+        "owner_contact",
+        "class_type",
+        "accessibility",
+        "test_url",
+    ]
     csv_headers = fields
     clone_fields = fields
 
     def get_absolute_url(self):
-        """Return detail view for Customer memeber."""
-        return reverse("plugins:lb_models:customer", args=[self.slug])
+        """Return detail view for CustomerAppProfile memeber."""
+        return reverse("plugins:lb_models:customerappprofile", args=[self.slug])
 
     def to_csv(self):
         """To CSV format."""
         return (
             self.slug,
-            self.customer_id,
+            self.profile_name,
+            self.application_name,
             self.site,
-            self.name,
             self.fqdn,
-            self.oe,
-            self.email,
+            self.oe_bu,
+            self.owner_contact,
             self.class_type,
             self.accessibility,
             self.test_url,
@@ -394,4 +425,4 @@ class Customer(OrganizationalModel):
 
     def __str__(self):
         """Stringify instance."""
-        return self.customer_id
+        return self.profile_name

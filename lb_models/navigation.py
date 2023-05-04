@@ -5,17 +5,17 @@ from nautobot.utilities.choices import ButtonColorChoices
 
 menu_items = (
     PluginMenuItem(
-        link="plugins:lb_models:certificate_list",
-        link_text="Certificate",
+        link="plugins:lb_models:sslcertkey_list",
+        link_text="SSLCertKey",
         buttons=(
             PluginMenuButton(
-                link="plugins:lb_models:certificate_add",
+                link="plugins:lb_models:sslcertkey_add",
                 title="Add",
                 icon_class="mdi mdi-plus-thick",
                 color=ButtonColorChoices.GREEN,
             ),
             PluginMenuButton(
-                link="plugins:lb_models:certificate_import",
+                link="plugins:lb_models:sslcertkey_import",
                 title="Import",
                 icon_class="mdi mdi-database-import-outline",
                 color=ButtonColorChoices.BLUE,
@@ -23,17 +23,17 @@ menu_items = (
         ),
     ),
     PluginMenuItem(
-        link="plugins:lb_models:servicegroupbinding_list",
+        link="plugins:lb_models:servicegroupmemberbinding_list",
         link_text="Service Group Binding",
         buttons=(
             PluginMenuButton(
-                link="plugins:lb_models:servicegroupbinding_add",
+                link="plugins:lb_models:servicegroupmemberbinding_add",
                 title="Add",
                 icon_class="mdi mdi-plus-thick",
                 color=ButtonColorChoices.GREEN,
             ),
             PluginMenuButton(
-                link="plugins:lb_models:servicegroupbinding_import",
+                link="plugins:lb_models:servicegroupmemberbinding_import",
                 title="Import",
                 icon_class="mdi mdi-database-import-outline",
                 color=ButtonColorChoices.BLUE,
@@ -95,17 +95,17 @@ menu_items = (
         ),
     ),
     PluginMenuItem(
-        link="plugins:lb_models:customer_list",
-        link_text="Customer",
+        link="plugins:lb_models:customerappprofile_list",
+        link_text="CustomerAppProfile",
         buttons=(
             PluginMenuButton(
-                link="plugins:lb_models:customer_add",
+                link="plugins:lb_models:customerappprofile_add",
                 title="Add",
                 icon_class="mdi mdi-plus-thick",
                 color=ButtonColorChoices.GREEN,
             ),
             PluginMenuButton(
-                link="plugins:lb_models:customer_import",
+                link="plugins:lb_models:customerappprofile_import",
                 title="Import",
                 icon_class="mdi mdi-database-import-outline",
                 color=ButtonColorChoices.BLUE,

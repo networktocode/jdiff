@@ -23,7 +23,7 @@ class VserverForm(BootstrapMixin, forms.ModelForm):
     fqdn = forms.CharField(required=False)
     protocol = forms.ChoiceField(choices=add_blank_choice(Protocols))
     method = forms.CharField(required=False)
-    certificate = forms.ModelChoiceField(queryset=models.Certificate.objects.all(), label="Certificate", required=False)
+    sslcertkey = forms.ModelChoiceField(queryset=models.SSLCertKey.objects.all(), label="SSLCertKey", required=False)
     owner = forms.CharField(required=False)
 
     class Meta:
@@ -44,7 +44,7 @@ class VserverForm(BootstrapMixin, forms.ModelForm):
             "protocol",
             "port",
             "method",
-            "certificate",
+            "sslcertkey",
             "owner",
         ]
 
@@ -69,7 +69,7 @@ class VserverFilterForm(BootstrapMixin, forms.ModelForm):
     fqdn = forms.CharField(required=False, label="FQDN")
     protocol = forms.ChoiceField(choices=add_blank_choice(Protocols), required=False, label="Protocol")
     method = forms.CharField(required=False, label="Method")
-    certificate = forms.ModelChoiceField(queryset=models.Certificate.objects.all(), required=False, label="Certificate")
+    sslcertkey = forms.ModelChoiceField(queryset=models.SSLCertKey.objects.all(), required=False, label="SSLCertKey")
     owner = forms.CharField(required=False, label="Owner")
 
     class Meta:
@@ -90,7 +90,7 @@ class VserverFilterForm(BootstrapMixin, forms.ModelForm):
             "protocol",
             "port",
             "method",
-            "certificate",
+            "sslcertkey",
             "owner",
         ]
 

@@ -5,12 +5,12 @@ from lb_models import filters, models
 from lb_models.api import serializers
 
 
-class CertificateViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
-    """Certificate serializer viewset."""
+class SSLCertKeyViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
+    """SSLCertKey serializer viewset."""
 
-    serializer_class = serializers.CertificateSerializer
-    filterset_class = filters.CertificateFilterSet
-    queryset = models.Certificate.objects.all()
+    serializer_class = serializers.SSLCertKeySerializer
+    filterset_class = filters.SSLCertKeyFilterSet
+    queryset = models.SSLCertKey.objects.all()
 
 
 class MonitorViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
@@ -21,12 +21,12 @@ class MonitorViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
     queryset = models.Monitor.objects.all()
 
 
-class ServiceGroupBindingViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
+class ServiceGroupMemberBindingViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
     """Service Group Member viewset."""
 
-    serializer_class = serializers.ServiceGroupBindingSerializer
-    filterset_class = filters.ServiceGroupBindingFilterSet
-    queryset = models.ServiceGroupBinding.objects.all()
+    serializer_class = serializers.ServiceGroupMemberBindingSerializer
+    filterset_class = filters.ServiceGroupMemberBindingFilterSet
+    queryset = models.ServiceGroupMemberBinding.objects.all()
 
 
 class ServiceGroupViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors

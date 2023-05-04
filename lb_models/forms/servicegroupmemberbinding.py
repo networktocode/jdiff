@@ -8,7 +8,7 @@ from lb_models import models
 from nautobot.ipam.models import IPAddress
 
 
-class ServiceGroupBindingForm(BootstrapMixin, forms.ModelForm):
+class ServiceGroupMemberBindingForm(BootstrapMixin, forms.ModelForm):
     """Service Group Member creation/edit form."""
 
     slug = AutoSlugField(populate_from=["name"])
@@ -20,7 +20,7 @@ class ServiceGroupBindingForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         """Meta attributes."""
 
-        model = models.ServiceGroupBinding
+        model = models.ServiceGroupMemberBinding
         fields = [
             "slug",
             "name",
@@ -33,7 +33,7 @@ class ServiceGroupBindingForm(BootstrapMixin, forms.ModelForm):
         ]
 
 
-class ServiceGroupBindingFilterForm(BootstrapMixin, forms.ModelForm):
+class ServiceGroupMemberBindingFilterForm(BootstrapMixin, forms.ModelForm):
     """Filter form to filter searches."""
 
     q = forms.CharField(
@@ -55,7 +55,7 @@ class ServiceGroupBindingFilterForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         """Meta attributes."""
 
-        model = models.ServiceGroupBinding
+        model = models.ServiceGroupMemberBinding
         fields = [
             "q",
             "slug",
@@ -69,26 +69,28 @@ class ServiceGroupBindingFilterForm(BootstrapMixin, forms.ModelForm):
         ]
 
 
-class ServiceGroupBindingBulkEditForm(BootstrapMixin, BulkEditForm):
-    """Certificate bulk edit form."""
+class ServiceGroupMemberBindingBulkEditForm(BootstrapMixin, BulkEditForm):
+    """SSLCertKey bulk edit form."""
 
-    pk = forms.ModelChoiceField(queryset=models.ServiceGroupBinding.objects.all(), widget=forms.MultipleHiddenInput)
+    pk = forms.ModelChoiceField(
+        queryset=models.ServiceGroupMemberBinding.objects.all(), widget=forms.MultipleHiddenInput
+    )
     issuer = forms.CharField(required=False)
 
     class Meta:
         """Meta attributes."""
 
-        model = models.ServiceGroupBinding
+        model = models.ServiceGroupMemberBinding
         nullable_fields = [
             "name",
         ]
 
 
-class ServiceGroupBindingCSVForm(CSVModelForm):
+class ServiceGroupMemberBindingCSVForm(CSVModelForm):
     """Form for creating bulk Team."""
 
     class Meta:
         """Meta attributes."""
 
-        model = models.ServiceGroupBinding
-        fields = models.ServiceGroupBinding.csv_headers
+        model = models.ServiceGroupMemberBinding
+        fields = models.ServiceGroupMemberBinding.csv_headers
