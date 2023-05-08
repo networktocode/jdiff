@@ -12,6 +12,8 @@ from lb_models.views import (
     servicegroup,
     vserver,
     customerappprofile,
+    server,
+    serverservicegroupbinding,
 )
 
 # Order is important for these URLs to work (add/delete/edit) to be before any that require uuid/slug
@@ -136,19 +138,143 @@ urlpatterns = [
         name="monitor_changelog",
         kwargs={"model": models.Monitor},
     ),
-    path("servicegroupmonitorbinding/", servicegroupmonitorbinding.ServiceGroupListView.as_view(), name="servicegroupmonitorbinding_list"),
-    path("servicegroupmonitorbinding/add/", servicegroupmonitorbinding.ServiceGroupCreateView.as_view(), name="servicegroupmonitorbinding_add"),
-    path("servicegroupmonitorbinding/import/", servicegroupmonitorbinding.ServiceGroupBulkImportView.as_view(), name="servicegroupmonitorbinding_import"),
-    path("servicegroupmonitorbinding/delete/", servicegroupmonitorbinding.ServiceGroupBulkDeleteView.as_view(), name="servicegroupmonitorbinding_bulk_delete"),
-    path("servicegroupmonitorbinding/edit/", servicegroupmonitorbinding.ServiceGroupBulkEditView.as_view(), name="servicegroupmonitorbinding_bulk_edit"),
-    path("servicegroupmonitorbinding/<slug:slug>/", servicegroupmonitorbinding.ServiceGroupView.as_view(), name="servicegroupmonitorbinding"),
-    path("servicegroupmonitorbinding/<slug:slug>/delete/", servicegroupmonitorbinding.ServiceGroupDeleteView.as_view(), name="servicegroupmonitorbinding_delete"),
-    path("servicegroupmonitorbinding/<slug:slug>/edit/", servicegroupmonitorbinding.ServiceGroupEditView.as_view(), name="servicegroupmonitorbinding_edit"),
+    path(
+        "servicegroupmonitorbinding/",
+        servicegroupmonitorbinding.ServiceGroupListView.as_view(),
+        name="servicegroupmonitorbinding_list",
+    ),
+    path(
+        "servicegroupmonitorbinding/add/",
+        servicegroupmonitorbinding.ServiceGroupCreateView.as_view(),
+        name="servicegroupmonitorbinding_add",
+    ),
+    path(
+        "servicegroupmonitorbinding/import/",
+        servicegroupmonitorbinding.ServiceGroupBulkImportView.as_view(),
+        name="servicegroupmonitorbinding_import",
+    ),
+    path(
+        "servicegroupmonitorbinding/delete/",
+        servicegroupmonitorbinding.ServiceGroupBulkDeleteView.as_view(),
+        name="servicegroupmonitorbinding_bulk_delete",
+    ),
+    path(
+        "servicegroupmonitorbinding/edit/",
+        servicegroupmonitorbinding.ServiceGroupBulkEditView.as_view(),
+        name="servicegroupmonitorbinding_bulk_edit",
+    ),
+    path(
+        "servicegroupmonitorbinding/<slug:slug>/",
+        servicegroupmonitorbinding.ServiceGroupView.as_view(),
+        name="servicegroupmonitorbinding",
+    ),
+    path(
+        "servicegroupmonitorbinding/<slug:slug>/delete/",
+        servicegroupmonitorbinding.ServiceGroupDeleteView.as_view(),
+        name="servicegroupmonitorbinding_delete",
+    ),
+    path(
+        "servicegroupmonitorbinding/<slug:slug>/edit/",
+        servicegroupmonitorbinding.ServiceGroupEditView.as_view(),
+        name="servicegroupmonitorbinding_edit",
+    ),
     path(
         "servicegroupmonitorbinding/<slug:slug>/changelog/",
         ObjectChangeLogView.as_view(),
         name="servicegroupmonitorbinding_changelog",
         kwargs={"model": models.ServiceGroup},
+    ),
+    path(
+        "servicegroupmemberbinding/",
+        servicegroupmemberbinding.ServiceGroupMemberBindingListView.as_view(),
+        name="servicegroupmemberbinding_list",
+    ),
+    path(
+        "servicegroupmemberbinding/add/",
+        servicegroupmemberbinding.ServiceGroupMemberBindingCreateView.as_view(),
+        name="servicegroupmemberbinding_add",
+    ),
+    path(
+        "servicegroupmemberbinding/import/",
+        servicegroupmemberbinding.ServiceGroupMemberBindingBulkImportView.as_view(),
+        name="servicegroupmemberbinding_import",
+    ),
+    path(
+        "servicegroupmemberbinding/delete/",
+        servicegroupmemberbinding.ServiceGroupMemberBindingBulkDeleteView.as_view(),
+        name="servicegroupmemberbinding_bulk_delete",
+    ),
+    path(
+        "servicegroupmemberbinding/edit/",
+        servicegroupmemberbinding.ServiceGroupMemberBindingBulkEditView.as_view(),
+        name="servicegroupmemberbinding_bulk_edit",
+    ),
+    path(
+        "servicegroupmemberbinding/<slug:slug>/",
+        servicegroupmemberbinding.ServiceGroupMemberBindingView.as_view(),
+        name="servicegroupmemberbinding",
+    ),
+    path(
+        "servicegroupmemberbinding/<slug:slug>/delete/",
+        servicegroupmemberbinding.ServiceGroupMemberBindingDeleteView.as_view(),
+        name="servicegroupmemberbinding_delete",
+    ),
+    path(
+        "servicegroupmemberbinding/<slug:slug>/edit/",
+        servicegroupmemberbinding.ServiceGroupMemberBindingEditView.as_view(),
+        name="servicegroupmemberbinding_edit",
+    ),
+    path(
+        "servicegroupmemberbinding/<slug:slug>/changelog/",
+        ObjectChangeLogView.as_view(),
+        name="servicegroupmemberbinding_changelog",
+        kwargs={"model": models.ServiceGroup},
+    ),
+    path(
+        "serverservicegroupbinding/",
+        serverservicegroupbinding.ServersServiceGroupBindingListView.as_view(),
+        name="serverservicegroupbinding_list",
+    ),
+    path(
+        "serverservicegroupbinding/add/",
+        serverservicegroupbinding.ServersServiceGroupBindingCreateView.as_view(),
+        name="serverservicegroupbinding_add",
+    ),
+    path(
+        "serverservicegroupbinding/import/",
+        serverservicegroupbinding.ServersServiceGroupBindingBulkImportView.as_view(),
+        name="serverservicegroupbinding_import",
+    ),
+    path(
+        "serverservicegroupbinding/delete/",
+        serverservicegroupbinding.ServersServiceGroupBindingBulkDeleteView.as_view(),
+        name="serverservicegroupbinding_bulk_delete",
+    ),
+    path(
+        "serverservicegroupbinding/edit/",
+        serverservicegroupbinding.ServersServiceGroupBindingBulkEditView.as_view(),
+        name="serverservicegroupbinding_bulk_edit",
+    ),
+    path(
+        "serverservicegroupbinding/<slug:slug>/",
+        serverservicegroupbinding.ServersServiceGroupBindingView.as_view(),
+        name="serverservicegroupbinding",
+    ),
+    path(
+        "serverservicegroupbinding/<slug:slug>/delete/",
+        serverservicegroupbinding.ServersServiceGroupBindingDeleteView.as_view(),
+        name="serverservicegroupbinding_delete",
+    ),
+    path(
+        "serverservicegroupbinding/<slug:slug>/edit/",
+        serverservicegroupbinding.ServersServiceGroupBindingEditView.as_view(),
+        name="serverservicegroupbinding_edit",
+    ),
+    path(
+        "serverservicegroupbinding/<slug:slug>/changelog/",
+        ObjectChangeLogView.as_view(),
+        name="serverservicegroupbinding_changelog",
+        kwargs={"model": models.ServersServiceGroupBinding},
     ),
     path("servicegroup/", servicegroup.ServiceGroupListView.as_view(), name="servicegroup_list"),
     path("servicegroup/add/", servicegroup.ServiceGroupCreateView.as_view(), name="servicegroup_add"),
@@ -177,6 +303,20 @@ urlpatterns = [
         ObjectChangeLogView.as_view(),
         name="vserver_changelog",
         kwargs={"model": models.Vserver},
+    ),
+    path("server/", server.ServerListView.as_view(), name="server_list"),
+    path("server/add/", server.ServerCreateView.as_view(), name="server_add"),
+    path("server/import/", server.ServerBulkImportView.as_view(), name="server_import"),
+    path("server/delete/", server.ServerBulkDeleteView.as_view(), name="server_bulk_delete"),
+    path("server/edit/", server.ServerBulkEditView.as_view(), name="server_bulk_edit"),
+    path("server/<slug:slug>/", server.ServerView.as_view(), name="server"),
+    path("server/<slug:slug>/delete/", server.ServerDeleteView.as_view(), name="server_delete"),
+    path("server/<slug:slug>/edit/", server.ServerEditView.as_view(), name="server_edit"),
+    path(
+        "server/<slug:slug>/changelog/",
+        ObjectChangeLogView.as_view(),
+        name="server_changelog",
+        kwargs={"model": models.Server},
     ),
     path(
         "customerappprofile/", customerappprofile.CustomerAppProfileListView.as_view(), name="customerappprofile_list"

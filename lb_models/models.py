@@ -12,6 +12,8 @@ from .choices import (
     ServiceGroupTypes,
     ApplicationClassTypes,
     ApplicationAccessibility,
+    Methods,
+    PersistenceType,
 )
 
 
@@ -82,7 +84,7 @@ class SSLServerBinding(PrimaryModel):
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50)
     ssl_certkey = models.OneToOneField(SSLCertKey, on_delete=models.CASCADE)
-    vserver = models.ForeignKey(to=models.Vserver, on_delete=models.CASCADE)
+    vserver = models.ForeignKey(to="Vserver", on_delete=models.CASCADE)
 
     fields = [
         "slug",
@@ -125,23 +127,15 @@ class ServiceGroupMemberBinding(PrimaryModel):
     """Service Group response model implementation."""
 
     slug = AutoSlugField(populate_from="name")
-    name = models.CharField(max_length=50, unique=True)
-    port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(1)])
-    address = models.ForeignKey(
-        to="ipam.IPAddress",
-        on_delete=models.CASCADE,
-        verbose_name="IPv4 Address",
-        blank=True,
-        null=True,
-    )
-    fqdn = models.CharField(max_length=200)
-    monitor = models.ForeignKey(to="Monitor", on_delete=models.PROTECT)
+    name = models.CharField(max_length=50)
+    server_port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(1)])
+    server_name = models.ForeignKey(to="Server", on_delete=models.CASCADE)
 
     fields = [
         "slug",
         "name",
-        "port",
-        "address",
+        "server_port",
+        "server_name",
     ]
     csv_headers = fields
     clone_fields = fields
@@ -155,8 +149,8 @@ class ServiceGroupMemberBinding(PrimaryModel):
         return (
             self.slug,
             self.name,
-            self.port,
-            self.address,
+            self.server_port,
+            self.server_name,
         )
 
     def __str__(self):
@@ -182,8 +176,8 @@ class Monitor(OrganizationalModel):
     comment = models.CharField(max_length=100, blank=True, null=True)
     type = models.CharField(max_length=20, choices=MonitorTypes)
     lrtm = models.BooleanField(default=False)
-    args = models.JSONField(blank=True, null=True)
     snow_id = models.CharField(max_length=20)
+    args = models.JSONField()
 
     fields = ["slug", "name", "comment", "type", "lrtm", "args", "snow_id"]
     csv_headers = fields
@@ -217,8 +211,8 @@ class ServiceGroupMonitorBinding(PrimaryModel):
 
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50)
-    monitor = models.ForeignKey(to=models.Monitor, on_delete=models.CASCADE)
-    service_group = models.ForeignKey(to=models.ServiceGroup, on_delete=models.CASCADE)
+    monitor = models.ForeignKey(to="Monitor", on_delete=models.CASCADE)
+    service_group = models.ForeignKey(to="ServiceGroup", on_delete=models.CASCADE)
 
     fields = [
         "slug",
@@ -246,6 +240,7 @@ class ServiceGroupMonitorBinding(PrimaryModel):
         """Stringify instance."""
         return self.name
 
+
 @extras_features(
     "custom_fields",
     "custom_links",
@@ -262,13 +257,13 @@ class ServiceGroup(OrganizationalModel):
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50)
     comment = models.CharField(max_length=50, blank=True, null=True)
-    member = models.ForeignKey(to="ServiceGroupMemberBinding", on_delete=models.PROTECT)
+    service_group_member = models.ForeignKey(to="ServiceGroupMemberBinding", on_delete=models.PROTECT)
+    monitor = models.ForeignKey(to="Monitor", on_delete=models.PROTECT)
     service_type = models.CharField(max_length=20, choices=ServiceGroupTypes)
-    td = models.SmallIntegerField()
     ssl_profile = models.CharField(max_length=50)
-    snow_id = models.CharField(max_length=20, blank=True, null=True)
+    snow_id = models.CharField(max_length=20)
 
-    fields = ["slug", "name", "comment", "member", "service_type", "td", "ssl_profile", "snow_id"]
+    fields = ["slug", "name", "comment", "service_group_member", "service_type", "monitor", "ssl_profile", "snow_id"]
     csv_headers = fields
     clone_fields = fields
 
@@ -282,9 +277,9 @@ class ServiceGroup(OrganizationalModel):
             self.slug,
             self.name,
             self.comment,
-            self.member,
+            self.service_group_member,
             self.service_type,
-            self.td,
+            self.monitor,
             self.ssl_profile,
             self.snow_id,
         )
@@ -309,7 +304,7 @@ class Vserver(PrimaryModel):
 
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=50)
+    comment = models.CharField(max_length=50, blank=True, null=True)
     device = models.ForeignKey(
         to="dcim.Device",
         on_delete=models.PROTECT,
@@ -317,14 +312,7 @@ class Vserver(PrimaryModel):
         null=True,
         verbose_name="Device",
     )
-    interface = models.ForeignKey(
-        to="dcim.Interface",
-        on_delete=models.PROTECT,
-        related_name="+",
-        null=True,
-        verbose_name="Interface",
-    )
-    address = models.ForeignKey(
+    ipv4_address = models.ForeignKey(
         to="ipam.IPAddress",
         on_delete=models.CASCADE,
         verbose_name="Member Address",
@@ -332,44 +320,31 @@ class Vserver(PrimaryModel):
         null=True,
     )
 
-    pool = models.ForeignKey(to="ServiceGroup", on_delete=models.PROTECT)
-    vlan = models.ForeignKey(
-        to="ipam.vlan",
-        on_delete=models.PROTECT,
-        related_name="+",
-        null=True,
-        verbose_name="VLAN",
-    )
-    vrf = models.ForeignKey(
-        to="ipam.vrf",
-        on_delete=models.PROTECT,
-        related_name="+",
-        null=True,
-        verbose_name="vrf",
-    )
-    fqdn = models.CharField(max_length=200)
-    protocol = models.CharField(max_length=20, choices=Protocols)
-    port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(1)])
-    method = models.CharField(max_length=50)
-    sslcertkey = models.ForeignKey(to="SSLCertKey", on_delete=models.CASCADE)
-    owner = models.CharField(max_length=50)
+    service_group_binding = models.ForeignKey(to="ServerServiceGroupBinding", on_delete=models.PROTECT)
+    service_type = models.CharField(max_length=20, choices=Protocols)
+    lb_method = models.CharField(max_length=20, choices=Methods)
+    ssl_binding = models.ForeignKey(to="SSLServerBinding", on_delete=models.CASCADE)
+    customer_app_profile = models.ForeignKey(to="CustomerAppProfile", on_delete=models.CASCADE)
+    ssl_profile = models.CharField(max_length=50, blank=True, null=True)
+    persistence_type = models.CharField(max_length=20, choices=PersistenceType)
+    args = models.JSONField(blank=True, null=True)
+    snow_id = models.CharField(max_length=20)
 
     fields = [
         "slug",
         "name",
-        "description",
+        "comment",
         "device",
-        "interface",
-        "address",
-        "pool",
-        "vlan",
-        "vrf",
-        "fqdn",
-        "protocol",
-        "port",
-        "method",
-        "sslcertkey",
-        "owner",
+        "ipv4_address",
+        "service_group_binding",
+        "service_type",
+        "lb_method",
+        "ssl_binding",
+        "customer_app_profile",
+        "ssl_profile",
+        "persistence_type",
+        "args",
+        "snow_id",
     ]
     csv_headers = fields
     clone_fields = fields
@@ -383,19 +358,18 @@ class Vserver(PrimaryModel):
         return (
             self.slug,
             self.name,
-            self.description,
+            self.comment,
             self.device,
-            self.interface,
-            self.address,
-            self.pool,
-            self.vlan,
-            self.vrf,
-            self.fqdn,
-            self.protocol,
-            self.port,
-            self.method,
-            self.sslcertkey,
-            self.owner,
+            self.ipv4_address,
+            self.service_group_binding,
+            self.service_type,
+            self.lb_method,
+            self.ssl_binding,
+            self.customer_app_profile,
+            self.ssl_profile,
+            self.persistence_type,
+            self.args,
+            self.snow_id,
         )
 
     def __str__(self):
@@ -470,3 +444,88 @@ class CustomerAppProfile(OrganizationalModel):
     def __str__(self):
         """Stringify instance."""
         return self.profile_name
+
+
+@extras_features(
+    "custom_fields",
+    "custom_links",
+    "custom_validators",
+    "export_templates",
+    "graphql",
+    "relationships",
+    "statuses",
+    "webhooks",
+)
+class Server(PrimaryModel):
+    """Server model implementation."""
+
+    slug = AutoSlugField(populate_from="name")
+    name = models.CharField(max_length=50)
+    state = models.BooleanField(default=False)
+    ipv4_address = models.ForeignKey(
+        to="ipam.IPAddress",
+        on_delete=models.CASCADE,
+        verbose_name="IPv4 Server Address",
+        blank=True,
+        null=True,
+    )
+    td = models.IntegerField()
+
+    fields = ["slug", "name", "state", "ipv4_address", "td"]
+    csv_headers = fields
+    clone_fields = fields
+
+    def get_absolute_url(self):
+        """Return detail view for Monitor."""
+        return reverse("plugins:lb_models:server", args=[self.slug])
+
+    def to_csv(self):
+        """To CSV format."""
+        return (self.slug, self.name, self.state, self.ipv4_address, self.td)
+
+    def __str__(self):
+        """Stringify instance."""
+        return self.name
+
+
+@extras_features(
+    "custom_fields",
+    "custom_links",
+    "custom_validators",
+    "export_templates",
+    "graphql",
+    "relationships",
+    "statuses",
+    "webhooks",
+)
+class ServerServiceGroupBinding(PrimaryModel):
+    """Server Service Group Binding response model implementation."""
+
+    slug = AutoSlugField(populate_from="name")
+    service_group = models.ForeignKey(to="ServiceGroup", on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+
+    fields = [
+        "slug",
+        "name",
+        "service_group",
+    ]
+    csv_headers = fields
+    clone_fields = fields
+
+    def get_absolute_url(self):
+        """Return detail view for Server Service Group Binding."""
+        return reverse("plugins:lb_models:serverservicegroupbinding", args=[self.slug])
+
+    def to_csv(self):
+        """To CSV format."""
+        return (
+            self.slug,
+            self.name,
+            self.service_group,
+            self.vserver,
+        )
+
+    def __str__(self):
+        """Stringify instance."""
+        return self.name

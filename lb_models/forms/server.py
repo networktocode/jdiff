@@ -9,34 +9,26 @@ from ..choices import Protocols
 from .utils import add_blank_choice
 
 
-class VserverForm(BootstrapMixin, forms.ModelForm):
-    """Vserver creation/edit form."""
+class ServerForm(BootstrapMixin, forms.ModelForm):
+    """Server creation/edit form."""
 
     slug = AutoSlugField(populate_from=["name"])
+    ipv4_address = forms.ModelChoiceField(queryset=IPAddress.objects.all(), label="IPv4 Address")
 
     class Meta:
         """Meta attributes."""
 
-        model = models.Vserver
+        model = models.Server
         fields = [
             "slug",
             "name",
-            "comment",
-            "device",
+            "state",
             "ipv4_address",
-            "service_group_binding",
-            "service_type",
-            "lb_method",
-            "ssl_binding",
-            "customer_app_profile",
-            "ssl_profile",
-            "persistence_type",
-            "args",
-            "snow_id",
+            "td",
         ]
 
 
-class VserverFilterForm(BootstrapMixin, forms.ModelForm):
+class ServerFilterForm(BootstrapMixin, forms.ModelForm):
     """Filter form to filter searches."""
 
     q = forms.CharField(
@@ -45,50 +37,45 @@ class VserverFilterForm(BootstrapMixin, forms.ModelForm):
         help_text="Search within issuer or Slug.",
     )
     slug = AutoSlugField(populate_from=["name"])
+    state = forms.CharField(required=False, label="State")
+    name = forms.CharField(required=False, label="Name")
+    ipv4_address = forms.ModelChoiceField(queryset=IPAddress.objects.all(), label="IP Address", required=False)
+    td = forms.IntegerField(required=False, label="TD")
 
     class Meta:
         """Meta attributes."""
 
-        model = models.Vserver
+        model = models.Server
         fields = [
             "q",
             "slug",
             "name",
-            "comment",
-            "device",
+            "state",
             "ipv4_address",
-            "service_group_binding",
-            "service_type",
-            "lb_method",
-            "ssl_binding",
-            "customer_app_profile",
-            "ssl_profile",
-            "persistence_type",
-            "args",
-            "snow_id",
+            "td",
         ]
 
 
-class VserverBulkEditForm(BootstrapMixin, BulkEditForm):
-    """Vserver bulk edit form."""
+class ServerBulkEditForm(BootstrapMixin, BulkEditForm):
+    """Server bulk edit form."""
 
-    pk = forms.ModelChoiceField(queryset=models.Vserver.objects.all(), widget=forms.MultipleHiddenInput)
+    pk = forms.ModelChoiceField(queryset=models.Server.objects.all(), widget=forms.MultipleHiddenInput)
     name = forms.CharField(required=False)
 
     class Meta:
         """Meta attributes."""
 
-        model = models.Vserver
+        model = models.Server
         nullable_fields = [
             "name",
         ]
 
 
-class VserverCSVForm(CSVModelForm):
+class ServerCSVForm(CSVModelForm):
     """Form for creating bulk Team."""
 
     class Meta:
         """Meta attributes."""
 
-        model = models.Vserver
-        fields = models.Vserver.csv_headers
+        model = models.Server
+        fields = models.Server.csv_headers

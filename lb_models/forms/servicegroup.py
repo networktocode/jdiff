@@ -13,16 +13,29 @@ class ServiceGroupForm(BootstrapMixin, forms.ModelForm):
     slug = AutoSlugField(populate_from=["name"])
     name = forms.CharField(required=False)
     comment = forms.CharField(required=False)
-    member = forms.ModelChoiceField(queryset=models.ServiceGroupMemberBinding.objects.all(), to_field_name="slug")
+    service_group_member = forms.ModelChoiceField(
+        queryset=models.ServiceGroupMemberBinding.objects.all(), to_field_name="slug", label="Service Group Member"
+    )
     snow_id = forms.CharField(required=False, label="SNOW ID")
-    td = forms.CharField(required=False, label="TD")
+    monitor = forms.ModelChoiceField(
+        queryset=models.ServiceGroupMonitorBinding.objects.all(), to_field_name="slug", label="Monitor"
+    )
     ssl_profile = forms.CharField(required=False, label="SSL Profile")
 
     class Meta:
         """Meta attributes."""
 
         model = models.ServiceGroup
-        fields = ["slug", "name", "comment", "member", "service_type", "td", "ssl_profile", "snow_id"]
+        fields = [
+            "slug",
+            "name",
+            "comment",
+            "service_group_member",
+            "service_type",
+            "monitor",
+            "ssl_profile",
+            "snow_id",
+        ]
 
 
 class ServiceGroupFilterForm(BootstrapMixin, forms.ModelForm):

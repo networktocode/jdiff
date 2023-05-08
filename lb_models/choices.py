@@ -2,6 +2,51 @@
 from nautobot.utilities.choices import ChoiceSet
 
 
+class Methods(ChoiceSet):
+    """Valid choices for LB Methods."""
+
+    ROUNDROBIN = "roundrobin"
+    LEASTCONNECTION = "leastconnection"
+    LEASTRESPONSETIME = "leastresponsetime"
+    URLHASH = "urlhash"
+    DOMAINHASH = "domainhash"
+    DESTINATIONIPHASH = "destinationiphash"
+    SOURCEIPHASH = "sourceiphash"
+    SRCIPDESTIPHASH = "srcipdestiphash"
+    LEASTBANDWIDTH = "leastbandwidth"
+    LEASTPACKETS = "leastpackets"
+    SRCIPSRCPORTHASH = "srcipsrcporthash"
+    CUSTOMLOAD = "customload"
+    LEASTREQUEST = "leastrequest"
+
+    CHOICES = (
+        (ROUNDROBIN, "roundrobin"),
+        (LEASTCONNECTION, "leastconnection"),
+        (LEASTRESPONSETIME, "leastresponsetime"),
+        (URLHASH, "urlhash"),
+        (DOMAINHASH, "domainhash"),
+        (DESTINATIONIPHASH, "destinationiphash"),
+        (SOURCEIPHASH, "sourceiphash"),
+        (SRCIPDESTIPHASH, "srcipdestiphash"),
+        (LEASTBANDWIDTH, "leastbandwidth"),
+        (LEASTPACKETS, "leastpackets"),
+        (SRCIPSRCPORTHASH, "srcipsrcporthash"),
+        (CUSTOMLOAD, "customload"),
+        (LEASTREQUEST, "leastrequest"),
+    )
+
+
+class PersistenceType(ChoiceSet):
+    """Valid choices for protocols."""
+
+    SOURCEIP = "sourceip"
+    COOKIEINSERT = "cookieinsert"
+    RULE = "rule"
+    NONE = "none"
+
+    CHOICES = ((SOURCEIP, "sourceip"), (COOKIEINSERT, "cookieinsert"), (RULE, "rule"), (NONE, "none"))
+
+
 class Protocols(ChoiceSet):
     """Valid choices for protocols."""
 

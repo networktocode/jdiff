@@ -113,6 +113,42 @@ menu_items = (
         ),
     ),
     PluginMenuItem(
+        link="plugins:lb_models:server_list",
+        link_text="Server",
+        buttons=(
+            PluginMenuButton(
+                link="plugins:lb_models:server_add",
+                title="Add",
+                icon_class="mdi mdi-plus-thick",
+                color=ButtonColorChoices.GREEN,
+            ),
+            PluginMenuButton(
+                link="plugins:lb_models:server_import",
+                title="Import",
+                icon_class="mdi mdi-database-import-outline",
+                color=ButtonColorChoices.BLUE,
+            ),
+        ),
+    ),
+    PluginMenuItem(
+        link="plugins:lb_models:serverservicegroupbinding_list",
+        link_text="Server Service Group Binding",
+        buttons=(
+            PluginMenuButton(
+                link="plugins:lb_models:serverservicegroupbinding_add",
+                title="Add",
+                icon_class="mdi mdi-plus-thick",
+                color=ButtonColorChoices.GREEN,
+            ),
+            PluginMenuButton(
+                link="plugins:lb_models:serverservicegroupbinding_import",
+                title="Import",
+                icon_class="mdi mdi-database-import-outline",
+                color=ButtonColorChoices.BLUE,
+            ),
+        ),
+    ),
+    PluginMenuItem(
         link="plugins:lb_models:customerappprofile_list",
         link_text="CustomerAppProfile",
         buttons=(
