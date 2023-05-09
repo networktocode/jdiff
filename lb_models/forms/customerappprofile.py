@@ -19,7 +19,7 @@ class CustomerAppProfileForm(BootstrapMixin, forms.ModelForm):
     oe_bu = forms.CharField(label="OE BU")
     owner_contact = forms.EmailField(label="Owner Contact")
     class_type = forms.ChoiceField(choices=add_blank_choice(ApplicationClassTypes))
-    accessibility = forms.ChoiceField(choices=add_blank_choice(ApplicationClassTypes))
+    accessibility = forms.ChoiceField(choices=add_blank_choice(ApplicationAccessibility))
     test_url = forms.URLField(label="URL")
 
     class Meta:
@@ -56,7 +56,7 @@ class CustomerAppProfileFilterForm(BootstrapMixin, forms.ModelForm):
     oe_bu = forms.CharField(label="OE BU", required=False)
     owner_contact = forms.EmailField(label="email", required=False)
     class_type = forms.ChoiceField(choices=add_blank_choice(ApplicationClassTypes), required=False)
-    accessibility = forms.ChoiceField(choices=add_blank_choice(ApplicationClassTypes), required=False)
+    accessibility = forms.ChoiceField(choices=add_blank_choice(ApplicationAccessibility), required=False)
     test_url = forms.URLField(required=False, label="URL")
 
     class Meta:

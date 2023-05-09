@@ -3,16 +3,17 @@ from django import forms
 from nautobot.utilities.forms import BootstrapMixin, BulkEditForm, CSVModelForm
 from nautobot.core.fields import AutoSlugField
 from lb_models import models
-from nautobot.ipam.models import IPAddress, Interface, VLAN, VRF
-from nautobot.dcim.models import Device
-from ..choices import Protocols
+from ..choices import Methods
 from .utils import add_blank_choice
-
 
 class VserverForm(BootstrapMixin, forms.ModelForm):
     """Vserver creation/edit form."""
 
     slug = AutoSlugField(populate_from=["name"])
+    lb_method = forms.ChoiceField(choices=add_blank_choice(Methods), label="LB Method")
+    ssl_binding = forms.ModelChoiceField(queryset=models.SSLCertKey.objects.all(), to_field_name="slug", label="SSL Binding")
+    ssl_profile = forms.CharField(label="SSL Profile")
+    snow_id = forms.CharField(label="SNOW ID")
 
     class Meta:
         """Meta attributes."""

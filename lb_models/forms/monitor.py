@@ -11,6 +11,12 @@ class MonitorForm(BootstrapMixin, forms.ModelForm):
     """Monitor creation/edit form."""
 
     slug = AutoSlugField(populate_from=["name"])
+    lrtm = forms.BooleanField(
+        required=True,
+        widget=StaticSelect2(choices=add_blank_choice((("ENABLED", "yes"), ("DISABLED", "no")))),
+        label="LRTM",
+    )
+    snow_id = forms.CharField(label="SNOW ID")
 
     class Meta:
         """Meta attributes."""
@@ -34,7 +40,6 @@ class MonitorFilterForm(BootstrapMixin, forms.ModelForm):
     lrtm = forms.NullBooleanField(
         required=False, widget=StaticSelect2(choices=add_blank_choice((("ENABLED", "yes"), ("DISABLED", "no"))))
     )
-    args = forms.JSONField(required=False, label="Optional Arguments")
     snow_id = forms.CharField(required=False, label="SNOW ID")
 
     class Meta:

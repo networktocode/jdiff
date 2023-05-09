@@ -9,7 +9,6 @@ class ServiceGroupMonitorBindingForm(BootstrapMixin, forms.ModelForm):
     """Service Group Member creation/edit form."""
 
     slug = AutoSlugField(populate_from=["name"])
-    service_group = forms.ModelChoiceField(queryset=models.ServiceGroup.objects.all(), to_field_name="slug")
     monitor = forms.ModelChoiceField(queryset=models.Monitor.objects.all(), to_field_name="slug")
 
     class Meta:
@@ -20,7 +19,6 @@ class ServiceGroupMonitorBindingForm(BootstrapMixin, forms.ModelForm):
             "slug",
             "name",
             "monitor",
-            "service_group",
         ]
 
 
@@ -37,9 +35,6 @@ class ServiceGroupMonitorBindingFilterForm(BootstrapMixin, forms.ModelForm):
     monitor = forms.ModelChoiceField(
         queryset=models.Monitor.objects.all(), required=False, label="Monitor", to_field_name="slug"
     )
-    service_group = forms.ModelChoiceField(
-        queryset=models.ServiceGroupMonitorBindingM.objects.all(), required=False, label="Monitor", to_field_name="slug"
-    )
 
     class Meta:
         """Meta attributes."""
@@ -50,7 +45,6 @@ class ServiceGroupMonitorBindingFilterForm(BootstrapMixin, forms.ModelForm):
             "slug",
             "name",
             "monitor",
-            "service_group",
         ]
 
 

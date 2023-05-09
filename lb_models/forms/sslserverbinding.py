@@ -19,7 +19,6 @@ class SSLServerBindingForm(BootstrapMixin, forms.ModelForm):
             "slug",
             "name",
             "ssl_certkey",
-            "vserver",
         ]
 
 
@@ -34,7 +33,6 @@ class SSLServerBindingFilterForm(BootstrapMixin, forms.ModelForm):
     slug = forms.CharField(required=False, label="Slug")
     name = forms.CharField(required=False, label="SSL Server Binding Name")
     ssl_certkey = forms.CharField(required=False, label="SSL Cert Key")
-    vserver = forms.CharField(required=False, label="SSL VServer")
 
     class Meta:
         """Meta attributes."""
@@ -45,7 +43,6 @@ class SSLServerBindingFilterForm(BootstrapMixin, forms.ModelForm):
             "slug",
             "name",
             "ssl_certkey",
-            "vserver",
         ]
 
 

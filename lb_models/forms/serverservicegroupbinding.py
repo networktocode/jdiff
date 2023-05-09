@@ -9,10 +9,7 @@ class ServerServiceGroupBindingForm(BootstrapMixin, forms.ModelForm):
     """Service Group Member creation/edit form."""
 
     slug = AutoSlugField(populate_from=["name"])
-    service_group = forms.ModelChoiceField(
-        queryset=models.ServerServiceGroupBinding.objects.all(), to_field_name="slug"
-    )
-    monitor = forms.ModelChoiceField(queryset=models.Monitor.objects.all(), to_field_name="slug")
+    service_group = forms.ModelChoiceField(queryset=models.ServiceGroup.objects.all(), to_field_name="slug")
 
     class Meta:
         """Meta attributes."""
@@ -22,7 +19,6 @@ class ServerServiceGroupBindingForm(BootstrapMixin, forms.ModelForm):
             "slug",
             "name",
             "service_group",
-            "vserver",
         ]
 
 
@@ -36,9 +32,6 @@ class ServerServiceGroupBindingFilterForm(BootstrapMixin, forms.ModelForm):
     )
     slug = forms.CharField(required=False, label="Slug")
     name = forms.CharField(required=False, label="Name")
-    vserver = forms.ModelChoiceField(
-        queryset=models.Vserver.objects.all(), required=False, label="Vserver", to_field_name="slug"
-    )
     service_group = forms.ModelChoiceField(
         queryset=models.ServiceGroup.objects.all(), required=False, label="SG", to_field_name="slug"
     )
@@ -52,7 +45,6 @@ class ServerServiceGroupBindingFilterForm(BootstrapMixin, forms.ModelForm):
             "slug",
             "name",
             "service_group",
-            "vserver",
         ]
 
 

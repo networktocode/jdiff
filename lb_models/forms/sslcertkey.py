@@ -9,7 +9,8 @@ class SSLCertKeyForm(BootstrapMixin, forms.ModelForm):
     """SSLCertKey creation/edit form."""
 
     slug = AutoSlugField(populate_from=["name"])
-    password = forms.CharField(widget=forms.PasswordInput)
+    password = forms.CharField(widget=forms.PasswordInput, required=False)
+    snow_id = forms.CharField(label="SNOW ID")
 
     class Meta:
         """Meta attributes."""
@@ -34,9 +35,9 @@ class SSLCertKeyFilterForm(BootstrapMixin, forms.ModelForm):
         help_text="Search within issuer or Slug.",
     )
     slug = forms.CharField(required=False, label="Slug")
-    name = forms.CharField(required=False, label="SSLCertKey Name")
-    private_key_filename = forms.CharField(required=False, label="SSLCertKey Key Filename")
-    private_crt_filename = forms.CharField(required=False, label="SSLCertKey Cert Filename")
+    name = forms.CharField(required=False, label="Key Name")
+    private_key_filename = forms.CharField(required=False, label="Key Filename")
+    private_crt_filename = forms.CharField(required=False, label="Cert Filename")
     snow_id = forms.CharField(required=False, label="SNOW ID")
 
     class Meta:

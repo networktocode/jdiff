@@ -11,16 +11,15 @@ class ServiceGroupForm(BootstrapMixin, forms.ModelForm):
     """Service Group Member creation/edit form."""
 
     slug = AutoSlugField(populate_from=["name"])
-    name = forms.CharField(required=False)
     comment = forms.CharField(required=False)
     service_group_member = forms.ModelChoiceField(
         queryset=models.ServiceGroupMemberBinding.objects.all(), to_field_name="slug", label="Service Group Member"
     )
-    snow_id = forms.CharField(required=False, label="SNOW ID")
+    snow_id = forms.CharField(label="SNOW ID")
     monitor = forms.ModelChoiceField(
         queryset=models.ServiceGroupMonitorBinding.objects.all(), to_field_name="slug", label="Monitor"
     )
-    ssl_profile = forms.CharField(required=False, label="SSL Profile")
+    ssl_profile = forms.CharField(label="SSL Profile")
 
     class Meta:
         """Meta attributes."""

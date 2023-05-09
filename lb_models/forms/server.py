@@ -1,11 +1,9 @@
 """Forms for lb_models."""
 from django import forms
-from nautobot.utilities.forms import BootstrapMixin, BulkEditForm, CSVModelForm
+from nautobot.utilities.forms import BootstrapMixin, BulkEditForm, CSVModelForm, StaticSelect2
 from nautobot.core.fields import AutoSlugField
 from lb_models import models
-from nautobot.ipam.models import IPAddress, Interface, VLAN, VRF
-from nautobot.dcim.models import Device
-from ..choices import Protocols
+from nautobot.ipam.models import IPAddress
 from .utils import add_blank_choice
 
 
@@ -14,6 +12,7 @@ class ServerForm(BootstrapMixin, forms.ModelForm):
 
     slug = AutoSlugField(populate_from=["name"])
     ipv4_address = forms.ModelChoiceField(queryset=IPAddress.objects.all(), label="IPv4 Address")
+    td = forms.IntegerField(label="TD")
 
     class Meta:
         """Meta attributes."""

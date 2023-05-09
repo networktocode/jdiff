@@ -2,7 +2,7 @@
 from nautobot.core.views import generic
 
 from lb_models import filters, models, tables
-from lb_models.forms import servicegroupmemberbinding as forms
+from lb_models.forms import serverservicegroupbinding as forms
 
 
 class ServerServiceGroupBindingView(generic.ObjectView):

@@ -378,15 +378,11 @@ class ServerServiceGroupBindingFilterSet(BaseFilterSet, NameSlugSearchFilterSet)
         """Perform the filtered search."""
         if not value.strip():
             return queryset
-        qs_filter = (
-            Q(id__icontains=value)
-            | Q(ame__icontains=value)
-            | Q(service_group__icontains=value)
-        )
+        qs_filter = Q(id__icontains=value) | Q(ame__icontains=value) | Q(service_group__icontains=value)
         return queryset.filter(qs_filter)
 
 
-class ServiceGroupMonitorBindingFilterFormFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
+class ServiceGroupMonitorBindingFilterForm(BaseFilterSet, NameSlugSearchFilterSet):
     """Filter for Server Service Group Binding."""
 
     q = django_filters.CharFilter(
@@ -402,17 +398,11 @@ class ServiceGroupMonitorBindingFilterFormFilterSet(BaseFilterSet, NameSlugSearc
             "slug",
             "name",
             "monitor",
-            "service_group",
         ]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
         """Perform the filtered search."""
         if not value.strip():
             return queryset
-        qs_filter = (
-            Q(id__icontains=value)
-            | Q(name__icontains=value)
-            | Q(monitor__icontains=value)
-            | Q(service_group__icontains=value)
-        )
+        qs_filter = Q(id__icontains=value) | Q(name__icontains=value) | Q(monitor__icontains=value)
         return queryset.filter(qs_filter)

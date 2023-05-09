@@ -32,7 +32,6 @@ class MonitorSerializer(ValidatedModelSerializer):
 class ServiceGroupMemberBindingSerializer(ValidatedModelSerializer):
     """Service Group Member Serializer."""
 
-    address = ipam_nested_serializers.NestedIPAddressSerializer()
     monitor = nested_serializers.MonitorNestedSerializer()
 
     class Meta:
@@ -44,8 +43,6 @@ class ServiceGroupMemberBindingSerializer(ValidatedModelSerializer):
 
 class ServiceGroupSerializer(ValidatedModelSerializer):
     """Service Group Serializer."""
-
-    member = nested_serializers.ServiceGroupMemberBindingNestedSerializer()
 
     class Meta:
         """Meta attributes."""
