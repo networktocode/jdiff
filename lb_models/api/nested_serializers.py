@@ -7,29 +7,29 @@ from nautobot.ipam.api import nested_serializers as ipam_nested_serializers
 from lb_models import models
 
 
-class HealthMonitorNestedSerializer(WritableNestedSerializer):
-    """Health Monitor Nested Serializer."""
+class MonitorNestedSerializer(WritableNestedSerializer):
+    """Monitor Nested Serializer."""
 
     monitor = serializers.CharField(source="name")
 
     class Meta:
         """Meta attributes."""
 
-        model = models.HealthMonitor
+        model = models.Monitor
         fields = ["monitor"]
 
 
-class ServiceGroupBindingNestedSerializer(WritableNestedSerializer):
+class ServiceGroupMemberBindingNestedSerializer(WritableNestedSerializer):
     """Service Group Member Nested Serializer."""
 
     member = serializers.CharField(source="name")
-    monitor = HealthMonitorNestedSerializer()
+    monitor = MonitorNestedSerializer()
     address = ipam_nested_serializers.NestedIPAddressSerializer()
 
     class Meta:
         """Meta attributes."""
 
-        model = models.ServiceGroupBinding
+        model = models.ServiceGroupMemberBinding
         fields = ["member", "monitor", "address"]
 
 
@@ -37,8 +37,8 @@ class ServiceGroupNestedSerializer(WritableNestedSerializer):
     """Service Group Nested Serializer."""
 
     pool = serializers.CharField(source="name")
-    member = ServiceGroupBindingNestedSerializer()
-    monitor = HealthMonitorNestedSerializer()
+    member = ServiceGroupMemberBindingNestedSerializer()
+    monitor = MonitorNestedSerializer()
 
     class Meta:
         """Meta attributes."""
@@ -47,13 +47,13 @@ class ServiceGroupNestedSerializer(WritableNestedSerializer):
         fields = ["pool", "member", "monitor"]
 
 
-class CertificateNestedSerializer(WritableNestedSerializer):
-    """Certificate Nested Serializer."""
+class SSLCertKeyNestedSerializer(WritableNestedSerializer):
+    """SSLCertKey Nested Serializer."""
 
-    certificate = serializers.CharField(source="name")
+    sslcertkey = serializers.CharField(source="name")
 
     class Meta:
         """Meta attributes."""
 
-        model = models.Certificate
-        fields = ["certificate"]
+        model = models.SSLCertKey
+        fields = ["sslcertkey"]
