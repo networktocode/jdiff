@@ -5,8 +5,8 @@ from django.db.models import Q
 from lb_models import models
 
 
-class CertificateFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
-    """Filter for Certificate."""
+class SSLCertKeyFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
+    """Filter for SSLCertKey."""
 
     q = django_filters.CharFilter(
         method="search",
@@ -16,18 +16,15 @@ class CertificateFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
     class Meta:
         """Meta attributes for filter."""
 
-        model = models.Certificate
+        model = models.SSLCertKey
         fields = [
             "q",
             "slug",
-            "issuer",
-            "version_number",
-            "serial_number",
             "name",
-            "key",
+            "private_key_filename",
+            "private_crt_filename",
             "password",
-            "start_date",
-            "end_date",
+            "snow_id",
         ]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
@@ -35,41 +32,114 @@ class CertificateFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         if not value.strip():
             return queryset
         qs_filter = (
-            Q(issuer__icontains=value)
-            | Q(serial_number__icontains=value)
-            | Q(version_number__icontains=value)
+            Q(name__icontains=value)
+            | Q(private_key_filename__icontains=value)
+            | Q(private_crt_filename__icontains=value)
             | Q(name__icontains=value)
-            | Q(key__icontains=value)
+            | Q(snow_id__icontains=value)
         )
         return queryset.filter(qs_filter)
 
 
-class ServiceGroupBindingFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
-    """Filter for ServiceGroupBinding."""
+class SSLServerBindingFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
+    """Filter for SSLServerBinding."""
+
+    q = django_filters.CharFilter(
+        method="search",
+        label="Search",
+    )
+    ssl_certkey = django_filters.ModelMultipleChoiceFilter(
+        queryset=models.SSLCertKey.objects.all(),
+        label="SSL Certkey",
+    )
+    vserver = django_filters.ModelMultipleChoiceFilter(
+        queryset=models.Vserver.objects.all(),
+        label="VServer",
+    )
+
+    class Meta:
+        """Meta attributes for filter."""
+
+        model = models.SSLServerBinding
+        fields = [
+            "q",
+            "slug",
+            "name",
+            "ssl_certkey",
+            "vserver",
+        ]
+
+    def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
+        """Perform the filtered search."""
+        if not value.strip():
+            return queryset
+        qs_filter = Q(name__icontains=value) | Q(ssl_certkey__icontains=value) | Q(vserver__icontains=value)
+        return queryset.filter(qs_filter)
+
+
+class ServiceGroupMemberBindingFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
+    """Filter for ServiceGroupMemberBinding."""
+
+    q = django_filters.CharFilter(
+        method="search",
+        label="Search",
+    )
+    server_name = django_filters.ModelMultipleChoiceFilter(
+        queryset=models.Server.objects.all(),
+        label="Server",
+    )
+
+    class Meta:
+        """Meta attributes for filter."""
+
+        model = models.ServiceGroupMemberBinding
+        fields = [
+            "q",
+            "slug",
+            "server_name",
+            "server_port",
+            "name",
+        ]
+
+    def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
+        """Perform the filtered search."""
+        if not value.strip():
+            return queryset
+        qs_filter = (
+            Q(name__icontains=value)
+            | Q(server_name__icontains=value)
+            | Q(server_port__icontains=value)
+            | Q(name__icontains=value)
+        )
+        return queryset.filter(qs_filter)
+
+
+class ServiceGroupMonitorBindingFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
+    """Filter for ServiceGroupMonitorBinding."""
 
     q = django_filters.CharFilter(
         method="search",
         label="Search",
     )
     monitor = django_filters.ModelMultipleChoiceFilter(
-        queryset=models.ServiceGroupBinding.objects.all(),
+        queryset=models.ServiceGroupMonitorBinding.objects.all(),
         label="Monitor",
+    )
+    service_group = django_filters.ModelMultipleChoiceFilter(
+        queryset=models.ServiceGroup.objects.all(),
+        label="Service Group",
     )
 
     class Meta:
         """Meta attributes for filter."""
 
-        model = models.ServiceGroupBinding
+        model = models.ServiceGroupMemberBinding
         fields = [
             "q",
             "slug",
             "name",
-            "description",
-            "protocol",
-            "port",
-            "address",
-            "fqdn",
             "monitor",
+            "service_group",
         ]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
@@ -88,8 +158,8 @@ class ServiceGroupBindingFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         return queryset.filter(qs_filter)
 
 
-class HealthMonitorFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
-    """Filter for HealthMonitor."""
+class MonitorFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
+    """Filter for Monitor."""
 
     q = django_filters.CharFilter(
         method="search",
@@ -99,21 +169,8 @@ class HealthMonitorFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
     class Meta:
         """Meta attributes for filter."""
 
-        model = models.HealthMonitor
-        fields = [
-            "q",
-            "slug",
-            "name",
-            "description",
-            "type",
-            "lrtm",
-            "secure",
-            "url",
-            "send",
-            "code",
-            "receive",
-            "httprequest",
-        ]
+        model = models.Monitor
+        fields = ["q", "slug", "name", "comment", "type", "lrtm", "args", "snow_id"]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
         """Perform the filtered search."""
@@ -121,12 +178,9 @@ class HealthMonitorFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             return queryset
         qs_filter = (
             Q(name__icontains=value)
-            | Q(description__icontains=value)
+            | Q(comment__icontains=value)
             | Q(type__icontains=value)
-            | Q(url__icontains=value)
-            | Q(send__icontains=value)
-            | Q(recevier__icontains=value)
-            | Q(httprequest__icontains=value)
+            | Q(snow_id__icontains=value)
         )
         return queryset.filter(qs_filter)
 
@@ -139,19 +193,29 @@ class ServiceGroupFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         label="Search",
     )
     monitor = django_filters.ModelMultipleChoiceFilter(
-        queryset=models.HealthMonitor.objects.all(),
+        queryset=models.ServiceGroupMonitorBinding.objects.all(),
         label="Monitor",
     )
-    member = django_filters.ModelMultipleChoiceFilter(
-        queryset=models.ServiceGroupBinding.objects.all(),
-        label="Member",
+    service_group_member = django_filters.ModelMultipleChoiceFilter(
+        queryset=models.ServiceGroupMemberBinding.objects.all(),
+        label="Service Group Member Binding",
     )
 
     class Meta:
         """Meta attributes for filter."""
 
         model = models.ServiceGroup
-        fields = ["q", "slug", "name", "description", "monitor", "member", "type", "td", "sslprofile"]
+        fields = [
+            "q",
+            "slug",
+            "name",
+            "comment",
+            "service_group_member",
+            "service_type",
+            "monitor",
+            "ssl_profile",
+            "snow_id",
+        ]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
         """Perform the filtered search."""
@@ -159,12 +223,12 @@ class ServiceGroupFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             return queryset
         qs_filter = (
             Q(name__icontains=value)
-            | Q(description__icontains=value)
+            | Q(comment__icontains=value)
             | Q(monitor__icontains=value)
-            | Q(member__icontains=value)
+            | Q(service_group_member__icontains=value)
             | Q(type__icontains=value)
-            | Q(td__icontains=value)
-            | Q(sslprofile__icontains=value)
+            | Q(name__icontains=value)
+            | Q(ssl_profile__icontains=value)
         )
         return queryset.filter(qs_filter)
 
@@ -184,18 +248,18 @@ class VserverFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         fields = [
             "slug",
             "name",
-            "description",
+            "comment",
             "device",
-            "address",
-            "pool",
-            "vlan",
-            "vrf",
-            "fqdn",
-            "protocol",
-            "port",
-            "method",
-            "certificate",
-            "owner",
+            "ipv4_address",
+            "service_group_binding",
+            "service_type",
+            "lb_method",
+            "ssl_binding",
+            "customer_app_profile",
+            "ssl_profile",
+            "persistence_type",
+            "args",
+            "snow_id",
         ]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
@@ -215,14 +279,14 @@ class VserverFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             | Q(protocol__icontains=value)
             | Q(port__icontains=value)
             | Q(method__icontains=value)
-            | Q(certificate__icontains=value)
+            | Q(sslcertkey__icontains=value)
             | Q(owner__icontains=value)
         )
         return queryset.filter(qs_filter)
 
 
-class CustomerFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
-    """Filter for Customer."""
+class ServerFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
+    """Filter for Server."""
 
     q = django_filters.CharFilter(
         method="search",
@@ -232,8 +296,46 @@ class CustomerFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
     class Meta:
         """Meta attributes for filter."""
 
-        model = models.Customer
-        fields = ["slug", "id", "site", "name", "fqdn", "oe", "email", "class_type", "accessibility", "test_url"]
+        model = models.Server
+        fields = ["slug", "name", "state", "ipv4_address", "td"]
+
+    def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
+        """Perform the filtered search."""
+        if not value.strip():
+            return queryset
+        qs_filter = (
+            Q(name__icontains=value)
+            | Q(state__icontains=value)
+            | Q(ipv4_address__icontains=value)
+            | Q(td__icontains=value)
+        )
+        return queryset.filter(qs_filter)
+
+
+class CustomerAppProfileFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
+    """Filter for CustomerAppProfile."""
+
+    q = django_filters.CharFilter(
+        method="search",
+        label="Search",
+    )
+
+    class Meta:
+        """Meta attributes for filter."""
+
+        model = models.CustomerAppProfile
+        fields = [
+            "slug",
+            "profile_name",
+            "application_name",
+            "site",
+            "fqdn",
+            "oe_bu",
+            "owner_contact",
+            "class_type",
+            "accessibility",
+            "test_url",
+        ]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
         """Perform the filtered search."""
@@ -241,13 +343,66 @@ class CustomerFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             return queryset
         qs_filter = (
             Q(id__icontains=value)
+            | Q(application_name__icontains=value)
+            | Q(profile_name__icontains=value)
             | Q(site__icontains=value)
-            | Q(name__icontains=value)
             | Q(fqdn__icontains=value)
-            | Q(oe__icontains=value)
-            | Q(email__icontains=value)
+            | Q(oe_bu__icontains=value)
+            | Q(owner_contact__icontains=value)
             | Q(class_type__icontains=value)
             | Q(accessibility__icontains=value)
             | Q(test_url__icontains=value)
         )
+        return queryset.filter(qs_filter)
+
+
+class ServerServiceGroupBindingFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
+    """Filter for Server Service Group Binding."""
+
+    q = django_filters.CharFilter(
+        method="search",
+        label="Search",
+    )
+
+    class Meta:
+        """Meta attributes for filter."""
+
+        model = models.ServerServiceGroupBinding
+        fields = [
+            "slug",
+            "name",
+            "service_group",
+        ]
+
+    def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
+        """Perform the filtered search."""
+        if not value.strip():
+            return queryset
+        qs_filter = Q(id__icontains=value) | Q(ame__icontains=value) | Q(service_group__icontains=value)
+        return queryset.filter(qs_filter)
+
+
+class ServiceGroupMonitorBindingFilterForm(BaseFilterSet, NameSlugSearchFilterSet):
+    """Filter for Server Service Group Binding."""
+
+    q = django_filters.CharFilter(
+        method="search",
+        label="Search",
+    )
+
+    class Meta:
+        """Meta attributes for filter."""
+
+        model = models.ServiceGroupMonitorBinding
+        fields = [
+            "slug",
+            "name",
+            "monitor",
+        ]
+
+    def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
+        """Perform the filtered search."""
+        if not value.strip():
+            return queryset
+        qs_filter = Q(id__icontains=value) | Q(name__icontains=value) | Q(monitor__icontains=value)
         return queryset.filter(qs_filter)

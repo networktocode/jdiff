@@ -11,16 +11,30 @@ class ServiceGroupForm(BootstrapMixin, forms.ModelForm):
     """Service Group Member creation/edit form."""
 
     slug = AutoSlugField(populate_from=["name"])
-    name = forms.CharField(required=False)
-    description = forms.CharField(required=False)
-    monitor = forms.ModelChoiceField(queryset=models.HealthMonitor.objects.all(), to_field_name="slug")
-    member = forms.ModelChoiceField(queryset=models.ServiceGroupBinding.objects.all(), to_field_name="slug")
+    comment = forms.CharField(required=False)
+    service_group_member = forms.ModelChoiceField(
+        queryset=models.ServiceGroupMemberBinding.objects.all(), to_field_name="slug", label="Service Group Member"
+    )
+    snow_id = forms.CharField(label="SNOW ID")
+    monitor = forms.ModelChoiceField(
+        queryset=models.ServiceGroupMonitorBinding.objects.all(), to_field_name="slug", label="Monitor"
+    )
+    ssl_profile = forms.CharField(label="SSL Profile")
 
     class Meta:
         """Meta attributes."""
 
         model = models.ServiceGroup
-        fields = ["slug", "name", "description", "monitor", "member", "type", "td", "sslprofile"]
+        fields = [
+            "slug",
+            "name",
+            "comment",
+            "service_group_member",
+            "service_type",
+            "monitor",
+            "ssl_profile",
+            "snow_id",
+        ]
 
 
 class ServiceGroupFilterForm(BootstrapMixin, forms.ModelForm):
@@ -34,23 +48,23 @@ class ServiceGroupFilterForm(BootstrapMixin, forms.ModelForm):
     slug = AutoSlugField(populate_from=["name"])
     name = forms.CharField(required=False)
     description = forms.CharField(required=False)
-    monitor = forms.ModelChoiceField(queryset=models.HealthMonitor.objects.all(), required=False, to_field_name="slug")
+    monitor = forms.ModelChoiceField(queryset=models.Monitor.objects.all(), required=False, to_field_name="slug")
     member = forms.ModelChoiceField(
-        queryset=models.ServiceGroupBinding.objects.all(), required=False, to_field_name="slug"
+        queryset=models.ServiceGroupMemberBinding.objects.all(), required=False, to_field_name="slug"
     )
     type = forms.ChoiceField(choices=add_blank_choice(ServiceGroupTypes), required=False)
     td = forms.BooleanField(required=False)
-    sslprofile = forms.CharField(required=False)
+    ssl_profile = forms.CharField(required=False)
 
     class Meta:
         """Meta attributes."""
 
         model = models.ServiceGroup
-        fields = ["slug", "name", "description", "monitor", "member", "type", "td", "sslprofile"]
+        fields = ["slug", "name", "description", "monitor", "member", "type", "td", "ssl_profile"]
 
 
 class ServiceGroupBulkEditForm(BootstrapMixin, BulkEditForm):
-    """Certificate bulk edit form."""
+    """SSLCertKey bulk edit form."""
 
     pk = forms.ModelChoiceField(queryset=models.ServiceGroup.objects.all(), widget=forms.MultipleHiddenInput)
     name = forms.CharField(required=False)

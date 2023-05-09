@@ -5,28 +5,28 @@ from lb_models import filters, models
 from lb_models.api import serializers
 
 
-class CertificateViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
-    """Certificate serializer viewset."""
+class SSLCertKeyViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
+    """SSLCertKey serializer viewset."""
 
-    serializer_class = serializers.CertificateSerializer
-    filterset_class = filters.CertificateFilterSet
-    queryset = models.Certificate.objects.all()
-
-
-class HealthMonitorViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
-    """Health Monitor serializer viewset."""
-
-    serializer_class = serializers.HealthMonitorSerializer
-    filterset_class = filters.HealthMonitorFilterSet
-    queryset = models.HealthMonitor.objects.all()
+    serializer_class = serializers.SSLCertKeySerializer
+    filterset_class = filters.SSLCertKeyFilterSet
+    queryset = models.SSLCertKey.objects.all()
 
 
-class ServiceGroupBindingViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
+class MonitorViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
+    """Monitor serializer viewset."""
+
+    serializer_class = serializers.MonitorSerializer
+    filterset_class = filters.MonitorFilterSet
+    queryset = models.Monitor.objects.all()
+
+
+class ServiceGroupMemberBindingViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
     """Service Group Member viewset."""
 
-    serializer_class = serializers.ServiceGroupBindingSerializer
-    filterset_class = filters.ServiceGroupBindingFilterSet
-    queryset = models.ServiceGroupBinding.objects.all()
+    serializer_class = serializers.ServiceGroupMemberBindingSerializer
+    filterset_class = filters.ServiceGroupMemberBindingFilterSet
+    queryset = models.ServiceGroupMemberBinding.objects.all()
 
 
 class ServiceGroupViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
