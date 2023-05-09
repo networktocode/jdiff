@@ -3,28 +3,17 @@ from django import forms
 from nautobot.utilities.forms import BootstrapMixin, BulkEditForm, CSVModelForm
 from nautobot.core.fields import AutoSlugField
 from lb_models import models
-from nautobot.ipam.models import IPAddress, Interface, VLAN, VRF
-from nautobot.dcim.models import Device
-from ..choices import Protocols
+from ..choices import Methods
 from .utils import add_blank_choice
-
 
 class VserverForm(BootstrapMixin, forms.ModelForm):
     """Vserver creation/edit form."""
 
     slug = AutoSlugField(populate_from=["name"])
-    description = forms.CharField(required=False)
-    device = forms.ModelChoiceField(queryset=Device.objects.all(), label="Device")
-    interface = forms.ModelChoiceField(queryset=Interface.objects.all(), label="Interface")
-    address = forms.ModelChoiceField(queryset=IPAddress.objects.all(), label="IPv4 Address")
-    pool = forms.ModelChoiceField(queryset=models.ServiceGroup.objects.all(), label="Service Group")
-    vlan = forms.ModelChoiceField(queryset=VLAN.objects.all(), label="VLAN", required=False)
-    vrf = forms.ModelChoiceField(queryset=VRF.objects.all(), label="VRF", required=False)
-    fqdn = forms.CharField(required=False)
-    protocol = forms.ChoiceField(choices=add_blank_choice(Protocols))
-    method = forms.CharField(required=False)
-    certificate = forms.ModelChoiceField(queryset=models.Certificate.objects.all(), label="Certificate", required=False)
-    owner = forms.CharField(required=False)
+    lb_method = forms.ChoiceField(choices=add_blank_choice(Methods), label="LB Method")
+    ssl_binding = forms.ModelChoiceField(queryset=models.SSLCertKey.objects.all(), to_field_name="slug", label="SSL Binding")
+    ssl_profile = forms.CharField(label="SSL Profile")
+    snow_id = forms.CharField(label="SNOW ID")
 
     class Meta:
         """Meta attributes."""
@@ -33,19 +22,18 @@ class VserverForm(BootstrapMixin, forms.ModelForm):
         fields = [
             "slug",
             "name",
-            "description",
+            "comment",
             "device",
-            "interface",
-            "address",
-            "pool",
-            "vlan",
-            "vrf",
-            "fqdn",
-            "protocol",
-            "port",
-            "method",
-            "certificate",
-            "owner",
+            "ipv4_address",
+            "service_group_binding",
+            "service_type",
+            "lb_method",
+            "ssl_binding",
+            "customer_app_profile",
+            "ssl_profile",
+            "persistence_type",
+            "args",
+            "snow_id",
         ]
 
 
@@ -58,19 +46,6 @@ class VserverFilterForm(BootstrapMixin, forms.ModelForm):
         help_text="Search within issuer or Slug.",
     )
     slug = AutoSlugField(populate_from=["name"])
-    description = forms.CharField(required=False, label="Description")
-    name = forms.CharField(required=False, label="Name")
-    port = forms.IntegerField(required=False, label="Port")
-    device = forms.ModelChoiceField(queryset=Device.objects.all(), label="Device", required=False)
-    address = forms.ModelChoiceField(queryset=IPAddress.objects.all(), label="IP Address", required=False)
-    pool = forms.ModelChoiceField(queryset=models.ServiceGroup.objects.all(), label="Service Group", required=False)
-    vlan = forms.ModelChoiceField(queryset=VLAN.objects.all(), label="VLAN", required=False)
-    vrf = forms.ModelChoiceField(queryset=VRF.objects.all(), label="VRF", required=False)
-    fqdn = forms.CharField(required=False, label="FQDN")
-    protocol = forms.ChoiceField(choices=add_blank_choice(Protocols), required=False, label="Protocol")
-    method = forms.CharField(required=False, label="Method")
-    certificate = forms.ModelChoiceField(queryset=models.Certificate.objects.all(), required=False, label="Certificate")
-    owner = forms.CharField(required=False, label="Owner")
 
     class Meta:
         """Meta attributes."""
@@ -80,18 +55,18 @@ class VserverFilterForm(BootstrapMixin, forms.ModelForm):
             "q",
             "slug",
             "name",
-            "description",
+            "comment",
             "device",
-            "address",
-            "pool",
-            "vlan",
-            "vrf",
-            "fqdn",
-            "protocol",
-            "port",
-            "method",
-            "certificate",
-            "owner",
+            "ipv4_address",
+            "service_group_binding",
+            "service_type",
+            "lb_method",
+            "ssl_binding",
+            "customer_app_profile",
+            "ssl_profile",
+            "persistence_type",
+            "args",
+            "snow_id",
         ]
 
 
@@ -104,7 +79,7 @@ class VserverBulkEditForm(BootstrapMixin, BulkEditForm):
     class Meta:
         """Meta attributes."""
 
-        model = models.ServiceGroup
+        model = models.Vserver
         nullable_fields = [
             "name",
         ]

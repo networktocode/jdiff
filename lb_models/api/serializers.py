@@ -9,44 +9,40 @@ from nautobot.dcim.api import nested_serializers as dcim_nested_serializers
 from nautobot.ipam.api import nested_serializers as ipam_nested_serializers
 
 
-class CertificateSerializer(ValidatedModelSerializer):
-    """Certificate Serializer."""
+class SSLCertKeySerializer(ValidatedModelSerializer):
+    """SSLCertKey Serializer."""
 
     class Meta:
         """Meta attributes."""
 
-        model = models.Certificate
+        model = models.SSLCertKey
         fields = "__all__"
 
 
-class HealthMonitorSerializer(ValidatedModelSerializer):
-    """Health Monitor Serializer."""
+class MonitorSerializer(ValidatedModelSerializer):
+    """Monitor Serializer."""
 
     class Meta:
         """Meta attributes."""
 
-        model = models.HealthMonitor
+        model = models.Monitor
         fields = "__all__"
 
 
-class ServiceGroupBindingSerializer(ValidatedModelSerializer):
+class ServiceGroupMemberBindingSerializer(ValidatedModelSerializer):
     """Service Group Member Serializer."""
 
-    address = ipam_nested_serializers.NestedIPAddressSerializer()
-    monitor = nested_serializers.HealthMonitorNestedSerializer()
+    monitor = nested_serializers.MonitorNestedSerializer()
 
     class Meta:
         """Meta attributes."""
 
-        model = models.ServiceGroupBinding
+        model = models.ServiceGroupMemberBinding
         fields = "__all__"
 
 
 class ServiceGroupSerializer(ValidatedModelSerializer):
     """Service Group Serializer."""
-
-    member = nested_serializers.ServiceGroupBindingNestedSerializer()
-    monitor = nested_serializers.HealthMonitorNestedSerializer()
 
     class Meta:
         """Meta attributes."""
@@ -64,7 +60,7 @@ class vserverSerializer(ValidatedModelSerializer):
     pool = nested_serializers.ServiceGroupNestedSerializer()
     vlan = ipam_nested_serializers.NestedVLANSerializer()
     vrf = ipam_nested_serializers.NestedVRFSerializer()
-    certificate = nested_serializers.CertificateNestedSerializer()
+    sslcertkey = nested_serializers.SSLCertKeyNestedSerializer()
 
     class Meta:
         """Meta attributes."""

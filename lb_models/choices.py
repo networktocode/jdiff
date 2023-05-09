@@ -2,6 +2,51 @@
 from nautobot.utilities.choices import ChoiceSet
 
 
+class Methods(ChoiceSet):
+    """Valid choices for LB Methods."""
+
+    ROUNDROBIN = "roundrobin"
+    LEASTCONNECTION = "leastconnection"
+    LEASTRESPONSETIME = "leastresponsetime"
+    URLHASH = "urlhash"
+    DOMAINHASH = "domainhash"
+    DESTINATIONIPHASH = "destinationiphash"
+    SOURCEIPHASH = "sourceiphash"
+    SRCIPDESTIPHASH = "srcipdestiphash"
+    LEASTBANDWIDTH = "leastbandwidth"
+    LEASTPACKETS = "leastpackets"
+    SRCIPSRCPORTHASH = "srcipsrcporthash"
+    CUSTOMLOAD = "customload"
+    LEASTREQUEST = "leastrequest"
+
+    CHOICES = (
+        (ROUNDROBIN, "roundrobin"),
+        (LEASTCONNECTION, "leastconnection"),
+        (LEASTRESPONSETIME, "leastresponsetime"),
+        (URLHASH, "urlhash"),
+        (DOMAINHASH, "domainhash"),
+        (DESTINATIONIPHASH, "destinationiphash"),
+        (SOURCEIPHASH, "sourceiphash"),
+        (SRCIPDESTIPHASH, "srcipdestiphash"),
+        (LEASTBANDWIDTH, "leastbandwidth"),
+        (LEASTPACKETS, "leastpackets"),
+        (SRCIPSRCPORTHASH, "srcipsrcporthash"),
+        (CUSTOMLOAD, "customload"),
+        (LEASTREQUEST, "leastrequest"),
+    )
+
+
+class PersistenceType(ChoiceSet):
+    """Valid choices for protocols."""
+
+    SOURCEIP = "sourceip"
+    COOKIEINSERT = "cookieinsert"
+    RULE = "rule"
+    NONE = "none"
+
+    CHOICES = ((SOURCEIP, "sourceip"), (COOKIEINSERT, "cookieinsert"), (RULE, "rule"), (NONE, "none"))
+
+
 class Protocols(ChoiceSet):
     """Valid choices for protocols."""
 
@@ -11,8 +56,8 @@ class Protocols(ChoiceSet):
     CHOICES = ((TCP, "tcp"), (UDP, "udp"))
 
 
-class HealthMonitorTypes(ChoiceSet):
-    """Valid choices for HealthMonitor."""
+class MonitorTypes(ChoiceSet):
+    """Valid choices for Monitor."""
 
     PING = "PING"
     TCP = "TCP"
@@ -21,15 +66,17 @@ class HealthMonitorTypes(ChoiceSet):
     HTTP_ECV = "HTTP-ECV"
     UDP_ECV = "UDP-ECV"
     LDAP = "LDAP"
+    SNMP = "SNMP"
 
     CHOICES = (
-        # (PING, "PING"),
-        # (TCP, "TCP"),
+        (PING, "PING"),
+        (TCP, "TCP"),
         (HTTP, "HTTP"),
-        # (TCP_ECV, "TCP-ECV"),
-        # (HTTP_ECV, "HTTP-ECV"),
-        # (UDP_ECV, "UDP-ECV"),
-        # (LDAP, "LDAP"),
+        (TCP_ECV, "TCP-ECV"),
+        (HTTP_ECV, "HTTP-ECV"),
+        (UDP_ECV, "UDP-ECV"),
+        (LDAP, "LDAP"),
+        (SNMP, "SNMP"),
     )
 
 
