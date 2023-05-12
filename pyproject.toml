@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jdiff"
-version = "0.0.3"
+version = "0.0.4"
 description = "A light-weight library to compare structured output from network devices show commands."
 authors = ["Network to Code, LLC <info@networktocode.com>"]
 license = "Apache-2.0"
@@ -23,7 +23,7 @@ include = [
 
 [tool.poetry.dependencies]
 python = "^3.7.0"
-deepdiff = "^5.5.0"
+deepdiff = ">=5.5.0 <7.0"
 jmespath = "^0.10.0"
 
 [tool.poetry.dev-dependencies]

@@ -1,4 +1,8 @@
 # Changelog
+
+## v0.0.4
+- Relax deepdiff dependency
+
 ## v0.0.3
 - Update documentation
 - Fix evaluation logic in operator check
