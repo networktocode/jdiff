@@ -32,8 +32,6 @@ class MonitorSerializer(ValidatedModelSerializer):
 class ServiceGroupMemberBindingSerializer(ValidatedModelSerializer):
     """Service Group Member Serializer."""
 
-    monitor = nested_serializers.MonitorNestedSerializer()
-
     class Meta:
         """Meta attributes."""
 

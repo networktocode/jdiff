@@ -1,3 +1,10 @@
+# Ver. 0.1.79
+- Remove Monitor from ServiceGroupMemberBindingSerializer.
+
+
+# Ver. 0.1.7
+- MVP release.
+
 # Ver. 0.1.5
 - Release version.
 
