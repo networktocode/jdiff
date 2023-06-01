@@ -11,7 +11,7 @@ class VserverForm(BootstrapMixin, forms.ModelForm):
 
     slug = AutoSlugField(populate_from=["name"])
     lb_method = forms.ChoiceField(choices=add_blank_choice(Methods), label="LB Method")
-    ssl_binding = forms.ModelChoiceField(queryset=models.SSLCertKey.objects.all(), to_field_name="slug", label="SSL Binding")
+    ssl_binding = forms.ModelChoiceField(queryset=models.SSLServerBinding.objects.all(), to_field_name="slug", label="SSL Binding")
     ssl_profile = forms.CharField(label="SSL Profile")
     snow_id = forms.CharField(label="SNOW ID")
 

@@ -1,3 +1,6 @@
+# Ver. 0.1.12
+- Fix Vserver form for SSLBinding.
+
 # Ver. 0.1.9
 - Remove Monitor from ServiceGroupMemberBindingSerializer.
 
