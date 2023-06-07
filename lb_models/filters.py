@@ -260,6 +260,7 @@ class VserverFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             "persistence_type",
             "args",
             "snow_id",
+            "td"
         ]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
@@ -281,6 +282,7 @@ class VserverFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             | Q(method__icontains=value)
             | Q(sslcertkey__icontains=value)
             | Q(owner__icontains=value)
+            | Q(td__icontains=value)
         )
         return queryset.filter(qs_filter)
 

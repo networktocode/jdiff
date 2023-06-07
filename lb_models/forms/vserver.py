@@ -67,6 +67,7 @@ class VserverFilterForm(BootstrapMixin, forms.ModelForm):
             "persistence_type",
             "args",
             "snow_id",
+            "td"
         ]
 
 

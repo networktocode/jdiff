@@ -311,7 +311,7 @@ class Vserver(PrimaryModel):
     )
 
     service_group_binding = models.ForeignKey(to="ServerServiceGroupBinding", on_delete=models.PROTECT, null=True)
-    service_type = models.CharField(max_length=20, choices=Protocols, null=True)
+    service_type = models.CharField(max_length=20, choices=ServiceGroupTypes, null=True)
     lb_method = models.CharField(max_length=20, choices=Methods, null=True)
     ssl_binding = models.ForeignKey(to="SSLServerBinding", on_delete=models.CASCADE, null=True)
     customer_app_profile = models.ForeignKey(to="CustomerAppProfile", on_delete=models.CASCADE, null=True)
@@ -319,6 +319,7 @@ class Vserver(PrimaryModel):
     persistence_type = models.CharField(max_length=20, choices=PersistenceType, null=True)
     args = models.JSONField(blank=True, null=True)
     snow_id = models.CharField(max_length=20, null=True)
+    td = models.PositiveSmallIntegerField(MinValueValidator=1,  MaxValueValidator=32767, null=True)
 
     fields = [
         "slug",
@@ -335,6 +336,7 @@ class Vserver(PrimaryModel):
         "persistence_type",
         "args",
         "snow_id",
+        "td"
     ]
     csv_headers = fields
     clone_fields = fields

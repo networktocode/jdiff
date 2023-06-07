@@ -175,6 +175,7 @@ class VserverTable(BaseTable):
             "persistence_type",
             "args",
             "snow_id",
+            "td"
         ]
 
 
