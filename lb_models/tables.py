@@ -53,7 +53,6 @@ class SSLServerBindingTable(BaseTable):
             "slug",
             "name",
             "ssl_certkey",
-            "vserver",
         ]
 
 

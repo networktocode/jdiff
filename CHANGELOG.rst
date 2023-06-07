@@ -1,6 +1,7 @@
 # Ver. 0.1.13
 - Fix Vserver ServiceType choices.
 - Add TD in Vserver model.
+- Remove Vserver from SSLServerBindingTable table
 
 # Ver. 0.1.12
 - Fix Vserver form for SSLBinding.
