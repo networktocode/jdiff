@@ -28,7 +28,6 @@ class SSLCertKeyTable(BaseTable):
             "name",
             "private_key_filename",
             "private_crt_filename",
-            "password",
             "snow_id",
         ]
 
