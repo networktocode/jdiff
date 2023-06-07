@@ -319,7 +319,7 @@ class Vserver(PrimaryModel):
     persistence_type = models.CharField(max_length=20, choices=PersistenceType, null=True)
     args = models.JSONField(blank=True, null=True)
     snow_id = models.CharField(max_length=20, null=True)
-    td = models.PositiveSmallIntegerField(MinValueValidator=1,  MaxValueValidator=32767, null=True)
+    td = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(32767)], null=True)
 
     fields = [
         "slug",
@@ -336,7 +336,7 @@ class Vserver(PrimaryModel):
         "persistence_type",
         "args",
         "snow_id",
-        "td"
+        "td",
     ]
     csv_headers = fields
     clone_fields = fields

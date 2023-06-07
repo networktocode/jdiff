@@ -260,7 +260,7 @@ class VserverFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             "persistence_type",
             "args",
             "snow_id",
-            "td"
+            "td",
         ]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
