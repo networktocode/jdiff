@@ -246,5 +246,4 @@ class ServerServiceGroupBindingTable(BaseTable):
             "slug",
             "name",
             "service_group",
-            "vserver",
         ]

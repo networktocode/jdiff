@@ -3,6 +3,7 @@
 - Add TD in Vserver model.
 - Remove Vserver from SSLServerBindingTable.
 - Remove password field from SSLCertKeyTable.
+- Remove Vserver from ServerServiceGroupBindingTable.
 
 # Ver. 0.1.12
 - Fix Vserver form for SSLBinding.
