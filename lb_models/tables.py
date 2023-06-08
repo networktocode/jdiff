@@ -99,7 +99,6 @@ class ServiceGroupMonitorBindingTable(BaseTable):
             "slug",
             "name",
             "monitor",
-            "service_group",
         ]
 
 

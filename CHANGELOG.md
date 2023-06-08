@@ -4,6 +4,7 @@
 - Remove Vserver from SSLServerBindingTable.
 - Remove password field from SSLCertKeyTable.
 - Remove Vserver from ServerServiceGroupBindingTable.
+- Remove service_group from ServiceGroupMonitorBindingTable.
 - Fix fields in ServiceGroupTable.
 
 # Ver. 0.1.12
