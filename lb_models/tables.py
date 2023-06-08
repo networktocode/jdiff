@@ -99,7 +99,6 @@ class ServiceGroupMonitorBindingTable(BaseTable):
             "slug",
             "name",
             "monitor",
-            "service_group",
         ]
 
 
@@ -139,7 +138,7 @@ class ServiceGroupTable(BaseTable):
         """Meta attributes."""
 
         model = models.ServiceGroup
-        fields = ["slug", "name", "description", "member", "type", "td", "ssl_profile", "snow_id"]
+        fields = ["slug", "name", "comment", "service_group_member", "service_type", "monitor", "ssl_profile", "snow_id"]
 
 
 class VserverTable(BaseTable):
