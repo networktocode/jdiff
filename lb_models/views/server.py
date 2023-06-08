@@ -41,7 +41,7 @@ class ServerEditView(generic.ObjectEditView):
 
     model = models.Server
     queryset = models.Server.objects.all()
-    model_form = forms.ServerForm
+    model_form = forms.ServerBulkEditForm
 
 
 class ServerBulkDeleteView(generic.BulkDeleteView):
@@ -64,4 +64,4 @@ class ServerBulkEditView(generic.BulkEditView):
 
     queryset = models.Server.objects.all()
     table = tables.ServerTable
-    form = forms.ServerForm
+    form = forms.ServerBulkEditForm

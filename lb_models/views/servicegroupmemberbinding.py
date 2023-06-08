@@ -41,7 +41,7 @@ class ServiceGroupMemberBindingEditView(generic.ObjectEditView):
 
     model = models.ServiceGroupMemberBinding
     queryset = models.ServiceGroupMemberBinding.objects.all()
-    model_form = forms.ServiceGroupMemberBindingForm
+    model_form = forms.ServiceGroupMemberBindingBulkEditForm
 
 
 class ServiceGroupMemberBindingBulkDeleteView(generic.BulkDeleteView):
@@ -64,4 +64,4 @@ class ServiceGroupMemberBindingBulkEditView(generic.BulkEditView):
 
     queryset = models.ServiceGroupMemberBinding.objects.all()
     table = tables.ServiceGroupMemberBindingTable
-    form = forms.ServiceGroupMemberBindingForm
+    form = forms.ServiceGroupMemberBindingBulkEditForm

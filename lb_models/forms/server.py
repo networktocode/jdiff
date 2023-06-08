@@ -19,7 +19,7 @@ class ServerForm(BootstrapMixin, forms.ModelForm):
         ),
         initial=False,
         required=False,
-        label="Server"
+        label="Server",
     )
 
     class Meta:

@@ -87,10 +87,8 @@ class CustomerAppProfileBulkEditForm(BootstrapMixin, BulkEditForm):
     class Meta:
         """Meta attributes."""
 
-        model = models.ServiceGroup
-        nullable_fields = [
-            "id",
-        ]
+        model = models.CustomerAppProfile
+        nullable_fields = []
 
 
 class CustomerAppProfileCSVForm(CSVModelForm):
