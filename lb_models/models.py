@@ -7,7 +7,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from nautobot.extras.utils import extras_features
 from nautobot.core.fields import AutoSlugField
 from .choices import (
-    Protocols,
     MonitorTypes,
     ServiceGroupTypes,
     ApplicationClassTypes,
@@ -125,7 +124,7 @@ class ServiceGroupMemberBinding(PrimaryModel):
 
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50, null=True)
-    server_port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(0)], null=True)
+    server_port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(1)], null=True)
     server_name = models.ForeignKey(to="Server", on_delete=models.CASCADE)
 
     fields = [
@@ -311,7 +310,7 @@ class Vserver(PrimaryModel):
     )
 
     service_group_binding = models.ForeignKey(to="ServerServiceGroupBinding", on_delete=models.PROTECT, null=True)
-    service_type = models.CharField(max_length=20, choices=Protocols, null=True)
+    service_type = models.CharField(max_length=20, choices=ServiceGroupTypes, null=True)
     lb_method = models.CharField(max_length=20, choices=Methods, null=True)
     ssl_binding = models.ForeignKey(to="SSLServerBinding", on_delete=models.CASCADE, null=True)
     customer_app_profile = models.ForeignKey(to="CustomerAppProfile", on_delete=models.CASCADE, null=True)
@@ -319,6 +318,7 @@ class Vserver(PrimaryModel):
     persistence_type = models.CharField(max_length=20, choices=PersistenceType, null=True)
     args = models.JSONField(blank=True, null=True)
     snow_id = models.CharField(max_length=20, null=True)
+    td = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(32767)], null=True)
 
     fields = [
         "slug",
@@ -335,6 +335,7 @@ class Vserver(PrimaryModel):
         "persistence_type",
         "args",
         "snow_id",
+        "td",
     ]
     csv_headers = fields
     clone_fields = fields
@@ -451,9 +452,10 @@ class Server(PrimaryModel):
         on_delete=models.CASCADE,
         verbose_name="IPv4 Server Address",
     )
-    td = models.IntegerField(null=True)
+    td = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(32767)], null=True)
+    snow_id = models.CharField(max_length=20, null=True)
 
-    fields = ["slug", "name", "state", "ipv4_address", "td"]
+    fields = ["slug", "name", "state", "ipv4_address", "td", "snow_id"]
     csv_headers = fields
     clone_fields = fields
 

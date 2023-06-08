@@ -6,14 +6,18 @@ from lb_models import models
 from ..choices import Methods
 from .utils import add_blank_choice
 
+
 class VserverForm(BootstrapMixin, forms.ModelForm):
     """Vserver creation/edit form."""
 
     slug = AutoSlugField(populate_from=["name"])
     lb_method = forms.ChoiceField(choices=add_blank_choice(Methods), label="LB Method")
-    ssl_binding = forms.ModelChoiceField(queryset=models.SSLServerBinding.objects.all(), to_field_name="slug", label="SSL Binding")
+    ssl_binding = forms.ModelChoiceField(
+        queryset=models.SSLServerBinding.objects.all(), to_field_name="slug", label="SSL Binding"
+    )
     ssl_profile = forms.CharField(label="SSL Profile")
     snow_id = forms.CharField(label="SNOW ID")
+    td = forms.IntegerField(label="TD")
 
     class Meta:
         """Meta attributes."""
@@ -32,8 +36,9 @@ class VserverForm(BootstrapMixin, forms.ModelForm):
             "customer_app_profile",
             "ssl_profile",
             "persistence_type",
-            "args",
             "snow_id",
+            "td",
+            "args",
         ]
 
 
@@ -67,6 +72,7 @@ class VserverFilterForm(BootstrapMixin, forms.ModelForm):
             "persistence_type",
             "args",
             "snow_id",
+            "td",
         ]
 
 

@@ -13,18 +13,20 @@ class ServerForm(BootstrapMixin, forms.ModelForm):
     slug = AutoSlugField(populate_from=["name"])
     ipv4_address = forms.ModelChoiceField(queryset=IPAddress.objects.all(), label="IPv4 Address")
     td = forms.IntegerField(label="TD")
+    state = forms.BooleanField(
+        widget=forms.Select(
+            choices=((False, "DISABLED"), (True, "ENABLED")),
+        ),
+        initial=False,
+        required=False,
+        label="Server"
+    )
 
     class Meta:
         """Meta attributes."""
 
         model = models.Server
-        fields = [
-            "slug",
-            "name",
-            "state",
-            "ipv4_address",
-            "td",
-        ]
+        fields = ["slug", "name", "state", "ipv4_address", "td", "snow_id"]
 
 
 class ServerFilterForm(BootstrapMixin, forms.ModelForm):

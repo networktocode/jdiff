@@ -97,7 +97,7 @@ class ServiceGroupTypes(ChoiceSet):
         (HTTP, "HTTP"),
         (SSL, "SSL"),
         (SSL_BRIDGE, "SSL-BRIDGE"),
-        (SSL_TCP, "SSL_TCP"),
+        (SSL_TCP, "SSL-TCP"),
         (ANY, "ANY"),
     )
 

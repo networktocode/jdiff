@@ -15,218 +15,422 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('ipam', '0008_prefix_vlan_vlangroup_location'),
-        ('extras', '0047_enforce_custom_field_slug'),
-        ('dcim', '0014_location_status_data_migration'),
+        ("ipam", "0008_prefix_vlan_vlangroup_location"),
+        ("extras", "0047_enforce_custom_field_slug"),
+        ("dcim", "0014_location_status_data_migration"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='CustomerAppProfile',
+            name="CustomerAppProfile",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('created', models.DateField(auto_now_add=True, null=True)),
-                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
-                ('_custom_field_data', models.JSONField(blank=True, default=dict, encoder=django.core.serializers.json.DjangoJSONEncoder)),
-                ('slug', nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from='profile_name', unique=True)),
-                ('profile_name', models.CharField(max_length=50, null=True)),
-                ('application_name', models.CharField(max_length=50, null=True)),
-                ('fqdn', models.CharField(max_length=50, null=True)),
-                ('oe_bu', models.CharField(max_length=50, null=True)),
-                ('owner_contact', models.EmailField(max_length=254, null=True)),
-                ('class_type', models.CharField(max_length=20, null=True)),
-                ('accessibility', models.CharField(max_length=20, null=True)),
-                ('test_url', models.URLField(null=True)),
-                ('site', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='+', to='dcim.site')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True
+                    ),
+                ),
+                ("created", models.DateField(auto_now_add=True, null=True)),
+                ("last_updated", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "_custom_field_data",
+                    models.JSONField(blank=True, default=dict, encoder=django.core.serializers.json.DjangoJSONEncoder),
+                ),
+                (
+                    "slug",
+                    nautobot.core.fields.AutoSlugField(
+                        blank=True, max_length=100, populate_from="profile_name", unique=True
+                    ),
+                ),
+                ("profile_name", models.CharField(max_length=50, null=True)),
+                ("application_name", models.CharField(max_length=50, null=True)),
+                ("fqdn", models.CharField(max_length=50, null=True)),
+                ("oe_bu", models.CharField(max_length=50, null=True)),
+                ("owner_contact", models.EmailField(max_length=254, null=True)),
+                ("class_type", models.CharField(max_length=20, null=True)),
+                ("accessibility", models.CharField(max_length=20, null=True)),
+                ("test_url", models.URLField(null=True)),
+                (
+                    "site",
+                    models.ForeignKey(
+                        null=True, on_delete=django.db.models.deletion.PROTECT, related_name="+", to="dcim.site"
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=(models.Model, nautobot.extras.models.mixins.DynamicGroupMixin, nautobot.extras.models.mixins.NotesMixin),
+            bases=(
+                models.Model,
+                nautobot.extras.models.mixins.DynamicGroupMixin,
+                nautobot.extras.models.mixins.NotesMixin,
+            ),
         ),
         migrations.CreateModel(
-            name='Monitor',
+            name="Monitor",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('created', models.DateField(auto_now_add=True, null=True)),
-                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
-                ('_custom_field_data', models.JSONField(blank=True, default=dict, encoder=django.core.serializers.json.DjangoJSONEncoder)),
-                ('slug', nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from='name', unique=True)),
-                ('name', models.CharField(max_length=50, null=True)),
-                ('comment', models.CharField(blank=True, max_length=100, null=True)),
-                ('type', models.CharField(max_length=20)),
-                ('lrtm', models.BooleanField(default=False)),
-                ('snow_id', models.CharField(max_length=20, null=True)),
-                ('args', models.JSONField(blank=True, null=True)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True
+                    ),
+                ),
+                ("created", models.DateField(auto_now_add=True, null=True)),
+                ("last_updated", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "_custom_field_data",
+                    models.JSONField(blank=True, default=dict, encoder=django.core.serializers.json.DjangoJSONEncoder),
+                ),
+                (
+                    "slug",
+                    nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from="name", unique=True),
+                ),
+                ("name", models.CharField(max_length=50, null=True)),
+                ("comment", models.CharField(blank=True, max_length=100, null=True)),
+                ("type", models.CharField(max_length=20)),
+                ("lrtm", models.BooleanField(default=False)),
+                ("snow_id", models.CharField(max_length=20, null=True)),
+                ("args", models.JSONField(blank=True, null=True)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=(models.Model, nautobot.extras.models.mixins.DynamicGroupMixin, nautobot.extras.models.mixins.NotesMixin),
+            bases=(
+                models.Model,
+                nautobot.extras.models.mixins.DynamicGroupMixin,
+                nautobot.extras.models.mixins.NotesMixin,
+            ),
         ),
         migrations.CreateModel(
-            name='Server',
+            name="Server",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('created', models.DateField(auto_now_add=True, null=True)),
-                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
-                ('_custom_field_data', models.JSONField(blank=True, default=dict, encoder=django.core.serializers.json.DjangoJSONEncoder)),
-                ('slug', nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from='name', unique=True)),
-                ('name', models.CharField(max_length=50, null=True)),
-                ('state', models.BooleanField(default=False)),
-                ('td', models.IntegerField(null=True)),
-                ('ipv4_address', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ipam.ipaddress')),
-                ('tags', taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True
+                    ),
+                ),
+                ("created", models.DateField(auto_now_add=True, null=True)),
+                ("last_updated", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "_custom_field_data",
+                    models.JSONField(blank=True, default=dict, encoder=django.core.serializers.json.DjangoJSONEncoder),
+                ),
+                (
+                    "slug",
+                    nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from="name", unique=True),
+                ),
+                ("name", models.CharField(max_length=50, null=True)),
+                ("state", models.BooleanField(default=False)),
+                ("td", models.IntegerField(null=True)),
+                ("ipv4_address", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="ipam.ipaddress")),
+                ("tags", taggit.managers.TaggableManager(through="extras.TaggedItem", to="extras.Tag")),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=(models.Model, nautobot.extras.models.mixins.DynamicGroupMixin, nautobot.extras.models.mixins.NotesMixin),
+            bases=(
+                models.Model,
+                nautobot.extras.models.mixins.DynamicGroupMixin,
+                nautobot.extras.models.mixins.NotesMixin,
+            ),
         ),
         migrations.CreateModel(
-            name='ServerServiceGroupBinding',
+            name="ServerServiceGroupBinding",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('created', models.DateField(auto_now_add=True, null=True)),
-                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
-                ('_custom_field_data', models.JSONField(blank=True, default=dict, encoder=django.core.serializers.json.DjangoJSONEncoder)),
-                ('slug', nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from='name', unique=True)),
-                ('name', models.CharField(max_length=50, null=True)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True
+                    ),
+                ),
+                ("created", models.DateField(auto_now_add=True, null=True)),
+                ("last_updated", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "_custom_field_data",
+                    models.JSONField(blank=True, default=dict, encoder=django.core.serializers.json.DjangoJSONEncoder),
+                ),
+                (
+                    "slug",
+                    nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from="name", unique=True),
+                ),
+                ("name", models.CharField(max_length=50, null=True)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=(models.Model, nautobot.extras.models.mixins.DynamicGroupMixin, nautobot.extras.models.mixins.NotesMixin),
+            bases=(
+                models.Model,
+                nautobot.extras.models.mixins.DynamicGroupMixin,
+                nautobot.extras.models.mixins.NotesMixin,
+            ),
         ),
         migrations.CreateModel(
-            name='SSLCertKey',
+            name="SSLCertKey",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('created', models.DateField(auto_now_add=True, null=True)),
-                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
-                ('_custom_field_data', models.JSONField(blank=True, default=dict, encoder=django.core.serializers.json.DjangoJSONEncoder)),
-                ('slug', nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from='name', unique=True)),
-                ('name', models.CharField(max_length=50, null=True)),
-                ('private_key_filename', models.CharField(max_length=100, null=True)),
-                ('private_crt_filename', models.CharField(max_length=100, null=True)),
-                ('password', models.CharField(blank=True, max_length=50, null=True)),
-                ('snow_id', models.CharField(max_length=20, null=True)),
-                ('tags', taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True
+                    ),
+                ),
+                ("created", models.DateField(auto_now_add=True, null=True)),
+                ("last_updated", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "_custom_field_data",
+                    models.JSONField(blank=True, default=dict, encoder=django.core.serializers.json.DjangoJSONEncoder),
+                ),
+                (
+                    "slug",
+                    nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from="name", unique=True),
+                ),
+                ("name", models.CharField(max_length=50, null=True)),
+                ("private_key_filename", models.CharField(max_length=100, null=True)),
+                ("private_crt_filename", models.CharField(max_length=100, null=True)),
+                ("password", models.CharField(blank=True, max_length=50, null=True)),
+                ("snow_id", models.CharField(max_length=20, null=True)),
+                ("tags", taggit.managers.TaggableManager(through="extras.TaggedItem", to="extras.Tag")),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=(models.Model, nautobot.extras.models.mixins.DynamicGroupMixin, nautobot.extras.models.mixins.NotesMixin),
+            bases=(
+                models.Model,
+                nautobot.extras.models.mixins.DynamicGroupMixin,
+                nautobot.extras.models.mixins.NotesMixin,
+            ),
         ),
         migrations.CreateModel(
-            name='SSLServerBinding',
+            name="SSLServerBinding",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('created', models.DateField(auto_now_add=True, null=True)),
-                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
-                ('_custom_field_data', models.JSONField(blank=True, default=dict, encoder=django.core.serializers.json.DjangoJSONEncoder)),
-                ('slug', nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from='name', unique=True)),
-                ('name', models.CharField(max_length=50, null=True)),
-                ('ssl_certkey', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='lb_models.sslcertkey')),
-                ('tags', taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True
+                    ),
+                ),
+                ("created", models.DateField(auto_now_add=True, null=True)),
+                ("last_updated", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "_custom_field_data",
+                    models.JSONField(blank=True, default=dict, encoder=django.core.serializers.json.DjangoJSONEncoder),
+                ),
+                (
+                    "slug",
+                    nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from="name", unique=True),
+                ),
+                ("name", models.CharField(max_length=50, null=True)),
+                (
+                    "ssl_certkey",
+                    models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to="lb_models.sslcertkey"),
+                ),
+                ("tags", taggit.managers.TaggableManager(through="extras.TaggedItem", to="extras.Tag")),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=(models.Model, nautobot.extras.models.mixins.DynamicGroupMixin, nautobot.extras.models.mixins.NotesMixin),
+            bases=(
+                models.Model,
+                nautobot.extras.models.mixins.DynamicGroupMixin,
+                nautobot.extras.models.mixins.NotesMixin,
+            ),
         ),
         migrations.CreateModel(
-            name='Vserver',
+            name="Vserver",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('created', models.DateField(auto_now_add=True, null=True)),
-                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
-                ('_custom_field_data', models.JSONField(blank=True, default=dict, encoder=django.core.serializers.json.DjangoJSONEncoder)),
-                ('slug', nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from='name', unique=True)),
-                ('name', models.CharField(max_length=50, null=True)),
-                ('comment', models.CharField(blank=True, max_length=50, null=True)),
-                ('service_type', models.CharField(max_length=20, null=True)),
-                ('lb_method', models.CharField(max_length=20, null=True)),
-                ('ssl_profile', models.CharField(max_length=50, null=True)),
-                ('persistence_type', models.CharField(max_length=20, null=True)),
-                ('args', models.JSONField(blank=True, null=True)),
-                ('snow_id', models.CharField(max_length=20, null=True)),
-                ('customer_app_profile', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='lb_models.customerappprofile')),
-                ('device', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='+', to='dcim.device')),
-                ('ipv4_address', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='ipam.ipaddress')),
-                ('service_group_binding', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='lb_models.serverservicegroupbinding')),
-                ('ssl_binding', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='lb_models.sslserverbinding')),
-                ('tags', taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True
+                    ),
+                ),
+                ("created", models.DateField(auto_now_add=True, null=True)),
+                ("last_updated", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "_custom_field_data",
+                    models.JSONField(blank=True, default=dict, encoder=django.core.serializers.json.DjangoJSONEncoder),
+                ),
+                (
+                    "slug",
+                    nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from="name", unique=True),
+                ),
+                ("name", models.CharField(max_length=50, null=True)),
+                ("comment", models.CharField(blank=True, max_length=50, null=True)),
+                ("service_type", models.CharField(max_length=20, null=True)),
+                ("lb_method", models.CharField(max_length=20, null=True)),
+                ("ssl_profile", models.CharField(max_length=50, null=True)),
+                ("persistence_type", models.CharField(max_length=20, null=True)),
+                ("args", models.JSONField(blank=True, null=True)),
+                ("snow_id", models.CharField(max_length=20, null=True)),
+                (
+                    "customer_app_profile",
+                    models.ForeignKey(
+                        null=True, on_delete=django.db.models.deletion.CASCADE, to="lb_models.customerappprofile"
+                    ),
+                ),
+                (
+                    "device",
+                    models.ForeignKey(
+                        null=True, on_delete=django.db.models.deletion.PROTECT, related_name="+", to="dcim.device"
+                    ),
+                ),
+                (
+                    "ipv4_address",
+                    models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to="ipam.ipaddress"),
+                ),
+                (
+                    "service_group_binding",
+                    models.ForeignKey(
+                        null=True, on_delete=django.db.models.deletion.PROTECT, to="lb_models.serverservicegroupbinding"
+                    ),
+                ),
+                (
+                    "ssl_binding",
+                    models.ForeignKey(
+                        null=True, on_delete=django.db.models.deletion.CASCADE, to="lb_models.sslserverbinding"
+                    ),
+                ),
+                ("tags", taggit.managers.TaggableManager(through="extras.TaggedItem", to="extras.Tag")),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=(models.Model, nautobot.extras.models.mixins.DynamicGroupMixin, nautobot.extras.models.mixins.NotesMixin),
+            bases=(
+                models.Model,
+                nautobot.extras.models.mixins.DynamicGroupMixin,
+                nautobot.extras.models.mixins.NotesMixin,
+            ),
         ),
         migrations.CreateModel(
-            name='ServiceGroupMonitorBinding',
+            name="ServiceGroupMonitorBinding",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('created', models.DateField(auto_now_add=True, null=True)),
-                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
-                ('_custom_field_data', models.JSONField(blank=True, default=dict, encoder=django.core.serializers.json.DjangoJSONEncoder)),
-                ('slug', nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from='name', unique=True)),
-                ('name', models.CharField(max_length=50)),
-                ('monitor', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lb_models.monitor')),
-                ('tags', taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True
+                    ),
+                ),
+                ("created", models.DateField(auto_now_add=True, null=True)),
+                ("last_updated", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "_custom_field_data",
+                    models.JSONField(blank=True, default=dict, encoder=django.core.serializers.json.DjangoJSONEncoder),
+                ),
+                (
+                    "slug",
+                    nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from="name", unique=True),
+                ),
+                ("name", models.CharField(max_length=50)),
+                ("monitor", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="lb_models.monitor")),
+                ("tags", taggit.managers.TaggableManager(through="extras.TaggedItem", to="extras.Tag")),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=(models.Model, nautobot.extras.models.mixins.DynamicGroupMixin, nautobot.extras.models.mixins.NotesMixin),
+            bases=(
+                models.Model,
+                nautobot.extras.models.mixins.DynamicGroupMixin,
+                nautobot.extras.models.mixins.NotesMixin,
+            ),
         ),
         migrations.CreateModel(
-            name='ServiceGroupMemberBinding',
+            name="ServiceGroupMemberBinding",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('created', models.DateField(auto_now_add=True, null=True)),
-                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
-                ('_custom_field_data', models.JSONField(blank=True, default=dict, encoder=django.core.serializers.json.DjangoJSONEncoder)),
-                ('slug', nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from='name', unique=True)),
-                ('name', models.CharField(max_length=50, null=True)),
-                ('server_port', models.PositiveIntegerField(null=True, validators=[django.core.validators.MaxValueValidator(65535), django.core.validators.MinValueValidator(0)])),
-                ('server_name', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lb_models.server')),
-                ('tags', taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True
+                    ),
+                ),
+                ("created", models.DateField(auto_now_add=True, null=True)),
+                ("last_updated", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "_custom_field_data",
+                    models.JSONField(blank=True, default=dict, encoder=django.core.serializers.json.DjangoJSONEncoder),
+                ),
+                (
+                    "slug",
+                    nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from="name", unique=True),
+                ),
+                ("name", models.CharField(max_length=50, null=True)),
+                (
+                    "server_port",
+                    models.PositiveIntegerField(
+                        null=True,
+                        validators=[
+                            django.core.validators.MaxValueValidator(65535),
+                            django.core.validators.MinValueValidator(0),
+                        ],
+                    ),
+                ),
+                ("server_name", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="lb_models.server")),
+                ("tags", taggit.managers.TaggableManager(through="extras.TaggedItem", to="extras.Tag")),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=(models.Model, nautobot.extras.models.mixins.DynamicGroupMixin, nautobot.extras.models.mixins.NotesMixin),
+            bases=(
+                models.Model,
+                nautobot.extras.models.mixins.DynamicGroupMixin,
+                nautobot.extras.models.mixins.NotesMixin,
+            ),
         ),
         migrations.CreateModel(
-            name='ServiceGroup',
+            name="ServiceGroup",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('created', models.DateField(auto_now_add=True, null=True)),
-                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
-                ('_custom_field_data', models.JSONField(blank=True, default=dict, encoder=django.core.serializers.json.DjangoJSONEncoder)),
-                ('slug', nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from='name', unique=True)),
-                ('name', models.CharField(max_length=50, null=True)),
-                ('comment', models.CharField(blank=True, max_length=50, null=True)),
-                ('service_type', models.CharField(max_length=20, null=True)),
-                ('ssl_profile', models.CharField(max_length=50, null=True)),
-                ('snow_id', models.CharField(max_length=20, null=True)),
-                ('monitor', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='lb_models.servicegroupmonitorbinding')),
-                ('service_group_member', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='lb_models.servicegroupmemberbinding')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True
+                    ),
+                ),
+                ("created", models.DateField(auto_now_add=True, null=True)),
+                ("last_updated", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "_custom_field_data",
+                    models.JSONField(blank=True, default=dict, encoder=django.core.serializers.json.DjangoJSONEncoder),
+                ),
+                (
+                    "slug",
+                    nautobot.core.fields.AutoSlugField(blank=True, max_length=100, populate_from="name", unique=True),
+                ),
+                ("name", models.CharField(max_length=50, null=True)),
+                ("comment", models.CharField(blank=True, max_length=50, null=True)),
+                ("service_type", models.CharField(max_length=20, null=True)),
+                ("ssl_profile", models.CharField(max_length=50, null=True)),
+                ("snow_id", models.CharField(max_length=20, null=True)),
+                (
+                    "monitor",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="lb_models.servicegroupmonitorbinding",
+                    ),
+                ),
+                (
+                    "service_group_member",
+                    models.ForeignKey(
+                        null=True, on_delete=django.db.models.deletion.PROTECT, to="lb_models.servicegroupmemberbinding"
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=(models.Model, nautobot.extras.models.mixins.DynamicGroupMixin, nautobot.extras.models.mixins.NotesMixin),
+            bases=(
+                models.Model,
+                nautobot.extras.models.mixins.DynamicGroupMixin,
+                nautobot.extras.models.mixins.NotesMixin,
+            ),
         ),
         migrations.AddField(
-            model_name='serverservicegroupbinding',
-            name='service_group',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lb_models.servicegroup'),
+            model_name="serverservicegroupbinding",
+            name="service_group",
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="lb_models.servicegroup"),
         ),
         migrations.AddField(
-            model_name='serverservicegroupbinding',
-            name='tags',
-            field=taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag'),
+            model_name="serverservicegroupbinding",
+            name="tags",
+            field=taggit.managers.TaggableManager(through="extras.TaggedItem", to="extras.Tag"),
         ),
     ]
