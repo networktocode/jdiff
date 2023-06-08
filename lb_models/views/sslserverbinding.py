@@ -41,7 +41,7 @@ class SSLServerBindingEditView(generic.ObjectEditView):
 
     model = models.SSLServerBinding
     queryset = models.SSLServerBinding.objects.all()
-    model_form = forms.SSLServerBindingForm
+    model_form = forms.SSLServerBindingBulkEditForm
 
 
 class SSLServerBindingBulkDeleteView(generic.BulkDeleteView):
@@ -64,4 +64,4 @@ class SSLServerBindingBulkEditView(generic.BulkEditView):
 
     queryset = models.SSLServerBinding.objects.all()
     table = tables.SSLServerBindingTable
-    form = forms.SSLServerBindingForm
+    form = forms.SSLServerBindingBulkEditForm

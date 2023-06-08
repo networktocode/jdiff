@@ -17,7 +17,7 @@ class MonitorForm(BootstrapMixin, forms.ModelForm):
         ),
         initial=False,
         required=False,
-        label="LRTM"
+        label="LRTM",
     )
     snow_id = forms.CharField(label="SNOW ID")
 

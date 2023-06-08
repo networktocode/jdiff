@@ -41,7 +41,7 @@ class ServiceGroupEditView(generic.ObjectEditView):
 
     model = models.ServiceGroup
     queryset = models.ServiceGroup.objects.all()
-    model_form = forms.ServiceGroupForm
+    model_form = forms.ServiceGroupBulkEditForm
 
 
 class ServiceGroupBulkDeleteView(generic.BulkDeleteView):
@@ -64,4 +64,4 @@ class ServiceGroupBulkEditView(generic.BulkEditView):
 
     queryset = models.ServiceGroup.objects.all()
     table = tables.ServiceGroupTable
-    form = forms.ServiceGroupForm
+    form = forms.ServiceGroupBulkEditForm

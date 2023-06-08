@@ -41,7 +41,7 @@ class CustomerAppProfileEditView(generic.ObjectEditView):
 
     model = models.CustomerAppProfile
     queryset = models.CustomerAppProfile.objects.all()
-    model_form = forms.CustomerAppProfileForm
+    model_form = forms.CustomerAppProfileBulkEditForm
 
 
 class CustomerAppProfileBulkDeleteView(generic.BulkDeleteView):
@@ -64,4 +64,4 @@ class CustomerAppProfileBulkEditView(generic.BulkEditView):
 
     queryset = models.CustomerAppProfile.objects.all()
     table = tables.CustomerAppProfileTable
-    form = forms.CustomerAppProfileForm
+    form = forms.CustomerAppProfileBulkEditForm

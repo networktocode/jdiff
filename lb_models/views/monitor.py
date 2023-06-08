@@ -41,7 +41,7 @@ class MonitorEditView(generic.ObjectEditView):
 
     model = models.Monitor
     queryset = models.Monitor.objects.all()
-    model_form = forms.MonitorForm
+    model_form = forms.MonitorBulkEditForm
 
 
 class MonitorBulkDeleteView(generic.BulkDeleteView):
@@ -64,4 +64,4 @@ class MonitorBulkEditView(generic.BulkEditView):
 
     queryset = models.Monitor.objects.all()
     table = tables.MonitorTable
-    form = forms.MonitorForm
+    form = forms.MonitorBulkEditForm

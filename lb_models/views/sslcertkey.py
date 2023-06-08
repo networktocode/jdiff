@@ -41,7 +41,7 @@ class SSLCertKeyEditView(generic.ObjectEditView):
 
     model = models.SSLCertKey
     queryset = models.SSLCertKey.objects.all()
-    model_form = forms.SSLCertKeyForm
+    model_form = forms.SSLCertKeyBulkEditForm
 
 
 class SSLCertKeyBulkDeleteView(generic.BulkDeleteView):
@@ -64,4 +64,4 @@ class SSLCertKeyBulkEditView(generic.BulkEditView):
 
     queryset = models.SSLCertKey.objects.all()
     table = tables.SSLCertKeyTable
-    form = forms.SSLCertKeyForm
+    form = forms.SSLCertKeyBulkEditForm
