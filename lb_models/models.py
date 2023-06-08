@@ -125,7 +125,7 @@ class ServiceGroupMemberBinding(PrimaryModel):
 
     slug = AutoSlugField(populate_from="name")
     name = models.CharField(max_length=50, null=True)
-    server_port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(0)], null=True)
+    server_port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(1)], null=True)
     server_name = models.ForeignKey(to="Server", on_delete=models.CASCADE)
 
     fields = [
