@@ -7,7 +7,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from nautobot.extras.utils import extras_features
 from nautobot.core.fields import AutoSlugField
 from .choices import (
-    Protocols,
     MonitorTypes,
     ServiceGroupTypes,
     ApplicationClassTypes,
@@ -453,9 +452,10 @@ class Server(PrimaryModel):
         on_delete=models.CASCADE,
         verbose_name="IPv4 Server Address",
     )
-    td = models.IntegerField(null=True)
+    td = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(32767)], null=True)
+    snow_id = models.CharField(max_length=20, null=True)
 
-    fields = ["slug", "name", "state", "ipv4_address", "td"]
+    fields = ["slug", "name", "state", "ipv4_address", "td", "snow_id"]
     csv_headers = fields
     clone_fields = fields
 

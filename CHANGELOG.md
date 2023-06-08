@@ -7,6 +7,9 @@
 - Remove service_group from ServiceGroupMonitorBindingTable.
 - Fix fields in ServiceGroupTable.
 - Update MinValueValidator for server_port in ServiceGroupMemberBinding.
+- Add SNOW ID to Server.
+- Add validator to Server TD.
+- Update forms state in server and forms lrtm in monitor.
 
 # Ver. 0.1.12
 - Fix Vserver form for SSLBinding.

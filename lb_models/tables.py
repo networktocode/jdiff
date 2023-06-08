@@ -138,7 +138,16 @@ class ServiceGroupTable(BaseTable):
         """Meta attributes."""
 
         model = models.ServiceGroup
-        fields = ["slug", "name", "comment", "service_group_member", "service_type", "monitor", "ssl_profile", "snow_id"]
+        fields = [
+            "slug",
+            "name",
+            "comment",
+            "service_group_member",
+            "service_type",
+            "monitor",
+            "ssl_profile",
+            "snow_id",
+        ]
 
 
 class VserverTable(BaseTable):
@@ -192,7 +201,7 @@ class ServerTable(BaseTable):
         """Meta attributes."""
 
         model = models.Server
-        fields = ["slug", "name", "state", "ipv4_address", "td"]
+        fields = ["slug", "name", "state", "ipv4_address", "td", "snow_id"]
 
 
 class CustomerAppProfileTable(BaseTable):

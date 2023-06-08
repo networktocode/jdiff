@@ -299,7 +299,7 @@ class ServerFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         """Meta attributes for filter."""
 
         model = models.Server
-        fields = ["slug", "name", "state", "ipv4_address", "td"]
+        fields = ["slug", "name", "state", "ipv4_address", "td", "snow_id"]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
         """Perform the filtered search."""
@@ -310,6 +310,7 @@ class ServerFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             | Q(state__icontains=value)
             | Q(ipv4_address__icontains=value)
             | Q(td__icontains=value)
+            | Q(snow_id__icontains=value)
         )
         return queryset.filter(qs_filter)
 

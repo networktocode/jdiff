@@ -12,9 +12,12 @@ class MonitorForm(BootstrapMixin, forms.ModelForm):
 
     slug = AutoSlugField(populate_from=["name"])
     lrtm = forms.BooleanField(
-        required=True,
-        widget=StaticSelect2(choices=add_blank_choice((("ENABLED", "yes"), ("DISABLED", "no")))),
-        label="LRTM",
+        widget=forms.Select(
+            choices=((False, "DISABLED"), (True, "ENABLED")),
+        ),
+        initial=False,
+        required=False,
+        label="LRTM"
     )
     snow_id = forms.CharField(label="SNOW ID")
 

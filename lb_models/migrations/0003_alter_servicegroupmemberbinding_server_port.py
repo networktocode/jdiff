@@ -7,13 +7,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('lb_models', '0002_vserver_td'),
+        ("lb_models", "0002_vserver_td"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='servicegroupmemberbinding',
-            name='server_port',
-            field=models.PositiveIntegerField(null=True, validators=[django.core.validators.MaxValueValidator(65535), django.core.validators.MinValueValidator(1)]),
+            model_name="servicegroupmemberbinding",
+            name="server_port",
+            field=models.PositiveIntegerField(
+                null=True,
+                validators=[
+                    django.core.validators.MaxValueValidator(65535),
+                    django.core.validators.MinValueValidator(1),
+                ],
+            ),
         ),
     ]
