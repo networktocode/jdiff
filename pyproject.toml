@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "lb_models"
-version = "0.1.12"
+version = "0.1.13"
 description = "lb_models"
 authors = ["Network to Code, LLC <info@networktocode.com>"]
 license = "Apache-2.0"
