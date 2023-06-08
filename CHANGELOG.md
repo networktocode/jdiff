@@ -6,6 +6,7 @@
 - Remove Vserver from ServerServiceGroupBindingTable.
 - Remove service_group from ServiceGroupMonitorBindingTable.
 - Fix fields in ServiceGroupTable.
+- Update MinValueValidator for server_port in ServiceGroupMemberBinding.
 
 # Ver. 0.1.12
 - Fix Vserver form for SSLBinding.
