@@ -30,19 +30,19 @@ class SSLCertKey(PrimaryModel):
     """SSLCertKey model implementation."""
 
     slug = AutoSlugField(populate_from="name")
-    name = models.CharField(max_length=50, null=True)
+    key_name = models.CharField(max_length=50, null=True)
     private_key_filename = models.CharField(max_length=100, null=True)
     private_crt_filename = models.CharField(max_length=100, null=True)
-    password = models.CharField(max_length=50, blank=True, null=True)
-    snow_id = models.CharField(max_length=20, null=True)
+    key_password = models.CharField(max_length=50, blank=True, null=True)
+    snow_ticket_id = models.CharField(max_length=20, null=True)
 
     fields = [
         "slug",
-        "name",
+        "key_name",
         "private_key_filename",
         "private_crt_filename",
-        "password",
-        "snow_id",
+        "key_password",
+        "snow_ticket_id",
     ]
     csv_headers = fields
     clone_fields = fields
@@ -55,16 +55,16 @@ class SSLCertKey(PrimaryModel):
         """To CSV format."""
         return (
             self.slug,
-            self.name,
+            self.key_name,
             self.private_key_filename,
             self.private_crt_filename,
-            self.password,
-            self.snow_id,
+            self.key_password,
+            self.snow_ticket_id,
         )
 
     def __str__(self):
         """Stringify instance."""
-        return self.name
+        return self.key_name
 
 
 @extras_features(
@@ -81,12 +81,12 @@ class SSLServerBinding(PrimaryModel):
     """SSLServerBinding model implementation."""
 
     slug = AutoSlugField(populate_from="name")
-    name = models.CharField(max_length=50, null=True)
+    server_name = models.CharField(max_length=50, null=True)
     ssl_certkey = models.OneToOneField(SSLCertKey, on_delete=models.CASCADE)
 
     fields = [
         "slug",
-        "name",
+        "server_name",
         "ssl_certkey",
     ]
     csv_headers = fields
@@ -100,13 +100,13 @@ class SSLServerBinding(PrimaryModel):
         """To CSV format."""
         return (
             self.slug,
-            self.name,
+            self.server_name,
             self.ssl_certkey,
         )
 
     def __str__(self):
         """Stringify instance."""
-        return self.name
+        return self.server_name
 
 
 @extras_features(
@@ -172,10 +172,10 @@ class Monitor(OrganizationalModel):
     comment = models.CharField(max_length=100, blank=True, null=True)
     type = models.CharField(max_length=20, choices=MonitorTypes)
     lrtm = models.BooleanField(default=False)
-    snow_id = models.CharField(max_length=20, null=True)
+    snow_ticket_id = models.CharField(max_length=20, null=True)
     args = models.JSONField(blank=True, null=True)
 
-    fields = ["slug", "name", "comment", "type", "lrtm", "args", "snow_id"]
+    fields = ["slug", "name", "comment", "type", "lrtm", "args", "snow_ticket_id"]
     csv_headers = fields
     clone_fields = fields
 
@@ -185,7 +185,7 @@ class Monitor(OrganizationalModel):
 
     def to_csv(self):
         """To CSV format."""
-        return (self.slug, self.name, self.comment, self.type, self.lrtm, self.args, self.snow_id)
+        return (self.slug, self.name, self.comment, self.type, self.lrtm, self.args, self.snow_ticket_id)
 
     def __str__(self):
         """Stringify instance."""
@@ -254,9 +254,9 @@ class ServiceGroup(OrganizationalModel):
     monitor = models.ForeignKey(to="ServiceGroupMonitorBinding", on_delete=models.PROTECT, null=True)
     service_type = models.CharField(max_length=20, choices=ServiceGroupTypes, null=True)
     ssl_profile = models.CharField(max_length=50, null=True)
-    snow_id = models.CharField(max_length=20, null=True)
+    snow_ticket_id = models.CharField(max_length=20, null=True)
 
-    fields = ["slug", "name", "comment", "service_group_member", "service_type", "monitor", "ssl_profile", "snow_id"]
+    fields = ["slug", "name", "comment", "service_group_member", "service_type", "monitor", "ssl_profile", "snow_ticket_id"]
     csv_headers = fields
     clone_fields = fields
 
@@ -274,7 +274,7 @@ class ServiceGroup(OrganizationalModel):
             self.service_type,
             self.monitor,
             self.ssl_profile,
-            self.snow_id,
+            self.snow_ticket_id,
         )
 
     def __str__(self):
@@ -317,7 +317,7 @@ class Vserver(PrimaryModel):
     ssl_profile = models.CharField(max_length=50, null=True)
     persistence_type = models.CharField(max_length=20, choices=PersistenceType, null=True)
     args = models.JSONField(blank=True, null=True)
-    snow_id = models.CharField(max_length=20, null=True)
+    snow_ticket_id = models.CharField(max_length=20, null=True)
     td = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(32767)], null=True)
 
     fields = [
@@ -334,7 +334,7 @@ class Vserver(PrimaryModel):
         "ssl_profile",
         "persistence_type",
         "args",
-        "snow_id",
+        "snow_ticket_id",
         "td",
     ]
     csv_headers = fields
@@ -360,7 +360,7 @@ class Vserver(PrimaryModel):
             self.ssl_profile,
             self.persistence_type,
             self.args,
-            self.snow_id,
+            self.snow_ticket_id,
         )
 
     def __str__(self):
@@ -453,9 +453,9 @@ class Server(PrimaryModel):
         verbose_name="IPv4 Server Address",
     )
     td = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(32767)], null=True)
-    snow_id = models.CharField(max_length=20, null=True)
+    snow_ticket_id = models.CharField(max_length=20, null=True)
 
-    fields = ["slug", "name", "state", "ipv4_address", "td", "snow_id"]
+    fields = ["slug", "name", "state", "ipv4_address", "td", "snow_ticket_id"]
     csv_headers = fields
     clone_fields = fields
 

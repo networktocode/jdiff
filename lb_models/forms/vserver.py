@@ -16,7 +16,7 @@ class VserverForm(BootstrapMixin, forms.ModelForm):
         queryset=models.SSLServerBinding.objects.all(), to_field_name="slug", label="SSL Binding"
     )
     ssl_profile = forms.CharField(label="SSL Profile")
-    snow_id = forms.CharField(label="SNOW ID")
+    snow_ticket_id = forms.CharField(label="SNOW ID")
     td = forms.IntegerField(label="TD")
 
     class Meta:
@@ -36,7 +36,7 @@ class VserverForm(BootstrapMixin, forms.ModelForm):
             "customer_app_profile",
             "ssl_profile",
             "persistence_type",
-            "snow_id",
+            "snow_ticket_id",
             "td",
             "args",
         ]
@@ -71,7 +71,7 @@ class VserverFilterForm(BootstrapMixin, forms.ModelForm):
             "ssl_profile",
             "persistence_type",
             "args",
-            "snow_id",
+            "snow_ticket_id",
             "td",
         ]
 

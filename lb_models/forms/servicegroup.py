@@ -15,7 +15,7 @@ class ServiceGroupForm(BootstrapMixin, forms.ModelForm):
     service_group_member = forms.ModelChoiceField(
         queryset=models.ServiceGroupMemberBinding.objects.all(), to_field_name="slug", label="Service Group Member"
     )
-    snow_id = forms.CharField(label="SNOW ID")
+    snow_ticket_id = forms.CharField(label="SNOW ID")
     monitor = forms.ModelChoiceField(
         queryset=models.ServiceGroupMonitorBinding.objects.all(), to_field_name="slug", label="Monitor"
     )
@@ -33,7 +33,7 @@ class ServiceGroupForm(BootstrapMixin, forms.ModelForm):
             "service_type",
             "monitor",
             "ssl_profile",
-            "snow_id",
+            "snow_ticket_id",
         ]
 
 

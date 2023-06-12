@@ -8,7 +8,7 @@ from lb_models import models
 class SSLServerBindingForm(BootstrapMixin, forms.ModelForm):
     """SSLServerBinding creation/edit form."""
 
-    slug = AutoSlugField(populate_from=["name"])
+    slug = AutoSlugField(populate_from=["server_name"])
     password = forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
@@ -17,7 +17,7 @@ class SSLServerBindingForm(BootstrapMixin, forms.ModelForm):
         model = models.SSLServerBinding
         fields = [
             "slug",
-            "name",
+            "server_name",
             "ssl_certkey",
         ]
 
@@ -31,7 +31,7 @@ class SSLServerBindingFilterForm(BootstrapMixin, forms.ModelForm):
         help_text="Search within issuer or Slug.",
     )
     slug = forms.CharField(required=False, label="Slug")
-    name = forms.CharField(required=False, label="SSL Server Binding Name")
+    server_name = forms.CharField(required=False, label="SSL Server Binding Name")
     ssl_certkey = forms.CharField(required=False, label="SSL Cert Key")
 
     class Meta:
@@ -41,7 +41,7 @@ class SSLServerBindingFilterForm(BootstrapMixin, forms.ModelForm):
         fields = [
             "q",
             "slug",
-            "name",
+            "server_name",
             "ssl_certkey",
         ]
 
@@ -56,7 +56,7 @@ class SSLServerBindingBulkEditForm(BootstrapMixin, BulkEditForm):
 
         model = models.SSLServerBinding
         nullable_fields = [
-            "name",
+            "server_name",
         ]
 
 

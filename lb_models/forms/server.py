@@ -26,7 +26,7 @@ class ServerForm(BootstrapMixin, forms.ModelForm):
         """Meta attributes."""
 
         model = models.Server
-        fields = ["slug", "name", "state", "ipv4_address", "td", "snow_id"]
+        fields = ["slug", "name", "state", "ipv4_address", "td", "snow_ticket_id"]
 
 
 class ServerFilterForm(BootstrapMixin, forms.ModelForm):

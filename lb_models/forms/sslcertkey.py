@@ -10,7 +10,7 @@ class SSLCertKeyForm(BootstrapMixin, forms.ModelForm):
 
     slug = AutoSlugField(populate_from=["name"])
     password = forms.CharField(widget=forms.PasswordInput, required=False)
-    snow_id = forms.CharField(label="SNOW ID")
+    snow_ticket_id = forms.CharField(label="SNOW ID")
 
     class Meta:
         """Meta attributes."""
@@ -18,11 +18,11 @@ class SSLCertKeyForm(BootstrapMixin, forms.ModelForm):
         model = models.SSLCertKey
         fields = [
             "slug",
-            "name",
+            "key_name",
             "private_key_filename",
             "private_crt_filename",
-            "password",
-            "snow_id",
+            "key_password",
+            "snow_ticket_id",
         ]
 
 
@@ -35,10 +35,10 @@ class SSLCertKeyFilterForm(BootstrapMixin, forms.ModelForm):
         help_text="Search within issuer or Slug.",
     )
     slug = forms.CharField(required=False, label="Slug")
-    name = forms.CharField(required=False, label="Key Name")
+    key_name = forms.CharField(required=False, label="Key Name")
     private_key_filename = forms.CharField(required=False, label="Key Filename")
     private_crt_filename = forms.CharField(required=False, label="Cert Filename")
-    snow_id = forms.CharField(required=False, label="SNOW ID")
+    snow_ticket_id = forms.CharField(required=False, label="SNOW ID")
 
     class Meta:
         """Meta attributes."""
@@ -47,10 +47,10 @@ class SSLCertKeyFilterForm(BootstrapMixin, forms.ModelForm):
         fields = [
             "q",
             "slug",
-            "name",
+            "key_name",
             "private_key_filename",
             "private_crt_filename",
-            "snow_id",
+            "snow_ticket_id",
         ]
 
 
@@ -64,7 +64,7 @@ class SSLCertKeyBulkEditForm(BootstrapMixin, BulkEditForm):
 
         model = models.SSLCertKey
         nullable_fields = [
-            "name",
+            "key_name",
         ]
 
 

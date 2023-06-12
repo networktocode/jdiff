@@ -20,11 +20,10 @@ class SSLCertKeyFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         fields = [
             "q",
             "slug",
-            "name",
+            "key_name",
             "private_key_filename",
             "private_crt_filename",
-            "password",
-            "snow_id",
+            "snow_ticket_id",
         ]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
@@ -32,11 +31,10 @@ class SSLCertKeyFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         if not value.strip():
             return queryset
         qs_filter = (
-            Q(name__icontains=value)
+            Q(key_name__icontains=value)
             | Q(private_key_filename__icontains=value)
             | Q(private_crt_filename__icontains=value)
-            | Q(name__icontains=value)
-            | Q(snow_id__icontains=value)
+            | Q(snow_ticket_id__icontains=value)
         )
         return queryset.filter(qs_filter)
 
@@ -64,16 +62,15 @@ class SSLServerBindingFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         fields = [
             "q",
             "slug",
-            "name",
+            "server_name",
             "ssl_certkey",
-            "vserver",
         ]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
         """Perform the filtered search."""
         if not value.strip():
             return queryset
-        qs_filter = Q(name__icontains=value) | Q(ssl_certkey__icontains=value) | Q(vserver__icontains=value)
+        qs_filter = Q(server_name__icontains=value) | Q(ssl_certkey__icontains=value)
         return queryset.filter(qs_filter)
 
 
@@ -170,7 +167,7 @@ class MonitorFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         """Meta attributes for filter."""
 
         model = models.Monitor
-        fields = ["q", "slug", "name", "comment", "type", "lrtm", "args", "snow_id"]
+        fields = ["q", "slug", "name", "comment", "type", "lrtm", "args", "snow_ticket_id"]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
         """Perform the filtered search."""
@@ -180,7 +177,7 @@ class MonitorFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             Q(name__icontains=value)
             | Q(comment__icontains=value)
             | Q(type__icontains=value)
-            | Q(snow_id__icontains=value)
+            | Q(snow_ticket_id__icontains=value)
         )
         return queryset.filter(qs_filter)
 
@@ -214,7 +211,7 @@ class ServiceGroupFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             "service_type",
             "monitor",
             "ssl_profile",
-            "snow_id",
+            "snow_ticket_id",
         ]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
@@ -259,7 +256,7 @@ class VserverFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             "ssl_profile",
             "persistence_type",
             "args",
-            "snow_id",
+            "snow_ticket_id",
             "td",
         ]
 
@@ -299,7 +296,7 @@ class ServerFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         """Meta attributes for filter."""
 
         model = models.Server
-        fields = ["slug", "name", "state", "ipv4_address", "td", "snow_id"]
+        fields = ["slug", "name", "state", "ipv4_address", "td", "snow_ticket_id"]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
         """Perform the filtered search."""
@@ -310,7 +307,7 @@ class ServerFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             | Q(state__icontains=value)
             | Q(ipv4_address__icontains=value)
             | Q(td__icontains=value)
-            | Q(snow_id__icontains=value)
+            | Q(snow_ticket_id__icontains=value)
         )
         return queryset.filter(qs_filter)
 

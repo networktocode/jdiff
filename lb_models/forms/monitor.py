@@ -19,13 +19,13 @@ class MonitorForm(BootstrapMixin, forms.ModelForm):
         required=False,
         label="LRTM",
     )
-    snow_id = forms.CharField(label="SNOW ID")
+    snow_ticket_id = forms.CharField(label="SNOW ID")
 
     class Meta:
         """Meta attributes."""
 
         model = models.Monitor
-        fields = ["slug", "name", "comment", "type", "lrtm", "args", "snow_id"]
+        fields = ["slug", "name", "comment", "type", "lrtm", "args", "snow_ticket_id"]
 
 
 class MonitorFilterForm(BootstrapMixin, forms.ModelForm):
@@ -43,13 +43,13 @@ class MonitorFilterForm(BootstrapMixin, forms.ModelForm):
     lrtm = forms.NullBooleanField(
         required=False, widget=StaticSelect2(choices=add_blank_choice((("ENABLED", "yes"), ("DISABLED", "no"))))
     )
-    snow_id = forms.CharField(required=False, label="SNOW ID")
+    snow_ticket_id = forms.CharField(required=False, label="SNOW ID")
 
     class Meta:
         """Meta attributes."""
 
         model = models.Monitor
-        fields = ["q", "slug", "name", "comment", "type", "lrtm", "args", "snow_id"]
+        fields = ["q", "slug", "name", "comment", "type", "lrtm", "args", "snow_ticket_id"]
 
 
 class MonitorBulkEditForm(BootstrapMixin, BulkEditForm):

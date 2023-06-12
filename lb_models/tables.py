@@ -25,10 +25,10 @@ class SSLCertKeyTable(BaseTable):
         model = models.SSLCertKey
         fields = [
             "slug",
-            "name",
+            "key_name",
             "private_key_filename",
             "private_crt_filename",
-            "snow_id",
+            "snow_ticket_id",
         ]
 
 
@@ -50,7 +50,7 @@ class SSLServerBindingTable(BaseTable):
         model = models.SSLServerBinding
         fields = [
             "slug",
-            "name",
+            "server_name",
             "ssl_certkey",
         ]
 
@@ -118,7 +118,7 @@ class MonitorTable(BaseTable):
         """Meta attributes."""
 
         model = models.Monitor
-        fields = ["slug", "name", "comment", "type", "lrtm", "args", "snow_id"]
+        fields = ["slug", "name", "comment", "type", "lrtm", "args", "snow_ticket_id"]
 
 
 class ServiceGroupTable(BaseTable):
@@ -146,7 +146,7 @@ class ServiceGroupTable(BaseTable):
             "service_type",
             "monitor",
             "ssl_profile",
-            "snow_id",
+            "snow_ticket_id",
         ]
 
 
@@ -180,7 +180,7 @@ class VserverTable(BaseTable):
             "ssl_profile",
             "persistence_type",
             "args",
-            "snow_id",
+            "snow_ticket_id",
             "td",
         ]
 
@@ -201,7 +201,7 @@ class ServerTable(BaseTable):
         """Meta attributes."""
 
         model = models.Server
-        fields = ["slug", "name", "state", "ipv4_address", "td", "snow_id"]
+        fields = ["slug", "name", "state", "ipv4_address", "td", "snow_ticket_id"]
 
 
 class CustomerAppProfileTable(BaseTable):
