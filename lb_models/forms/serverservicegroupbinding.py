@@ -8,7 +8,7 @@ from lb_models import models
 class ServerServiceGroupBindingForm(BootstrapMixin, forms.ModelForm):
     """Service Group Member creation/edit form."""
 
-    slug = AutoSlugField(populate_from=["name"])
+    slug = AutoSlugField(populate_from=["group_server_name"])
     service_group = forms.ModelChoiceField(queryset=models.ServiceGroup.objects.all(), to_field_name="slug")
 
     class Meta:
@@ -17,7 +17,7 @@ class ServerServiceGroupBindingForm(BootstrapMixin, forms.ModelForm):
         model = models.ServerServiceGroupBinding
         fields = [
             "slug",
-            "name",
+            "group_server_name",
             "service_group",
         ]
 
@@ -31,7 +31,7 @@ class ServerServiceGroupBindingFilterForm(BootstrapMixin, forms.ModelForm):
         help_text="Search within issuer or Slug.",
     )
     slug = forms.CharField(required=False, label="Slug")
-    name = forms.CharField(required=False, label="Name")
+    group_server_name = forms.CharField(required=False, label="Name")
     service_group = forms.ModelChoiceField(
         queryset=models.ServiceGroup.objects.all(), required=False, label="SG", to_field_name="slug"
     )
@@ -43,7 +43,7 @@ class ServerServiceGroupBindingFilterForm(BootstrapMixin, forms.ModelForm):
         fields = [
             "q",
             "slug",
-            "name",
+            "group_server_name",
             "service_group",
         ]
 
@@ -61,7 +61,7 @@ class ServerServiceGroupBindingBulkEditForm(BootstrapMixin, BulkEditForm):
 
         model = models.ServerServiceGroupBinding
         nullable_fields = [
-            "name",
+            "group_server_name",
         ]
 
 

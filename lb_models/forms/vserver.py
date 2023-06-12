@@ -10,14 +10,14 @@ from .utils import add_blank_choice
 class VserverForm(BootstrapMixin, forms.ModelForm):
     """Vserver creation/edit form."""
 
-    slug = AutoSlugField(populate_from=["name"])
+    slug = AutoSlugField(populate_from=["vserver_name"])
     lb_method = forms.ChoiceField(choices=add_blank_choice(Methods), label="LB Method")
     ssl_binding = forms.ModelChoiceField(
         queryset=models.SSLServerBinding.objects.all(), to_field_name="slug", label="SSL Binding"
     )
     ssl_profile = forms.CharField(label="SSL Profile")
     snow_ticket_id = forms.CharField(label="SNOW ID")
-    td = forms.IntegerField(label="TD")
+    vserver_td = forms.IntegerField(label="TD")
 
     class Meta:
         """Meta attributes."""
@@ -25,7 +25,7 @@ class VserverForm(BootstrapMixin, forms.ModelForm):
         model = models.Vserver
         fields = [
             "slug",
-            "name",
+            "vserver_name",
             "comment",
             "device",
             "ipv4_address",
@@ -37,8 +37,8 @@ class VserverForm(BootstrapMixin, forms.ModelForm):
             "ssl_profile",
             "persistence_type",
             "snow_ticket_id",
-            "td",
-            "args",
+            "vserver_td",
+            "vserver_args",
         ]
 
 
@@ -59,7 +59,7 @@ class VserverFilterForm(BootstrapMixin, forms.ModelForm):
         fields = [
             "q",
             "slug",
-            "name",
+            "vserver_name",
             "comment",
             "device",
             "ipv4_address",
@@ -70,9 +70,9 @@ class VserverFilterForm(BootstrapMixin, forms.ModelForm):
             "customer_app_profile",
             "ssl_profile",
             "persistence_type",
-            "args",
+            "vserver_args",
             "snow_ticket_id",
-            "td",
+            "vserver_td",
         ]
 
 
@@ -87,7 +87,7 @@ class VserverBulkEditForm(BootstrapMixin, BulkEditForm):
 
         model = models.Vserver
         nullable_fields = [
-            "name",
+            "vserver_name",
         ]
 
 

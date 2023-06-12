@@ -10,9 +10,9 @@ from .utils import add_blank_choice
 class ServerForm(BootstrapMixin, forms.ModelForm):
     """Server creation/edit form."""
 
-    slug = AutoSlugField(populate_from=["name"])
+    slug = AutoSlugField(populate_from=["server_name"])
     ipv4_address = forms.ModelChoiceField(queryset=IPAddress.objects.all(), label="IPv4 Address")
-    td = forms.IntegerField(label="TD")
+    server_td = forms.IntegerField(label="TD")
     state = forms.BooleanField(
         widget=forms.Select(
             choices=((False, "DISABLED"), (True, "ENABLED")),
@@ -26,7 +26,7 @@ class ServerForm(BootstrapMixin, forms.ModelForm):
         """Meta attributes."""
 
         model = models.Server
-        fields = ["slug", "name", "state", "ipv4_address", "td", "snow_ticket_id"]
+        fields = ["slug", "server_name", "state", "ipv4_address", "server_td", "snow_ticket_id"]
 
 
 class ServerFilterForm(BootstrapMixin, forms.ModelForm):
@@ -39,9 +39,9 @@ class ServerFilterForm(BootstrapMixin, forms.ModelForm):
     )
     slug = AutoSlugField(populate_from=["name"])
     state = forms.CharField(required=False, label="State")
-    name = forms.CharField(required=False, label="Name")
+    server_name = forms.CharField(required=False, label="Name")
     ipv4_address = forms.ModelChoiceField(queryset=IPAddress.objects.all(), label="IP Address", required=False)
-    td = forms.IntegerField(required=False, label="TD")
+    server_td = forms.IntegerField(required=False, label="TD")
 
     class Meta:
         """Meta attributes."""
@@ -50,10 +50,10 @@ class ServerFilterForm(BootstrapMixin, forms.ModelForm):
         fields = [
             "q",
             "slug",
-            "name",
+            "server_name",
             "state",
             "ipv4_address",
-            "td",
+            "server_td",
         ]
 
 
@@ -68,7 +68,7 @@ class ServerBulkEditForm(BootstrapMixin, BulkEditForm):
 
         model = models.Server
         nullable_fields = [
-            "name",
+            "server_name",
         ]
 
 

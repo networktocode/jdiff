@@ -10,7 +10,7 @@ from .utils import add_blank_choice
 class ServiceGroupForm(BootstrapMixin, forms.ModelForm):
     """Service Group Member creation/edit form."""
 
-    slug = AutoSlugField(populate_from=["name"])
+    slug = AutoSlugField(populate_from=["service_group_name"])
     comment = forms.CharField(required=False)
     service_group_member = forms.ModelChoiceField(
         queryset=models.ServiceGroupMemberBinding.objects.all(), to_field_name="slug", label="Service Group Member"
@@ -27,7 +27,7 @@ class ServiceGroupForm(BootstrapMixin, forms.ModelForm):
         model = models.ServiceGroup
         fields = [
             "slug",
-            "name",
+            "service_group_name",
             "comment",
             "service_group_member",
             "service_type",
@@ -45,22 +45,30 @@ class ServiceGroupFilterForm(BootstrapMixin, forms.ModelForm):
         label="Search",
         help_text="Search within issuer or Slug.",
     )
-    slug = AutoSlugField(populate_from=["name"])
-    name = forms.CharField(required=False)
-    description = forms.CharField(required=False)
+    slug = AutoSlugField(populate_from=["service_group_name"])
+    snow_ticket_id = forms.CharField(required=False)
+    comment = forms.CharField(required=False)
+    comment = forms.CharField(required=False)
     monitor = forms.ModelChoiceField(queryset=models.Monitor.objects.all(), required=False, to_field_name="slug")
-    member = forms.ModelChoiceField(
+    service_group_member = forms.ModelChoiceField(
         queryset=models.ServiceGroupMemberBinding.objects.all(), required=False, to_field_name="slug"
     )
-    type = forms.ChoiceField(choices=add_blank_choice(ServiceGroupTypes), required=False)
-    td = forms.BooleanField(required=False)
     ssl_profile = forms.CharField(required=False)
 
     class Meta:
         """Meta attributes."""
 
         model = models.ServiceGroup
-        fields = ["slug", "name", "description", "monitor", "member", "type", "td", "ssl_profile"]
+        fields = [
+            "slug",
+            "service_group_name",
+            "comment",
+            "service_group_member",
+            "service_type",
+            "monitor",
+            "ssl_profile",
+            "snow_ticket_id",
+        ]
 
 
 class ServiceGroupBulkEditForm(BootstrapMixin, BulkEditForm):
@@ -74,7 +82,7 @@ class ServiceGroupBulkEditForm(BootstrapMixin, BulkEditForm):
 
         model = models.ServiceGroup
         nullable_fields = [
-            "name",
+            "service_group_name",
         ]
 
 

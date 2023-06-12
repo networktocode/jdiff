@@ -95,7 +95,7 @@ class ServiceGroupMemberBindingFilterSet(BaseFilterSet, NameSlugSearchFilterSet)
             "slug",
             "server_name",
             "server_port",
-            "name",
+            "group_binding_name",
         ]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
@@ -103,54 +103,7 @@ class ServiceGroupMemberBindingFilterSet(BaseFilterSet, NameSlugSearchFilterSet)
         if not value.strip():
             return queryset
         qs_filter = (
-            Q(name__icontains=value)
-            | Q(server_name__icontains=value)
-            | Q(server_port__icontains=value)
-            | Q(name__icontains=value)
-        )
-        return queryset.filter(qs_filter)
-
-
-class ServiceGroupMonitorBindingFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
-    """Filter for ServiceGroupMonitorBinding."""
-
-    q = django_filters.CharFilter(
-        method="search",
-        label="Search",
-    )
-    monitor = django_filters.ModelMultipleChoiceFilter(
-        queryset=models.ServiceGroupMonitorBinding.objects.all(),
-        label="Monitor",
-    )
-    service_group = django_filters.ModelMultipleChoiceFilter(
-        queryset=models.ServiceGroup.objects.all(),
-        label="Service Group",
-    )
-
-    class Meta:
-        """Meta attributes for filter."""
-
-        model = models.ServiceGroupMemberBinding
-        fields = [
-            "q",
-            "slug",
-            "name",
-            "monitor",
-            "service_group",
-        ]
-
-    def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
-        """Perform the filtered search."""
-        if not value.strip():
-            return queryset
-        qs_filter = (
-            Q(name__icontains=value)
-            | Q(description__icontains=value)
-            | Q(protocol__icontains=value)
-            | Q(port__icontains=value)
-            | Q(address__icontains=value)
-            | Q(fqdn__icontains=value)
-            | Q(monitor__icontains=value)
+            Q(group_binding_name__icontains=value) | Q(server_name__icontains=value) | Q(server_port__icontains=value)
         )
         return queryset.filter(qs_filter)
 
@@ -167,18 +120,49 @@ class MonitorFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         """Meta attributes for filter."""
 
         model = models.Monitor
-        fields = ["q", "slug", "name", "comment", "type", "lrtm", "args", "snow_ticket_id"]
+        fields = ["q", "slug", "monitor_name", "comment", "monitor_type", "lrtm", "monitor_args", "snow_ticket_id"]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
         """Perform the filtered search."""
         if not value.strip():
             return queryset
         qs_filter = (
-            Q(name__icontains=value)
+            Q(monitor_name__icontains=value)
             | Q(comment__icontains=value)
-            | Q(type__icontains=value)
+            | Q(monitor_type__icontains=value)
             | Q(snow_ticket_id__icontains=value)
         )
+        return queryset.filter(qs_filter)
+
+
+class ServiceGroupMonitorBindingFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
+    """Filter for ServiceGroupMonitorBinding."""
+
+    q = django_filters.CharFilter(
+        method="search",
+        label="Search",
+    )
+    monitor = django_filters.ModelMultipleChoiceFilter(
+        queryset=models.ServiceGroupMonitorBinding.objects.all(),
+        label="Monitor",
+    )
+
+    class Meta:
+        """Meta attributes for filter."""
+
+        model = models.ServiceGroupMonitorBinding
+        fields = [
+            "q",
+            "slug",
+            "group_monitor_name",
+            "monitor",
+        ]
+
+    def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
+        """Perform the filtered search."""
+        if not value.strip():
+            return queryset
+        qs_filter = Q(group_monitor_name__icontains=value) | Q(monitor__icontains=value)
         return queryset.filter(qs_filter)
 
 
@@ -205,7 +189,7 @@ class ServiceGroupFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         fields = [
             "q",
             "slug",
-            "name",
+            "service_group_name",
             "comment",
             "service_group_member",
             "service_type",
@@ -219,12 +203,11 @@ class ServiceGroupFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         if not value.strip():
             return queryset
         qs_filter = (
-            Q(name__icontains=value)
+            Q(service_group_name__icontains=value)
             | Q(comment__icontains=value)
             | Q(monitor__icontains=value)
             | Q(service_group_member__icontains=value)
-            | Q(type__icontains=value)
-            | Q(name__icontains=value)
+            | Q(snow_ticket_id__icontains=value)
             | Q(ssl_profile__icontains=value)
         )
         return queryset.filter(qs_filter)
@@ -244,7 +227,7 @@ class VserverFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         model = models.Vserver
         fields = [
             "slug",
-            "name",
+            "vserver_name",
             "comment",
             "device",
             "ipv4_address",
@@ -252,12 +235,12 @@ class VserverFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
             "service_type",
             "lb_method",
             "ssl_binding",
-            "customer_app_profile",
+            "ssl_profile",
             "ssl_profile",
             "persistence_type",
-            "args",
+            "vserver_args",
             "snow_ticket_id",
-            "td",
+            "vserver_td",
         ]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
@@ -265,21 +248,16 @@ class VserverFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         if not value.strip():
             return queryset
         qs_filter = (
-            Q(name__icontains=value)
-            | Q(description__icontains=value)
+            Q(vserver_name__icontains=value)
+            | Q(comment__icontains=value)
             | Q(device__icontains=value)
-            | Q(interface__icontains=value)
-            | Q(address__icontains=value)
-            | Q(pool__icontains=value)
-            | Q(vlan__icontains=value)
-            | Q(vrf__icontains=value)
-            | Q(fqdn__icontains=value)
-            | Q(protocol__icontains=value)
-            | Q(port__icontains=value)
-            | Q(method__icontains=value)
-            | Q(sslcertkey__icontains=value)
-            | Q(owner__icontains=value)
-            | Q(td__icontains=value)
+            | Q(ipv4_address__icontains=value)
+            | Q(service_group_binding__icontains=value)
+            | Q(service_type__icontains=value)
+            | Q(lb_method__icontains=value)
+            | Q(ssl_binding__icontains=value)
+            | Q(ssl_profile__icontains=value)
+            | Q(vserver_td__icontains=value)
         )
         return queryset.filter(qs_filter)
 
@@ -296,17 +274,17 @@ class ServerFilterSet(BaseFilterSet, NameSlugSearchFilterSet):
         """Meta attributes for filter."""
 
         model = models.Server
-        fields = ["slug", "name", "state", "ipv4_address", "td", "snow_ticket_id"]
+        fields = ["slug", "server_name", "state", "ipv4_address", "server_td", "snow_ticket_id"]
 
     def search(self, queryset, name, value):  # pylint: disable=unused-argument, no-self-use
         """Perform the filtered search."""
         if not value.strip():
             return queryset
         qs_filter = (
-            Q(name__icontains=value)
+            Q(server_name__icontains=value)
             | Q(state__icontains=value)
             | Q(ipv4_address__icontains=value)
-            | Q(td__icontains=value)
+            | Q(server_td__icontains=value)
             | Q(snow_ticket_id__icontains=value)
         )
         return queryset.filter(qs_filter)
@@ -370,7 +348,7 @@ class ServerServiceGroupBindingFilterSet(BaseFilterSet, NameSlugSearchFilterSet)
         model = models.ServerServiceGroupBinding
         fields = [
             "slug",
-            "name",
+            "group_server_name",
             "service_group",
         ]
 
@@ -378,7 +356,7 @@ class ServerServiceGroupBindingFilterSet(BaseFilterSet, NameSlugSearchFilterSet)
         """Perform the filtered search."""
         if not value.strip():
             return queryset
-        qs_filter = Q(id__icontains=value) | Q(ame__icontains=value) | Q(service_group__icontains=value)
+        qs_filter = Q(id__icontains=value) | Q(group_server_name__icontains=value) | Q(service_group__icontains=value)
         return queryset.filter(qs_filter)
 
 
@@ -396,7 +374,7 @@ class ServiceGroupMonitorBindingFilterForm(BaseFilterSet, NameSlugSearchFilterSe
         model = models.ServiceGroupMonitorBinding
         fields = [
             "slug",
-            "name",
+            "group_monitor_name",
             "monitor",
         ]
 
@@ -404,5 +382,5 @@ class ServiceGroupMonitorBindingFilterForm(BaseFilterSet, NameSlugSearchFilterSe
         """Perform the filtered search."""
         if not value.strip():
             return queryset
-        qs_filter = Q(id__icontains=value) | Q(name__icontains=value) | Q(monitor__icontains=value)
+        qs_filter = Q(group_monitor_name__icontains=value) | Q(monitor__icontains=value)
         return queryset.filter(qs_filter)

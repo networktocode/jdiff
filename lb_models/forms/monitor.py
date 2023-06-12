@@ -10,7 +10,7 @@ from .utils import add_blank_choice
 class MonitorForm(BootstrapMixin, forms.ModelForm):
     """Monitor creation/edit form."""
 
-    slug = AutoSlugField(populate_from=["name"])
+    slug = AutoSlugField(populate_from=["monitor_name"])
     lrtm = forms.BooleanField(
         widget=forms.Select(
             choices=((False, "DISABLED"), (True, "ENABLED")),
@@ -25,7 +25,7 @@ class MonitorForm(BootstrapMixin, forms.ModelForm):
         """Meta attributes."""
 
         model = models.Monitor
-        fields = ["slug", "name", "comment", "type", "lrtm", "args", "snow_ticket_id"]
+        fields = ["slug", "monitor_name", "comment", "monitor_type", "lrtm", "monitor_args", "snow_ticket_id"]
 
 
 class MonitorFilterForm(BootstrapMixin, forms.ModelForm):
@@ -37,9 +37,9 @@ class MonitorFilterForm(BootstrapMixin, forms.ModelForm):
         help_text="Search within issuer or Slug.",
     )
     slug = forms.CharField(required=False, label="Slug")
-    name = forms.CharField(required=False, label="Name")
+    monitor_name = forms.CharField(required=False, label="Name")
     comment = forms.CharField(required=False, label="Comment")
-    type = forms.ChoiceField(choices=add_blank_choice(MonitorTypes), required=False)
+    monitor_type = forms.ChoiceField(choices=add_blank_choice(MonitorTypes), required=False)
     lrtm = forms.NullBooleanField(
         required=False, widget=StaticSelect2(choices=add_blank_choice((("ENABLED", "yes"), ("DISABLED", "no"))))
     )
@@ -49,7 +49,7 @@ class MonitorFilterForm(BootstrapMixin, forms.ModelForm):
         """Meta attributes."""
 
         model = models.Monitor
-        fields = ["q", "slug", "name", "comment", "type", "lrtm", "args", "snow_ticket_id"]
+        fields = ["q", "slug", "monitor_name", "comment", "monitor_type", "lrtm", "monitor_args", "snow_ticket_id"]
 
 
 class MonitorBulkEditForm(BootstrapMixin, BulkEditForm):
@@ -63,7 +63,7 @@ class MonitorBulkEditForm(BootstrapMixin, BulkEditForm):
 
         model = models.Monitor
         nullable_fields = [
-            "name",
+            "monitor_name",
         ]
 
 
