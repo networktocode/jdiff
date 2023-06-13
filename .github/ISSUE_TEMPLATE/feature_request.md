@@ -5,8 +5,7 @@ about: Propose a new feature or enhancement
 ---
 
 ### Environment
-* Nautobot version:  <!-- Example: 1.4 -->
-* lb_models version:  <!-- Example: 0.1.0 -->
+* jdiff version:  <!-- Example: 1.0.0 -->
 
 <!--
     Describe in detail the new functionality you are proposing.

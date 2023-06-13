@@ -1,57 +1,46 @@
 [tool.poetry]
-name = "lb_models"
-version = "0.1.15"
-description = "lb_models"
+name = "jdiff"
+version = "0.0.2"
+description = "A light-weight library to compare structured output from network devices show commands."
 authors = ["Network to Code, LLC <info@networktocode.com>"]
 license = "Apache-2.0"
+homepage = "https://github.com/networktocode/jdiff"
+repository = "https://github.com/networktocode/jdiff"
 readme = "README.md"
-homepage = "git@github.com:networktocode-llc/cu-allspice-lb-management.git"
-repository = "git@github.com:networktocode-llc/cu-allspice-lb-management.git"
-keywords = ["nautobot", "nautobot-plugin"]
-include = [
-    "LICENSE",
-    "README.md",
+keywords = ["json", "diff", "network"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
 ]
-packages = [
-    { include = "lb_models" },
+include = [
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "LICENSE",
 ]
 
 [tool.poetry.dependencies]
-python = "^3.7"
-# Required for Python 3.7 for now. See: https://stackoverflow.com/a/73932581/194311
-importlib-metadata = "4.13.0"
-# Used for local development
-nautobot = "1.4.3"
+python = "^3.7.0"
+deepdiff = "^5.5.0"
+jmespath = "^0.10.0"
 
 [tool.poetry.dev-dependencies]
-bandit = "*"
-black = "*"
-coverage = "*"
-django-debug-toolbar = "*"
-# we need to pin flake8 because of package dependencies that cause it to downgrade and
-# therefore cause issues with linting since older versions do not take .flake8 as config
-flake8 = "^3.9.2"
-invoke = "*"
-ipython = "*"
-pydocstyle = "*"
-pylint = "*"
-pylint-django = "*"
 pytest = "*"
+requests_mock = "*"
+pyyaml = "*"
+black = "*"
+pylint = "*"
+pydocstyle = "*"
 yamllint = "*"
-Markdown = "*"
+bandit = "*"
+invoke = "*"
 toml = "*"
-# Rendering docs to HTML
-mkdocs = "1.3.1"
-# Material for MkDocs theme
-mkdocs-material = "8.4.2"
-# Render custom markdown for version added/changed/remove notes
-mkdocs-version-annotations = "1.0.0"
-# Automatic documentation from sources, for MkDocs
-mkdocstrings = "0.19"
-mkdocstrings-python = "0.7.1"
-
-[tool.poetry.extras]
-nautobot = ["nautobot"]
+flake8 = "*"
+mypy = "*"
+mkdocs = "^1.3.1"
+mkdocs-include-markdown-plugin = "^3.6.1"
 
 [tool.black]
 line-length = 120
@@ -76,11 +65,6 @@ exclude = '''
 )
 '''
 
-[tool.pylint.master]
-# Include the pylint_django plugin to avoid spurious warnings about Django patterns
-load-plugins="pylint_django"
-ignore=".venv"
-
 [tool.pylint.basic]
 # No docstrings required for private methods (Pylint default), or for test_ functions, or for inner Meta classes.
 no-docstring-rgx="^(_|test_|Meta$)"
@@ -88,8 +72,13 @@ no-docstring-rgx="^(_|test_|Meta$)"
 [tool.pylint.messages_control]
 # Line length is enforced by Black, so pylint doesn't need to check it.
 # Pylint and Black disagree about how to format multi-line arrays; Black wins.
+# too-many-branches disabled to supported nested logic in Operator.
+# protected-access disabled as we want test the method
 disable = """,
-    line-too-long
+    line-too-long,
+    bad-continuation,
+    too-many-branches,
+    protected-access
     """
 
 [tool.pylint.miscellaneous]
@@ -112,11 +101,27 @@ match-dir = "(?!tests|migrations|development)[^\\.].*"
 add_ignore = "D212"
 
 [build-system]
-requires = ["poetry_core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
 
 [tool.pytest.ini_options]
 testpaths = [
     "tests"
 ]
 addopts = "-vv --doctest-modules"
+
+[tool.mypy]
+exclude = [
+    '^tasks\.py',
+]
+
+[[tool.mypy.overrides]]
+module = [
+    "deepdiff",
+    "jmespath",
+]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+ignore_errors = true

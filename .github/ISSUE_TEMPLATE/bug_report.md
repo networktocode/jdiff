@@ -1,12 +1,11 @@
 ---
 name: 🐛 Bug Report
-about: Report a reproducible bug in the current release of lb_models
+about: Report a reproducible bug in the current release of jdiff
 ---
 
 ### Environment
 * Python version:  <!-- Example: 3.7.7 -->
-* Nautobot version:  <!-- Example: 1.4 -->
-* lb_models version:  <!-- Example: 0.1.0 -->
+* jdiff version:  <!-- Example: 1.0.0 -->
 
 <!-- What did you expect to happen? -->
 ### Expected Behavior

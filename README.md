@@ -1,66 +1,39 @@
-# lb_models
+# jdiff
 
-<!--
-Developer Note - Remove Me!
+`jdiff` is a lightweight Python library allowing you to examine structured data. `jdiff` provides an interface to intelligently compare--via key presense/absense and value comparison--JSON data objects
 
-The README will have certain links/images broken until the PR is merged into `develop`. Update the GitHub links with whichever branch you're using (main etc.) if different.
+Our primary use case is the examination of structured data returned from networking devices, such as:
 
-The logo of the project is a placeholder (docs/images/icon-lb_models.png) - please replace it with your app icon, making sure it's at least 200x200px and has a transparent background!
+* Compare the operational state of network devices pre and post change
+* Compare operational state of a device vs a "known healthy" state
+* Compare state of similar devices, such as a pair of leafs or a pair of backbone routers
+* Compare operational state of a component (interface, vrf, bgp peering, etc.) migrated from one device to another
 
-To avoid extra work and temporary links, make sure that publishing docs (or merging a PR) is done at the same time as setting up the docs site on RTD, then test everything.
--->
+However, the library fits other use cases where structured data needs to be operated on.
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/networktocode-llc/lb_models/develop/docs/images/icon-lb_models.png" class="logo" height="200px">
-  <br>
-  <a href="git@github.com:networktocode-llc/lb_models.git/actions"><img src="git@github.com:networktocode-llc/lb_models.git/actions/workflows/ci.yml/badge.svg?branch=main"></a>
-  <a href="https://docs.nautobot.com/projects/lb_models/en/latest"><img src="https://readthedocs.org/projects/lb_models/badge/"></a>
-  <a href="https://pypi.org/project/lb_models/"><img src="https://img.shields.io/pypi/v/lb_models"></a>
-  <a href="https://pypi.org/project/lb_models/"><img src="https://img.shields.io/pypi/dm/lb_models"></a>
-  <br>
-  An <a href="https://www.networktocode.com/nautobot/apps/">App</a> for <a href="https://nautobot.com/">Nautobot</a>.
-</p>
+## Installation 
 
-## Overview
+Install from PyPI:
 
-> Developer Note: Add a long (2-3 paragraphs) description of what the App does, what problems it solves, what functionality it adds to Nautobot, what external systems it works with etc.
+```
+pip install jdiff
+```
 
-### Screenshots
+## Intelligent Comparison
 
-> Developer Note: Add any representative screenshots of the App in action. These images should also be added to the `docs/user/app_use_cases.md` section.
+The library provides the ability to ask more intelligent questions of a given data structure. Comparisons of data such as "Is my pre change state the same as my post change state", is not that interesting of a comparison. The library intends to ask intelligent questions _like_:
 
-> Developer Note: Place the files in the `docs/images/` folder and link them using only full URLs from GitHub, for example: `![Overview](https://raw.githubusercontent.com/networktocode-llc/lb_models/develop/docs/images/plugin-overview.png)`. This absolute static linking is required to ensure the README renders properly in GitHub, the docs site, and any other external sites like PyPI.
+* Is the route table within 10% of routes before and after a change?
+* Is all of the interfaces that were up before the change, still up?
+* Are there at least 10k sessions of traffic on my firewall?
+* Is there there at least 2 interfaces up within lldp neighbors?
 
-More screenshots can be found in the [Using the App](https://docs.nautobot.com/projects/lb_models/en/latest/user/app_use_cases/) page in the documentation. Here's a quick overview of some of the plugin's added functionality:
+## Technical Overview
 
-![](https://raw.githubusercontent.com/networktocode-llc/lb_models/develop/docs/images/placeholder.png)
+The library heavily relies on [JMESPath](https://jmespath.org/) for traversing the JSON object and finding the values to be evaluated. More on that [here](#customized-jmespath).
 
-## Try it out!
-
-> Developer Note: Only keep this section if appropriate. Update link to correct sandbox.
-
-This App is installed in the Nautobot Community Sandbox found over at [demo.nautobot.com](https://demo.nautobot.com/)!
-
-> For a full list of all the available always-on sandbox environments, head over to the main page on [networktocode.com](https://www.networktocode.com/nautobot/sandbox-environments/).
+`jdiff` has been developed around diffing and testing structured data returned from Network APIs and libraries (such as TextFSM) but is equally useful when working or dealing with data returned from APIs.
 
 ## Documentation
 
-Full documentation for this App can be found over on the [Nautobot Docs](https://docs.nautobot.com) website:
-
-- [User Guide](https://docs.nautobot.com/projects/lb_models/en/latest/user/app_overview/) - Overview, Using the App, Getting Started.
-- [Administrator Guide](https://docs.nautobot.com/projects/lb_models/en/latest/admin/install/) - How to Install, Configure, Upgrade, or Uninstall the App.
-- [Developer Guide](https://docs.nautobot.com/projects/lb_models/en/latest/dev/contributing/) - Extending the App, Code Reference, Contribution Guide.
-- [Release Notes / Changelog](https://docs.nautobot.com/projects/lb_models/en/latest/admin/release_notes/).
-- [Frequently Asked Questions](https://docs.nautobot.com/projects/lb_models/en/latest/user/faq/).
-
-### Contributing to the Documentation
-
-You can find all the Markdown source for the App documentation under the [`docs`](git@github.com:networktocode-llc/lb_models.git/tree/develop/docs) folder in this repository. For simple edits, a Markdown capable editor is sufficient: clone the repository and edit away.
-
-If you need to view the fully-generated documentation site, you can build it with [MkDocs](https://www.mkdocs.org/). A container hosting the documentation can be started using the `invoke` commands (details in the [Development Environment Guide](https://docs.nautobot.com/projects/lb_models/en/latest/dev/dev_environment/#docker-development-environment)) on [http://localhost:8001](http://localhost:8001). Using this container, as your changes to the documentation are saved, they will be automatically rebuilt and any pages currently being viewed will be reloaded in your browser.
-
-Any PRs with fixes or improvements are very welcome!
-
-## Questions
-
-For any questions or comments, please check the [FAQ](https://docs.nautobot.com/projects/lb_models/en/latest/user/faq/) first. Feel free to also swing by the [Network to Code Slack](https://networktocode.slack.com/) (channel `#nautobot`), sign up [here](http://slack.networktocode.com/) if you don't have an account.
+Documentation is hosted on Read the Docs at [jdiff Documentation](https://jdiff.readthedocs.io/).

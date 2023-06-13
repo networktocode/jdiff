@@ -1,0 +1,16 @@
+{
+    "interfaces": {
+        "Ethernet1": {
+            "power_level": 4
+        },
+        "Ethernet2": {
+            "power_level": -4
+        },
+        "Ethernet3": {
+            "power_level": 3
+        },
+        "Ethernet4": {
+            "power_level": -4
+        }
+    }
+}
