@@ -21,9 +21,8 @@ def test_child_class_raises_exception():
     with pytest.raises(TypeError) as error:
         CheckTypeChild()  # pylint: disable=E0110
 
-    assert (
-        "Can't instantiate abstract class CheckTypeChild"
-        " with abstract methods _validate, evaluate" in error.value.__str__()
+    assert "Can't instantiate abstract class CheckTypeChild" " with abstract methods _validate, evaluate" in str(
+        error.value
     )
 
 
@@ -69,7 +68,7 @@ def tests_exceptions_init(check_type_str, exception_type, expected_in_output):
     """Tests exceptions when check object is initialized."""
     with pytest.raises(exception_type) as error:
         CheckType.create(check_type_str)
-    assert expected_in_output in error.value.__str__()
+    assert expected_in_output in str(error.value)
 
 
 exact_match_test_values_no_change = (
@@ -303,6 +302,7 @@ def test_param_match(filename, check_type_str, evaluate_args, path, expected_res
     # There is not concept of "pre" and "post" in parameter_match.
     data = load_json_file("parameter_match", filename)
     value = extract_data_from_json(data, path)
+    # pylint:disable=too-many-function-args
     actual_results = check.evaluate(evaluate_args["params"], value, evaluate_args["mode"])
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
         output=actual_results, expected_output=expected_result
@@ -350,6 +350,7 @@ def test_regex_match(filename, check_type_str, evaluate_args, path, expected_res
     # There is not concept of "pre" and "post" in parameter_match.
     data = load_json_file("api", filename)
     value = extract_data_from_json(data, path)
+    # pylint:disable=too-many-function-args
     actual_results = check.evaluate(evaluate_args["regex"], value, evaluate_args["mode"])
     assert actual_results == expected_result, ASSERT_FAIL_MESSAGE.format(
         output=actual_results, expected_output=expected_result
