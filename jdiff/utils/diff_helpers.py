@@ -23,7 +23,7 @@ def get_diff_iterables_items(diff_result: Mapping) -> DefaultDict:
     """
     get_dict_keys = re.compile(r"^root((\['\w.*'\])+)\[\d+\]$")
 
-    defaultdict_list = partial(defaultdict, list)
+    defaultdict_list = partial(defaultdict, list)  # type: partial
     result = defaultdict(defaultdict_list)  # type: DefaultDict
 
     items_removed = diff_result.get("iterable_item_removed")

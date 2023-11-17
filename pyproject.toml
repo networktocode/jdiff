@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jdiff"
-version = "0.0.4"
+version = "0.0.5"
 description = "A light-weight library to compare structured output from network devices show commands."
 authors = ["Network to Code, LLC <info@networktocode.com>"]
 license = "Apache-2.0"
@@ -22,9 +22,9 @@ include = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.7.0"
+python = "^3.8"
 deepdiff = ">=5.5.0 <7.0"
-jmespath = "^0.10.0"
+jmespath = "^1.0.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
@@ -77,7 +77,6 @@ no-docstring-rgx="^(_|test_|Meta$)"
 # protected-access disabled as we want test the method
 disable = """,
     line-too-long,
-    bad-continuation,
     too-many-branches,
     protected-access
     """

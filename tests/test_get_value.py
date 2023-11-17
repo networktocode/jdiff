@@ -17,7 +17,7 @@ def test_jmspath_return_none(jmspath):
     with pytest.raises(TypeError) as error:
         extract_data_from_json(data=data, path=jmspath)
 
-    assert "JMSPath returned 'None'. Please, verify your JMSPath regex." in error.value.__str__()
+    assert "JMSPath returned 'None'. Please, verify your JMSPath regex." in str(error.value)
 
 
 test_cases_extract_data_no_ref_key = [
