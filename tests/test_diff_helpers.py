@@ -4,8 +4,8 @@ from jdiff.utils.diff_helpers import dict_merger, group_value, fix_deepdiff_key_
 
 def test_dict_merger():
     """Tests that dict is merged as expected and duplicates identified."""
-    original_dict = dict(key_1="my_key_1", key_5="my_key_5")
-    dict_to_merge = dict(key_1="my_key_1", key_2="my_key_2", key_3="my_key_3")
+    original_dict = {"key_1": "my_key_1", "key_5": "my_key_5"}
+    dict_to_merge = {"key_1": "my_key_1", "key_2": "my_key_2", "key_3": "my_key_3"}
     dict_merger(original_dict, dict_to_merge)
 
     assert original_dict == {
