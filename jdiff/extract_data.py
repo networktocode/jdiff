@@ -87,6 +87,8 @@ def extract_data_from_json(data: Union[Mapping, List], path: str = "*", exclude:
         else:
             raise ValueError("Reference Key normalization failure. Please verify data type returned.")
 
-        return keys_values_zipper(list_of_reference_keys, paired_key_value)
+        normalized = keys_values_zipper(list_of_reference_keys, paired_key_value)
+        # Data between pre and post may come in different order, so it needs to be sorted.
+        return sorted(normalized, key=lambda arg: list(arg.keys()))
 
     return values
