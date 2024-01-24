@@ -11,13 +11,6 @@ operator_all_same = (
     (
         [
             {
-                "7.7.7.7": {
-                    "peerGroup": "EVPN-OVERLAY-SPINE",
-                    "state": "Idle",
-                    "vrf": "default",
-                }
-            },
-            {
                 "10.1.0.0": {
                     "peerGroup": "IPv4-UNDERLAY-SPINE",
                     "state": "Idle",
@@ -34,6 +27,13 @@ operator_all_same = (
             {
                 "10.64.207.255": {
                     "peerGroup": "IPv4-UNDERLAY-MLAG-PEER",
+                    "state": "Idle",
+                    "vrf": "default",
+                }
+            },
+            {
+                "7.7.7.7": {
+                    "peerGroup": "EVPN-OVERLAY-SPINE",
                     "state": "Idle",
                     "vrf": "default",
                 }
@@ -124,10 +124,10 @@ operator_not_in = (
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
     (
         [
-            {"7.7.7.7": {"prefixesSent": 50}},
             {"10.1.0.0": {"prefixesSent": 50}},
             {"10.2.0.0": {"prefixesSent": 50}},
             {"10.64.207.255": {"prefixesSent": 50}},
+            {"7.7.7.7": {"prefixesSent": 50}},
         ],
         False,
     ),
@@ -146,10 +146,10 @@ operator_not_in_range = (
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesSent]",
     (
         [
-            {"7.7.7.7": {"prefixesSent": 50}},
             {"10.1.0.0": {"prefixesSent": 50}},
             {"10.2.0.0": {"prefixesSent": 50}},
             {"10.64.207.255": {"prefixesSent": 50}},
+            {"7.7.7.7": {"prefixesSent": 50}},
         ],
         False,
     ),
@@ -191,22 +191,22 @@ def test_operator(filename, check_type_str, evaluate_args, path, expected_result
     [
         (
             [
-                {"7.7.7.7": {"peerGroup": "EVPN-OVERLAY-SPINE", "vrf": "default", "state": "Connected"}},
                 {"10.1.0.0": {"peerGroup": "EVPN-OVERLAY-SPINE", "vrf": "default", "state": "Connected"}},
+                {"7.7.7.7": {"peerGroup": "EVPN-OVERLAY-SPINE", "vrf": "default", "state": "Connected"}},
             ],
             True,
             ([], True),
         ),
         (
             [
-                {"7.7.7.7": {"peerGroup": "EVPN-OVERLAY-SPINE", "vrf": "default", "state": "Connected"}},
                 {"10.1.0.0": {"peerGroup": "IPv4-UNDERLAY-SPINE", "vrf": "default", "state": "Connected"}},
+                {"7.7.7.7": {"peerGroup": "EVPN-OVERLAY-SPINE", "vrf": "default", "state": "Connected"}},
             ],
             True,
             (
                 [
-                    {"7.7.7.7": {"peerGroup": "EVPN-OVERLAY-SPINE", "vrf": "default", "state": "Connected"}},
                     {"10.1.0.0": {"peerGroup": "IPv4-UNDERLAY-SPINE", "vrf": "default", "state": "Connected"}},
+                    {"7.7.7.7": {"peerGroup": "EVPN-OVERLAY-SPINE", "vrf": "default", "state": "Connected"}},
                 ],
                 False,
             ),
@@ -227,8 +227,8 @@ def test_operator(filename, check_type_str, evaluate_args, path, expected_result
         ),
         (
             [
-                {"7.7.7.7": {"peerGroup": "EVPN-OVERLAY-SPINE", "vrf": "default", "state": "Connected"}},
                 {"10.1.0.0": {"peerGroup": "IPv4-UNDERLAY-SPINE", "vrf": "default", "state": "Connected"}},
+                {"7.7.7.7": {"peerGroup": "EVPN-OVERLAY-SPINE", "vrf": "default", "state": "Connected"}},
             ],
             False,
             ([], True),
