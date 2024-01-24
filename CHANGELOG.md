@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.0.6
+- Sort the data when data normalization is used with key anchoring
+
+## v0.0.5
+- Update jmespath dependency
+- Drop python 3.7 support
+
 ## v0.0.4
 - Relax deepdiff dependency
 
