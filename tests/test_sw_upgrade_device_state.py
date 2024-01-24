@@ -192,10 +192,36 @@ def test_lldp_neighbor_state(platform, command, check_should_pass):
     """Test LLDP neighbors with exact match."""
     command_pre = load_json_file("sw_upgrade", f"{platform}_{command}.json")
     command_post = deepcopy(command_pre)
+    jpath = "[*].[neighbor,capabilities,$local_interface$,neighbor_interface]"
+    command_pre_normalized = extract_data_from_json(command_pre, jpath)
+    command_post_normalized = extract_data_from_json(command_post, jpath)
 
     if check_should_pass is False:
-        command_post = command_post[:2]
+        command_post_normalized = command_post_normalized[:2]
 
     check = CheckType.create("exact_match")
-    eval_results, passed = check.evaluate(command_post, command_pre)
+    eval_results, passed = check.evaluate(command_pre_normalized, command_post_normalized)
     assert passed is check_should_pass, f"FAILED, eval_result: {eval_results}"
+
+
+@pytest.mark.parametrize(
+    "platform, command",
+    [
+        ("arista_eos", "show_lldp_neighbors"),
+        ("cisco_ios", "show_lldp_neighbors"),
+        ("cisco_nxos", "show_lldp_neighbors"),
+    ],
+)
+def test_lldp_neighbor_state_changed_order(platform, command):
+    """Test LLDP neighbors with exact match, when post-check is in reversed order."""
+    command_pre = load_json_file("sw_upgrade", f"{platform}_{command}.json")
+    command_post = deepcopy(command_pre)
+    command_post.reverse()  # reverse data for the test
+
+    jpath = "[*].[neighbor,capabilities,$local_interface$,neighbor_interface]"
+    command_pre_normalized = extract_data_from_json(command_pre, jpath)
+    command_post_normalized = extract_data_from_json(command_post, jpath)
+
+    check = CheckType.create("exact_match")
+    eval_results, passed = check.evaluate(command_pre_normalized, command_post_normalized)
+    assert passed is True, f"FAILED, eval_result: {eval_results}"
