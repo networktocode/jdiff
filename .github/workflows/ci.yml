@@ -11,7 +11,7 @@ on: # yamllint disable-line rule:truthy rule:comments
 
 jobs:
   black:
-    runs-on: "ubuntu-20.04"
+    runs-on: "ubuntu-24.04"
     env:
       INVOKE_LOCAL: "True"
     steps:
@@ -22,7 +22,7 @@ jobs:
       - name: "Linting: black"
         run: "poetry run invoke black"
   mypy:
-    runs-on: "ubuntu-20.04"
+    runs-on: "ubuntu-24.04"
     env:
       INVOKE_LOCAL: "True"
     steps:
@@ -33,7 +33,7 @@ jobs:
       - name: "Linting: mypy"
         run: "poetry run invoke mypy"
   bandit:
-    runs-on: "ubuntu-20.04"
+    runs-on: "ubuntu-24.04"
     env:
       INVOKE_LOCAL: "True"
     steps:
@@ -44,7 +44,7 @@ jobs:
       - name: "Linting: bandit"
         run: "poetry run invoke bandit"
   pydocstyle:
-    runs-on: "ubuntu-20.04"
+    runs-on: "ubuntu-24.04"
     env:
       INVOKE_LOCAL: "True"
     steps:
@@ -55,7 +55,7 @@ jobs:
       - name: "Linting: pydocstyle"
         run: "poetry run invoke pydocstyle"
   flake8:
-    runs-on: "ubuntu-20.04"
+    runs-on: "ubuntu-24.04"
     env:
       INVOKE_LOCAL: "True"
     steps:
@@ -66,7 +66,7 @@ jobs:
       - name: "Linting: flake8"
         run: "poetry run invoke flake8"
   yamllint:
-    runs-on: "ubuntu-20.04"
+    runs-on: "ubuntu-24.04"
     env:
       INVOKE_LOCAL: "True"
     steps:
@@ -84,7 +84,7 @@ jobs:
       - "yamllint"
       - "black"
       - "mypy"
-    runs-on: "ubuntu-20.04"
+    runs-on: "ubuntu-24.04"
     strategy:
       fail-fast: true
       matrix:
@@ -106,7 +106,7 @@ jobs:
       fail-fast: true
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11"]
-    runs-on: "ubuntu-20.04"
+    runs-on: "ubuntu-24.04"
     env:
       PYTHON_VER: "${{ matrix.python-version }}"
       INVOKE_LOCAL: "True"
@@ -121,7 +121,7 @@ jobs:
     needs:
       - "pytest"
     name: "Publish to GitHub"
-    runs-on: "ubuntu-20.04"
+    runs-on: "ubuntu-24.04"
     if: "startsWith(github.ref, 'refs/tags/v')"
     steps:
       - name: "Check out repository code"
@@ -150,7 +150,7 @@ jobs:
     needs:
       - "pytest"
     name: "Push Package to PyPI"
-    runs-on: "ubuntu-20.04"
+    runs-on: "ubuntu-24.04"
     if: "startsWith(github.ref, 'refs/tags/v')"
     steps:
       - name: "Check out repository code"
@@ -177,7 +177,7 @@ jobs:
       - "publish_gh"
       - "publish_pypi"
     name: "Send notification to the Slack"
-    runs-on: "ubuntu-20.04"
+    runs-on: "ubuntu-24.04"
     env:
       SLACK_WEBHOOK_URL: "${{ secrets.SLACK_WEBHOOK_URL }}"
       SLACK_MESSAGE: >-
