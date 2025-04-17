@@ -25,10 +25,9 @@ def is_truthy(arg):
     val = str(arg).lower()
     if val in ("y", "yes", "t", "true", "on", "1"):
         return True
-    elif val in ("n", "no", "f", "false", "off", "0"):
+    if val in ("n", "no", "f", "false", "off", "0"):
         return False
-    else:
-        raise ValueError(f"Invalid truthy value: `{arg}`")
+    raise ValueError(f"Invalid truthy value: `{arg}`")
 
 
 PYPROJECT_CONFIG = toml.load("pyproject.toml")
