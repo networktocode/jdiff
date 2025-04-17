@@ -111,6 +111,8 @@ jobs:
         uses: "networktocode/gh-action-setup-poetry-environment@v6"
         with:
           poetry-version: "1.8.5"
+          # Default install options is "--only dev", but we need to install all dependencies
+          poetry-install-options: ""
       - name: "Linting: Pylint"
         run: "poetry run invoke pylint"
   pytest:
@@ -131,6 +133,8 @@ jobs:
         uses: "networktocode/gh-action-setup-poetry-environment@v6"
         with:
           poetry-version: "1.8.5"
+          # Default install options is "--only dev", but we need to install all dependencies
+          poetry-install-options: ""
       - name: "Run Tests"
         run: "poetry run invoke pytest"
   publish_gh:
