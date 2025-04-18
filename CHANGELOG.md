@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.0.7
+- Fix exclude to work with lists [#123](https://github.com/networktocode/jdiff/pull/123)
+
 ## v0.0.6
 - Sort the data when data normalization is used with key anchoring
 
