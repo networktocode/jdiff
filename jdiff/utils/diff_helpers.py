@@ -64,8 +64,12 @@ def fix_deepdiff_key_names(obj: Mapping) -> Dict:
     result = {}  # type: Dict
     for key, value in obj.items():
         key_parts = re.findall(REGEX_PATTERN_RELEVANT_KEYS, key)
-        if not key_parts:  # If key parts can't be find, keep original key so data is not lost.
-            key_parts = [key.replace("root", "index_element")]  # replace root from DeepDiff with more meaningful name.
+        if (
+            not key_parts
+        ):  # If key parts can't be find, keep original key so data is not lost.
+            key_parts = [
+                key.replace("root", "index_element")
+            ]  # replace root from DeepDiff with more meaningful name.
         partial_res = group_value(key_parts, value)
         dict_merger(result, partial_res)
     return result
@@ -81,10 +85,16 @@ def group_value(tree_list: List, value: Dict) -> Dict:
 def dict_merger(original_dict: Dict, dict_to_merge: Dict):
     """Function to merge a dictionary (dict_to_merge) recursively into the original_dict."""
     for key in dict_to_merge.keys():
-        if key in original_dict and isinstance(original_dict[key], dict) and isinstance(dict_to_merge[key], dict):
+        if (
+            key in original_dict
+            and isinstance(original_dict[key], dict)
+            and isinstance(dict_to_merge[key], dict)
+        ):
             dict_merger(original_dict[key], dict_to_merge[key])
         elif key in original_dict.keys():
-            original_dict[key + "_dup!"] = dict_to_merge[key]  # avoid overwriting existing keys.
+            original_dict[key + "_dup!"] = dict_to_merge[
+                key
+            ]  # avoid overwriting existing keys.
         else:
             original_dict[key] = dict_to_merge[key]
 
@@ -122,22 +132,6 @@ def set_nested_value(data, keys, value):
         set_nested_value(data[keys[0]], keys[1:], value)
 
 
-def all_values_empty(input_dict):
-    """
-    Checks if all values in a dictionary are empty objects (empty string, list, or dictionary).
-
-    Args:
-        input_dict: The dictionary to check.
-
-    Returns:
-        True if all values are empty, False otherwise.
-    """
-    for value in input_dict.values():
-        if value:  # Empty objects evaluate to False in a boolean context
-            return False
-    return True
-
-
 def parse_diff(jdiff_evaluate_response, actual, intended, match_config):
     """Parse jdiff evaluate result into missing and extra dictionaries."""
     extra = {}
@@ -145,7 +139,11 @@ def parse_diff(jdiff_evaluate_response, actual, intended, match_config):
 
     def process_diff(_map, extra_map, missing_map, previous_key=None):
         for key, value in _map.items():
-            if isinstance(value, dict) and "new_value" in value and "old_value" in value:
+            if (
+                isinstance(value, dict)
+                and "new_value" in value
+                and "old_value" in value
+            ):
                 extra_map[key] = value["old_value"]
                 missing_map[key] = value["new_value"]
             elif isinstance(value, str):
