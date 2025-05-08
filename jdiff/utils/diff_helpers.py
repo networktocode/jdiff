@@ -143,7 +143,7 @@ def parse_diff(jdiff_evaluate_response, actual, intended, match_config):
     extra = {}
     missing = {}
 
-    def process_diff(_map, extra_map, missing_map):
+    def process_diff(_map, extra_map, missing_map, previous_key=None):
         for key, value in _map.items():
             if isinstance(value, dict) and "new_value" in value and "old_value" in value:
                 extra_map[key] = value["old_value"]
@@ -157,13 +157,13 @@ def parse_diff(jdiff_evaluate_response, actual, intended, match_config):
                     set_nested_value(missing_map, key_chain[1::], new_value)
             elif isinstance(value, defaultdict):
                 if dict(value).get("new"):
-                    missing[key] = dict(value).get("new", {})
+                    missing[previous_key][key] = dict(value).get("new", {})
                 if dict(value).get("missing"):
-                    extra_map[key] = dict(value).get("missing", {})
+                    extra_map[previous_key][key] = dict(value).get("missing", {})
             elif isinstance(value, dict):
                 extra_map[key] = {}
                 missing_map[key] = {}
-                process_diff(value, extra_map[key], missing_map[key])
+                process_diff(value, extra_map[key], missing_map[key], previous_key=key)
         return extra_map, missing_map
 
     extras, missing = process_diff(jdiff_evaluate_response, extra, missing)
