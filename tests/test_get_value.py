@@ -1,4 +1,5 @@
 """Test extract_data_from_json."""
+
 import pytest
 from jdiff import extract_data_from_json
 from .utility import load_json_file, ASSERT_FAIL_MESSAGE

@@ -1,4 +1,5 @@
 """Tests for typical software upgrade device state check."""
+
 from copy import deepcopy
 import pytest
 from jdiff import CheckType, extract_data_from_json

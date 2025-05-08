@@ -2,7 +2,8 @@
 
 import re
 from collections import defaultdict
-from functools import partial
+from functools import partial, reduce
+from operator import getitem
 from typing import DefaultDict, Dict, List, Mapping
 
 REGEX_PATTERN_RELEVANT_KEYS = r"'([A-Za-z0-9_\./\\-]*)'"
@@ -63,12 +64,8 @@ def fix_deepdiff_key_names(obj: Mapping) -> Dict:
     result = {}  # type: Dict
     for key, value in obj.items():
         key_parts = re.findall(REGEX_PATTERN_RELEVANT_KEYS, key)
-        if (
-            not key_parts
-        ):  # If key parts can't be find, keep original key so data is not lost.
-            key_parts = [
-                key.replace("root", "index_element")
-            ]  # replace root from DeepDiff with more meaningful name.
+        if not key_parts:  # If key parts can't be find, keep original key so data is not lost.
+            key_parts = [key.replace("root", "index_element")]  # replace root from DeepDiff with more meaningful name.
         partial_res = group_value(key_parts, value)
         dict_merger(result, partial_res)
     return result
@@ -84,16 +81,10 @@ def group_value(tree_list: List, value: Dict) -> Dict:
 def dict_merger(original_dict: Dict, dict_to_merge: Dict):
     """Function to merge a dictionary (dict_to_merge) recursively into the original_dict."""
     for key in dict_to_merge.keys():
-        if (
-            key in original_dict
-            and isinstance(original_dict[key], dict)
-            and isinstance(dict_to_merge[key], dict)
-        ):
+        if key in original_dict and isinstance(original_dict[key], dict) and isinstance(dict_to_merge[key], dict):
             dict_merger(original_dict[key], dict_to_merge[key])
         elif key in original_dict.keys():
-            original_dict[key + "_dup!"] = dict_to_merge[
-                key
-            ]  # avoid overwriting existing keys.
+            original_dict[key + "_dup!"] = dict_to_merge[key]  # avoid overwriting existing keys.
         else:
             original_dict[key] = dict_to_merge[key]
 
@@ -106,7 +97,45 @@ def _parse_index_element_string(index_element_string):
     if match:
         for inner_key in match[1::]:
             result[inner_key] = ""
-    return result
+    return match, result
+
+
+def set_nested_value(data, keys, value):
+    """
+    Recursively sets a value in a nested dictionary, given a list of keys.
+
+    Args:
+        data (dict): The nested dictionary to modify.
+        keys (list): A list of keys to access the target value.
+        value: The value to set.
+
+    Returns:
+        None: The function modifies the dictionary in place.  Returns None.
+    """
+    if not keys:
+        return  # Should not happen, but good to have.
+    if len(keys) == 1:
+        data[keys[0]] = value
+    else:
+        if keys[0] not in data:
+            data[keys[0]] = {}  # Create the nested dictionary if it doesn't exist
+        set_nested_value(data[keys[0]], keys[1:], value)
+
+
+def all_values_empty(input_dict):
+    """
+    Checks if all values in a dictionary are empty objects (empty string, list, or dictionary).
+
+    Args:
+        input_dict: The dictionary to check.
+
+    Returns:
+        True if all values are empty, False otherwise.
+    """
+    for value in input_dict.values():
+        if value:  # Empty objects evaluate to False in a boolean context
+            return False
+    return True
 
 
 def parse_diff(jdiff_evaluate_response, actual, intended, match_config):
@@ -116,67 +145,39 @@ def parse_diff(jdiff_evaluate_response, actual, intended, match_config):
 
     def process_diff(_map, extra_map, missing_map):
         for key, value in _map.items():
-            if (
-                isinstance(value, dict)
-                and "new_value" in value
-                and "old_value" in value
-            ):
+            if isinstance(value, dict) and "new_value" in value and "old_value" in value:
                 extra_map[key] = value["old_value"]
                 missing_map[key] = value["new_value"]
             elif isinstance(value, str):
                 if "missing" in value:
                     extra_map[key] = actual.get(match_config, {}).get(key)
                 if "new" in value:
-                    new_key = _parse_index_element_string(key)
-                    new_key[key] = intended.get(match_config, {}).get(key)
-                    missing_map.update(new_key)
+                    key_chain, _ = _parse_index_element_string(key)
+                    new_value = reduce(getitem, key_chain, intended)
+                    set_nested_value(missing_map, key_chain[1::], new_value)
+            elif isinstance(value, defaultdict):
+                if dict(value).get("new"):
+                    missing[key] = dict(value).get("new", {})
+                if dict(value).get("missing"):
+                    extra_map[key] = dict(value).get("missing", {})
             elif isinstance(value, dict):
                 extra_map[key] = {}
                 missing_map[key] = {}
                 process_diff(value, extra_map[key], missing_map[key])
         return extra_map, missing_map
 
-    extras, missings = process_diff(jdiff_evaluate_response, extra, missing)
-    return extras, missings
-
-
-# result = {'hostname': {'new_value': 'veos', 'old_value': 'veos-0'}, 'domain-name': 'missing'}
-# result = {'domain-name': 'missing'}
-# result = {'hostname': {'new_value': 'veos', 'old_value': 'veos-0'}, 'domain-name': 'missing', "index_element['openconfig-system:config']['ip name']": 'new'}
-# result = {'domain-name': 'missing','hostname': 'missing', "index_element['openconfig-system:config']['ip name']": 'new'}
-# result = {'servers': {'server': defaultdict(<class 'list'>, {'missing': [{'address': '1.us.pool.ntp.org', 'config': {'address': '1.us.pool.ntp.org'}, 'state': {'address': '1.us.pool.ntp.org'}}]})}}
-
-# '''
-# ```
-# from jdiff import CheckType
-
-# a = {
-#     "openconfig-system:ntp": {
-#         "servers": {
-#             "server": [
-#                 {
-#                     "address": "1.us.pool.ntp.org",
-#                     "config": {
-#                         "address": "1.us.pool.ntp.org"
-#                     },
-#                     "state": {
-#                         "address": "1.us.pool.ntp.org"
-#                     }
-#                 }
-#             ]
-#         }
-#     }
-# }
-
-# i = {
-#     "openconfig-system:ntp": {
-#         "servers": {
-#             "server": []
-#         }
-#     }
-# }
-
-# jdiff_param_match = CheckType.create("exact_match")
-# result, compliant = jdiff_param_match.evaluate(a, i)
-# ```
-# '''
+    extras, missing = process_diff(jdiff_evaluate_response, extra, missing)
+    # Don't like this, but with less the performant way of doing it right now it works to clear out
+    # Any empty dicts that are left over from the diff.
+    # This is a bit of a hack, but it works for now.
+    final_extras = extras.copy()
+    final_missing = missing.copy()
+    for key, value in extras.items():
+        if isinstance(value, dict):
+            if not value:
+                del final_extras[key]
+    for key, value in missing.items():
+        if isinstance(value, dict):
+            if not value:
+                del final_missing[key]
+    return final_extras, final_missing

@@ -1,4 +1,5 @@
 """Check Type unit tests."""
+
 import pytest
 from jdiff.check_types import (
     CheckType,

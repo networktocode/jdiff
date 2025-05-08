@@ -16,9 +16,7 @@ from .utils.jmespath_parsers import (
 )
 
 
-def extract_data_from_json(
-    data: Union[Mapping, List], path: str = "*", exclude: Optional[List] = None
-) -> Any:
+def extract_data_from_json(data: Union[Mapping, List], path: str = "*", exclude: Optional[List] = None) -> Any:
     """Return wanted data from outpdevice data based on the check path. See unit test for complete example.
 
     Get the wanted values to be evaluated if JMESPath expression is defined,
@@ -37,16 +35,12 @@ def extract_data_from_json(
     """
     if exclude and isinstance(data, Dict):
         if not isinstance(exclude, list):
-            raise ValueError(
-                f"Exclude list must be defined as a list. You have {type(exclude)}"
-            )
+            raise ValueError(f"Exclude list must be defined as a list. You have {type(exclude)}")
         # exclude unwanted elements
         exclude_filter(data, exclude)
 
     if not path:
-        warnings.warn(
-            "JMSPath cannot be empty string or type 'None'. Path argument reverted to default value '*'"
-        )
+        warnings.warn("JMSPath cannot be empty string or type 'None'. Path argument reverted to default value '*'")
         path = "*"
 
     if path == "*":
@@ -85,27 +79,19 @@ def extract_data_from_json(
     # Based on the expression or data we might have different data types
     # therefore we need to normalize.
     if re.search(r"\$.*\$", path):
-        paired_key_value = associate_key_of_my_value(
-            jmespath_value_parser(path), values
-        )
+        paired_key_value = associate_key_of_my_value(jmespath_value_parser(path), values)
         wanted_reference_keys = jmespath.search(jmespath_refkey_parser(path), data)
 
-        if isinstance(
-            wanted_reference_keys, dict
-        ):  # when wanted_reference_keys is dict() type
+        if isinstance(wanted_reference_keys, dict):  # when wanted_reference_keys is dict() type
             list_of_reference_keys = list(wanted_reference_keys.keys())
         elif any(
             isinstance(element, list) for element in wanted_reference_keys
         ):  # when wanted_reference_keys is a nested list
             list_of_reference_keys = flatten_list(wanted_reference_keys)[0]
-        elif isinstance(
-            wanted_reference_keys, list
-        ):  # when wanted_reference_keys is a list
+        elif isinstance(wanted_reference_keys, list):  # when wanted_reference_keys is a list
             list_of_reference_keys = wanted_reference_keys
         else:
-            raise ValueError(
-                "Reference Key normalization failure. Please verify data type returned."
-            )
+            raise ValueError("Reference Key normalization failure. Please verify data type returned.")
 
         normalized = keys_values_zipper(list_of_reference_keys, paired_key_value)
         # Data between pre and post may come in different order, so it needs to be sorted.

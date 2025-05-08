@@ -1,4 +1,5 @@
 """Diff generator tests."""
+
 import pytest
 from jdiff.evaluators import diff_generator
 from jdiff import extract_data_from_json

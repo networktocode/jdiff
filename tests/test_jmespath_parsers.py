@@ -1,4 +1,5 @@
 """jmespath parser unit tests."""
+
 import pytest
 from jdiff.utils.jmespath_parsers import (
     jmespath_value_parser,

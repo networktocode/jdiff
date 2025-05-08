@@ -5,6 +5,7 @@ This utility interfaces the custom jdiff jmespath expression with the jmespath l
 From one expression defined in jdiff, we will derive two expressions: one expression that traverse the json output and get the
 evaluated bit of it, the second will target the reference key relative to the value to evaluate. More on README.md
 """
+
 import re
 from typing import Mapping, List, Union
 

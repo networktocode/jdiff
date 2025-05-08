@@ -1,4 +1,5 @@
 """Data Normalization utilities."""
+
 from typing import List, Generator, Union, Dict
 
 

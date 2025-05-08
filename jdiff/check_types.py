@@ -1,4 +1,5 @@
 """CheckType Implementation."""
+
 from typing import List, Tuple, Dict, Any, Union
 from abc import ABC, abstractmethod
 from .evaluators import diff_generator, parameter_evaluator, regex_evaluator, operator_evaluator
