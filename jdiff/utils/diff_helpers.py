@@ -1,8 +1,9 @@
 """Diff helpers."""
+
 import re
 from collections import defaultdict
 from functools import partial
-from typing import Mapping, Dict, List, DefaultDict
+from typing import DefaultDict, Dict, List, Mapping
 
 REGEX_PATTERN_RELEVANT_KEYS = r"'([A-Za-z0-9_\./\\-]*)'"
 

@@ -1,8 +1,10 @@
 """Test extract_data_from_json."""
-import pytest
-from jdiff import extract_data_from_json
-from .utility import load_json_file, ASSERT_FAIL_MESSAGE
 
+import pytest
+
+from jdiff import extract_data_from_json
+
+from .utility import ASSERT_FAIL_MESSAGE, load_json_file
 
 test_cases_extract_data_none = [
     "global[*]",

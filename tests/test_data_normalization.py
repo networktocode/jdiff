@@ -1,8 +1,10 @@
 "Flatten list unit test"
-import pytest
-from jdiff.utils.data_normalization import flatten_list
-from .utility import ASSERT_FAIL_MESSAGE
 
+import pytest
+
+from jdiff.utils.data_normalization import flatten_list
+
+from .utility import ASSERT_FAIL_MESSAGE
 
 flatten_list_case_1 = (
     [[[[-1, 0], [-1, 0]]]],

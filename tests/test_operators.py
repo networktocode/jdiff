@@ -1,7 +1,10 @@
 """Unit tests for operator check-type."""
+
 import pytest
+
 from jdiff import CheckType, extract_data_from_json
-from .utility import load_json_file, ASSERT_FAIL_MESSAGE
+
+from .utility import ASSERT_FAIL_MESSAGE, load_json_file
 
 operator_all_same = (
     "pre.json",
