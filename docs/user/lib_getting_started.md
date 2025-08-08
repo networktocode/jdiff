@@ -53,7 +53,7 @@ Below are the names of checks provided by the library. These both describe the t
 
 ## Workflow
 
-| ![jdiff Workflow](./images/jdiff-workflow.png) |
+| ![jdiff Workflow](../images/jdiff-workflow.png) |
 |:---:|
 | **`jdiff` Workflow** |
 
