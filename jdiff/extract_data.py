@@ -33,7 +33,7 @@ def extract_data_from_json(data: Union[Mapping, List], path: str = "*", exclude:
     Returns:
         Evaluated data, may be anything depending on JMESPath used.
     """
-    if exclude and isinstance(data, Dict):
+    if exclude and isinstance(data, (Dict, List)):
         if not isinstance(exclude, list):
             raise ValueError(f"Exclude list must be defined as a list. You have {type(exclude)}")
         # exclude unwanted elements
