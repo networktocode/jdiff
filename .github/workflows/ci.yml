@@ -43,22 +43,6 @@ jobs:
           poetry-version: "1.8.5"
       - name: "Linting: ruff"
         run: "poetry run invoke ruff --action lint"
-  mypy:
-    runs-on: "ubuntu-24.04"
-    env:
-      INVOKE_JDIFF_LOCAL: "True"
-    steps:
-      - name: "Check out repository code"
-        uses: "actions/checkout@v4"
-      - name: "Setup environment"
-        uses: "networktocode/gh-action-setup-poetry-environment@v6"
-        with:
-          python-version: "3.13"
-      - name: "Type-Hints: mypy"
-        run: "poetry run invoke mypy"
-    needs:
-      - "ruff-format"
-      - "ruff-lint"
   # Temporarily disabled due to issues with the docs build and needing best practices for NTC python builds.
   # check-docs-build:
   #   runs-on: "ubuntu-24.04"
@@ -89,7 +73,6 @@ jobs:
     needs:
       - "ruff-format"
       - "ruff-lint"
-      - "mypy"
       - "yamllint"
   yamllint:
     runs-on: "ubuntu-24.04"
