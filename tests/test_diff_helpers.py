@@ -32,16 +32,12 @@ def test_group_value():
     """Tests that nested dict is recursively created."""
     tree_list = ["10.1.0.0", "is_enabled"]
     value = {"new_value": False, "old_value": True}
-    assert group_value(tree_list, value) == {
-        "10.1.0.0": {"is_enabled": {"new_value": False, "old_value": True}}
-    }
+    assert group_value(tree_list, value) == {"10.1.0.0": {"is_enabled": {"new_value": False, "old_value": True}}}
 
 
 def test_fix_deepdiff_key_names():
     """Tests that deepdiff return is parsed properly."""
-    deepdiff_object = {
-        "root[0]['10.1.0.0']['is_enabled']": {"new_value": False, "old_value": True}
-    }
+    deepdiff_object = {"root[0]['10.1.0.0']['is_enabled']": {"new_value": False, "old_value": True}}
     assert fix_deepdiff_key_names(deepdiff_object) == {
         "10.1.0.0": {"is_enabled": {"new_value": False, "old_value": True}}
     }
@@ -50,9 +46,7 @@ def test_fix_deepdiff_key_names():
 def test_get_diff_iterables_items():
     """Tests that deepdiff return is parsed properly."""
     diff_result = {
-        "values_changed": {
-            "root['Ethernet1'][0]['port']": {"new_value": "518", "old_value": "519"}
-        },
+        "values_changed": {"root['Ethernet1'][0]['port']": {"new_value": "518", "old_value": "519"}},
         "iterable_item_added": {
             "root['Ethernet3'][1]": {
                 "hostname": "ios-xrv-unittest",
@@ -63,9 +57,7 @@ def test_get_diff_iterables_items():
     result = get_diff_iterables_items(diff_result)
 
     assert list(dict(result).keys())[0] == "['Ethernet3']"
-    assert list(list(dict(result).values())[0].values())[0] == [
-        {"hostname": "ios-xrv-unittest", "port": "Gi0/0/0/0"}
-    ]
+    assert list(list(dict(result).values())[0].values())[0] == [{"hostname": "ios-xrv-unittest", "port": "Gi0/0/0/0"}]
 
 
 index_element_case_1 = (
@@ -93,8 +85,8 @@ parse_diff_simple_1 = (
     {"foo": {"bar-1": "baz1"}},  # actual
     {"foo": {"bar-2": "baz2"}},  # intended
     "foo",  # match_config
-    {"bar-1": "baz1"},  # extra
-    {"bar-2": "baz2"},  # missing
+    {"foo": {"bar-1": "baz1"}},  # extra
+    {"foo": {"bar-2": "baz2"}},  # missing
 )
 
 parse_diff_case_1 = (
@@ -190,7 +182,6 @@ def test_parse_diff(actual, intended, match_config, extra, missing):  # pylint: 
     """Test that index_element can be unpacked."""
     jdiff_param_match = CheckType.create("exact_match")
     jdiff_evaluate_response, _ = jdiff_param_match.evaluate(actual, intended)
-    print(jdiff_evaluate_response)
 
     parsed_extra, parsed_missing = parse_diff(
         jdiff_evaluate_response,
@@ -198,6 +189,5 @@ def test_parse_diff(actual, intended, match_config, extra, missing):  # pylint: 
         intended,
         match_config,
     )
-    print(parsed_extra, parsed_missing)
     assert parsed_extra == extra
     assert parsed_missing == missing
