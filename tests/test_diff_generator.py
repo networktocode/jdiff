@@ -1,9 +1,11 @@
 """Diff generator tests."""
-import pytest
-from jdiff.evaluators import diff_generator
-from jdiff import extract_data_from_json
-from .utility import load_mocks, ASSERT_FAIL_MESSAGE
 
+import pytest
+
+from jdiff import extract_data_from_json
+from jdiff.evaluators import diff_generator
+
+from .utility import ASSERT_FAIL_MESSAGE, load_mocks
 
 # Diff test case 1.
 global_peers = (

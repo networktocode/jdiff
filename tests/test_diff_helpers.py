@@ -1,5 +1,6 @@
 """DIff helpers unit tests."""
-from jdiff.utils.diff_helpers import dict_merger, group_value, fix_deepdiff_key_names, get_diff_iterables_items
+
+from jdiff.utils.diff_helpers import dict_merger, fix_deepdiff_key_names, get_diff_iterables_items, group_value
 
 
 def test_dict_merger():

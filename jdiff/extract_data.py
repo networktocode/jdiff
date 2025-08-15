@@ -1,13 +1,16 @@
 """Extract data from JSON. Based on custom JMSPath implementation."""
+
 import re
 import warnings
-from typing import Mapping, List, Dict, Any, Union, Optional
+from typing import Any, Dict, List, Mapping, Optional, Union
+
 import jmespath
+
 from .utils.data_normalization import exclude_filter, flatten_list
 from .utils.jmespath_parsers import (
-    jmespath_value_parser,
-    jmespath_refkey_parser,
     associate_key_of_my_value,
+    jmespath_refkey_parser,
+    jmespath_value_parser,
     keys_values_zipper,
     multi_reference_keys,
 )

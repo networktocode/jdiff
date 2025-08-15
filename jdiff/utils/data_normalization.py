@@ -1,5 +1,6 @@
 """Data Normalization utilities."""
-from typing import List, Generator, Union, Dict
+
+from typing import Dict, Generator, List, Union
 
 
 def flatten_list(my_list: List) -> List:

@@ -1,15 +1,18 @@
 """Check Type unit tests."""
+
 import pytest
+
+from jdiff import extract_data_from_json
 from jdiff.check_types import (
     CheckType,
     ExactMatchType,
     OperatorType,
-    ToleranceType,
     ParameterMatchType,
     RegexType,
+    ToleranceType,
 )
-from jdiff import extract_data_from_json
-from .utility import load_json_file, load_mocks, ASSERT_FAIL_MESSAGE
+
+from .utility import ASSERT_FAIL_MESSAGE, load_json_file, load_mocks
 
 
 def test_child_class_raises_exception():
@@ -21,9 +24,9 @@ def test_child_class_raises_exception():
     with pytest.raises(TypeError) as error:
         CheckTypeChild()  # pylint: disable=E0110
 
-    assert "Can't instantiate abstract class CheckTypeChild" " with abstract methods _validate, evaluate" in str(
-        error.value
-    )
+    assert "Can't instantiate abstract class CheckTypeChild" in str(error.value)
+    assert "_validate" in str(error.value)
+    assert "evaluate" in str(error.value)
 
 
 def test_child_class_proper_implementation():
