@@ -144,7 +144,7 @@ addopts = "-vv --doctest-modules -p no:warnings --ignore-glob='*mock*'"
 package = "jdiff"
 directory = "changes"
 filename = "docs/release_notes.md"
-template = "changes/towncrier_template.j2"
+template = "towncrier_template.j2"
 start_string = "<!-- towncrier release notes start -->"
 issue_format = "[#{issue}](https://github.com/networktocode/jdiff/issues/{issue})"
 
