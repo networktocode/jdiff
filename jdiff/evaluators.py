@@ -1,10 +1,12 @@
 """Evaluators."""
 
 import re
-from typing import Any, Mapping, Dict, Tuple, List
+from typing import Any, Dict, List, Mapping, Tuple
+
 from deepdiff import DeepDiff
-from .utils.diff_helpers import get_diff_iterables_items, fix_deepdiff_key_names
+
 from .operator import Operator
+from .utils.diff_helpers import fix_deepdiff_key_names, get_diff_iterables_items
 
 
 def diff_generator(pre_result: Any, post_result: Any) -> Dict:
@@ -43,6 +45,7 @@ def parameter_evaluator(values: List[Dict], parameters: Mapping, mode: str) -> D
     Args:
         values: List of items what we will check the parameters against
         parameters: Dict with the keys and reference values to check
+        mode: "match" or "no-match" to define the evaluation mode
 
     Example:
         values: [{'7.7.7.7': {'peerAddress': '7.7.7.7', 'localAsn': '65130.1100', 'linkType': 'external'}}]

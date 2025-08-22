@@ -1,8 +1,11 @@
 """Tests for typical software upgrade device state check."""
 
 from copy import deepcopy
+
 import pytest
+
 from jdiff import CheckType, extract_data_from_json
+
 from .utility import load_json_file
 
 
@@ -87,9 +90,9 @@ def test_show_ip_route_missing_and_additional_routes(platform, command):
     check = CheckType.create("exact_match")
     eval_results_missing, passed_missing = check.evaluate(command_post[:30], command_pre)
     eval_results_additional, passed_additional = check.evaluate(command_post, command_pre[:30])
-    assert (
-        passed_missing is False and passed_additional is False
-    ), f"FAILED, eval_results_missing: {eval_results_missing}; eval_results_additional: {eval_results_additional}"
+    assert passed_missing is False and passed_additional is False, (
+        f"FAILED, eval_results_missing: {eval_results_missing}; eval_results_additional: {eval_results_additional}"
+    )
 
 
 @pytest.mark.parametrize(

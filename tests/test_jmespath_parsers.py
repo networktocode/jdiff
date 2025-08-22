@@ -1,15 +1,16 @@
 """jmespath parser unit tests."""
 
 import pytest
+
 from jdiff.utils.jmespath_parsers import (
-    jmespath_value_parser,
-    jmespath_refkey_parser,
-    keys_values_zipper,
     associate_key_of_my_value,
+    jmespath_refkey_parser,
+    jmespath_value_parser,
+    keys_values_zipper,
     multi_reference_keys,
 )
-from .utility import load_json_file, ASSERT_FAIL_MESSAGE
 
+from .utility import ASSERT_FAIL_MESSAGE, load_json_file
 
 value_parser_case_1 = (
     "result[0].vrfs.default.peerList[*].[$peerAddress$,prefixesReceived]",

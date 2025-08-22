@@ -4,7 +4,7 @@ about: Report a reproducible bug in the current release of jdiff
 ---
 
 ### Environment
-* Python version:  <!-- Example: 3.7.7 -->
+* Python version:  <!-- Example: 3.11.2 -->
 * jdiff version:  <!-- Example: 1.0.0 -->
 
 <!-- What did you expect to happen? -->

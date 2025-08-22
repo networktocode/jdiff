@@ -1,0 +1,7 @@
+---
+jdiff:
+  python_ver: "3.11"
+  # local: false
+  # image_name: "jdiff"
+  # image_ver: "latest"
+  # pwd: "."

@@ -1,8 +1,9 @@
 """CheckType Implementation."""
 
-from typing import List, Tuple, Dict, Any, Union
 from abc import ABC, abstractmethod
-from .evaluators import diff_generator, parameter_evaluator, regex_evaluator, operator_evaluator
+from typing import Any, Dict, List, Tuple, Union
+
+from .evaluators import diff_generator, operator_evaluator, parameter_evaluator, regex_evaluator
 
 
 # pylint: disable=arguments-differ

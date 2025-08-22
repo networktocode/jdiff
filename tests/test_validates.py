@@ -1,6 +1,7 @@
 """Unit tests for validator CheckType method."""
 
 import pytest
+
 from jdiff import CheckType
 
 tolerance_wrong_argumet = (

@@ -7,12 +7,12 @@ evaluated bit of it, the second will target the reference key relative to the va
 """
 
 import re
-from typing import Mapping, List, Union
+from typing import List, Mapping, Union
 
 import jmespath
 
 
-def jmespath_value_parser(path: str):
+def jmespath_value_parser(path: str) -> str:
     """
     Extract the jmespath value path from 'path' argument.
 
@@ -47,7 +47,7 @@ def jmespath_value_parser(path: str):
     return path
 
 
-def jmespath_refkey_parser(path: str):
+def jmespath_refkey_parser(path: str) -> str:
     """
     Get the jmespath reference key path from 'path' argument.
 
@@ -131,7 +131,7 @@ def keys_values_zipper(list_of_reference_keys: List, wanted_value_with_key: List
     return final_result
 
 
-def multi_reference_keys(jmspath, data):
+def multi_reference_keys(jmspath: str, data):
     """Build a list of concatenated reference keys.
 
     Args:
