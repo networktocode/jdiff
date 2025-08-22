@@ -610,3 +610,120 @@ Can you guess what would be the outcome for an `int`, `float` operator?
 ```
 
 See `tests` folder in the repo for more examples.
+
+## Putting a Result Back Together
+
+Jdiff results are very helpful in determining what is wrong with the outputs. What if you want to reconstruct the results in order to fix the problem. The `parse_diff` helper does just that.  Imagine you have a `jdiff` result such as:
+
+Examples of jdiff evaluated results:
+
+```python
+ex1 = {'bar-2': 'missing', 'bar-1': 'new'}
+ex2 = {
+  'hostname': {'new_value': 'veos-actual', 'old_value': 'veos-intended'},
+  'domain-name': 'new'
+  }
+ex3 = {
+  'hostname': {'new_value': 'veos-0', 'old_value': 'veos'}, 
+  "index_element['ip name']": 'missing', 
+  'domain-name': 'new'
+  }
+ex4 = {
+  'servers': 
+    {
+      'server': defaultdict(<class 'list'>, 
+        {
+          'missing': [
+            {
+              'address': '1.us.pool.ntp.org', 
+              'config': {'address': '1.us.pool.ntp.org'}, 
+              'state': {'address': '1.us.pool.ntp.org'}
+            }
+          ]
+        }
+      )
+    }
+  }
+```
+
+And you need to understand what is extra and what is missing from the result. (Think configuration compliance on a JSON/JSON-RPC system).
+
+Well running the `parse_diff` will give you what is extra (in the comparison data) and missing from the reference data, and also the reverse. What is missing (in the reference data) that is missing from the comparison data.
+
+An example will help visualize the results.
+
+```python
+In [1]: from jdiff import extract_data_from_json
+   ...: from jdiff.check_types import CheckType
+   ...: from jdiff.utils.diff_helpers import parse_diff
+
+In [2]: reference_data = {"foo": {"bar-2": "baz2"}}
+   ...: comparison_data = {"foo": {"bar-1": "baz1"}}
+   ...: match_key = "foo"
+
+In [3]: extracted_comparison_data = extract_data_from_json(comparison_data, match_key)
+
+In [4]: extracted_comparison_data
+Out[4]: {'bar-1': 'baz1'}
+
+In [5]: extracted_reference_data = extract_data_from_json(reference_data, match_key)
+
+In [6]: extracted_reference_data
+Out[6]: {'bar-2': 'baz2'}
+
+In [7]: jdiff_exact_match = CheckType.create("exact_match")
+   ...: jdiff_evaluate_response, _ = jdiff_exact_match.evaluate(extracted_reference_data, extracted_comparison_data)
+
+In [8]: jdiff_evaluate_response
+Out[8]: {'bar-2': 'missing', 'bar-1': 'new'}
+
+In [9]: parsed_extra, parsed_missing = parse_diff(
+    ...:     jdiff_evaluate_response,
+    ...:     comparison_data,
+    ...:     reference_data,
+    ...:     match_key,
+    ...: )
+    ...: 
+
+In [10]: parsed_extra
+Out[10]: {'bar-1': 'baz1'}
+
+In [10]: parsed_missing
+Out[10]: {'bar-2': 'baz2'}
+```
+
+What about one with a more true JSON data structure. Like this RESTCONF YANG response.
+
+```python
+from jdiff import extract_data_from_json
+from jdiff.check_types import CheckType
+from jdiff.utils.diff_helpers import parse_diff
+
+reference_data = {"openconfig-system:config": {"hostname": "veos", "ip name": "ntc.com"}}
+comparison_data = {"openconfig-system:config": {"domain-name": "ntc.com", "hostname": "veos-0"}}
+match_key = '"openconfig-system:config"'
+extracted_comparison_data = extract_data_from_json(comparison_data, match_key)
+extracted_reference_data = extract_data_from_json(reference_data, match_key)
+jdiff_exact_match = CheckType.create("exact_match")
+jdiff_evaluate_response, _ = jdiff_exact_match.evaluate(extracted_reference_data, extracted_comparison_data)
+
+parsed_extra, parsed_missing = parse_diff(
+     jdiff_evaluate_response,
+     comparison_data,
+     reference_data,
+     match_key,
+)
+```
+Which results in:
+
+```python
+In [24]: parsed_extra
+{'hostname': 'veos-0', 'domain-name': 'ntc.com'}
+
+In [25]: parsed_missing
+Out[25]: {'hostname': 'veos', 'ip name': 'ntc.com'}
+```
+
+Now you can see how valuable this data can be to reconstruct, or remediate a out of compliant JSON object.
+
+For more detailed examples see the `test_diff_helpers.py` file.

@@ -122,43 +122,58 @@ def set_nested_value(data, keys, value):
         set_nested_value(data[keys[0]], keys[1:], value)
 
 
-# {'foo': {'bar-1': 'missing', 'bar-2': 'new'}}
 def parse_diff(jdiff_evaluate_response, actual, intended, match_config):
-    """Parse jdiff evaluate result into missing and extra dictionaries."""
-    extra = {}
-    missing = {}
+    """Parse jdiff evaluate result into missing and extra dictionaries.
+
+    Dict value in jdiff_evaluate_response can be:
+    - 'missing'  ->  In the intended but missing from actual.
+    - 'new'  -> In the actual missing from intended.
+
+    Examples of jdiff_evaluate_response:
+    - {'bar-2': 'missing', 'bar-1': 'new'}
+    - {'hostname': {'new_value': 'veos-actual', 'old_value': 'veos-intended'}, 'domain-name': 'new'}
+    - {'hostname': {'new_value': 'veos-0', 'old_value': 'veos'}, "index_element['ip name']": 'missing', 'domain-name': 'new'}
+    - {'servers': {'server': defaultdict(<class 'list'>, {'missing': [{'address': '1.us.pool.ntp.org', 'config': {'address': '1.us.pool.ntp.org'}, 'state': {'address': '1.us.pool.ntp.org'}}]})}}
+    """
+    # Remove surrounding double quotes if present from jmespath/config-to-match match with - in the string.
+    match_config = match_config.strip('"')
+    extra = {}  # In the actual missing from intended.
+    missing = {}  # In the intended but missing from actual.
 
     def process_diff(_map, extra_map, missing_map, previous_key=None):
+        """Process the diff recursively."""
         for key, value in _map.items():
-            print("value", value)
-            print("type(value)", type(value))
-            if isinstance(value, dict) and "new_value" in value and "old_value" in value:
-                extra_map[key] = value["old_value"]
-                missing_map[key] = value["new_value"]
+            if isinstance(value, dict) and all(nested_key in value for nested_key in ("new_value", "old_value")):
+                extra_map[key] = value["new_value"]
+                missing_map[key] = value["old_value"]
             elif isinstance(value, str):
-                if "missing" in value:
-                    print("missing", value)
-                    extra_map[key] = actual.get(match_config, {}).get(key)
-                if "new" in value:
-                    print("new", value)
+                if "missing" in value and "index_element" in key:
                     key_chain, _ = _parse_index_element_string(key)
-                    new_value = reduce(getitem, key_chain, intended)
-                    set_nested_value(missing_map, key_chain[1::], new_value)
+                    if len(key_chain) == 1:
+                        missing_map[key_chain[0]] = intended.get(match_config, {}).get(key_chain[0])
+                    else:
+                        new_value = reduce(getitem, key_chain, intended)
+                        set_nested_value(extra_map, key_chain[1::], new_value)
+                elif "missing" in value:
+                    missing_map[key] = intended.get(match_config, {}).get(key)
+                else:
+                    if "new" in value:
+                        extra_map[key] = actual.get(match_config, {}).get(key)
             elif isinstance(value, defaultdict):
-                if dict(value).get("new"):
-                    missing[previous_key][key] = dict(value).get("new", {})
-                if dict(value).get("missing"):
-                    extra_map[previous_key][key] = dict(value).get("missing", {})
+                value_dict = dict(value)
+                if "new" in value_dict:
+                    extra_map[previous_key][key] = value_dict.get("new", {})
+                if "missing" in value_dict:
+                    missing_map[previous_key][key] = value_dict.get("missing", {})
             elif isinstance(value, dict):
                 extra_map[key] = {}
                 missing_map[key] = {}
-                process_diff(value, extra_map[key], missing_map[key], previous_key=key)
+                process_diff(value, extra_map, missing_map, previous_key=key)
         return extra_map, missing_map
 
     extras, missing = process_diff(jdiff_evaluate_response, extra, missing)
     # Don't like this, but with less the performant way of doing it right now it works to clear out
     # Any empty dicts that are left over from the diff.
-    # This is a bit of a hack, but it works for now.
     final_extras = extras.copy()
     final_missing = missing.copy()
     for key, value in extras.items():

@@ -2,6 +2,7 @@
 
 import pytest
 
+from jdiff import extract_data_from_json
 from jdiff.check_types import CheckType
 from jdiff.utils.diff_helpers import (
     _parse_index_element_string,
@@ -85,30 +86,30 @@ parse_diff_simple_1 = (
     {"foo": {"bar-1": "baz1"}},  # actual
     {"foo": {"bar-2": "baz2"}},  # intended
     "foo",  # match_config
-    {"foo": {"bar-1": "baz1"}},  # extra
-    {"foo": {"bar-2": "baz2"}},  # missing
+    {"bar-1": "baz1"},  # extra
+    {"bar-2": "baz2"},  # missing
 )
 
 parse_diff_case_1 = (
-    {"openconfig-system:config": {"domain-name": "ntc.com", "hostname": "veos-0"}},
-    {"openconfig-system:config": {"hostname": "veos"}},
-    "openconfig-system:config",
-    {"hostname": "veos-0", "domain-name": "ntc.com"},
-    {"hostname": "veos"},
+    {"openconfig-system:config": {"domain-name": "ntc.com", "hostname": "veos-actual"}},  # actual
+    {"openconfig-system:config": {"hostname": "veos-intended"}},  # intended
+    '"openconfig-system:config"',  # match_config
+    {"hostname": "veos-actual", "domain-name": "ntc.com"},  # extra
+    {"hostname": "veos-intended"},  # missing
 )
 
 parse_diff_case_2 = (
-    {"openconfig-system:config": {"domain-name": "ntc.com", "hostname": "veos-0"}},
-    {"openconfig-system:config": {"hostname": "veos", "ip name": "ntc.com"}},
-    "openconfig-system:config",
-    {"domain-name": "ntc.com", "hostname": "veos-0"},
-    {"hostname": "veos", "ip name": "ntc.com"},
+    {"openconfig-system:config": {"domain-name": "ntc.com", "hostname": "veos-0"}},  # actual
+    {"openconfig-system:config": {"hostname": "veos", "ip name": "ntc.com"}},  # intended
+    '"openconfig-system:config"',  # match_config
+    {"domain-name": "ntc.com", "hostname": "veos-0"},  # extra
+    {"hostname": "veos", "ip name": "ntc.com"},  # missing
 )
 
 parse_diff_case_3 = (
     {"openconfig-system:config": {"domain-name": "ntc.com", "hostname": "veos-0"}},
     {"openconfig-system:config": {"ip name": "ntc.com"}},
-    "openconfig-system:config",
+    '"openconfig-system:config"',
     {"domain-name": "ntc.com", "hostname": "veos-0"},
     {"ip name": "ntc.com"},
 )
@@ -116,7 +117,7 @@ parse_diff_case_3 = (
 parse_diff_case_4 = (
     {"openconfig-system:config": {"domain-name": "ntc.com", "hostname": "veos"}},
     {"openconfig-system:config": {"hostname": "veos"}},
-    "openconfig-system:config",
+    '"openconfig-system:config"',
     {"domain-name": "ntc.com"},
     {},
 )
@@ -124,7 +125,7 @@ parse_diff_case_4 = (
 parse_diff_case_5 = (
     {"openconfig-system:config": {"domain-name": "ntc.com", "hostname": "veos-0"}},
     {"openconfig-system:config": {"hostname": "veos", "ip name": "ntc.com"}},
-    "openconfig-system:config",
+    '"openconfig-system:config"',
     {"hostname": "veos-0", "domain-name": "ntc.com"},
     {"ip name": "ntc.com", "hostname": "veos"},
 )
@@ -144,7 +145,7 @@ parse_diff_case_6 = (
             }
         }
     },
-    "openconfig-system:ntp",
+    '"openconfig-system:ntp"',
     {},
     {
         "servers": {
@@ -181,7 +182,10 @@ parse_diff_tests = [
 def test_parse_diff(actual, intended, match_config, extra, missing):  # pylint: disable=too-many-arguments
     """Test that index_element can be unpacked."""
     jdiff_param_match = CheckType.create("exact_match")
-    jdiff_evaluate_response, _ = jdiff_param_match.evaluate(actual, intended)
+    extracted_actual = extract_data_from_json(actual, match_config)
+    extracted_intended = extract_data_from_json(intended, match_config)
+    jdiff_evaluate_response, _ = jdiff_param_match.evaluate(extracted_intended, extracted_actual)
+    print("jdiff_evaluate_response", jdiff_evaluate_response)
 
     parsed_extra, parsed_missing = parse_diff(
         jdiff_evaluate_response,
