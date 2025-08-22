@@ -13,10 +13,10 @@ def get_diff_iterables_items(diff_result: Mapping) -> DefaultDict:
     """Helper function for diff_generator to postprocess changes reported by DeepDiff for iterables.
 
     DeepDiff iterable_items are returned when the source data is a list
-    and provided in the format: "root['Ethernet3'][1]"
-    or more generically: root['KEY']['KEY']['KEY']...[numeric_index]
+    and provided in the format: `"root['Ethernet3'][1]"`
+    or more generically: `root['KEY']['KEY']['KEY']...[numeric_index]`
     where the KEYs are dict keys within the original object
-    and the "[index]" is appended to indicate the position within the list.
+    and the `"[index]"` is appended to indicate the position within the list.
 
     Args:
         diff_result: iterable comparison result from DeepDiff
@@ -52,10 +52,12 @@ def fix_deepdiff_key_names(obj: Mapping) -> Dict:
 
     Args:
         obj (Mapping): Mapping to be fixed. For example:
+            ```
             {
                 "root[3]['7.7.7.7']['is_enabled']": {'new_value': False, 'old_value': True},
                 "root[3]['7.7.7.7']['is_up']": {'new_value': False, 'old_value': True}
             }
+            ```
 
     Returns:
         Dict: aggregated output, for example: {'7.7.7.7': {'is_enabled': {'new_value': False, 'old_value': True},
@@ -107,10 +109,10 @@ def set_nested_value(data, keys, value):
     Args:
         data (dict): The nested dictionary to modify.
         keys (list): A list of keys to access the target value.
-        value: The value to set.
+        value (str): The value to set.
 
     Returns:
-        None: The function modifies the dictionary in place.  Returns None.
+        None (None): The function modifies the dictionary in place.  Returns None.
     """
     if not keys:
         return  # Should not happen, but good to have.
