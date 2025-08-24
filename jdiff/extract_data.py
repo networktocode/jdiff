@@ -51,7 +51,10 @@ def extract_data_from_json(data: Union[Mapping, List], path: str = "*", exclude:
     if len(re.findall(r"\$.*?\$", path)) > 1:
         clean_path = path.replace("$", "")
         values = jmespath.search(f"{clean_path}{' | []' * (path.count('*') - 1)}", data)
-        return keys_values_zipper(multi_reference_keys(path, data), associate_key_of_my_value(clean_path, values))
+        return keys_values_zipper(
+            multi_reference_keys(path, data),
+            associate_key_of_my_value(clean_path, values),
+        )
 
     values = jmespath.search(jmespath_value_parser(path), data)
 

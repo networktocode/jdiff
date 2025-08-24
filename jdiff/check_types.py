@@ -37,8 +37,8 @@ class CheckType(ABC):
         This method is the one that each CheckType has to implement.
 
         Args:
-            *args: arguments specific to child class implementation
-            **kwargs: named arguments
+            *args (tuple): arguments specific to child class implementation
+            **kwargs (dict): named arguments
 
         Returns:
             tuple: Dictionary representing check result, bool indicating if differences are found.

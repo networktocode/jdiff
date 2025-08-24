@@ -135,10 +135,10 @@ def multi_reference_keys(jmspath: str, data):
     """Build a list of concatenated reference keys.
 
     Args:
-        jmspath: "$*$.peers.$*$.*.ipv4.[accepted_prefixes]"
-        data: tests/mock/napalm_get_bgp_neighbors/multi_vrf.json
+        jmspath (str): "$*$.peers.$*$.*.ipv4.[accepted_prefixes]"
+        data (dict): tests/mock/napalm_get_bgp_neighbors/multi_vrf.json
 
-    Returns:
+    Returns (str):
         ["global.10.1.0.0", "global.10.2.0.0", "global.10.64.207.255", "global.7.7.7.7", "vpn.10.1.0.0", "vpn.10.2.0.0"]
     """
     ref_key_regex = re.compile(r"\$.*?\$")
