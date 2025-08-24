@@ -615,8 +615,6 @@ See `tests` folder in the repo for more examples.
 
 Jdiff results are very helpful in determining what is wrong with the outputs. What if you want to reconstruct the results in order to fix the problem. The `parse_diff` helper does just that.  Imagine you have a `jdiff` result such as:
 
-Examples of jdiff evaluated results:
-
 ```python
 ex1 = {'bar-2': 'missing', 'bar-1': 'new'}
 ex2 = {
