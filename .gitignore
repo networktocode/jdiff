@@ -297,6 +297,12 @@ fabric.properties
 
 # Rando
 creds.env
+development/*.txt
 
 # Invoke overrides
 invoke.yml
+
+# Docs
+docs/README.md
+docs/CHANGELOG.md
+public

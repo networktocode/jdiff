@@ -1,4 +1,5 @@
 """Operator diff."""
+
 import operator
 from typing import Any, List, Tuple
 

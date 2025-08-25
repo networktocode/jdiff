@@ -1,6 +1,6 @@
 # Library Architecture
 
-| ![jdiff HLD](./images/hld-architecture.png) |
+| ![jdiff HLD](../images/hld-architecture.png) |
 |:---:|
 | **`jdiff` architecture** |
 

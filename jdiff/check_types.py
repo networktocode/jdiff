@@ -1,7 +1,9 @@
 """CheckType Implementation."""
-from typing import List, Tuple, Dict, Any, Union
+
 from abc import ABC, abstractmethod
-from .evaluators import diff_generator, parameter_evaluator, regex_evaluator, operator_evaluator
+from typing import Any, Dict, List, Tuple, Union
+
+from .evaluators import diff_generator, operator_evaluator, parameter_evaluator, regex_evaluator
 
 
 # pylint: disable=arguments-differ
@@ -35,8 +37,8 @@ class CheckType(ABC):
         This method is the one that each CheckType has to implement.
 
         Args:
-            *args: arguments specific to child class implementation
-            **kwargs: named arguments
+            *args (tuple): arguments specific to child class implementation
+            **kwargs (dict): named arguments
 
         Returns:
             tuple: Dictionary representing check result, bool indicating if differences are found.

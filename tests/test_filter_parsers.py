@@ -1,8 +1,10 @@
 "Filter parser unit tests."
-import pytest
-from jdiff.utils.data_normalization import exclude_filter
-from .utility import ASSERT_FAIL_MESSAGE
 
+import pytest
+
+from jdiff.utils.data_normalization import exclude_filter
+
+from .utility import ASSERT_FAIL_MESSAGE
 
 exclude_filter_test_case_1 = (
     ["interfaceStatistics"],

@@ -1,4 +1,4 @@
-# Changelog
+# v0.0 Release Notes
 
 ## v0.0.7
 - Fix exclude to work with lists [#123](https://github.com/networktocode/jdiff/pull/123)

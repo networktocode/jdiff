@@ -1,13 +1,16 @@
 """Extract data from JSON. Based on custom JMSPath implementation."""
+
 import re
 import warnings
-from typing import Mapping, List, Dict, Any, Union, Optional
+from typing import Any, Dict, List, Mapping, Optional, Union
+
 import jmespath
+
 from .utils.data_normalization import exclude_filter, flatten_list
 from .utils.jmespath_parsers import (
-    jmespath_value_parser,
-    jmespath_refkey_parser,
     associate_key_of_my_value,
+    jmespath_refkey_parser,
+    jmespath_value_parser,
     keys_values_zipper,
     multi_reference_keys,
 )
@@ -48,7 +51,10 @@ def extract_data_from_json(data: Union[Mapping, List], path: str = "*", exclude:
     if len(re.findall(r"\$.*?\$", path)) > 1:
         clean_path = path.replace("$", "")
         values = jmespath.search(f"{clean_path}{' | []' * (path.count('*') - 1)}", data)
-        return keys_values_zipper(multi_reference_keys(path, data), associate_key_of_my_value(clean_path, values))
+        return keys_values_zipper(
+            multi_reference_keys(path, data),
+            associate_key_of_my_value(clean_path, values),
+        )
 
     values = jmespath.search(jmespath_value_parser(path), data)
 
