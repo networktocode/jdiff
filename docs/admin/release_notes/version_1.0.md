@@ -4,8 +4,8 @@ This document describes all new features and changes in the release. The format 
 
 ## Release Overview
 
-- Major features or milestones
-- Changes to compatibility with Nautobot and/or other apps, libraries etc.
+- Updated the entire project to the new Network to Code development standards.
+- Added a JSON data compliance utility to help reconstruct JSON from compliance results.
 
 ## [v1.0.0 (2025-08-25)](https://github.com/networktocode/jdiff/releases/tag/v1.0.0)
 
