@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jdiff"
-version = "1.0.0"
+version = "1.0.1a0"
 description = "A light-weight library to compare structured output from network devices show commands."
 authors = ["Network to Code, LLC <info@networktocode.com>"]
 readme = "README.md"
