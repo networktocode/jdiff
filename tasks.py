@@ -250,6 +250,7 @@ def build_and_check_docs(context):
             print(f"Release notes file `version_{major}.{minor}.md` does not exist.")
             raise Exit(code=1)
 
+
 @task
 def docs(context):
     """Build and serve docs locally for development."""
