@@ -138,6 +138,7 @@ nav:
       - Extending the Library: "dev/extending.md"
       - Contributing to the Library: "dev/contributing.md"
       - Development Environment: "dev/dev_environment.md"
+      - Release Checklist: "dev/release_checklist.md"
       - Architecture Decisions: "dev/arch_decision.md"
       - Code Reference:
           - Jdiff: "code-reference/jdiff/__init__.md"
