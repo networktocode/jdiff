@@ -179,11 +179,14 @@ def parse_diff(jdiff_evaluate_response, actual, intended, match_config):
     final_extras = extras.copy()
     final_missing = missing.copy()
     for key, value in extras.items():
-        if isinstance(value, dict):
-            if not value:
-                del final_extras[key]
+        if isinstance(value, dict) and not value:
+            del final_extras[key]
     for key, value in missing.items():
-        if isinstance(value, dict):
-            if not value:
-                del final_missing[key]
+        if isinstance(value, dict) and not value:
+            del final_missing[key]
+    # Pop the root "index_element" key.
+    if final_extras.get("index_element"):
+        final_extras.update(final_extras.pop("index_element"))
+    if final_missing.get("index_element"):
+        final_missing.update(final_missing.pop("index_element"))
     return final_extras, final_missing
