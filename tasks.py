@@ -40,7 +40,7 @@ namespace.configure(
             "local": False,
             "image_name": "jdiff",
             "image_ver": "latest",
-            "pwd": ".",
+            "pwd": Path(__file__).parent,
         }
     }
 )
