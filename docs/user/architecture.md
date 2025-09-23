@@ -57,7 +57,7 @@ Generally, for all of the `CheckTypes`, the arguments will be in the order `inte
 
 For regex or parameter matching, your provided regex or dictionary would be the first argument and the collected data would be the second argument.
 
-# Customized JMESPath
+## Customized JMESPath
 
 Since `jdiff` works with JSON objects as data inputs, JMESPath was the obvious choice for traversing the data and extracting the value(s) to compare. However, JMESPath has a limitation where context is lost for the values it collects, in other words, for each given value that JMESPath returns, we cannot be sure what key it was part of.
 
