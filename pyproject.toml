@@ -27,7 +27,7 @@ include = [
 
 [tool.poetry.dependencies]
 python = "^3.9"
-deepdiff = "^8.6.1"
+deepdiff = ">=8.6.1,<9.0.0"
 jmespath = "^1.0.1"
 
 [tool.poetry.group.dev.dependencies]
