@@ -22,7 +22,7 @@ In summary, the workflow is generally:
 
 Before we get started with the CheckTypes, we've also included a method of extracting portions of the data for comparison. In many cases in data comparison, we aren't interested in the whole piece of data. We've provided this utility to extract subsets of a larger data object. 
 
-## `extract_data_from_json`
+### `extract_data_from_json`
 
 As an example, in this case of the object below, we are only interested in comparing the value of a single key-value pair from each item in the interfaces dictionary contained within the response. 
 
@@ -67,9 +67,9 @@ After getting the response data from an external system, we'll create a query (s
 This type of logic to extract keys and value from the object is called anchor logic.
 
 
-# `CheckTypes` Explained
+## `CheckTypes` Explained
 
-## exact_match
+### Exact Match
 
 Check type `exact_match` is concerned with the value of the elements within the data structure. The key-value pairs should match between the reference and comparison data. A diff is generated between the two data sets and tested to see whether all the keys and values match.
 

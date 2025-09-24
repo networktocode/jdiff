@@ -1,4 +1,4 @@
-## Getting Started
+# Getting Started
 
 
 First, you import the `CheckType` class.
