@@ -1,0 +1,1 @@
+If the value is a a bool, the function extract_data_from_json will attempt to iterate through the nested values

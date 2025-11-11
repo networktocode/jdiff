@@ -151,4 +151,6 @@ def test_not_iterable_value():
 
     value = extract_data_from_json(data=data, path=path)
 
-    assert value == True
+    expected_output = True
+
+    assert value == expected_output
