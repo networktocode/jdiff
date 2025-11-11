@@ -96,7 +96,8 @@ test_cases_extract_data_with_ref_key = [
 
 
 @pytest.mark.parametrize(
-    "jmspath, expected_value", test_cases_extract_data_no_ref_key + test_cases_extract_data_with_ref_key
+    "jmspath, expected_value",
+    test_cases_extract_data_no_ref_key + test_cases_extract_data_with_ref_key,
 )
 def test_extract_data_from_json(jmspath, expected_value):
     """Test JMSPath return value."""
@@ -139,3 +140,15 @@ def test_top_key_anchor(jmspath, expected_value):
     value = extract_data_from_json(data=data, path=jmspath)
 
     assert value == expected_value, ASSERT_FAIL_MESSAGE.format(output=value, expected_output=expected_value)
+
+
+def test_not_iterable_value():
+    """Test JMSPath return value for anchoring the top key."""
+    data = {
+        "isBool": True,
+    }
+    path = "isBool"
+
+    value = extract_data_from_json(data=data, path=path)
+
+    assert value == True
