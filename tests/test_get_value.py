@@ -143,7 +143,7 @@ def test_top_key_anchor(jmspath, expected_value):
 
 
 def test_not_iterable_value():
-    """Test JMSPath return value for anchoring the top key."""
+    """Test JMSPath return value for values that are not iterable."""
     data = {
         "isBool": True,
     }
