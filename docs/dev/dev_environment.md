@@ -4,7 +4,7 @@
 
 The development environment can be used in two ways:
 
-1. `Recommended` All services are spun up using Docker and a local mount so you can develop locally, but Jdiff is spun up within the Docker container.
+1. `Recommended` All services are spun up using Docker and a local mount so you can develop locally, but jdiff is spun up within the Docker container.
 2. With a local poetry environment if you wish to develop outside of Docker.
 
 This is a quick reference guide if you're already familiar with the development environment provided, which you can read more about later in this document.
@@ -45,7 +45,7 @@ To either stop or destroy the development environment use the following options.
 
 ## Poetry
 
-Poetry is used in lieu of the "virtualenv" commands and is leveraged in both environments. The virtual environment will provide all of the Python packages required to manage the development environment such as **Invoke**. See the [Local Development Environment](#docker-development-environment) section to see how to install Jdiff if you're going to be developing locally (i.e. not using the Docker container).
+Poetry is used in lieu of the "virtualenv" commands and is leveraged in both environments. The virtual environment will provide all of the Python packages required to manage the development environment such as **Invoke**. See the [Local Development Environment](#full-docker-development-environment) section to see how to install jdiff if you're going to be developing locally (i.e. not using the Docker container).
 
 The `pyproject.toml` file outlines all of the relevant dependencies for the project:
 
@@ -82,7 +82,7 @@ Each command can be executed with `invoke <command>`. Each command also has its 
 
 ```
   cli                       Enter the image to perform troubleshooting or dev work.
-  clean                     Remove stopped containers that source for image `Jdiff:`
+  clean                     Remove stopped containers that source for image `jdiff:`
   generate-release-notes    Generate Release Notes using Towncrier.
 ```
 
