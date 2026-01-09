@@ -3,5 +3,5 @@
 Upgrade from PyPI.
 
 ```bash
-$ pip install jdiff --upgrade
+pip install jdiff --upgrade
 ```

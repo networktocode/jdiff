@@ -1,5 +1,16 @@
 # Library Overview
 
-`jdiff` is a lightweight Python library allowing you to examine structured data. `jdiff` provides an interface to intelligently compare JSON data objects and test for the presence (or absence) of keys. You can also examine and compare corresponding key-values.
+This document provides an overview of the library including critical information and important considerations.
 
-The library heavily relies on [JMESPath](https://jmespath.org/) for traversing the JSON object and finding the values to be evaluated. More on that [here](architecture.md#customized-jmespath).
+## Description
+
+
+## Audience (User Personas) - Who should use this Library?
+
+!!! warning "Developer Note - Remove Me!"
+    Who is this meant for/ who is the common user of this library?
+
+## Authors and Maintainers
+
+!!! warning "Developer Note - Remove Me!"
+    Add the team and/or the main individuals maintaining this project. Include historical maintainers as well.
