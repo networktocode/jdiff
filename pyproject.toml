@@ -25,6 +25,8 @@ include = [
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.14"
+deepdiff = ">=8.6.1,<9.0.0"
+jmespath = "^1.0.1"
 
 [tool.poetry.group.dev.dependencies]
 requests_mock = "*"
