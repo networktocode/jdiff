@@ -1,0 +1,12 @@
+[
+  {
+    "uptime": 5100,
+    "vendor": "Juniper",
+    "hostname": "vsrx",
+    "fqdn": "vsrx",
+    "os_version": "12.1X47-D20.7",
+    "serial_number": "beb914a9cca3",
+    "model": "FIREFLY-PERIMETER",
+    "interface_list": ["lo0"]
+  }
+]

@@ -1,0 +1,20 @@
+[
+    {
+        "neighbor": "long_name_swt.josh-v",
+        "local_interface": "Gi0/2",
+        "capabilities": "R",
+        "neighbor_interface": "Gi0/0"
+    },
+    {
+        "neighbor": "WAN-RT",
+        "local_interface": "Gi0/0",
+        "capabilities": "R",
+        "neighbor_interface": "Gi0/1"
+    },
+    {
+        "neighbor": "LAN-SW",
+        "local_interface": "Gi0/1",
+        "capabilities": "R",
+        "neighbor_interface": "Gi0/0"
+    }
+]

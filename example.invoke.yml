@@ -1,5 +1,5 @@
 ---
-"jdiff":
+jdiff:
   python_ver: "3.10"
   local: false
   # image_name: "jdiff"

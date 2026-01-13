@@ -8,6 +8,7 @@ homepage = "https://jdiff.readthedocs.io/"
 repository = "https://github.com/networktocode/jdiff"
 documentation = "https://jdiff.readthedocs.io/"
 license = "Apache-2.0"
+keywords = ["json", "diff", "network"]
 classifiers = [
     "Intended Audience :: Developers",
     "Development Status :: 5 - Production/Stable",
@@ -24,9 +25,9 @@ include = [
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.14"
-click = "*"
 
 [tool.poetry.group.dev.dependencies]
+requests_mock = "*"
 coverage = "*"
 pytest = "*"
 mock = "*"
@@ -64,11 +65,6 @@ mkdocstrings = "0.27.0"
 # Python-specific extension to mkdocstrings
 mkdocstrings-python = "1.13.0"
 griffe = "1.1.1"
-
-[tool.poetry.scripts]
-jdiff = 'jdiff.cli:main'
-
-
 
 [tool.ruff]
 line-length = 120
@@ -121,8 +117,8 @@ no-docstring-rgx = "^(_|test_|Meta$)"
 [tool.pylint.messages_control]
 disable = [
     "line-too-long",
-    "duplicate-code",
-    "cyclic-import",
+    "too-many-branches",
+    "protected-access"
     ]
 
 [tool.pylint.miscellaneous]
