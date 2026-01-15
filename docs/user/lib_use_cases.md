@@ -1,4 +1,8 @@
-# Usage
+# Using the Library
+
+This document describes common use-cases and scenarios for this library.
+
+## General Usage
 
 Comparison and testing of the data structures in `jdiff` is performed through one of the built-in `CheckType` type objects, which are explained below in more detail.
 
@@ -6,7 +10,7 @@ A `jdiff` `CheckType` accepts two Python dictionaries as input: the reference ob
 
 It's worth pointing out that `jdiff` is focused on the comparison of the two objects and the testing of the values, not retrieving the data from the external system.
 
-## Workflow
+## Use-cases and common workflows
 
 In summary, the workflow is generally:
 
