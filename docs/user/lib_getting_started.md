@@ -1,5 +1,12 @@
-# Getting Started
+#  Getting Started with the Library
 
+This document provides a step-by-step tutorial on how to get the library going and how to use it.
+
+## Install the Library
+
+To install the library, please follow the instructions detailed in the [Installation Guide](../admin/install.md).
+
+## First steps with the Library
 
 First, you import the `CheckType` class.
 
@@ -69,4 +76,6 @@ Below are the names of checks provided by the library. These both describe the t
 3. The reference state is then compared to the current state via the jdiff library using one of the `CheckTypes`.
 4. The evaluate method is called on the `check` object, and the result is returned.
 
-Please see [usage](usage.md) for commands and more information.
+## What are the next steps?
+
+You can check out the [Use Cases](./lib_use_cases.md) section for more examples.
