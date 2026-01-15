@@ -1,1 +1,1 @@
-If the value is a a boolean, the function extract_data_from_json will attempt to iterate through the nested values
+Iterate through the nested values from extract_data_from_json If the value is a boolean.
