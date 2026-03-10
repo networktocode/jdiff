@@ -74,33 +74,37 @@ def jmespath_refkey_parser(path: str) -> str:
 
 
 def associate_key_of_my_value(paths: str, wanted_value: List) -> List:
-    """Associate each reference key (from: jmespath_refkey_parser) to every value found in output (from: jmespath_value_parser)."""
-    # global.peers.*.[is_enabled,is_up] / result.[*].state
+    """Associate extracted field names with the values returned by the parsed JMESPath value path."""
     find_the_key_of_my_values = paths.split(".")[-1]
 
-    # [is_enabled,is_up]
     if find_the_key_of_my_values.startswith("[") and find_the_key_of_my_values.endswith("]"):
-        # ['is_enabled', 'is_up']
         my_key_value_list = find_the_key_of_my_values.strip("[]").split(",")
-    # state
     else:
         my_key_value_list = [find_the_key_of_my_values]
 
     final_list = []
 
-    if not all(isinstance(item, list) for item in wanted_value) and len(my_key_value_list) == 1:
+    if len(my_key_value_list) == 1:
+        key_name = my_key_value_list[0]
+
         for item in wanted_value:
-            temp_dict = {my_key_value_list[0]: item}
-            final_list.append(temp_dict)
+            if not isinstance(item, list):
+                value = item
+            elif len(item) == 1 and not isinstance(item[0], list):
+                value = item[0]
+            else:
+                value = item
 
-    else:
-        for items in wanted_value:
-            if len(items) != len(my_key_value_list):
-                raise ValueError("Key's value len != from value len")
+            final_list.append({key_name: value})
 
-            temp_dict = {my_key_value_list[my_index]: my_value for my_index, my_value in enumerate(items)}
+        return final_list
 
-            final_list.append(temp_dict)
+    for items in wanted_value:
+        if len(items) != len(my_key_value_list):
+            raise ValueError("Key's value len != from value len")
+
+        temp_dict = {my_key_value_list[my_index]: my_value for my_index, my_value in enumerate(items)}
+        final_list.append(temp_dict)
 
     return final_list
 

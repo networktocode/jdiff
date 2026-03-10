@@ -129,3 +129,43 @@ class Operator:
     def not_in_range(self) -> Tuple[List, bool]:
         """Is not in range operator caller."""
         return self._loop_through_wrapper("not_in_range")
+
+    def is_subset(self) -> Tuple[List, bool]:
+        """Check whether each extracted list is a subset of the reference list."""
+        result = []
+        reference_set = set(self.reference_data)
+
+        for item in self.value_to_compare:
+            for value in item.values():
+                for evaluated_value in value.values():
+                    # Fail fast if the extracted value is not a list/tuple
+                    if not isinstance(evaluated_value, (list, tuple)):
+                        result.append(item)
+                        continue
+
+                    if not set(evaluated_value).issubset(reference_set):
+                        result.append(item)
+
+        if result:
+            return (result, False)
+        return ([], True)
+
+    def is_subset_ci(self) -> Tuple[List, bool]:
+        """Check whether each extracted list is a subset of the reference list (case-insensitive)."""
+        result = []
+        reference_set = {str(item).lower() for item in self.reference_data}
+
+        for item in self.value_to_compare:
+            for value in item.values():
+                for evaluated_value in value.values():
+                    if not isinstance(evaluated_value, (list, tuple)):
+                        result.append(item)
+                        continue
+
+                    normalized_value = {str(element).lower() for element in evaluated_value}
+                    if not normalized_value.issubset(reference_set):
+                        result.append(item)
+
+        if result:
+            return (result, False)
+        return ([], True)

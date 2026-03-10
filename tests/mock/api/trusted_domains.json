@@ -1,0 +1,29 @@
+[
+    {
+      "allocate_gids": true,
+      "allocate_uids": true,
+      "assume_default_domain": false,
+      "authentication": true,
+      "check_online_interval": 300,
+      "controller_time": 1769518575,
+      "create_home_directory": false,
+      "domain_offline_alerts": false,
+      "extra_expected_spns": [],
+      "findable_groups": [],
+      "findable_users": [],
+      "forest": "domain1.company.com",
+      "groupnet": "groupnet1",
+      "home_directory_template": "/ifs/zone1/cluster1/adm/%U",
+      "hostname": "cluster1.domain1.company.com",
+      "id": "DOMAIN1.COMPANY.COM",
+      "ignore_all_trusts": false,
+      "ignored_trusted_domains": [],
+      "include_trusted_domains": [
+        "COMPANY.COM",
+        "domain1.company.com",
+        "domain2.company.COM",
+        "domain3.company.com",
+        "test.com"
+      ]
+    }
+  ]

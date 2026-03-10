@@ -53,7 +53,7 @@ Below are the names of checks provided by the library. These both describe the t
 - `tolerance`: the keys must match and the values can differ according to the 'tolerance' value provided
 - `parameter_match`: a reference key and value is provided and its presence (or absence) is checked in the provided object
 - `regex`: a reference regex pattern is provided and is used to find a match in the provided object
-- `operator`: similar to parameter match, but the reference includes several different possible operators: 'in', 'bool', 'string', and numerical comparison with 'int' and 'float' to check against
+- `operator`: similar to parameter match, but the reference includes several different possible operators: `in`, `bool`, `string`, `list`, and numerical comparison with `int` and `float` to check against
 
 `CheckTypes` are explained in more detail in the [architecture](architecture.md).
 
