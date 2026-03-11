@@ -139,3 +139,37 @@ def test_top_key_anchor(jmspath, expected_value):
     value = extract_data_from_json(data=data, path=jmspath)
 
     assert value == expected_value, ASSERT_FAIL_MESSAGE.format(output=value, expected_output=expected_value)
+
+
+def test_extract_data_from_json_with_ref_key_and_list_value():
+    """Verify that extract_data_from_json correctly handles ref-key paths when the extracted field value is a list."""
+    data = [
+        {
+            "id": "DOMAIN1.MYCOMPANY.COM",
+            "include_trusted_domains": [
+                "MYCOMPANY.COM",
+                "domain1.mycompany.com",
+                "domain2.mycompany.COM",
+                "domain3.mycompany.com",
+                "test_domain.com",
+            ],
+        }
+    ]
+
+    expected_value = [
+        {
+            "DOMAIN1.MYCOMPANY.COM": {
+                "include_trusted_domains": [
+                    "MYCOMPANY.COM",
+                    "domain1.mycompany.com",
+                    "domain2.mycompany.COM",
+                    "domain3.mycompany.com",
+                    "test_domain.com",
+                ]
+            }
+        }
+    ]
+
+    value = extract_data_from_json(data=data, path="[*].[$id$,include_trusted_domains]")
+
+    assert value == expected_value, ASSERT_FAIL_MESSAGE.format(output=value, expected_output=expected_value)
