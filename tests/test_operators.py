@@ -157,6 +157,65 @@ operator_not_in_range = (
         False,
     ),
 )
+operator_is_subset = (
+    "trusted_domains.json",
+    "operator",
+    {
+        "params": {
+            "mode": "is-subset",
+            "operator_data": [
+                "COMPANY.COM",
+                "domain1.company.com",
+                "domain2.company.com",
+                "domain3.company.com",
+                "domain4.company.com",
+                "domain5.company.com",
+                "test.com",
+                "test1.com",
+                "test2.com",
+            ],
+        }
+    },
+    "[*].[$id$,include_trusted_domains]",
+    (
+        [
+            {
+                "DOMAIN1.COMPANY.COM": {
+                    "include_trusted_domains": [
+                        "COMPANY.COM",
+                        "domain1.company.com",
+                        "domain2.company.COM",
+                        "domain3.company.com",
+                        "test.com",
+                    ]
+                }
+            }
+        ],
+        False,
+    ),
+)
+operator_is_subset_ci = (
+    "trusted_domains.json",
+    "operator",
+    {
+        "params": {
+            "mode": "is-subset-ci",
+            "operator_data": [
+                "COMPANY.COM",
+                "domain1.company.com",
+                "domain2.company.com",
+                "domain3.company.com",
+                "domain4.company.com",
+                "domain5.company.com",
+                "test.com",
+                "test1.com",
+                "test2.com",
+            ],
+        }
+    },
+    "[*].[$id$,include_trusted_domains]",
+    ([], True),
+)
 
 operator_all_tests = [
     operator_all_same,
@@ -172,6 +231,8 @@ operator_all_tests = [
     operator_not_in,
     operator_in_range,
     operator_not_in_range,
+    operator_is_subset,
+    operator_is_subset_ci,
 ]
 
 

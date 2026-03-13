@@ -67,7 +67,7 @@ operator_params_mode = (
 operator_params_wrong_operator = (
     "operator",
     {"params": {"mode": "random", "operator_data": [20, 40, 60]}},
-    "'params' value must be one of the following: ['is-in', 'not-in', 'in-range', 'not-in-range', 'all-same', 'is-gt', 'is-lt', 'is-ge', 'is-le', 'contains', 'not-contains']. You have: random",
+    "'params' value must be one of the following: ['is-in', 'not-in', 'in-range', 'not-in-range', 'all-same', 'is-gt', 'is-lt', 'is-ge', 'is-le', 'contains', 'not-contains', 'is-subset', 'is-subset-ci']. You have: random",
 )
 operator_params_in = (
     "operator",
@@ -99,6 +99,11 @@ operator_params_bool = (
     {"params": {"mode": "all-same", "operator_data": 1}},
     "check option all-same must have value of type bool. You have: 1 of type <class 'int'>",
 )
+operator_params_subset = (
+    "operator",
+    {"params": {"mode": "is-subset", "operator_data": "not-a-list"}},
+    "check options ('is-subset', 'is-subset-ci') must have value of type list or tuple. You have: not-a-list of type <class 'str'>.",
+)
 
 all_tests = [
     tolerance_wrong_argumet,
@@ -120,6 +125,7 @@ all_tests = [
     operator_params_number,
     operator_params_contains,
     operator_params_bool,
+    operator_params_subset,
 ]
 
 

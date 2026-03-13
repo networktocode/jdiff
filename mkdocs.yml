@@ -124,7 +124,7 @@ nav:
       - Library Overview: "user/lib_overview.md"
       - Getting Started: "user/lib_getting_started.md"
       - Architecture Overview: "user/architecture.md"
-      - Usage: "user/usage.md"
+      - Using the Library: "user/lib_use_cases.md"
       - Frequently Asked Questions: "user/faq.md"
   - Administrator Guide:
       - Install and Configure: "admin/install.md"

@@ -1,4 +1,8 @@
-# Usage
+# Using the Library
+
+This document describes common use-cases and scenarios for this library.
+
+## General Usage
 
 Comparison and testing of the data structures in `jdiff` is performed through one of the built-in `CheckType` type objects, which are explained below in more detail.
 
@@ -6,7 +10,7 @@ A `jdiff` `CheckType` accepts two Python dictionaries as input: the reference ob
 
 It's worth pointing out that `jdiff` is focused on the comparison of the two objects and the testing of the values, not retrieving the data from the external system.
 
-## Workflow
+## Use-cases and common workflows
 
 In summary, the workflow is generally:
 
@@ -22,7 +26,7 @@ In summary, the workflow is generally:
 
 Before we get started with the CheckTypes, we've also included a method of extracting portions of the data for comparison. In many cases in data comparison, we aren't interested in the whole piece of data. We've provided this utility to extract subsets of a larger data object. 
 
-## `extract_data_from_json`
+### `extract_data_from_json`
 
 As an example, in this case of the object below, we are only interested in comparing the value of a single key-value pair from each item in the interfaces dictionary contained within the response. 
 
@@ -67,9 +71,9 @@ After getting the response data from an external system, we'll create a query (s
 This type of logic to extract keys and value from the object is called anchor logic.
 
 
-# `CheckTypes` Explained
+## `CheckTypes` Explained
 
-## exact_match
+### Exact Match
 
 Check type `exact_match` is concerned with the value of the elements within the data structure. The key-value pairs should match between the reference and comparison data. A diff is generated between the two data sets and tested to see whether all the keys and values match.
 
@@ -470,6 +474,14 @@ The `operator` check is a collection of more specific checks divided into catego
 2. `not-contains`: determines if an element string value does not contain the provided test-string value.
     - `not-contains: "overlay"`: checks if "overlay" is present in given node or not.
 
+#### `list` Operators
+
+1. `is-subset`: Check if the value of a specified element is a subset of the provided reference list.
+    - `is-subset: ["A", "B", "C"]`: checks if the extracted list contains only values from the provided reference list.
+
+2. `is-subset-ci`: Check if the value of a specified element is a subset of the provided reference list using case-insensitive comparison.
+    - `is-subset-ci: ["A", "B", "C"]`: checks if the extracted list contains only values from the provided reference list, ignoring letter case.
+
 #### `int`, `float` Operators
 
 1. `is-gt`: Check if the value of a specified element is greater than a given numeric value.
@@ -608,6 +620,88 @@ Can you guess what would be the outcome for an `int`, `float` operator?
 >>> result
 ([], True)
 ```
+
+What about checking whether an extracted list is a subset of an allowed list?
+
+```python
+>>> data = [
+...     {
+...         "id": "DOMAIN1.COMPANY.COM",
+...         "include_trusted_domains": [
+...             "COMPANY.COM",
+...             "domain1.company.com",
+...             "domain2.company.COM",
+...             "domain3.company.com",
+...             "test.com",
+...         ],
+...     }
+... ]
+>>> path = "[*].[$id$,include_trusted_domains]"
+>>> value = extract_data_from_json(data, path)
+>>> value
+[{'DOMAIN1.COMPANY.COM': {'include_trusted_domains': ['COMPANY.COM',
+                                                      'domain1.company.com',
+                                                      'domain2.company.COM',
+                                                      'domain3.company.com',
+                                                      'test.com']}}]
+```
+
+Using the case-sensitive subset operator:
+
+```python
+>>> check_args = {
+...     "params": {
+...         "mode": "is-subset",
+...         "operator_data": [
+...             "COMPANY.COM",
+...             "domain1.company.com",
+...             "domain2.company.com",
+...             "domain3.company.com",
+...             "domain4.company.com",
+...             "domain5.company.com",
+...             "test.com",
+...             "test1.com",
+...             "test2.com",
+...         ],
+...     }
+... }
+>>> check = CheckType.create("operator")
+>>> result = check.evaluate(check_args, value)
+>>> result
+([{'DOMAIN1.COMPANY.COM': {'include_trusted_domains': ['COMPANY.COM',
+                                                       'domain1.company.com',
+                                                       'domain2.company.COM',
+                                                       'domain3.company.com',
+                                                       'test.com']}}], False)
+```
+
+The is-subset operator is case-sensitive, so "domain2.company.COM" does not match "domain2.company.com".
+
+Using the case-insensitive subset operator:
+
+```python
+>>> check_args = {
+...     "params": {
+...         "mode": "is-subset-ci",
+...         "operator_data": [
+...             "COMPANY.COM",
+...             "domain1.company.com",
+...             "domain2.company.com",
+...             "domain3.company.com",
+...             "domain4.company.com",
+...             "domain5.company.com",
+...             "test.com",
+...             "test1.com",
+...             "test2.com",
+...         ],
+...     }
+... }
+>>> result = check.evaluate(check_args, value)
+>>> result
+([], True)
+```
+
+These operators are useful when the extracted value itself is a list and must be validated against an allowed reference list.
 
 See `tests` folder in the repo for more examples.
 

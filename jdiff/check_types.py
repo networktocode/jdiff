@@ -180,11 +180,13 @@ class OperatorType(CheckType):
         bool_operators = ("all-same",)
         number_operators = ("is-gt", "is-lt", "is-ge", "is-le")
         string_operators = ("contains", "not-contains")
+        list_operators = ("is-subset", "is-subset-ci")
         valid_options = (
             in_operators,
             bool_operators,
             number_operators,
             string_operators,
+            list_operators,
         )
 
         # Validate "params" argument is not None.
@@ -245,6 +247,13 @@ class OperatorType(CheckType):
             raise ValueError(
                 f"check option all-same must have value of type bool. You have: {params_value} of type {type(params_value)}"
             )
+        # "is-subset" requires lists or tuples
+        if params_key in list_operators:
+            if not isinstance(params_value, (list, tuple)):
+                raise ValueError(
+                    f"check options {list_operators} must have value of type list or tuple. "
+                    f"You have: {params_value} of type {type(params_value)}."
+                )
 
     def evaluate(self, params: Any, value_to_compare: Any) -> Tuple[Dict, bool]:  # type: ignore[override]
         """Operator evaluator implementation."""
