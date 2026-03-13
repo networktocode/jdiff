@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jdiff"
-version = "1.0.1"
+version = "1.0.2"
 description = "Python library for examining structured data."
 authors = ["Network to Code, LLC <opensource@networktocode.com>"]
 readme = "README.md"
