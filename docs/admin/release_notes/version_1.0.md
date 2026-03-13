@@ -9,21 +9,16 @@ This document describes all new features and changes in the release `1.0`. The f
 - Major features or milestones
 - Changes to compatibility with Nautobot and/or other apps, libraries etc.
 
-## [v1.0.0] - 2025-08-25
+## [v1.0.2] - 2026-03-23
 
 ### Added
 
-- [#130](https://github.com/networktocode/jdiff/issues/130) - Add the ability to reconstruct JSON blobs to perform JSON data compliance.
-- [#134](https://github.com/networktocode/jdiff/issues/134) - Added documentation on the release checklist and process for the library.
 - [#149](https://github.com/networktocode/jdiff/issues/149) - Add is-subset and is-subset-ci operator modes for list comparison.
 
 ### Fixed
 
-- [#128](https://github.com/networktocode/jdiff/issues/128) - Fixed the development standards to use 2025 standards.
-- [#123](https://github.com/networktocode/jdiff/issues/123) Fixed Tag filtering not working in job launch form.
-- [#133](https://github.com/networktocode/jdiff/issues/133), [#136](https://github.com/networktocode/jdiff/issues/136) - Fix GitHub release failing in CI pipeline.
 - [#140](https://github.com/networktocode/jdiff/issues/140) - Fix invoke volume path.
-- [#141](https://github.com/networktocode/jdiff/issues/141) - Fix GitHub CI Publish failures.
+- [#142](https://github.com/networktocode/jdiff/issues/142) - Fix GitHub CI Publish failures.
 
 ### Documentation
 
@@ -31,6 +26,28 @@ This document describes all new features and changes in the release `1.0`. The f
 
 ### Housekeeping
 
-- [#141](https://github.com/networktocode/jdiff/issues/141) - Pep508 compliant deepdiff dependency specification.
+- [#142](https://github.com/networktocode/jdiff/issues/142) - Pep508 compliant deepdiff dependency specification.
 - Add .cookiecutter.json file for drift management.
 - Run drift manager to update library.
+
+## [v1.0.1] - 2025-09-04
+
+### Added
+
+- [#134](https://github.com/networktocode/jdiff/issues/134) - Added documentation on the release checklist and process for the library.
+
+### Fixed
+
+- [#133](https://github.com/networktocode/jdiff/issues/133) - Update DeepDiif dependency to 8.6.1
+- [#136](https://github.com/networktocode/jdiff/issues/136) - Update DeepDiif dependency to 8.6.1
+
+## [v1.0.0] - 2025-08-25
+
+### Added
+
+- [#130](https://github.com/networktocode/jdiff/issues/130) - Add the ability to reconstruct JSON blobs to perform JSON data compliance.
+
+### Fixed
+
+- [#128](https://github.com/networktocode/jdiff/issues/128) - Fixed the development standards to use 2025 standards.
+- [#123](https://github.com/networktocode/jdiff/issues/123) - Fixed Tag filtering not working in job launch form.
