@@ -62,7 +62,7 @@ def extract_data_from_json(data: Union[Mapping, List], path: str = "*", exclude:
         raise TypeError("JMSPath returned 'None'. Please, verify your JMSPath regex.")
 
     # check for multi-nested lists
-    if any(isinstance(i, list) for i in values):
+    if isinstance(values, list) and any(isinstance(i, list) for i in values):
         # process elements to check if lists should be flattened
         for element in values:
             for item in element:

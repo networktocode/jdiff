@@ -1,0 +1,1 @@
+Fixed bug when accessing a jmespath integer or float.
