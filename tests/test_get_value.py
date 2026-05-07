@@ -173,3 +173,16 @@ def test_extract_data_from_json_with_ref_key_and_list_value():
     value = extract_data_from_json(data=data, path="[*].[$id$,include_trusted_domains]")
 
     assert value == expected_value, ASSERT_FAIL_MESSAGE.format(output=value, expected_output=expected_value)
+
+
+def test_extract_data_from_json_with_int_or_float_values():
+    """Verify that extract_data_from_json correctly handles ref-key paths when the extracted field value is an int or float."""
+    data = {"x": 5, "y": 0.75}
+
+    expected_value = 5
+    value = extract_data_from_json(data=data, path="x")
+    assert value == expected_value, ASSERT_FAIL_MESSAGE.format(output=value, expected_output=expected_value)
+
+    expected_value = 0.75
+    value = extract_data_from_json(data=data, path="y")
+    assert value == expected_value, ASSERT_FAIL_MESSAGE.format(output=value, expected_output=expected_value)
