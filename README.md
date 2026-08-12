@@ -1,7 +1,11 @@
 # Jdiff
 
 <p align="center">
+<<<<<<< HEAD
   <img src="https://raw.githubusercontent.com/networktocode/jdiff/develop/docs/images/jdiff_logo.png" class="logo" height="200px">
+=======
+  <img src="https://raw.githubusercontent.com/networktocode/jdiff/develop/docs/images/icon-jdiff.png" class="logo" height="200px">
+>>>>>>> d408d2a (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
   <br>
   <a href="https://github.com/networktocode/jdiff/actions"><img src="https://github.com/networktocode/jdiff/actions/workflows/ci.yml/badge.svg?branch=main"></a>
   <a href="https://jdiff.readthedocs.io/en/latest/"><img src="https://readthedocs.org/projects/jdiff/badge/"></a>
@@ -18,9 +22,15 @@
 
 Full documentation for this library can be found over on the [Jdiff Docs](https://jdiff.readthedocs.io/) website:
 
+<<<<<<< HEAD
 - [User Guide](https://jdiff.readthedocs.io/en/latest/user/lib_overview/) - Overview, Using the library, Getting Started.
 - [Administrator Guide](https://jdiff.readthedocs.io/en/latest/admin/install/) - How to Install, Configure, Upgrade, or Uninstall the library.
 - [Developer Guide](https://jdiff.readthedocs.io/en/latest/dev/contributing/) - Extending the library, Code Reference, Contribution Guide.
+=======
+- [User Guide](https://jdiff.readthedocs.io/en/latest/user/app_overview/) - Overview, Using the Library, Getting Started.
+- [Administrator Guide](https://jdiff.readthedocs.io/en/latest/admin/install/) - How to Install, Configure, Upgrade, or Uninstall the Library.
+- [Developer Guide](https://jdiff.readthedocs.io/en/latest/dev/contributing/) - Extending the Library, Code Reference, Contribution Guide.
+>>>>>>> d408d2a (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 - [Release Notes / Changelog](https://jdiff.readthedocs.io/en/latest/admin/release_notes/).
 - [Frequently Asked Questions](https://jdiff.readthedocs.io/en/latest/user/faq/).
 
