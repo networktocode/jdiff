@@ -11,7 +11,7 @@ To avoid extra work and temporary links, make sure that publishing docs (or merg
 -->
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/networktocode/jdiff/develop/docs/images/icon-Jdiff.png" class="logo" height="200px">
+  <img src="https://raw.githubusercontent.com/networktocode/jdiff/develop/docs/images/icon-jdiff.png" class="logo" height="200px">
   <br>
   <a href="https://github.com/networktocode/jdiff/actions"><img src="https://github.com/networktocode/jdiff/actions/workflows/ci.yml/badge.svg?branch=main"></a>
   <a href="https://jdiff.readthedocs.io/en/latest/"><img src="https://readthedocs.org/projects/jdiff/badge/"></a>
@@ -28,11 +28,11 @@ To avoid extra work and temporary links, make sure that publishing docs (or merg
 
 Full documentation for this library can be found over on the [Jdiff Docs](https://jdiff.readthedocs.io/) website:
 
-- [User Guide](https://jdiff.readthedocs.io/user/app_overview/) - Overview, Using the Library, Getting Started.
-- [Administrator Guide](https://jdiff.readthedocs.io/admin/install/) - How to Install, Configure, Upgrade, or Uninstall the Library.
-- [Developer Guide](https://jdiff.readthedocs.io/dev/contributing/) - Extending the Library, Code Reference, Contribution Guide.
-- [Release Notes / Changelog](https://jdiff.readthedocs.io/admin/release_notes/).
-- [Frequently Asked Questions](https://jdiff.readthedocs.io/user/faq/).
+- [User Guide](https://jdiff.readthedocs.io/en/latest/user/app_overview/) - Overview, Using the Library, Getting Started.
+- [Administrator Guide](https://jdiff.readthedocs.io/en/latest/admin/install/) - How to Install, Configure, Upgrade, or Uninstall the Library.
+- [Developer Guide](https://jdiff.readthedocs.io/en/latest/dev/contributing/) - Extending the Library, Code Reference, Contribution Guide.
+- [Release Notes / Changelog](https://jdiff.readthedocs.io/en/latest/admin/release_notes/).
+- [Frequently Asked Questions](https://jdiff.readthedocs.io/en/latest/user/faq/).
 
 ### Contributing to the Documentation
 
