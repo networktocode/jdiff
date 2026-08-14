@@ -1,6 +1,10 @@
 [tool.poetry]
 name = "jdiff"
+<<<<<<< HEAD
 version = "1.0.3a0"
+=======
+version = "0.1.0a0"
+>>>>>>> f3dca29 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 description = "Python library for examining structured data."
 authors = ["Network to Code, LLC <opensource@networktocode.com>"]
 readme = "README.md"
@@ -17,10 +21,16 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
+
 include = [
-    "LICENSE",
-    "README.md",
+    # Poetry by default will exclude files that are in .gitignore
+    { path = "jdiff/static/jdiff/docs/**/*", format = ["sdist", "wheel"] }
+]
+
+packages = [
+    { include = "jdiff" },
 ]
 
 packages = [
@@ -28,6 +38,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
+<<<<<<< HEAD
 python = ">=3.10,<3.14"
 deepdiff = ">=8.6.1,<9.0.0"
 jmespath = "^1.0.1"
@@ -39,6 +50,13 @@ coverage = "*"
 =======
 coverage = "~7.15.4"
 >>>>>>> d408d2a (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
+=======
+python = ">=3.10,<3.15"
+click = "*"
+
+[tool.poetry.group.dev.dependencies]
+coverage = "~7.15.4"
+>>>>>>> f3dca29 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 pytest = "*"
 mock = "*"
 pyyaml = "^6.0.1"
@@ -74,6 +92,14 @@ mkdocs-section-index = "~0.3.12"
 mkdocstrings = "~1.0.6"
 # Python-specific extension to mkdocstrings
 mkdocstrings-python = "~2.0.5"
+<<<<<<< HEAD
+=======
+
+[tool.poetry.scripts]
+jdiff = 'jdiff.cli:main'
+
+
+>>>>>>> f3dca29 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 
 [tool.ruff]
 line-length = 120
@@ -152,7 +178,7 @@ addopts = "-vv --doctest-modules -p no:warnings --ignore-glob='*mock*'"
 package = "jdiff"
 directory = "changes"
 filename = "docs/admin/release_notes/version_X.Y.md"
-template = "towncrier_template.j2"
+template = "development/towncrier_template.j2"
 start_string = "<!-- towncrier release notes start -->"
 issue_format = "[#{issue}](https://github.com/networktocode/jdiff/issues/{issue})"
 

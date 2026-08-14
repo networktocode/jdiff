@@ -36,7 +36,7 @@ namespace.configure(
     {
         "jdiff": {
             "project_name": "jdiff",
-            "python_ver": "3.10",
+            "python_ver": "3.14",
             "local": is_truthy(os.getenv("INVOKE_JDIFF_LOCAL", "false")),
             "image_name": "jdiff",
             "image_ver": os.getenv("INVOKE_JDIFF_IMAGE_VER", "latest"),
@@ -326,6 +326,7 @@ def docs(context):
     help={
         "version": "Version of jdiff to generate the release notes for.",
         "date": "Date of the release (default: today).",
+<<<<<<< HEAD
     }
 )
 def generate_release_notes(context, version="", date=""):
@@ -339,5 +340,23 @@ def generate_release_notes(context, version="", date=""):
     command = f"poetry run towncrier build --version {version} --yes"
     if date:
         command += f" --date {date}"
+=======
+        "keep": "Keep existing release notes files. Useful for testing. (default: False).",
+    }
+)
+def generate_release_notes(context, version="", date="", keep=False):
+    """Generate Release Notes using Towncrier."""
+    command = "poetry run towncrier build"
+    if not version:
+        version = context.run("poetry version --short", hide=True).stdout.strip()
+    command += f" --version {version}"
+    if date:
+        command += f" --date {date}"
+    command += " --keep" if keep else " --yes"
+
+    version_major_minor = ".".join(version.split(".")[:2])
+    context.run(f"poetry run python development/bin/ensure_release_notes.py --version {version_major_minor}")
+
+>>>>>>> f3dca29 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
     # Due to issues with git repo ownership in the containers, this must always run locally.
     context.run(command)
