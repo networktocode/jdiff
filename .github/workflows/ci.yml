@@ -100,10 +100,14 @@ jobs:
       - name: "Setup environment"
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         uses: "networktocode/gh-action-setup-poetry-environment@v6"
 =======
         uses: "networktocode/gh-action-setup-poetry-environment@v7"
 >>>>>>> ac9044b (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
+=======
+        uses: "networktocode/gh-action-setup-poetry-environment@v7"
+>>>>>>> 64d8762 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
         with:
           poetry-version: "2.1.3"
       - name: "Get image version"
@@ -132,6 +136,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
+<<<<<<< HEAD
 <<<<<<< HEAD
         python-version: ["3.10", "3.11", "3.12", "3.13"]
     runs-on: "ubuntu-latest"
@@ -177,6 +182,8 @@ jobs:
       matrix:
 =======
 >>>>>>> ac9044b (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
+=======
+>>>>>>> 64d8762 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
         python-version: ["3.10", "3.14"]
     runs-on: "ubuntu-latest"
     env:
@@ -207,9 +214,12 @@ jobs:
           build-args: |
             PYTHON_VER=${{ matrix.python-version }}
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> f3dca29 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 =======
 >>>>>>> ac9044b (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
+=======
+>>>>>>> 64d8762 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
       - name: "Run Tests"
         run: "poetry run invoke pytest"
   changelog:

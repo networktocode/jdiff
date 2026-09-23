@@ -2,6 +2,7 @@
 name = "jdiff"
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 version = "1.0.3a0"
 =======
 version = "0.1.0a0"
@@ -9,6 +10,9 @@ version = "0.1.0a0"
 =======
 version = "0.1.0a0"
 >>>>>>> ac9044b (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
+=======
+version = "0.1.0a0"
+>>>>>>> 64d8762 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 description = "Python library for examining structured data."
 authors = ["Network to Code, LLC <opensource@networktocode.com>"]
 readme = "README.md"
@@ -36,6 +40,7 @@ include = [
 packages = [
     { include = "jdiff" },
 <<<<<<< HEAD
+<<<<<<< HEAD
 ]
 
 packages = [
@@ -61,15 +66,23 @@ coverage = "~7.15.4"
 
 [tool.poetry.dependencies]
 >>>>>>> ac9044b (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
+=======
+]
+
+[tool.poetry.dependencies]
+>>>>>>> 64d8762 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 python = ">=3.10,<3.15"
 click = "*"
 
 [tool.poetry.group.dev.dependencies]
 coverage = "~7.15.4"
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> f3dca29 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 =======
 >>>>>>> ac9044b (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
+=======
+>>>>>>> 64d8762 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 pytest = "*"
 mock = "*"
 pyyaml = "^6.0.1"
@@ -107,9 +120,12 @@ mkdocstrings = "~1.0.6"
 mkdocstrings-python = "~2.0.5"
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> ac9044b (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
+=======
+>>>>>>> 64d8762 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 
 [tool.poetry.scripts]
 jdiff = 'jdiff.cli:main'
