@@ -329,6 +329,7 @@ def docs(context):
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     }
 )
 def generate_release_notes(context, version="", date=""):
@@ -356,6 +357,11 @@ def generate_release_notes(context, version="", date=""):
     }
 )
 >>>>>>> 64d8762 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
+=======
+        "keep": "Keep existing release notes files. Useful for testing. (default: False).",
+    }
+)
+>>>>>>> 7afecc1 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 def generate_release_notes(context, version="", date="", keep=False):
     """Generate Release Notes using Towncrier."""
     command = "poetry run towncrier build"
@@ -371,10 +377,13 @@ def generate_release_notes(context, version="", date="", keep=False):
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> f3dca29 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 =======
 >>>>>>> ac9044b (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 =======
 >>>>>>> 64d8762 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
+=======
+>>>>>>> 7afecc1 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
     # Due to issues with git repo ownership in the containers, this must always run locally.
     context.run(command)

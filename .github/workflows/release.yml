@@ -7,6 +7,10 @@ on:  # yamllint disable-line rule:truthy rule:comments
 env:
   POETRY_VERSION: "2.1.3"
   PYTHON_VERSION: "3.12"
+<<<<<<< HEAD
+=======
+  INVOKE_JDIFF_LOCAL: "True"
+>>>>>>> 7afecc1 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 
 jobs:
   build:
@@ -14,10 +18,11 @@ jobs:
     runs-on: "ubuntu-latest"
     if: "startsWith(github.ref, 'refs/tags/v')"
     steps:
-      - uses: "actions/checkout@v4"
+      - uses: "actions/checkout@v7"
       - name: "Setup environment"
         uses: "networktocode/gh-action-setup-poetry-environment@v7"
         with:
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -38,6 +43,11 @@ jobs:
           poetry-install-options: "--no-root"
       - name: "Build Documentation"
         run: "poetry run invoke build-and-check-docs"
+=======
+          poetry-version: "${{ env.POETRY_VERSION }}"
+          python-version: "${{ env.PYTHON_VERSION }}"
+          poetry-install-options: "--with dev,docs"
+>>>>>>> 7afecc1 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
       - name: "Run Poetry Build"
         run: "poetry build"
 
@@ -59,7 +69,7 @@ jobs:
       contents: "write"
     needs: "build"
     steps:
-      - uses: "actions/checkout@v4"
+      - uses: "actions/checkout@v7"
       - name: "Retrieve built package from cache"
         uses: "actions/download-artifact@v4"
         with:
@@ -80,6 +90,7 @@ jobs:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     # IMPORTANT: this permission is mandatory for trusted publishing.
     permissions:
 =======
@@ -94,6 +105,10 @@ jobs:
     permissions:
       # IMPORTANT: this permission is mandatory for Trusted Publishing
 >>>>>>> 64d8762 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
+=======
+    permissions:
+      # IMPORTANT: this permission is mandatory for Trusted Publishing
+>>>>>>> 7afecc1 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
       id-token: "write"
     steps:
       - name: "Retrieve built package from cache"
@@ -147,6 +162,7 @@ jobs:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     name: "Create a PR from main into develop"
 =======
     name: "${{ github.event.release.target_commitish == 'main' && 'Create a PR from main into develop' || format('Create a PR to merge into {0}', github.event.release.target_commitish) }}"
@@ -157,11 +173,15 @@ jobs:
 =======
     name: "${{ github.event.release.target_commitish == 'main' && 'Create a PR from main into develop' || format('Create a PR to merge into {0}', github.event.release.target_commitish) }}"
 >>>>>>> 64d8762 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
+=======
+    name: "${{ github.event.release.target_commitish == 'main' && 'Create a PR from main into develop' || format('Create a PR to merge into {0}', github.event.release.target_commitish) }}"
+>>>>>>> 7afecc1 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
     needs:
       - "publish-github"
       - "publish-pypi"
     runs-on: "ubuntu-latest"
     steps:
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -185,6 +205,10 @@ jobs:
 >>>>>>> 64d8762 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
       - name: "Checkout source branch"
         uses: "actions/checkout@v4"
+=======
+      - name: "Checkout source branch"
+        uses: "actions/checkout@v7"
+>>>>>>> 7afecc1 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
         with:
           ref: "${{ github.event.release.target_commitish }}"
           fetch-depth: 0
@@ -198,17 +222,21 @@ jobs:
       - name: "Create release branch and bump version"
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> f3dca29 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 =======
 >>>>>>> ac9044b (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 =======
 >>>>>>> 64d8762 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
+=======
+>>>>>>> 7afecc1 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
         id: "branch"
         run: |
 
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -221,6 +249,8 @@ jobs:
 >>>>>>> ac9044b (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 =======
 >>>>>>> 64d8762 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
+=======
+>>>>>>> 7afecc1 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
           SOURCE_BRANCH="${{ github.event.release.target_commitish }}"
           if [ "$SOURCE_BRANCH" = "main" ]; then
             TARGET_BRANCH="develop"
@@ -234,11 +264,14 @@ jobs:
           BRANCH_NAME="release-${VERSION}-to-${TARGET_BRANCH}"
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> f3dca29 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 =======
 >>>>>>> ac9044b (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 =======
 >>>>>>> 64d8762 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
+=======
+>>>>>>> 7afecc1 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 
           # Ensure release branch doesn't already exist
           if git rev-parse --verify origin/$BRANCH_NAME > /dev/null 2>&1; then
@@ -248,6 +281,7 @@ jobs:
 
           git checkout -b "$BRANCH_NAME"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -261,10 +295,14 @@ jobs:
 =======
           poetry version prerelease
 >>>>>>> 64d8762 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
+=======
+          poetry version prerelease
+>>>>>>> 7afecc1 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
           git add pyproject.toml && git commit -m "Bump version"
           git push origin "$BRANCH_NAME"
 
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -285,10 +323,16 @@ jobs:
 
       - name: "Create Pull Request"
 >>>>>>> 64d8762 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
+=======
+          echo "target_branch=$TARGET_BRANCH" >> $GITHUB_OUTPUT
+
+      - name: "Create Pull Request"
+>>>>>>> 7afecc1 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
         env:
           GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
           gh pr create \
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -298,10 +342,13 @@ jobs:
 >>>>>>> ac9044b (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
 =======
 >>>>>>> 64d8762 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
+=======
+>>>>>>> 7afecc1 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
             --title "Post release ${{ github.event.release.tag_name }} to ${{ steps.branch.outputs.target_branch }}" \
             --body "Please do a merge commit." \
             --base "${{ steps.branch.outputs.target_branch }}" \
             --head "${{ steps.branch.outputs.branch_name }}"
+<<<<<<< HEAD
 
       - name: "Create Pull Request"
         if: "steps.branch.outputs.branch_name != ''"
@@ -320,3 +367,5 @@ jobs:
             --body "Please do a merge commit." \
             --base "develop" \
             --head "${{ steps.branch.outputs.branch_name }}"
+=======
+>>>>>>> 7afecc1 (Cookie updated targeting develop by NetworkToCode Cookie Drift Manager Tool)
